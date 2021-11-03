@@ -28,7 +28,7 @@ Item {
 
             Text{
                 color:"#fff"
-                text:qsTr("蒸箱")
+                text:qsTr("蒸箱")//
                 font.pixelSize:fontSize
                 anchors.bottom:parent.bottom
                 anchors.bottomMargin: 20
@@ -36,7 +36,7 @@ Item {
             }
 
             onClicked: {
-                load_page("PageSteamBakeBase")
+                load_page("pageSteamBakeBase")
             }
         }
         Button{
@@ -54,6 +54,7 @@ Item {
             Text{
                 color:"#fff"
                 text:qsTr("烤箱")
+                font.family:"Serif"
                 font.pixelSize:fontSize
                 anchors.bottom:parent.bottom
                 anchors.bottomMargin: 20

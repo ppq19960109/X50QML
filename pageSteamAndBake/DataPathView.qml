@@ -1,9 +1,12 @@
-import QtQuick 2.0
+import QtQuick 2.9
+import QtQuick.Controls 2.2
 
 Item {
     property string textColor:"#7286A3"
     property string highlightColor:"#ECF4FC"
-
+    property alias model:pathView.model
+    property alias currentIndex:pathView.currentIndex
+    signal valueChanged(var index,var valueName)
     id:root
     //        anchors.fill: parent
 
@@ -14,10 +17,11 @@ Item {
             height:root.height/pathView.pathItemCount
             opacity: PathView.isCurrentItem ? 1 : 0.5
             Text {
+                id:rectDelegateText
                 anchors.centerIn: parent
                 color:'white'
-                font.pixelSize: 40
-                text: index;
+                font.pixelSize: 30
+                text: modelData;
             }
         }
     }
@@ -26,16 +30,15 @@ Item {
         id:pathView
         anchors.fill: parent
 
-//        currentIndex:0
+        currentIndex:0
         pathItemCount:3
         interactive: true
-        maximumFlickVelocity:1000
-//        focus: true;
+        focus: true;
         preferredHighlightBegin: 0.5;
         preferredHighlightEnd: 0.5;
         highlightRangeMode: PathView.StrictlyEnforceRange;
 
-        model:10
+//        model:textModel
         delegate:rectDelegate
 
         path : Path{
@@ -47,6 +50,12 @@ Item {
             }
 
         }
+        onMovementEnded: {
+            console.log("currentIndex:",currentIndex);
+
+            valueChanged(currentIndex,"model");
+        }
+
 //        Component.onCompleted: {
 //            console.log("parent.x:"+parent.x,"parent.y:"+parent.y,"parent.width:"+parent.width,"parent.height:"+parent.height)
 //            console.log("x:"+root.x,"y:"+root.y,"width:"+root.width,"height:"+root.height)

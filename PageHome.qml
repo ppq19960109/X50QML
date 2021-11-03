@@ -1,6 +1,6 @@
 import QtQuick 2.2
 import QtQuick.Controls 2.2
-
+import QmlWifi 1.0
 Item {
     //判断儿童锁(true表示锁定，false表示未锁定)
     property bool childLock:false
@@ -8,13 +8,107 @@ Item {
     property int childLockPressCount:0
 
     visible: true
-//    width: parent.width
-//    height: parent.height
-//    anchors.fill: parent
+    //    width: parent.width
+    //    height: parent.height
+    //    anchors.fill: parent
+    Component.onCompleted: {
+        console.log("page home onCompleted")
+        if(systemSettings.wifiSwitch){
+            qmlWifi.scanWiFi();
+        }
+    }
+    StackView.onActivated:{
+        console.log("page home onActivated")
+        if(systemSettings.wifiSwitch){
+            getWifiStatus()
+        }
+        else{
+            wifi_icon.source = "images/wifi/icon_wifi_error.png"
+        }
+    }
+    function getWifiStatus()
+    {
+        var wifi_state=qmlWifi.getWifiState()
+        console.log("pagehome getWifiStatus",wifi_state,QmlWifi.WiFiEventConnected)
+
+        if(wifi_state!==QmlWifi.WiFiEventConnected){
+            wifi_icon.source = "images/wifi/icon_wifi_error.png"
+        }
+        else{
+            wifi_icon.source = "images/wifi/wifi.png"
+        }
+    }
+
+    QmlWifi{
+        id:qmlWifi
+        onWifiEvent:{
+            console.log("WiFi status:" ,event)
+        }
+    }
+    Timer{
+        property int timer_wifi_count:0
+        id:timer_wifi
+        repeat: true
+        running: systemSettings.wifiSwitch
+        interval: 30000
+        triggeredOnStart: false
+        onTriggered: {
+            console.log("pagehome timer_wifi",timer_wifi_count)
+
+            if(++timer_wifi_count>3)
+            {
+                timer_wifi_count=0;
+                qmlWifi.scanWiFi();
+            }
+            getWifiStatus()
+        }
+    }
+    Rectangle{
+        width:parent.width
+        anchors.top:parent.top
+        anchors.bottom:topBar.top
+        color:"#000"
+
+        SwipeView {
+            id: swipeview
+            currentIndex:0
+            width:parent.width
+
+            interactive:true //是否可以滑动
+            anchors.top:parent.top
+            anchors.bottom: indicator.top
+            anchors.bottomMargin: 10
+            Item {
+                PageHomeFirst{}
+            }
+            Item {
+                PageHomeSecond{}
+            }
+//            Item {
+//                PageHomeThird{}
+//            }
+        }
+
+        PageIndicator {
+            id:indicator
+            count: swipeview.count
+            currentIndex: swipeview.currentIndex
+            anchors.bottom: parent.bottom
+            anchors.horizontalCenter: parent.horizontalCenter
+            interactive: true
+            delegate: Image {
+
+                source:index===swipeview.currentIndex
+                       ?"images/main_menu/user_active"+index+".png":"images/main_menu/user_normal"+index+".png"
+                anchors.verticalCenter:parent.verticalCenter
+            }
+        }
+
+    }
     ToolBar {
         id:topBar
         width:parent.width
-        anchors.top:parent.top
+        anchors.bottom: parent.bottom
         height:96
         Image {
             anchors.fill: parent
@@ -28,6 +122,7 @@ Item {
             anchors.left:parent.left
             anchors.verticalCenter: parent.verticalCenter
             Image{
+                id:wifi_icon
                 anchors.centerIn: parent
                 source: "images/wifi/wifi.png"
             }
@@ -36,23 +131,10 @@ Item {
             }
             onClicked: {
                 console.log("TabButton wifi")
-                //                    mystackview.push(setting_page_network,StackView.Immediate)
+                load_page("pageWifi")
             }
         }
-        //闹钟图标
-        Rectangle{
-            id:alarmClock
-            width:120
-            height:parent.height
-            anchors.left:wifi.right
-            anchors.verticalCenter: parent.verticalCenter
-            color:"transparent"
-            visible: true
-            Image{
-                anchors.centerIn: parent
-                source: "images/main_menu/naozhong.png"
-            }
-        }
+
         //时间展示
         Text{
             id:currentTime
@@ -156,53 +238,5 @@ Item {
                 }
             }
         }
-    }
-
-    Rectangle{
-        width:parent.width
-        anchors.top:topBar.bottom
-        anchors.bottom: parent.bottom
-        color:"#000"
-
-        Image {
-            id:botImg
-            width:parent.width
-            source: "images/main_menu/dibuyuans.png"
-            anchors.bottom:parent.bottom
-        }
-
-        SwipeView {
-            id: swipeview
-            currentIndex:0
-            width:parent.width
-
-            interactive:true //是否可以滑动
-            anchors.top:parent.top
-            anchors.bottom: botImg.top
-            Item {
-                PageHomeFirst{}
-            }
-            Item {
-                PageHomeSecond{}
-            }
-            Item {
-                PageHomeThird{}
-            }
-        }
-
-        PageIndicator {
-            count: swipeview.count
-            currentIndex: swipeview.currentIndex
-            anchors.top: botImg.top
-//            anchors.topMargin: 10
-            anchors.horizontalCenter: parent.horizontalCenter
-            interactive: true
-            delegate: Image {
-                source:index===swipeview.currentIndex
-                       ?"images/main_menu/user_active"+index+".png":"images/main_menu/user_normal"+index+".png"
-                anchors.verticalCenter:parent.verticalCenter
-            }
-        }
-
     }
 }

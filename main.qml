@@ -24,13 +24,15 @@ ApplicationWindow {
         property int brightness: 255
         //首次开机引导
         property bool firstOpenGuide: true
+
+        property bool wifiSwitch: true
     }
 
     id: window
     visible: true
     width: 800
     height: 480
-    title: qsTr("MarsX5")
+    title: qsTr("X5")
 
     StackView {
         id: stackView
@@ -52,8 +54,21 @@ ApplicationWindow {
     }
 
     Component {
+        id: pageWifi
+        PageWifi {}
+    }
+
+    Component {
         id: pageSteamBakeBase
         PageSteamBakeBase {}
+    }
+    Component {
+        id: pageSteamBakeMultistage
+        PageSteamBakeMultistage {}
+    }
+    Component {
+        id: pageMultistageSet
+        PageMultistageSet {}
     }
 
     function backPrePage() {
@@ -68,6 +83,12 @@ ApplicationWindow {
         console.log("stackView depth:"+stackView.depth)
     }
 
+    function backPage(page) {
+        if(stackView.depth>0)
+            stackView.pop(page);
+        console.log("stackView depth:"+stackView.depth)
+    }
+
     function load_page(page,args) {
         console.log("load_page:"+page,"args:"+args)
 
@@ -75,8 +96,17 @@ ApplicationWindow {
         case "pageHome":
             stackView.pop(null);
             break;
-        case "PageSteamBakeBase": //蒸烤设置页面
+        case "pageWifi":
+            stackView.push(pageWifi);
+            break;
+        case "pageSteamBakeBase": //蒸烤设置页面
             stackView.push(pageSteamBakeBase);
+            break;
+        case "pageSteamBakeMultistage": //蒸烤设置页面
+            stackView.push(pageSteamBakeMultistage);
+            break;
+        case "pageMultistageSet": //蒸烤设置页面
+            stackView.push(pageMultistageSet);
             break;
         }
         console.log("stackView depth:"+stackView.depth)

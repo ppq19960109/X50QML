@@ -2,6 +2,18 @@ import QtQuick 2.2
 import QtQuick.Controls 2.2
 
 Item {
+    property bool startButtonState: false
+
+    Component.onCompleted: {
+        var tempArray = new Array
+        for(var i=0; i< 200; ++i) {
+            tempArray.push(i);
+            //            console.log("tempArray",i)
+        }
+        tempPathView.model=tempArray
+        timePathView.model=tempArray
+
+    }
 
     ToolBar {
         id:topBar
@@ -41,7 +53,7 @@ Item {
             anchors.verticalCenter: parent.verticalCenter
             text: qsTr("蒸箱")
         }
-        //多段
+        //预约
         TabButton{
             id:step
             width:160
@@ -55,7 +67,7 @@ Item {
                 color:"#ECF4FC"
                 font.pixelSize: fontSize
                 anchors.centerIn:parent
-                text: qsTr("多段蒸")
+                text: qsTr("预约")
             }
             onClicked: {
 
@@ -160,20 +172,77 @@ Item {
                 anchors.top: nav.bottom
                 anchors.bottom: parent.bottom
                 color:"transparent"
+                Image{
+                    source: "/images/fengexian.png"
+                    anchors.top:parent.top
+                    anchors.topMargin:rowPathView.height/3
+                }
+                Image{
+                    source: "/images/fengexian.png"
+                    anchors.top:parent.top
+                    anchors.topMargin:rowPathView.height/3*2
+                }
+                ListModel {
+                    id:modeListModel
+                    ListElement {modelData:"经典蒸";temp:100;time:40;}
+                    ListElement {modelData:"快速蒸";temp:110;time:30;}
+                    ListElement {modelData:"热风烧烤";temp:120;time:20}
+                    ListElement {modelData:"上下加热";temp:130;time:10}
+                }
 
                 Row {
-                    anchors.fill: parent
+                    id:rowPathView
+                    width: parent.width
+                    height:parent.height
                     spacing: 20
 
                     DataPathView {
-                        width: 100
+                        id:modePathView
+                        width: parent.width/5
                         height:parent.height
+                        model:modeListModel
+                        currentIndex:0
+                        onValueChanged: {
+                            console.log(index,valueName)
+                            console.log("model value:",model.get(index).modelData);
+                            tempPathView.currentIndex=model.get(index).temp;
+                            timePathView.currentIndex=model.get(index).time;
+
+                        }
                     }
                     DataPathView {
-                        width: 100
+                        id:tempPathView
+                        width: parent.width/5
                         height:parent.height
+                        Component.onCompleted:{
+                            //                            tempPathView.positionViewAtIndex(1, PathView.End)
+                            tempPathView.currentIndex=modePathView.model.get(modePathView.currentIndex).temp;
+                        }
                     }
-
+                    Text{
+                        //                        width: parent.width/5
+                        //                        anchors.left: parent.right
+                        anchors.verticalCenter:  parent.verticalCenter
+                        text:"℃"
+                        font.pixelSize: 30
+                        color:"#ECF4FC"
+                    }
+                    DataPathView {
+                        id:timePathView
+                        width: parent.width/5
+                        height:parent.height
+                        Component.onCompleted:{
+                            timePathView.currentIndex=modePathView.model.get(modePathView.currentIndex).time;
+                        }
+                    }
+                    Text{
+                        //                        width: parent.width/5
+                        //                        anchors.left: parent.right
+                        anchors.verticalCenter:  parent.verticalCenter
+                        text:"分钟"
+                        font.pixelSize: 30
+                        color:"#ECF4FC"
+                    }
                 }
             }
 
@@ -208,11 +277,12 @@ Item {
                     id:startText
                     anchors.centerIn: startUpBg
                     color:"#fff"
-                    text:"启动"
+                    text:startButtonState?"停止":"启动"
                     font.pixelSize: fontSize
                 }
                 onClicked: {
-
+                    startButtonState=!startButtonState
+                    console.log(modePathView.model.get(modePathView.currentIndex).modelData,tempPathView.model[tempPathView.currentIndex],timePathView.model[timePathView.currentIndex])
                 }
             }
             Button{

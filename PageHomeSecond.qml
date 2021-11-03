@@ -15,7 +15,7 @@ Item {
             id:smartRecipe
             //            width: 235
             //            height:parent.height
-            Layout.preferredWidth: 235
+            Layout.preferredWidth: 240
             Layout.preferredHeight:parent.height
             Layout.alignment: Qt.AlignHCenter
 
@@ -31,7 +31,7 @@ Item {
                 color:"#fff"
                 font.pixelSize: fontSize
                 anchors.bottom:parent.bottom
-                anchors.bottomMargin: 5
+                anchors.bottomMargin: 60
                 anchors.horizontalCenter:parent.horizontalCenter
             }
 
@@ -44,7 +44,7 @@ Item {
             id:myRecond
             //            width: 235
             //            height:parent.height
-            Layout.preferredWidth: 235
+            Layout.preferredWidth: 240
             Layout.preferredHeight:parent.height
             Layout.alignment: Qt.AlignHCenter
             background:Rectangle{
@@ -59,7 +59,7 @@ Item {
                 color:"#fff"
                 font.pixelSize: fontSize
                 anchors.bottom:parent.bottom
-                anchors.bottomMargin: 5
+                anchors.bottomMargin: 60
                 anchors.horizontalCenter:parent.horizontalCenter
             }
 
@@ -72,27 +72,24 @@ Item {
             id:setCenter
             //            width: 235
             //            height:parent.height
-            Layout.preferredWidth: 235
+            Layout.preferredWidth: 240
             Layout.preferredHeight:parent.height
             Layout.alignment: Qt.AlignHCenter
+
             background:Rectangle{
-                color:"transparent"
-                Image{
-                    source: "images/main_menu/shezhi.png"
-                }
+                radius: 10
+                color:"#fff"
             }
 
             Text{
-                text:"设置"
-                color:"#fff"
-                font.pixelSize: fontSize
-                anchors.bottom:parent.bottom
-                anchors.bottomMargin: 5
-                anchors.horizontalCenter:parent.horizontalCenter
+                text:"多段烹饪"
+                color:"#000"
+                font.pixelSize: 40
+                anchors.centerIn: parent
             }
 
             onClicked: {
-                //                load_page("pageSetting")
+                load_page("pageSteamBakeMultistage")
             }
         }
     }

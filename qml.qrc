@@ -54,5 +54,42 @@
         <file>images/anniu_yes.png</file>
         <file>images/xiahuaxian.png</file>
         <file>pageSteamAndBake/DataPathView.qml</file>
+        <file>images/fengexian.png</file>
+        <file>images/fengexian_big.png</file>
+        <file>pageSteamAndBake/PageSteamBakeMultistage.qml</file>
+        <file>pageSteamAndBake/PageMultistageRemind.qml</file>
+        <file>pageSteamAndBake/PageMultistageSet.qml</file>
+        <file>images/xinzeng.png</file>
+        <file>images/bianji.png</file>
+        <file>images/guanbi.png</file>
+        <file>pageSteamAndBake/PageMultistagePopUp.qml</file>
+        <file>images/dibutanchuang_bj.png</file>
+        <file>PageWifi.qml</file>
+        <file>images/bg/bg_btn_common.png</file>
+        <file>images/bg/bg_clock.png</file>
+        <file>images/bg/bg_clock_big.png</file>
+        <file>images/bg/bg_clock_hour.png</file>
+        <file>images/bg/bg_clock_hour_big.png</file>
+        <file>images/bg/bg_clock_minute.png</file>
+        <file>images/bg/bg_clock_minute_big.png</file>
+        <file>images/bg/bg_clock_second.png</file>
+        <file>images/bg/bg_clock_second_big.png</file>
+        <file>images/bg/bg_scrollbar.png</file>
+        <file>images/bg/bg_scrollbar_thumb.png</file>
+        <file>images/bg/bg_setting_about_machine_btn.png</file>
+        <file>images/bg/bg_setting_bright_btn.png</file>
+        <file>images/bg/bg_setting_date_btn.png</file>
+        <file>images/bg/bg_setting_divide_line.png</file>
+        <file>images/bg/bg_setting_network_btn.png</file>
+        <file>images/bg/bg_setting_recovery_factory_btn.png</file>
+        <file>images/bg/bg_setting_recovery_factory_confirm_btn.png</file>
+        <file>images/bg/bg_setting_standby_btn.png</file>
+        <file>images/bg/bg_setting_switch_close.png</file>
+        <file>images/bg/bg_setting_switch_open.png</file>
+        <file>images/bg/bg_setting_system_update_btn.png</file>
+        <file>images/bg/bg_setting_time_confirm.png</file>
+        <file>images/bg/bg_setting_time_select.png</file>
+        <file>images/icon_pwd_invisible.png</file>
+        <file>images/icon_pwd_visible.png</file>
     </qresource>
 </RCC>
