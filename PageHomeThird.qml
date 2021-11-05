@@ -35,7 +35,7 @@ Item {
             Text{
                 text:"定时器"
                 color:"#fff"
-                font.pixelSize: fontSize
+                font.pixelSize: 40
                 anchors.bottom:parent.bottom
                 anchors.bottomMargin: 5
                 anchors.horizontalCenter:parent.horizontalCenter
@@ -68,7 +68,7 @@ Item {
             Text{
                 text:"天气"
                 color:"#fff"
-                font.pixelSize: fontSize
+                font.pixelSize: 40
                 anchors.bottom:parent.bottom
                 anchors.bottomMargin: 5
                 anchors.horizontalCenter:parent.horizontalCenter
@@ -101,7 +101,7 @@ Item {
             Text{
                 text:"消息中心"
                 color:"#fff"
-                font.pixelSize: fontSize
+                font.pixelSize: 40
                 anchors.bottom:parent.bottom
                 anchors.bottomMargin: 5
                 anchors.horizontalCenter:parent.horizontalCenter

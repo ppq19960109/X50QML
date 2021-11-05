@@ -7,6 +7,8 @@
 #include <QStandardPaths>
 
 #include "QmlWifi.h"
+#include "qmldevstate.h"
+
 int main(int argc, char *argv[])
 {
     qputenv("QT_IM_MODULE", QByteArray("qtvirtualkeyboard"));
@@ -43,7 +45,7 @@ int main(int argc, char *argv[])
 
     QQmlApplicationEngine engine;
 
-//    engine.rootContext()->setContextProperty("QmlWifi", new QmlWifi(&app));
+    engine.rootContext()->setContextProperty("QmlDevState", new QmlDevState(&app));
 
     const QUrl url(QStringLiteral("qrc:/main.qml"));
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,

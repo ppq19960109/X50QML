@@ -3,62 +3,52 @@ import QtQuick.Controls 2.2
 
 
 Item {
-    width:parent.width
-    height: parent.height
-    //        anchors.fill: parent
+    //    width:parent.width
+    //    height: parent.height
+    anchors.fill: parent
+
     Row {
         anchors.fill: parent
         anchors.topMargin: 20
-        spacing: 30
-        anchors.leftMargin: (parent.width-steam.width-bake.width-spacing)/2
+        spacing: 20
+        anchors.leftMargin: 50
+        anchors.rightMargin: 50
 
         Button{
             id:steam
-            width: 357
+            width: 330
             height:parent.height
 
             background:Rectangle{
-                color:"transparent"
-            }
-
-            Image{
-                source: "images/main_menu/zheng_bj.png"
-                anchors.fill: parent
+                color:"#fff"
+                radius: 10
             }
 
             Text{
-                color:"#fff"
-                text:qsTr("蒸箱")//
-                font.pixelSize:fontSize
-                anchors.bottom:parent.bottom
-                anchors.bottomMargin: 20
-                anchors.horizontalCenter:parent.horizontalCenter
+                color:"#000"
+                text:qsTr("左腔蒸烤")
+                font.pixelSize:40
+                anchors.centerIn: parent
             }
 
             onClicked: {
-                load_page("pageSteamBakeBase")
+                load_page("pageSteamBakeBase","123")
             }
         }
         Button{
             id:bake
-            width: 357
+            width: 330
             height:parent.height
 
             background:Rectangle{
-                color:"transparent"
-                Image{
-                    source: "images/main_menu/kao_bj.png"
-                    anchors.fill: parent
-                }
+                color:"#fff"
+                radius: 10
             }
             Text{
-                color:"#fff"
-                text:qsTr("烤箱")
-                font.family:"Serif"
-                font.pixelSize:fontSize
-                anchors.bottom:parent.bottom
-                anchors.bottomMargin: 20
-                anchors.horizontalCenter:parent.horizontalCenter
+                color:"#000"
+                text:qsTr("右腔速蒸")
+                font.pixelSize:40
+                anchors.centerIn: parent
             }
 
         }

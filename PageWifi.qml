@@ -64,7 +64,7 @@ Item {
         Text{
             width:50
             color:"#9AABC2"
-            font.pixelSize: fontSize
+            font.pixelSize: 40
             anchors.left:goBack.right
             anchors.verticalCenter: parent.verticalCenter
 
@@ -335,7 +335,7 @@ Item {
                 Text{
                     width:40
                     color:"#9AABC2"
-                    font.pixelSize: fontSize
+                    font.pixelSize: 40
                     anchors.left:goBack.right
                     anchors.verticalCenter: parent.verticalCenter
                     text:"密码"
@@ -344,7 +344,7 @@ Item {
                     id:wifiName
                     width:300
                     color:"#9AABC2"
-                    font.pixelSize: fontSize
+                    font.pixelSize: 40
                     elide: Text.ElideRight
 
                     anchors.centerIn: parent

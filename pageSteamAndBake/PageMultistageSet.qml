@@ -36,7 +36,7 @@ Item {
         Text{
             width:50
             color:"#9AABC2"
-            font.pixelSize: fontSize
+            font.pixelSize: 40
             anchors.left:goBack.right
             anchors.verticalCenter: parent.verticalCenter
             text: qsTr("多段")
@@ -51,7 +51,7 @@ Item {
             }
             Text{
                 color:"#ECF4FC"
-                font.pixelSize: fontSize
+                font.pixelSize: 40
                 anchors.centerIn:parent
                 text: qsTr("启动")
             }

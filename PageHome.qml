@@ -2,15 +2,17 @@ import QtQuick 2.2
 import QtQuick.Controls 2.2
 import QmlWifi 1.0
 Item {
-    //判断儿童锁(true表示锁定，false表示未锁定)
-    property bool childLock:false
-
     property int childLockPressCount:0
 
-    visible: true
-    //    width: parent.width
-    //    height: parent.height
     //    anchors.fill: parent
+
+    Connections { // 将目标对象信号与槽函数进行连接
+        target: QmlDevState
+        onNameChanged: { // 处理目标对象信号的槽函数
+
+        }
+    }
+
     Component.onCompleted: {
         console.log("page home onCompleted")
         if(systemSettings.wifiSwitch){
@@ -75,6 +77,7 @@ Item {
             width:parent.width
 
             interactive:true //是否可以滑动
+
             anchors.top:parent.top
             anchors.bottom: indicator.top
             anchors.bottomMargin: 10
@@ -84,11 +87,54 @@ Item {
             Item {
                 PageHomeSecond{}
             }
-//            Item {
-//                PageHomeThird{}
-//            }
+            Item {
+                PageHomeThird{}
+            }
         }
 
+        Button{
+            id:preBtn
+            width:60
+            height:swipeview.height
+            anchors.left:parent.left
+
+            background:Rectangle{
+                color:"transparent"
+            }
+            Image{
+                anchors.centerIn: parent
+                source: "/images/main_menu/zuohua.png"
+                opacity: swipeview.currentIndex===0?0:1
+            }
+            onClicked:{
+                console.log('preBtn',swipeview.currentIndex);
+                if(swipeview.currentIndex>0){
+                    swipeview.currentIndex-=1
+                }
+            }
+        }
+
+        Button{
+            id:nextBtn
+            width:60
+            height:swipeview.height
+            anchors.right:parent.right
+
+            background:Rectangle{
+                color:"transparent"
+            }
+            Image{
+                anchors.centerIn: parent
+                source: "/images/main_menu/youhua.png"
+                opacity: swipeview.currentIndex===(swipeview.count-1)?0:1
+            }
+            onClicked:{
+                console.log('nextBtn',swipeview.currentIndex);
+                if(swipeview.currentIndex < swipeview.count){
+                    swipeview.currentIndex+=1
+                }
+            }
+        }
         PageIndicator {
             id:indicator
             count: swipeview.count
@@ -110,6 +156,9 @@ Item {
         width:parent.width
         anchors.bottom: parent.bottom
         height:96
+        background:Rectangle{
+            color:"#000"
+        }
         Image {
             anchors.fill: parent
             source: "images/main_menu/zhuangtai_bj.png"
@@ -117,63 +166,20 @@ Item {
         //wifi图标
         TabButton {
             id:wifi
-            width:130
+            width:200
             height:parent.height
             anchors.left:parent.left
-            anchors.verticalCenter: parent.verticalCenter
+
+            background: Rectangle {
+                opacity: 0
+            }
             Image{
                 id:wifi_icon
                 anchors.centerIn: parent
                 source: "images/wifi/wifi.png"
             }
-            background: Rectangle {
-                opacity: 0
-            }
             onClicked: {
-                console.log("TabButton wifi")
                 load_page("pageWifi")
-            }
-        }
-
-        //时间展示
-        Text{
-            id:currentTime
-            anchors.horizontalCenter:parent.horizontalCenter
-            anchors.verticalCenter: parent.verticalCenter
-            font.pixelSize: fontSize
-            color:"#9BABC2"
-            text:getCurtime()
-
-            //时间Timer
-            Timer {
-                interval: 30000
-                running: true
-                repeat: true
-                onTriggered: {
-                    currentTime.text = getCurtime()//此处即是让时间显示到文本中去
-                }
-            }
-        }
-
-        //水箱问题
-        Rectangle{
-            id:waterTank
-            width:80
-            height:parent.height
-            anchors.right:childLockBtn.left
-            color:"transparent"
-            visible: true
-
-            Image{
-                anchors.centerIn: parent
-                source: "images/main_menu/queshuitubiao.png"
-            }
-
-            MouseArea{
-                anchors.fill: parent
-                onClicked: {
-                    console.log("click waterTank")
-                }
             }
         }
 
@@ -181,20 +187,27 @@ Item {
         TabButton{
 
             id:childLockBtn
-            width:105
+            width:200
             height:parent.height
             anchors.right:parent.right
+
             background:Rectangle{
                 color:"transparent"
-                Image{
-                    anchors.right:parent.right
-                    anchors.rightMargin: 50
-                    anchors.verticalCenter: parent.verticalCenter
-                    source: childLock ?"images/main_menu/tongsuokai_sz.png" : "images/main_menu/tongsuokai.png"
-                }
-
             }
-
+            Image{
+                id:tongsuoImg
+                anchors.left:parent.left
+                anchors.verticalCenter: parent.verticalCenter
+                source: systemSettings.childLock ?"images/main_menu/tongsuokai_sz.png" : "images/main_menu/tongsuokai.png"
+            }
+            Text{
+                anchors.left:tongsuoImg.right
+                anchors.leftMargin: 20
+                color:"#fff"
+                text:QmlDevState.state.HoodSpeed//qsTr("童锁")
+                font.pixelSize:30
+                anchors.verticalCenter: parent.verticalCenter
+            }
             Timer {
                 id: longPressTimer
                 interval: 1000
@@ -209,7 +222,7 @@ Item {
 
             onPressedChanged: {
                 if (pressed) {
-                    if(childLock == false)
+                    if(systemSettings.childLock == false)
                     {
                         childLockPressCount = 0
                         longPressTimer.running = true
@@ -217,7 +230,7 @@ Item {
                 }
                 else
                 {
-                    if(childLock == false)
+                    if(systemSettings.childLock == false)
                     {
                         longPressTimer.running = false
                         if(childLockPressCount < 2){
@@ -226,14 +239,16 @@ Item {
                         else
                         {
                             longPressTimer.running = false
-                            childLock=true
+                            systemSettings.childLock=true
                             console.log("童锁键启用")
+//                            QmlDevState.setUartData("HoodSpeed",150)
+//                            QmlDevState.sendUartData()
                         }
                     }
                     else
                     {
                         console.log("取消童锁")
-                        childLock=false
+                        systemSettings.childLock=false
                     }
                 }
             }

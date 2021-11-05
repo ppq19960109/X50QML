@@ -16,6 +16,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         QmlWifi.cpp \
         main.cpp \
+        qmldevstate.cpp \
         rkwifi.cpp
 
 RESOURCES += qml.qrc
@@ -41,5 +42,6 @@ LIBS += -lDeviceIo -lasound
 
 HEADERS += \
     QmlWifi.h \
+    qmldevstate.h \
     rkwifi.h
 

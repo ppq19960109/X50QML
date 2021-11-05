@@ -12,15 +12,18 @@ Item {
 
     Component {
         id: rectDelegate;
+
         Item  {
+            property int textFont:PathView.isCurrentItem ? 50 : 40
             width:root.width
             height:root.height/pathView.pathItemCount
             opacity: PathView.isCurrentItem ? 1 : 0.5
+
             Text {
                 id:rectDelegateText
                 anchors.centerIn: parent
                 color:'white'
-                font.pixelSize: 30
+                font.pixelSize: textFont
                 text: modelData;
             }
         }

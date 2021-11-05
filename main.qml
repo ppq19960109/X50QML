@@ -5,7 +5,6 @@ import Qt.labs.settings 1.0
 import "pageSteamAndBake"
 
 ApplicationWindow {
-    property  int  fontSize:40
 
     Settings {
         id: systemSettings
@@ -26,6 +25,9 @@ ApplicationWindow {
         property bool firstOpenGuide: true
 
         property bool wifiSwitch: true
+
+        //判断儿童锁(true表示锁定，false表示未锁定)
+        property bool childLock:false
     }
 
     id: window
@@ -100,7 +102,7 @@ ApplicationWindow {
             stackView.push(pageWifi);
             break;
         case "pageSteamBakeBase": //蒸烤设置页面
-            stackView.push(pageSteamBakeBase);
+            stackView.push({item:pageSteamBakeBase, properties:{color: "#123456"}});
             break;
         case "pageSteamBakeMultistage": //蒸烤设置页面
             stackView.push(pageSteamBakeMultistage);
