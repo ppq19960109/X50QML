@@ -91,5 +91,6 @@
         <file>images/bg/bg_setting_time_select.png</file>
         <file>images/icon_pwd_invisible.png</file>
         <file>images/icon_pwd_visible.png</file>
+        <file>PageSteamBakeRun.qml</file>
     </qresource>
 </RCC>

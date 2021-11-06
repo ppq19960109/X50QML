@@ -38,7 +38,7 @@ ApplicationWindow {
 
     StackView {
         id: stackView
-        initialItem: pageHome
+        initialItem: pageSteamBakeRun
         anchors.fill: parent
 
     }
@@ -59,7 +59,10 @@ ApplicationWindow {
         id: pageWifi
         PageWifi {}
     }
-
+    Component {
+        id: pageSteamBakeRun
+        PageSteamBakeRun {}
+    }
     Component {
         id: pageSteamBakeBase
         PageSteamBakeBase {}
