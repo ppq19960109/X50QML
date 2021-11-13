@@ -32,7 +32,7 @@ Item {
             }
 
             onClicked: {
-                load_page("pageSteamBakeBase","123")
+                load_page("pageSteamBakeBase",JSON.stringify({"device":0}))
             }
         }
         Button{
@@ -50,7 +50,9 @@ Item {
                 font.pixelSize:40
                 anchors.centerIn: parent
             }
-
+            onClicked: {
+                load_page("pageSteamBakeBase",JSON.stringify({"device":1}))
+            }
         }
     }
 }

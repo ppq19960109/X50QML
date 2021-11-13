@@ -3,7 +3,6 @@ import QtQuick.Controls 2.2
 import QmlWifi 1.0
 Item {
     property int childLockPressCount:0
-
     //    anchors.fill: parent
 
     Connections { // 将目标对象信号与槽函数进行连接
@@ -11,16 +10,41 @@ Item {
         onNameChanged: { // 处理目标对象信号的槽函数
 
         }
+        onStateChanged: { // 处理目标对象信号的槽函数
+            console.log("page home onStateChanged")
+            if(("StOvState"==name || "RightStOvState"==name))
+            {
+                if(value > 0)
+                {
+                    var ret=isExistView("pageSteamBakeRun")
+                    console.log(ret,typeof ret)
+                    if(ret===null)
+                    {
+                        load_page("pageSteamBakeRun")
+                    }
+                }
+                else
+                {
+                    if(QmlDevState.state.StOvState===0 && QmlDevState.state.RightStOvState===0)
+                    {
+                        backTopPage()
+                    }
+                }
+            }
+
+        }
     }
 
     Component.onCompleted: {
         console.log("page home onCompleted")
+
         if(systemSettings.wifiSwitch){
             qmlWifi.scanWiFi();
         }
     }
     StackView.onActivated:{
         console.log("page home onActivated")
+
         if(systemSettings.wifiSwitch){
             getWifiStatus()
         }
@@ -73,7 +97,7 @@ Item {
 
         SwipeView {
             id: swipeview
-            currentIndex:0
+            currentIndex:1
             width:parent.width
 
             interactive:true //是否可以滑动
@@ -196,17 +220,8 @@ Item {
             }
             Image{
                 id:tongsuoImg
-                anchors.left:parent.left
-                anchors.verticalCenter: parent.verticalCenter
+                anchors.centerIn: parent
                 source: systemSettings.childLock ?"images/main_menu/tongsuokai_sz.png" : "images/main_menu/tongsuokai.png"
-            }
-            Text{
-                anchors.left:tongsuoImg.right
-                anchors.leftMargin: 20
-                color:"#fff"
-                text:QmlDevState.state.HoodSpeed//qsTr("童锁")
-                font.pixelSize:30
-                anchors.verticalCenter: parent.verticalCenter
             }
             Timer {
                 id: longPressTimer
@@ -241,8 +256,8 @@ Item {
                             longPressTimer.running = false
                             systemSettings.childLock=true
                             console.log("童锁键启用")
-//                            QmlDevState.setUartData("HoodSpeed",150)
-//                            QmlDevState.sendUartData()
+                            //                            QmlDevState.setUartData("HoodSpeed",150)
+                            //                            QmlDevState.sendUartData()
                         }
                     }
                     else

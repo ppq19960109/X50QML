@@ -13,6 +13,7 @@ Item {
         if(systemSettings.wifiSwitch)
             getWifiList()
         VirtualKeyboardSettings.styleName = "retro"
+        console.log("PageWifi onCompleted",QmlWifi.WiFiEventConnected)
     }
 
     function getWifiList()

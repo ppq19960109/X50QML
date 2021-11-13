@@ -5,7 +5,8 @@ import Qt.labs.settings 1.0
 import "pageSteamAndBake"
 
 ApplicationWindow {
-
+    property var leftWorkModeArr:["左腔","经典蒸","快速蒸","热风烧烤","上下加热","立体热风","蒸汽烤","空气炸","保温烘干"]
+    property string rightWorkMode:"小腔速蒸"
     Settings {
         id: systemSettings
         category: "system"
@@ -38,7 +39,7 @@ ApplicationWindow {
 
     StackView {
         id: stackView
-        initialItem: pageSteamBakeRun
+        initialItem: pageHome
         anchors.fill: parent
 
     }
@@ -75,6 +76,29 @@ ApplicationWindow {
         id: pageMultistageSet
         PageMultistageSet {}
     }
+    Component {
+        id: pageSteamBakeReserve
+        PageSteamBakeReserve {}
+    }
+    Component {
+        id: pageSmartRecipes
+        PageSmartRecipes {}
+    }
+    Component {
+        id: pageCookDetails
+        PageCookDetails {}
+    }
+    Component {
+        id: pageCookHistory
+        PageCookHistory {}
+    }
+    function isExistView(pageName) {
+        console.log("isExistView:",pageName)
+        //        return stackView.currentItem.name===PageName
+        return stackView.find(function(item,index){
+            return item.name === pageName
+        })
+    }
 
     function backPrePage() {
         if(stackView.depth>0)
@@ -105,15 +129,31 @@ ApplicationWindow {
             stackView.push(pageWifi);
             break;
         case "pageSteamBakeBase": //蒸烤设置页面
-            stackView.push({item:pageSteamBakeBase, properties:{color: "#123456"}});
+            stackView.push(pageSteamBakeBase, {"state":args});
             break;
-        case "pageSteamBakeMultistage": //蒸烤设置页面
+        case "pageSteamBakeMultistage":
             stackView.push(pageSteamBakeMultistage);
             break;
-        case "pageMultistageSet": //蒸烤设置页面
+        case "pageMultistageSet":
             stackView.push(pageMultistageSet);
             break;
+        case "pageSteamBakeRun": //蒸烤页面
+            stackView.push(pageSteamBakeRun, {"state":args});
+            break;
+        case "pageSteamBakeReserve": //页面
+            stackView.push(pageSteamBakeReserve, {"state":args});
+            break;
+        case "pageSmartRecipes": //页面
+            stackView.push(pageSmartRecipes);
+            break;
+        case "pageCookDetails":
+            stackView.push(pageCookDetails, {"state":args});
+            break;
+        case "pageCookHistory":
+            stackView.push(pageCookHistory);
+            break;
         }
+
         console.log("stackView depth:"+stackView.depth)
     }
     //获取当前时间方法

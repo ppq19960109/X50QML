@@ -1,9 +1,12 @@
 import QtQuick 2.2
 import QtQuick.Controls 2.2
-
+import "../"
 Item {
-    property bool startButtonState: false
-
+    //    property string curDevice
+    property var leftModel:[{"modelData":"经典蒸","temp":100,"time":30},{"modelData":"快速蒸","temp":120,"time":20},{"modelData":"热风烧烤","temp":200,"time":60}
+        ,{"modelData":"上下加热","temp":180,"time":120},{"modelData":"立体热风","temp":180,"time":120},{"modelData":"蒸汽烤","temp":150,"time":60}
+        ,{"modelData":"空气炸","temp":220,"time":30},{"modelData":"保温烘干","temp":60,"time":30}]
+    property var rightModel:{"modelData":"便捷蒸","temp":100,"time":30}
     Component.onCompleted: {
         var i;
         var tempArray = new Array
@@ -16,7 +19,20 @@ Item {
             timeArray.push(i+"分钟");
         }
         timePathView.model=timeArray
-        console.log("mode",color)
+        console.log("state",state,typeof state)
+        var root=JSON.parse(state);
+        if(0===root.device)
+        {
+            name.text="左腔蒸烤"
+            for (let mod of leftModel) {
+                modeListModel.append(mod)
+            }
+        }
+        else
+        {
+            name.text="右腔速蒸"
+            modeListModel.append(rightModel)
+        }
     }
 
     ToolBar {
@@ -52,18 +68,58 @@ Item {
 
         Text{
             id:name
-            width:50
+            width:80
             color:"#9AABC2"
             font.pixelSize: 40
             anchors.left:goBack.right
             anchors.verticalCenter: parent.verticalCenter
-            text: qsTr("蒸箱")
+        }
+
+        //启动
+        TabButton{
+            id:startBtn
+            width:160
+            height:parent.height
+            anchors.right:reserve.left
+            background:Rectangle{
+                color:"transparent"
+            }
+            Text{
+                color:"#ECF4FC"
+                font.pixelSize: 40
+                anchors.centerIn:parent
+                text:qsTr("启动")
+            }
+            onClicked: {
+                console.log(modePathView.model.get(modePathView.currentIndex).modelData,tempPathView.model[tempPathView.currentIndex],timePathView.model[timePathView.currentIndex])
+
+                backPrePage()
+                if(name.text=="左腔蒸烤")
+                {
+                    QmlDevState.setState("StOvState",3)
+                    QmlDevState.setState("StOvMode",modePathView.currentIndex+1)
+
+                    QmlDevState.setState("StOvSetTemp",tempPathView.currentIndex+40)
+                    QmlDevState.setState("StOvSetTimer",timePathView.currentIndex+1)
+
+                    QmlDevState.setUartData("StOvState",[3,23])
+                    QmlDevState.sendUartData()
+                }
+                else
+                {
+                    QmlDevState.setState("RightStOvState",2)
+
+                    QmlDevState.setState("RightStOvSetTemp",tempPathView.currentIndex+40)
+                    QmlDevState.setState("RightStOvSetTimer",timePathView.currentIndex+1)
+                }
+            }
         }
         //预约
         TabButton{
+            id:reserve
             width:160
             height:parent.height
-            anchors.right:startBtn.left
+            anchors.right:parent.right
             anchors.rightMargin: 10
             background:Rectangle{
                 color:"transparent"
@@ -75,27 +131,17 @@ Item {
                 text:qsTr("预约")
             }
             onClicked: {
-
-            }
-        }
-        //启动
-        TabButton{
-            id:startBtn
-            width:160
-            height:parent.height
-            anchors.right:parent.right
-            background:Rectangle{
-                color:"transparent"
-            }
-            Text{
-                color:"#ECF4FC"
-                font.pixelSize: 40
-                anchors.centerIn:parent
-                text:startButtonState?qsTr("停止"):qsTr("启动")
-            }
-            onClicked: {
-                startButtonState=!startButtonState
-                console.log(modePathView.model.get(modePathView.currentIndex).modelData,tempPathView.model[tempPathView.currentIndex],timePathView.model[timePathView.currentIndex])
+                var list = [];
+                var param = {};
+                if(name.text=="左腔蒸烤")
+                    param.device=0
+                else
+                    param.device=1
+                param.mode=modePathView.currentIndex+1
+                param.temp=tempPathView.currentIndex+40
+                param.time=timePathView.currentIndex+1
+                list.push(param)
+                load_page("pageSteamBakeReserve",JSON.stringify(list))
             }
         }
     }
@@ -121,10 +167,6 @@ Item {
         }
         ListModel {
             id:modeListModel
-            ListElement {modelData:"经典蒸";temp:100;time:40;}
-            ListElement {modelData:"快速蒸";temp:110;time:30;}
-            ListElement {modelData:"热风烧烤";temp:120;time:20}
-            ListElement {modelData:"上下加热";temp:130;time:10}
         }
 
         Row {
@@ -142,9 +184,8 @@ Item {
                 onValueChanged: {
                     console.log(index,valueName)
                     console.log("model value:",model.get(index).modelData);
-                    tempPathView.currentIndex=model.get(index).temp;
-                    timePathView.currentIndex=model.get(index).time;
-
+                    tempPathView.currentIndex=model.get(index).temp-40;
+                    timePathView.currentIndex=model.get(index).time-1;
                 }
             }
             DataPathView {
@@ -153,7 +194,8 @@ Item {
                 height:parent.height
                 Component.onCompleted:{
                     //                            tempPathView.positionViewAtIndex(1, PathView.End)
-                    tempPathView.currentIndex=modePathView.model.get(modePathView.currentIndex).temp;
+                    tempPathView.currentIndex=modePathView.model.get(modePathView.currentIndex).temp-40;
+                    console.log("tempPathView",tempPathView.currentIndex)
                 }
             }
             DataPathView {
@@ -161,11 +203,11 @@ Item {
                 width: parent.width/3
                 height:parent.height
                 Component.onCompleted:{
-                    timePathView.currentIndex=modePathView.model.get(modePathView.currentIndex).time;
+                    timePathView.currentIndex=modePathView.model.get(modePathView.currentIndex).time-1;
+                    console.log("timePathView",tempPathView.currentIndex)
                 }
             }
         }
-
 
     }
 }

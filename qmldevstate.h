@@ -27,6 +27,7 @@ public:
     explicit QmlDevState(QObject *parent = nullptr);
     static QmlDevState* qmlDevState;
 
+
     void setName(const QString &name);
     QString getName() const;
 
@@ -35,8 +36,12 @@ public:
     //    static QmlDevState *qmlAttachedProperties(QObject *);
     Q_INVOKABLE static int uartStatusCb(const char* value,const int value_len);
     QByteArray uartData;
-    Q_INVOKABLE int setUartData(const QString& name,const int value);
+    Q_INVOKABLE int setUartData(const QString& name,QVariantList value);
     Q_INVOKABLE int sendUartData();
+    QVariantList recipe[6];
+    QVariantList history;
+    Q_INVOKABLE QVariantList getRecipe(const int index);
+    Q_INVOKABLE QVariantList getHistory();
 private:
 
     QString myName;

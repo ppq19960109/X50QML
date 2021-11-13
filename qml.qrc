@@ -92,5 +92,13 @@
         <file>images/icon_pwd_invisible.png</file>
         <file>images/icon_pwd_visible.png</file>
         <file>PageSteamBakeRun.qml</file>
+        <file>PageCirProgressBar.qml</file>
+        <file>PageCirWaveProgressBar.qml</file>
+        <file>PageCookDetails.qml</file>
+        <file>pageSteamAndBake/PageSteamBakeReserve.qml</file>
+        <file>PageSmartRecipes.qml</file>
+        <file>images/peitu01.png</file>
+        <file>PageCookHistory.qml</file>
+        <file>images/shanchu-icon.png</file>
     </qresource>
 </RCC>

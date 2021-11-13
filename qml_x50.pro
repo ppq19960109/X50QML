@@ -17,7 +17,7 @@ SOURCES += \
         QmlWifi.cpp \
         main.cpp \
         qmldevstate.cpp \
-        rkwifi.cpp
+        rkwifi.c
 
 RESOURCES += qml.qrc
 

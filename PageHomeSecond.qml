@@ -30,7 +30,7 @@ Item {
             }
 
             onClicked: {
-                //            load_page("pageSetupCookBook")
+                 load_page("pageSmartRecipes")
             }
         }
 
@@ -45,14 +45,14 @@ Item {
             }
 
             Text{
-                text:"我的收藏"
+                text:"烹饪历史"
                 color:"#000"
                 font.pixelSize: 40
                 anchors.centerIn: parent
             }
 
             onClicked: {
-                //                load_page("pageMyCookRecord")
+                load_page("pageCookHistory")
             }
         }
 
