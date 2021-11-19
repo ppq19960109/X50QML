@@ -39,6 +39,8 @@ Item {
             workState:QmlDevState.state.StOvState
             workTime:workState==PageSteamBakeRun.WORKSTATE.WORKSTATE_FINISH?"返回":QmlDevState.state.StOvSetTimer+"分钟"
             workTemp:workState==0?qsTr("左腔烹饪"):qsTr(QmlDevState.state.StOvSetTemp+"℃")
+            multCount:QmlDevState.state.cnt
+            multCur:QmlDevState.state.current
             MouseArea{
                 anchors.fill: parent
                 propagateComposedEvents: true
@@ -80,9 +82,9 @@ Item {
             workMode:workState==0?qsTr("右腔"):rightWorkMode
             canvasDiameter:250
             percent:slider.value
-            workState:QmlDevState.state.RightStOvState
-            workTime:workState==PageSteamBakeRun.WORKSTATE.WORKSTATE_FINISH?"返回":QmlDevState.state.StOvSetTimer+"分钟"
-            workTemp:workState==0?qsTr("右腔烹饪"):qsTr(QmlDevState.state.RightStOvSetTemp+"℃")
+            workState:QmlDevState.state.RStOvState
+            workTime:workState==PageSteamBakeRun.WORKSTATE.WORKSTATE_FINISH?"返回":QmlDevState.state.RStOvSetTimer+"分钟"
+            workTemp:workState==0?qsTr("右腔烹饪"):qsTr(QmlDevState.state.RStOvSetTemp+"℃")
             MouseArea{
                 anchors.fill: parent
                 propagateComposedEvents: true

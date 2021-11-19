@@ -6,13 +6,11 @@
 #include <QByteArray>
 #include <QMap>
 #include <QtQml>
-
-struct QDevAttr
-{
-    QString name;
-    unsigned char uartByteLen;
-    //    unsigned int value;
-};
+#include<QtAlgorithms>
+#include<algorithm>
+using namespace std;
+#define MAX_HISTORY (40)
+#define MAX_COLLECT (4)
 
 class QmlDevState : public QObject
 {
@@ -34,19 +32,23 @@ public:
     Q_INVOKABLE  void setState(const QString& name,const QVariant value);
     QVariantMap getState() const;
     //    static QmlDevState *qmlAttachedProperties(QObject *);
-    Q_INVOKABLE static int uartStatusCb(const char* value,const int value_len);
-    QByteArray uartData;
-    Q_INVOKABLE int setUartData(const QString& name,QVariantList value);
+
     Q_INVOKABLE int sendUartData();
     QVariantList recipe[6];
     QVariantList history;
     Q_INVOKABLE QVariantList getRecipe(const int index);
     Q_INVOKABLE QVariantList getHistory();
+    Q_INVOKABLE int setSingleHistory(QVariantMap single);
+    Q_INVOKABLE int addSingleHistory(QVariantMap single);
+    Q_INVOKABLE int lastHistory(bool collect);
+    Q_INVOKABLE int getHistoryCount();
+    Q_INVOKABLE void clearHistory();
+    Q_INVOKABLE int removeHistory(int index);
+    Q_INVOKABLE int setCollect(int index,bool collect);
 private:
 
     QString myName;
     QVariantMap stateMap;
-    static QMap<int,QDevAttr> attrMap;
 signals:
     void nameChanged(const QString name);
     void stateChanged(const QString& name,const QVariant value);

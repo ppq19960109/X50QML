@@ -3,7 +3,7 @@ import QtQuick.Controls 2.2
 
 Item {
     //点击增加状态
-    property int listClickIndex:-1
+    property int listClickIndex:0
     ToolBar {
         id:topBar
         width:parent.width
@@ -39,13 +39,13 @@ Item {
             font.pixelSize: 40
             anchors.left:goBack.right
             anchors.verticalCenter: parent.verticalCenter
-            text: qsTr("多段")
+            text: qsTr("多段烹饪")
         }
 
         TabButton{
             width:160
             height:parent.height
-            anchors.right:parent.right
+            anchors.right:reserve.left
             background:Rectangle{
                 color:"transparent"
             }
@@ -56,7 +56,61 @@ Item {
                 text: qsTr("启动")
             }
             onClicked: {
+                QmlDevState.setState("StOvState",3)
+                QmlDevState.setState("StOvMode",listView.model.get(0).mode)
 
+                QmlDevState.setState("StOvSetTemp",listView.model.get(0).temp)
+                QmlDevState.setState("StOvSetTimer",listView.model.get(0).time)
+
+                QmlDevState.setState("cnt",phoneModel.count)
+                QmlDevState.setState("current",0)
+
+                var list = [];
+                for(let i = 0; i < phoneModel.count; ++i)
+                {
+                    var steps={}
+                    steps.device=0
+                    steps.mode=phoneModel.get(i).mode
+                    steps.temp=phoneModel.get(i).temp
+                    steps.time=phoneModel.get(i).time
+                    list.push(steps)
+                }
+                var para =getDefHistory()
+                para.dishName=getDishName(list)
+                para.cookSteps=JSON.stringify(list)
+
+                QmlDevState.addSingleHistory(para)
+            }
+        }
+
+        //预约
+        TabButton{
+            id:reserve
+            width:160
+            height:parent.height
+            anchors.right:parent.right
+            anchors.rightMargin: 10
+            background:Rectangle{
+                color:"transparent"
+            }
+            Text{
+                color:"#ECF4FC"
+                font.pixelSize: 40
+                anchors.centerIn:parent
+                text:qsTr("预约")
+            }
+            onClicked: {
+                var list = [];
+                for(let i = 0; i < phoneModel.count; ++i)
+                {
+                    var steps={}
+                    steps.device=0
+                    steps.mode=phoneModel.get(i).mode
+                    steps.temp=phoneModel.get(i).temp
+                    steps.time=phoneModel.get(i).time
+                    list.push(steps)
+                }
+                load_page("pageSteamBakeReserve",JSON.stringify(list))
             }
         }
     }
@@ -87,9 +141,9 @@ Item {
                     }
                 }
                 onClicked:{
-
+                    listClickIndex=listView.count
                     showTanchang()
-                    listClickIndex=-1
+
                 }
             }
         }
@@ -98,12 +152,12 @@ Item {
         id: phoneModel
 
         ListElement {
-            cookMode: "普通蒸"
+            mode: 4
             temp: 75
             time:30
         }
         ListElement {
-            cookMode: "鲜嫩蒸"
+            mode: 3
             temp: 55
             time:40
         }
@@ -140,87 +194,80 @@ Item {
                     listView.model.remove(index)
                 }
             }
-            Button{
-                id:soparam
-                width:60
-                height:parent.height
-                anchors.right:close.left
+            Button {
+                height: parent.height
+                anchors.left: parent.left
+                anchors.right: close.left
+                anchors.verticalCenter: parent.verticalCenter
                 background: Rectangle{
                     color:"transparent"
-                    Image{
-                        source: "/images/bianji.png"
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        anchors.verticalCenter: parent.verticalCenter
-                    }
+                }
+                Text {
+                    id: indexText
+                    anchors.left: parent.left
+                    anchors.leftMargin: 48
+                    anchors.verticalCenter: parent.verticalCenter
+                    color:"#9AABC2"
+                    font.pixelSize: 32
+                    text:index+1
                 }
 
+                Text{
+                    id:modeText
+                    anchors.left: indexText.right
+                    anchors.leftMargin: 62
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    text: leftWorkModeArr[mode]
+                    color: "#ECF4FC"
+                    font.pixelSize: 40
+                }
+
+                Text{
+                    id:tempText
+                    anchors.left: modeText.right
+                    anchors.leftMargin:62
+                    anchors.verticalCenter: parent.verticalCenter
+                    text: temp
+                    color: "#ECF4FC"
+                    font.pixelSize: 40
+                }
+
+                Text{
+                    id:tempImage
+                    anchors.left: tempText.right
+                    anchors.leftMargin:6
+                    text:"℃"
+                    anchors.verticalCenter: parent.verticalCenter
+                    color: "#ECF4FC"
+                    font.pixelSize: 36
+
+                }
+
+                Text{
+                    id:timeText
+                    anchors.left: tempImage.right
+                    anchors.leftMargin: 62
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    text: time
+                    color: "#ECF4FC"
+                    font.pixelSize: 40
+                }
+
+                Text{
+                    id:timeImage
+                    anchors.left: timeText.right
+                    anchors.leftMargin:6
+                    color: "#ECF4FC"
+                    text:"分钟"
+                    font.pixelSize: 30
+                    anchors.verticalCenter: parent.verticalCenter
+                }
                 onClicked: {
                     listClickIndex=index
                     showTanchang()
                 }
-            }
-
-            Text {
-                id: interText
-                anchors.left: parent.left
-                anchors.leftMargin: 48
-                anchors.verticalCenter: parent.verticalCenter
-                color:"#9AABC2"
-                font.pixelSize: 32
-                text:'第'+ (index===0?'一':index===1?'二':'三')+'步'
-            }
-
-            Text{
-                id:modeId
-                anchors.left: interText.right
-                anchors.leftMargin: 62
-                anchors.verticalCenter: parent.verticalCenter
-
-                text: cookMode
-                color: "#ECF4FC"
-                font.pixelSize: 40
-            }
-
-            Text{
-                id:temp1
-                anchors.left: modeId.right
-                anchors.leftMargin:62
-                anchors.verticalCenter: parent.verticalCenter
-                text: temp
-                color: "#ECF4FC"
-                font.pixelSize: 40
-            }
-
-            Text{
-                id:tempImage
-                anchors.left: temp1.right
-                anchors.leftMargin:6
-                text:"℃"
-                anchors.verticalCenter: parent.verticalCenter
-                color: "#ECF4FC"
-                font.pixelSize: 36
-
-            }
-
-            Text{
-                id:time1
-                anchors.left: tempImage.right
-                anchors.leftMargin: 62
-                anchors.verticalCenter: parent.verticalCenter
-
-                text: time
-                color: "#ECF4FC"
-                font.pixelSize: 40
-            }
-
-            Text{
-                id:timeImage
-                anchors.left: time1.right
-                anchors.leftMargin:6
-                color: "#ECF4FC"
-                text:"分钟"
-                font.pixelSize: 30
-                anchors.verticalCenter: parent.verticalCenter
             }
         }
     }
@@ -245,9 +292,9 @@ Item {
 
             footer: footerView
             focus: true
-//            highlightRangeMode: ListView.StrictlyEnforceRange
-//            highlightFollowsCurrentItem: true
-//            snapMode: ListView.SnapToItem
+            //            highlightRangeMode: ListView.StrictlyEnforceRange
+            //            highlightFollowsCurrentItem: true
+            //            snapMode: ListView.SnapToItem
 
             // 连接信号槽
             Component.onCompleted: {
@@ -264,6 +311,7 @@ Item {
     }
     function showTanchang(){
         loader_tanchuang.sourceComponent = component_tanchuang
+        loader_tanchuang.item.title= '第'+ (listClickIndex+1) +'段'
     }
     function dismissTanchang(){
         loader_tanchuang.sourceComponent = null
@@ -275,14 +323,14 @@ Item {
         Connections {
             target: loader_tanchuang.item
             onShowListData:{
-                console.log("onShowListData",listData.cookMode,listData.temp,listData.time,listView.count);
+                console.log("onShowListData",listData.mode,listData.temp,listData.time,listView.count);
 
-                if(listClickIndex<0){
+                if(listClickIndex >= listView.count){
                     listView.model.append(listData);
                 }else{
                     console.log("onShowListData listClickIndex",listClickIndex)
 
-                    listView.model.get(listClickIndex).cookMode=listData.cookMode;
+                    listView.model.get(listClickIndex).mode=listData.mode;
                     listView.model.get(listClickIndex).temp=listData.temp;
                     listView.model.get(listClickIndex).time=listData.time;
                 }

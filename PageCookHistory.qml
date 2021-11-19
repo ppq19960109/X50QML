@@ -15,6 +15,21 @@ Item {
             listModel.append(recipe[i])
         }
     }
+    function getCurHistory(index)
+    {
+        var param = {};
+        param.id=listModel.get(index).id
+        param.dishCook=listModel.get(index).dishCook
+        param.dishName=listModel.get(index).dishName
+        param.dishCookTime=listModel.get(index).dishCookTime
+        param.imgSource=listModel.get(index).imgSource
+        param.details=listModel.get(index).details
+        param.cookSteps=listModel.get(index).cookSteps
+        param.collection=listModel.get(index).collection
+        param.time=listModel.get(index).time
+        return param
+    }
+
     ToolBar {
         id:topBar
         width:parent.width
@@ -90,7 +105,6 @@ Item {
                 text:qsTr("详情")
             }
             onClicked: {
-                console.log("详情",listModel.get(recipe.currentIndex).run)
                 var param = {};
                 param.dishName=listModel.get(recipe.currentIndex).dishName
                 param.dishCookTime=listModel.get(recipe.currentIndex).dishCookTime
@@ -181,7 +195,7 @@ Item {
                     Text{
                         anchors.centerIn: parent
                         visible: edit==false
-                        text: collection==0?"收藏":"已收藏"
+                        text: collection==false?"收藏":"已收藏"
                         font.pixelSize: 40
 
                         horizontalAlignment:Text.AlignHCenter
@@ -191,11 +205,18 @@ Item {
                     onClicked: {
                         if(edit)
                         {
-
+                            if(QmlDevState.removeHistory(index)==0)
+                            {
+                               listModel.remove(index)
+                            }
                         }
                         else
                         {
-
+                            var val=!collection
+                            if(QmlDevState.setCollect(index,val)==0)
+                            {
+                               listModel.get(index).collection=val
+                            }
                         }
                     }
                 }

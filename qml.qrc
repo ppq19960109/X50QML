@@ -100,5 +100,7 @@
         <file>images/peitu01.png</file>
         <file>PageCookHistory.qml</file>
         <file>images/shanchu-icon.png</file>
+        <file>PageCloseHeat.qml</file>
+        <file>PageSet.qml</file>
     </qresource>
 </RCC>

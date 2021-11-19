@@ -31,7 +31,7 @@ Item {
             }
 
             onClicked: {
-
+                load_page("pageCloseHeat")
             }
         }
 

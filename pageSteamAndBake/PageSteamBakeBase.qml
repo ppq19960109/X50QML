@@ -2,11 +2,8 @@ import QtQuick 2.2
 import QtQuick.Controls 2.2
 import "../"
 Item {
-    //    property string curDevice
-    property var leftModel:[{"modelData":"经典蒸","temp":100,"time":30},{"modelData":"快速蒸","temp":120,"time":20},{"modelData":"热风烧烤","temp":200,"time":60}
-        ,{"modelData":"上下加热","temp":180,"time":120},{"modelData":"立体热风","temp":180,"time":120},{"modelData":"蒸汽烤","temp":150,"time":60}
-        ,{"modelData":"空气炸","temp":220,"time":30},{"modelData":"保温烘干","temp":60,"time":30}]
-    property var rightModel:{"modelData":"便捷蒸","temp":100,"time":30}
+    property var root
+
     Component.onCompleted: {
         var i;
         var tempArray = new Array
@@ -20,7 +17,7 @@ Item {
         }
         timePathView.model=timeArray
         console.log("state",state,typeof state)
-        var root=JSON.parse(state);
+        root=JSON.parse(state);
         if(0===root.device)
         {
             name.text="左腔蒸烤"
@@ -94,7 +91,8 @@ Item {
                 console.log(modePathView.model.get(modePathView.currentIndex).modelData,tempPathView.model[tempPathView.currentIndex],timePathView.model[timePathView.currentIndex])
 
                 backPrePage()
-                if(name.text=="左腔蒸烤")
+
+                if(0===root.device)
                 {
                     QmlDevState.setState("StOvState",3)
                     QmlDevState.setState("StOvMode",modePathView.currentIndex+1)
@@ -102,16 +100,27 @@ Item {
                     QmlDevState.setState("StOvSetTemp",tempPathView.currentIndex+40)
                     QmlDevState.setState("StOvSetTimer",timePathView.currentIndex+1)
 
-                    QmlDevState.setUartData("StOvState",[3,23])
-                    QmlDevState.sendUartData()
                 }
                 else
                 {
-                    QmlDevState.setState("RightStOvState",2)
+                    QmlDevState.setState("RStOvState",2)
 
-                    QmlDevState.setState("RightStOvSetTemp",tempPathView.currentIndex+40)
-                    QmlDevState.setState("RightStOvSetTimer",timePathView.currentIndex+1)
+                    QmlDevState.setState("RStOvSetTemp",tempPathView.currentIndex+40)
+                    QmlDevState.setState("RStOvSetTimer",timePathView.currentIndex+1)
                 }
+                var list = [];
+                var steps={}
+                steps.device=root.device
+                steps.mode=modePathView.currentIndex+1
+                steps.temp=tempPathView.currentIndex+40
+                steps.time=timePathView.currentIndex+1
+                list.push(steps)
+
+                var para =getDefHistory()
+                para.dishName=getDishName(list)
+                para.cookSteps=JSON.stringify(list)
+
+                QmlDevState.addSingleHistory(para)
             }
         }
         //预约
@@ -133,10 +142,7 @@ Item {
             onClicked: {
                 var list = [];
                 var param = {};
-                if(name.text=="左腔蒸烤")
-                    param.device=0
-                else
-                    param.device=1
+                    param.device=root.device
                 param.mode=modePathView.currentIndex+1
                 param.temp=tempPathView.currentIndex+40
                 param.time=timePathView.currentIndex+1

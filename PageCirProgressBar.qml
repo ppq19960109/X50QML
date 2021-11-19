@@ -12,6 +12,8 @@ Item {
     property int workState
     property alias workTime:time.text
     property alias workTemp:temp.text
+    property alias multCount:indicator.count
+    property alias multCur:indicator.currentIndex
     Text{
         id:mode
         color:"white"
@@ -141,6 +143,21 @@ Item {
             verticalAlignment :Text.AlignHCenter
             //            text: workTemp
         }
+        PageIndicator {
+            id:indicator
+            visible: count != 0
+            count: 0
+            currentIndex: 0
+            anchors.top: temp.bottom
+            anchors.horizontalCenter: parent.horizontalCenter
+            interactive: true
+//            delegate: Image {
+
+//                source:index===swipeview.currentIndex
+//                       ?"images/main_menu/user_active"+index+".png":"images/main_menu/user_normal"+index+".png"
+//                anchors.verticalCenter:parent.verticalCenter
+//            }
+        }
     }
     Button{
         visible: workState != PageSteamBakeRun.WORKSTATE.WORKSTATE_STOP
@@ -165,7 +182,7 @@ Item {
             }
             else
             {
-                QmlDevState.setState("RightStOvState",PageSteamBakeRun.WORKSTATE.WORKSTATE_STOP)
+                QmlDevState.setState("RStOvState",PageSteamBakeRun.WORKSTATE.WORKSTATE_STOP)
             }
         }
     }
@@ -192,8 +209,10 @@ Item {
             }
             else
             {
-                QmlDevState.setState("RightStOvState",PageSteamBakeRun.WORKSTATE.WORKSTATE_PAUSE)
+                QmlDevState.setState("RStOvState",PageSteamBakeRun.WORKSTATE.WORKSTATE_PAUSE)
             }
         }
     }
+
+
 }

@@ -1,6 +1,6 @@
 import QtQuick 2.0
 import QtQuick.Controls 2.2
-import "../"
+import "pageSteamAndBake"
 Item {
     property var root
     Component.onCompleted: {
@@ -16,11 +16,6 @@ Item {
         }
         minutePathView.model=minuteArray
 
-        console.log("state",state,typeof state)
-        root=JSON.parse(state);
-        console.log("root",root.length)
-
-        reserveData.text=getDishName(root)
     }
     ToolBar {
         id:topBar
@@ -61,18 +56,7 @@ Item {
             font.pixelSize: 40
             anchors.left:goBack.right
             anchors.verticalCenter: parent.verticalCenter
-            text:qsTr("预约")
-        }
-
-        Text{
-            id:reserveData
-            width:200
-            //            height:parent.height
-            color:"#9AABC2"
-            font.pixelSize: 40
-            anchors.left:pageName.right
-            anchors.verticalCenter: parent.verticalCenter
-
+            text:qsTr("定时关火")
         }
 
         //启动
@@ -93,45 +77,7 @@ Item {
             onClicked: {
                 console.log("startBtn",hourPathView.model[hourPathView.currentIndex],minutePathView.model[minutePathView.currentIndex])
 
-                for(let i = 0; i < root.length; i++)
-                {
-                    console.log(root[i].mode,root[i].temp,root[i].time)
-                    if(root.length===1)
-                    {
-                        if(0===root[i].device)
-                        {
-                            QmlDevState.setState("StOvState",1)
-                            QmlDevState.setState("StOvMode",root[i].mode)
-                            QmlDevState.setState("StOvSetTemp",root[i].temp)
-                            QmlDevState.setState("StOvSetTimer",root[i].time)
 
-                        }
-                        else
-                        {
-                            QmlDevState.setState("RStOvState",1)
-                            QmlDevState.setState("RStOvSetTemp",root[i].temp)
-                            QmlDevState.setState("RStOvSetTimer",root[i].time)
-
-                        }
-                    }
-                    else
-                    {
-                        if(0===root[i].device)
-                        {
-
-                        }
-                        else
-                        {
-
-                        }
-                    }
-                }
-
-                var para =getDefHistory()
-                para.dishName=getDishName(root)
-                para.cookSteps=JSON.stringify(root)
-
-                QmlDevState.addSingleHistory(para)
             }
         }
     }
@@ -162,6 +108,8 @@ Item {
             id:rowPathView
             width: parent.width
             height:parent.height
+            anchors.top:parent.top
+            anchors.bottom: prompt.top
             spacing: 10
 
             DataPathView {
@@ -188,8 +136,17 @@ Item {
                 color:"white"
                 font.pixelSize: 40
                 anchors.verticalCenter: parent.verticalCenter
-                text:qsTr("后启动")
+                text:qsTr("后定时关火")
             }
+        }
+        Text{
+            id:prompt
+//            width:120
+            anchors.bottom:parent.bottom
+            color:"white"
+            font.pixelSize: 30
+            anchors.horizontalCenter: parent.horizontalCenter
+            text:qsTr("右灶开启后才可定时关火")
         }
     }
 }

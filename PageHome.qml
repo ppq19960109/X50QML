@@ -12,7 +12,7 @@ Item {
         }
         onStateChanged: { // 处理目标对象信号的槽函数
             console.log("page home onStateChanged")
-            if(("StOvState"==name || "RightStOvState"==name))
+            if(("StOvState"==name || "RStOvState"==name))
             {
                 if(value > 0)
                 {
@@ -25,7 +25,7 @@ Item {
                 }
                 else
                 {
-                    if(QmlDevState.state.StOvState===0 && QmlDevState.state.RightStOvState===0)
+                    if(QmlDevState.state.StOvState===0 && QmlDevState.state.RStOvState===0)
                     {
                         backTopPage()
                     }
@@ -190,7 +190,7 @@ Item {
         //wifi图标
         TabButton {
             id:wifi
-            width:200
+            width:100
             height:parent.height
             anchors.left:parent.left
 
@@ -207,11 +207,39 @@ Item {
             }
         }
 
+        TabButton {
+            id:closeHeat
+            width:100
+            height:parent.height
+            anchors.right:childLockBtn.left
+            visible: true
+            background: Rectangle {
+                opacity: 0
+            }
+            Image{
+                anchors.right: time.left
+                anchors.rightMargin: 20
+                anchors.verticalCenter: parent.verticalCenter
+                source: "/images/main_menu/naozhong.png"
+            }
+            Text{
+                id:time
+                anchors.verticalCenter: parent.verticalCenter
+                color:"#fff"
+                text:Qt.formatTime(new Date( 2020,1, 1, 14, 15, 0),"hh:mm")//qsTr("01:12")
+                font.pixelSize:40
+                anchors.right: parent.right
+            }
+            onClicked: {
+                if(visible)
+                    load_page("pageCloseHeat")
+            }
+        }
         //童锁按钮
         TabButton{
 
             id:childLockBtn
-            width:200
+            width:100
             height:parent.height
             anchors.right:parent.right
 
