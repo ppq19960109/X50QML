@@ -97,7 +97,7 @@ Item {
 
         SwipeView {
             id: swipeview
-            currentIndex:1
+            currentIndex:2
             width:parent.width
 
             interactive:true //是否可以滑动
@@ -209,10 +209,10 @@ Item {
 
         TabButton {
             id:closeHeat
-            width:100
+            width:150
             height:parent.height
             anchors.right:childLockBtn.left
-            visible: true
+            visible: QmlDevState.state.RStoveTimingState==1
             background: Rectangle {
                 opacity: 0
             }
@@ -226,7 +226,7 @@ Item {
                 id:time
                 anchors.verticalCenter: parent.verticalCenter
                 color:"#fff"
-                text:Qt.formatTime(new Date( 2020,1, 1, 14, 15, 0),"hh:mm")//qsTr("01:12")
+                text:"0"+Math.floor(QmlDevState.state.RStoveTimingLeft/60)+":"+Math.floor(QmlDevState.state.RStoveTimingLeft%60/10)+(QmlDevState.state.RStoveTimingLeft%60%10)//qsTr("01:12")
                 font.pixelSize:40
                 anchors.right: parent.right
             }

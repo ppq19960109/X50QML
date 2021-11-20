@@ -24,14 +24,15 @@ int main(int argc, char *argv[])
     app.setOrganizationDomain("MarsOven.com"); //2
     app.setApplicationName("x5"); //3
 
-    int fontId = QFontDatabase::addApplicationFont("/oem/res/fonts/SourceHanSansCN-Regular.ttf");
+//    int fontId = QFontDatabase::addApplicationFont("/oem/res/fonts/SourceHanSansCN-Regular.ttf");
+        int fontId = QFontDatabase::addApplicationFont("simfang.ttf");
     QStringList fontFamilies = QFontDatabase::applicationFontFamilies(fontId);
     qDebug()<<"fontfamilies: "<<fontFamilies;
 
     qDebug()<<"FontsLocation"<<QStandardPaths::standardLocations(QStandardPaths::FontsLocation);
-//    QFont font;
-//    font.setFamily("FangSong");//设置全局字体
-//    app.setFont(font);
+    QFont font;
+    font.setFamily("FangSong");//设置全局字体
+    app.setFont(font);
     //中文支持
 
     QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF-8"));

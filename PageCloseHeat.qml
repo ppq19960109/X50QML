@@ -6,7 +6,7 @@ Item {
     Component.onCompleted: {
         var i
         var hourArray = new Array
-        for(i=0; i< 12; ++i) {
+        for(i=0; i< 3; ++i) {
             hourArray.push(i+"小时");
         }
         hourPathView.model=hourArray
@@ -77,7 +77,9 @@ Item {
             onClicked: {
                 console.log("startBtn",hourPathView.model[hourPathView.currentIndex],minutePathView.model[minutePathView.currentIndex])
 
-
+                QmlDevState.setState("RStoveTimingState",1)
+                QmlDevState.setState("RStoveTimingLeft",hourPathView.currentIndex*60+minutePathView.currentIndex)
+                backPrePage()
             }
         }
     }
@@ -118,8 +120,9 @@ Item {
                 height:parent.height
 
                 currentIndex:0
-                onValueChanged: {
-
+                Component.onCompleted:{
+                    if(QmlDevState.state.RStoveTimingState==1)
+                        currentIndex=Math.floor(QmlDevState.state.RStoveTimingLeft/60)
                 }
             }
             DataPathView {
@@ -128,7 +131,8 @@ Item {
                 height:parent.height
 
                 Component.onCompleted:{
-
+                    if(QmlDevState.state.RStoveTimingState==1)
+                        currentIndex=QmlDevState.state.RStoveTimingLeft%60
                 }
             }
             Text{
@@ -141,7 +145,7 @@ Item {
         }
         Text{
             id:prompt
-//            width:120
+            //            width:120
             anchors.bottom:parent.bottom
             color:"white"
             font.pixelSize: 30

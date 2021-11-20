@@ -24,6 +24,9 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     qmlDevState->setState("remind",false);
     qmlDevState->setState("RemindText","");
 
+    qmlDevState->setState("RStoveTimingState",0);
+    qmlDevState->setState("RStoveTimingLeft",110);
+
     QVariantMap info;
     info.insert("id", 0);
     info.insert("dishCook", 0);
@@ -190,7 +193,7 @@ void QmlDevState::clearHistory()
 int QmlDevState::removeHistory(int index)
 {
     history.removeAt(index);
-//    sort(history.begin(), history.end(), compareTime);
+    //    sort(history.begin(), history.end(), compareTime);
     return 0;
 }
 

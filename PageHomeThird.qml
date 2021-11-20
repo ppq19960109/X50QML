@@ -6,17 +6,17 @@ Item {
     width:parent.width
     height: parent.height
     //        anchors.fill: parent
-    RowLayout {
+    Row {
         anchors.fill: parent
         anchors.topMargin: 20
+        spacing: 20
         anchors.leftMargin: 50
         anchors.rightMargin: 50
 
         Button{
             id:timer
-            Layout.preferredWidth: 210
-            Layout.preferredHeight:parent.height
-            Layout.alignment: Qt.AlignHCenter
+            width: 210
+            height:parent.height
 
             background:Rectangle{
                 radius: 10
@@ -37,9 +37,8 @@ Item {
 
         Button{
             id:weather
-            Layout.preferredWidth: 210
-            Layout.preferredHeight:parent.height
-            Layout.alignment: Qt.AlignHCenter
+            width: 210
+            height:parent.height
             background:Rectangle{
                 radius: 10
                 color:"#fff"
@@ -52,7 +51,7 @@ Item {
             }
 
             onClicked: {
-
+                load_page("pageSet")
             }
         }
 

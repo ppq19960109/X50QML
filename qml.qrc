@@ -101,6 +101,15 @@
         <file>PageCookHistory.qml</file>
         <file>images/shanchu-icon.png</file>
         <file>PageCloseHeat.qml</file>
-        <file>PageSet.qml</file>
+        <file>pageSet/PageSet.qml</file>
+        <file>pageSet/PageLocalSettings.qml</file>
+        <file>pageSet/PageReset.qml</file>
+        <file>pageSet/PageSystemUpdate.qml</file>
+        <file>pageSet/PageAboutMachine.qml</file>
+        <file>pageSet/PageAfterGuide.qml</file>
+        <file>pageSet/PageSlider.qml</file>
+        <file>images/icon_setting_bright_max.png</file>
+        <file>images/icon_setting_bright_min.png</file>
+        <file>images/icon_mars_fans_club_logo.png</file>
     </qresource>
 </RCC>

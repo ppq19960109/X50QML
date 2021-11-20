@@ -3,7 +3,7 @@ import QtQuick.Controls 2.2
 import Qt.labs.settings 1.0
 
 import "pageSteamAndBake"
-
+import "pageSet"
 ApplicationWindow {
     property var leftWorkModeArr:["左腔","经典蒸","快速蒸","热风烧烤","上下加热","立体热风","蒸汽烤","空气炸","保温烘干"]
     property string rightWorkMode:"小腔速蒸"
@@ -145,6 +145,30 @@ ApplicationWindow {
         id: pageCloseHeat
         PageCloseHeat {}
     }
+    Component {
+        id: pageSet
+        PageSet {}
+    }
+    Component {
+        id: pageLocalSettings
+        PageLocalSettings {}
+    }
+    Component {
+        id: pageReset
+        PageReset {}
+    }
+    Component {
+        id: pageSystemUpdate
+        PageSystemUpdate {}
+    }
+    Component {
+        id: pageAboutMachine
+        PageAboutMachine {}
+    }
+    Component {
+        id: pageAfterGuide
+        PageAfterGuide {}
+    }
     function isExistView(pageName) {
         console.log("isExistView:",pageName)
         //        return stackView.currentItem.name===PageName
@@ -207,6 +231,24 @@ ApplicationWindow {
             break;
         case "pageCloseHeat":
             stackView.push(pageCloseHeat);
+            break;
+        case "pageSet":
+            stackView.push(pageSet);
+            break;
+        case "pageLocalSettings":
+            stackView.push(pageLocalSettings);
+            break;
+        case "pageReset":
+            stackView.push(pageReset);
+            break;
+        case "pageSystemUpdate":
+            stackView.push(pageSystemUpdate);
+            break;
+        case "pageAboutMachine":
+            stackView.push(pageAboutMachine);
+            break;
+        case "pageAfterGuide":
+            stackView.push(pageAfterGuide);
             break;
         }
 
