@@ -17,8 +17,8 @@ Item {
         }
         timePathView.model=timeArray
 
-        for (let mod of leftModel) {
-            modeListModel.append(mod)
+        for (i=0; i< leftModel.length; ++i) {
+            modeListModel.append(leftModel[i])
         }
     }
     ToolBar {

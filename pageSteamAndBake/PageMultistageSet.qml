@@ -66,7 +66,7 @@ Item {
                 QmlDevState.setState("current",0)
 
                 var list = [];
-                for(let i = 0; i < phoneModel.count; ++i)
+                for(var i = 0; i < phoneModel.count; ++i)
                 {
                     var steps={}
                     steps.device=0
@@ -101,7 +101,7 @@ Item {
             }
             onClicked: {
                 var list = [];
-                for(let i = 0; i < phoneModel.count; ++i)
+                for(var i = 0; i < phoneModel.count; ++i)
                 {
                     var steps={}
                     steps.device=0

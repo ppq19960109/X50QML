@@ -8,7 +8,7 @@ Item {
         var root=JSON.parse(state);
         recipeImg.source=root.imgSource
         dishName.text=root.dishName
-        cookTime.text="烹饪用时："+root.dishCookTime+"分钟"
+        cookTime.text="烹饪用时："+root.cookTime+"分钟"
         details.text=root.details
         console.log("cookSteps",root.cookSteps)
         cookSteps=JSON.parse(root.cookSteps)

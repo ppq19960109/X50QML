@@ -11,6 +11,7 @@ ApplicationWindow {
         ,{"modelData":"上下加热","temp":180,"time":120},{"modelData":"立体热风","temp":180,"time":120},{"modelData":"蒸汽烤","temp":150,"time":60}
         ,{"modelData":"空气炸","temp":220,"time":30},{"modelData":"保温烘干","temp":60,"time":30}]
     property var rightModel:{"modelData":"便捷蒸","temp":100,"time":30}
+    property var devWorkState:{"WORKSTATE_STOP":0,"WORKSTATE_RESERVE":1,"WORKSTATE_PREHEAT":2,"WORKSTATE_RUN":3,"WORKSTATE_FINISH":4,"WORKSTATE_PAUSE":5}
     Settings {
         id: systemSettings
         category: "system"
@@ -39,13 +40,13 @@ ApplicationWindow {
     {
         var param = {};
         param.id=0
-        param.dishCook=0
+        param.cookType=0
         param.dishName=""
-        param.dishCookTime=0
+        param.cookTime=0
         param.imgSource=""
         param.details=""
         param.cookSteps=""
-        param.collection=false
+        param.collect=false
         param.time=0
         return param
     }
@@ -53,10 +54,10 @@ ApplicationWindow {
     function getDishName(root)
     {
         var dishName=""
-        for(let i = 0; i < root.length; i++)
+        for(var i = 0; i < root.length; i++)
         {
             console.log(root[i].mode,root[i].temp,root[i].time,leftWorkModeArr[root[i].mode])
-//            console.log("getDishName dishName",root[i].dishName==null)
+            //            console.log("getDishName dishName",root[i].dishName==null)
             if(root[i].dishName!=null)
             {
                 console.log("dishName",root[i].dishName)
@@ -81,23 +82,45 @@ ApplicationWindow {
         return dishName
     }
     id: window
-    visible: true
     width: 800
     height: 480
-    title: qsTr("X5")
+    visible: true
 
     StackView {
         id: stackView
-        initialItem: pageHome
+        initialItem: pageTest
         anchors.fill: parent
 
     }
     Component {
-        id: pagepathview
-        DataPathView {
+        id: pageTest
+        Item {
+            SwipeView {
+                id: swipeview
+                anchors.fill: parent
+                currentIndex:0
 
-            width: 100
-            height:480
+                interactive:true //是否可以滑动
+
+                Item {Image{source: "/test/images/x5/方案一/1.png" }}
+                Item {Image{source: "/test/images/x5/方案一/2.png" }}
+                Item {Image{source: "/test/images/x5/方案一/3.png" }}
+                Item {Image{source: "/test/images/x5/方案一/4.png" }}
+                Item {Image{source: "/test/images/x5/方案一/5.png" }}
+
+                Item {Image{source: "/test/images/x5/方案二/A1.png" }}
+                Item {Image{source: "/test/images/x5/方案二/A2.png" }}
+                Item {Image{source: "/test/images/x5/方案二/A3.png" }}
+                Item {Image{source: "/test/images/x5/方案二/A4.png" }}
+
+                Item {Image{source: "/test/images/x5/方案三/B1.png" }}
+                Item {Image{source: "/test/images/x5/方案三/B2.png" }}
+                Item {Image{source: "/test/images/x5/方案三/B3.png" }}
+                Item {Image{source: "/test/images/x5/方案三/B4.png" }}
+
+                Item {Image{source: "/test/images/x5/方案四/C1.png" }}
+
+            }
         }
     }
     Component {

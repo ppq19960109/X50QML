@@ -24,8 +24,8 @@ int main(int argc, char *argv[])
     app.setOrganizationDomain("MarsOven.com"); //2
     app.setApplicationName("x5"); //3
 
-//    int fontId = QFontDatabase::addApplicationFont("/oem/res/fonts/SourceHanSansCN-Regular.ttf");
-        int fontId = QFontDatabase::addApplicationFont("simfang.ttf");
+    //    int fontId = QFontDatabase::addApplicationFont("/oem/res/fonts/SourceHanSansCN-Regular.ttf");
+    int fontId = QFontDatabase::addApplicationFont("simfang.ttf");
     QStringList fontFamilies = QFontDatabase::applicationFontFamilies(fontId);
     qDebug()<<"fontfamilies: "<<fontFamilies;
 
@@ -37,11 +37,11 @@ int main(int argc, char *argv[])
 
     QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF-8"));
 
-    QFontDatabase fdb;
-    QStringList fontList = fdb.families();
-    for(int i = 0; i < fontList.size(); i++){
-        qDebug() << "font name" << i << ": " << fontList.at(i);
-    }
+//    QFontDatabase fdb;
+//    QStringList fontList = fdb.families();
+//    for(int i = 0; i < fontList.size(); i++){
+//        qDebug() << "font name" << i << ": " << fontList.at(i);
+//    }
 
 
     QQmlApplicationEngine engine;

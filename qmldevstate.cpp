@@ -1,5 +1,7 @@
 #include "qmldevstate.h"
-
+//#include<QtAlgorithms>
+#include<algorithm>
+//using namespace std;
 
 QmlDevState* QmlDevState::qmlDevState;
 QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
@@ -29,27 +31,27 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
 
     QVariantMap info;
     info.insert("id", 0);
-    info.insert("dishCook", 0);
-    info.insert("dishCookTime", 120);
+    info.insert("cookType", 0);
+    info.insert("cookTime", 120);
     info.insert("dishName", "清蒸鱼");
     info.insert("imgSource", "/images/peitu01.png");
     info.insert("cookSteps", "[{\"device\":0,\"mode\":5,\"temp\":100,\"time\":90}]");
     info.insert("details", "食材：\n鸡蛋2个，蛤蜊50g，盐2g，油3滴葱花30g\n步骤：\n1、鱼片加入适量鸡蛋，料酒、升降、盐，醋、糖，搅拌均匀后加一点淀粉（淀粉加水）增加粘度\n2、鱼片加入适量鸡蛋，料酒、升降、盐，醋、糖，搅拌均匀后加一点淀粉（淀粉加水）增加粘度\n3、鱼片加入适量鸡蛋，料酒、升降、盐，醋、糖，搅拌均匀后加一点淀粉（淀粉加水）增加粘度");
-    info.insert("collection", false);
+    info.insert("collect", false);
     info.insert("time", 0);
 
     recipe[0].append(info);
-    info["dishCook"]=1;
+    info["cookType"]=1;
     info["dishName"]="烤鱼";
     recipe[0].append(info);
-    info["dishCook"]=2;
+    info["cookType"]=2;
     info["dishName"]="红烧鱼";
     recipe[0].append(info);
-    info["dishCook"]=1;
+    info["cookType"]=1;
     info["dishName"]="烤面包";
     recipe[0].append(info);
 
-    info["dishCook"]=0;
+    info["cookType"]=0;
     info["dishName"]="烤面包0";
     recipe[1].append(info);
 
@@ -69,12 +71,6 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     info["id"]=5;
     info["dishName"]="烤面包5";
     history.append(info);
-}
-
-
-int QmlDevState::sendUartData()
-{
-    qDebug() << "sendUartData:" ;
 }
 
 QVariantList QmlDevState::getRecipe(const int index)
@@ -122,7 +118,7 @@ int QmlDevState::setSingleHistory(QVariantMap single)
     {
         return -1;
     }
-    sort(history.begin(), history.end(), compareTime);
+    std::sort(history.begin(), history.end(), compareTime);
     return 0;
 }
 
@@ -138,7 +134,7 @@ int QmlDevState::addSingleHistory(QVariantMap single)
     }
     else
     {
-        sort(history.begin(), history.end(), compareId);
+        std::sort(history.begin(), history.end(), compareId);
         for ( i = 0; i < history.size(); ++i)
         {
             QVariantMap cur=history[i].toMap();
@@ -154,7 +150,7 @@ int QmlDevState::addSingleHistory(QVariantMap single)
         }
         history.append(single);
     }
-    sort(history.begin(), history.end(), compareTime);
+    std::sort(history.begin(), history.end(), compareTime);
     return 0;
 }
 
@@ -163,11 +159,12 @@ int QmlDevState::lastHistory(bool collect)
     for (int i = history.size() -1;i > 0; --i)
     {
         QVariantMap cur=history[i].toMap();
-        if(cur["collection"]==collect)
+        if(cur["collect"]==collect)
         {
             return i;
         }
     }
+    return -1;
 }
 
 int QmlDevState::getHistoryCount()
@@ -177,7 +174,7 @@ int QmlDevState::getHistoryCount()
     for (iter = history.begin(); iter != history.end(); ++iter)
     {
         QVariantMap cur=(*iter).toMap();
-        if(cur["collection"] == true)
+        if(cur["collect"] == true)
         {
             ++count;
         }
@@ -220,7 +217,7 @@ int QmlDevState::setCollect(int index, bool collect)
     }
 
     cur["time"]= QDateTime::currentDateTime().toSecsSinceEpoch();
-    cur["collection"]=collect;
+    cur["collect"]=collect;
     history[index]=cur;
     if(lastIndex < 0 || lastIndex==index)
     {
@@ -233,7 +230,7 @@ int QmlDevState::setCollect(int index, bool collect)
     }
 
     qDebug() << history[index];
-    sort(history.begin(), history.end(), compareTime);
+    std::sort(history.begin(), history.end(), compareTime);
     return 0;
 }
 
@@ -253,7 +250,7 @@ QString QmlDevState::getName() const
     return myName;
 }
 
-void QmlDevState::setState(const QString& name,const QVariant value)
+void QmlDevState::setState(QString name,QVariant value)
 {
     //    if(stateMap.contains(name))
     //    {

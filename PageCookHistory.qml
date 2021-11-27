@@ -11,7 +11,7 @@ Item {
     {
         listModel.clear();
         var recipe=QmlDevState.getHistory();
-        for(let i = 0; i < recipe.length; ++i) {
+        for(var i = 0; i < recipe.length; ++i) {
             listModel.append(recipe[i])
         }
     }
@@ -19,13 +19,13 @@ Item {
     {
         var param = {};
         param.id=listModel.get(index).id
-        param.dishCook=listModel.get(index).dishCook
+        param.cookType=listModel.get(index).cookType
         param.dishName=listModel.get(index).dishName
-        param.dishCookTime=listModel.get(index).dishCookTime
+        param.cookTime=listModel.get(index).cookTime
         param.imgSource=listModel.get(index).imgSource
         param.details=listModel.get(index).details
         param.cookSteps=listModel.get(index).cookSteps
-        param.collection=listModel.get(index).collection
+        param.collect=listModel.get(index).collect
         param.time=listModel.get(index).time
         return param
     }
@@ -107,7 +107,7 @@ Item {
             onClicked: {
                 var param = {};
                 param.dishName=listModel.get(recipe.currentIndex).dishName
-                param.dishCookTime=listModel.get(recipe.currentIndex).dishCookTime
+                param.cookTime=listModel.get(recipe.currentIndex).cookTime
                 param.imgSource=listModel.get(recipe.currentIndex).imgSource
                 param.details=listModel.get(recipe.currentIndex).details
                 param.cookSteps=listModel.get(recipe.currentIndex).cookSteps
@@ -154,7 +154,7 @@ Item {
                 Button {
                     height:parent.height
                     anchors.left:number.right
-                    anchors.right:collect.left
+                    anchors.right:collection.left
                     background: Rectangle{
                         color:"transparent"
                     }
@@ -180,7 +180,7 @@ Item {
                     }
                 }
                 Button {
-                    id:collect
+                    id:collection
                     width:150
                     height:parent.height
                     anchors.right: parent.right
@@ -195,12 +195,12 @@ Item {
                     Text{
                         anchors.centerIn: parent
                         visible: edit==false
-                        text: collection==false?"收藏":"已收藏"
+                        text: collect==false?"收藏":"已收藏"
                         font.pixelSize: 40
 
                         horizontalAlignment:Text.AlignHCenter
                         verticalAlignment:Text.AlignHCenter
-                        color:collection==0?"#fff":"orange"
+                        color:collect==0?"#fff":"orange"
                     }
                     onClicked: {
                         if(edit)
@@ -212,10 +212,10 @@ Item {
                         }
                         else
                         {
-                            var val=!collection
+                            var val=!collect
                             if(QmlDevState.setCollect(index,val)==0)
                             {
-                               listModel.get(index).collection=val
+                               listModel.get(index).collect=val
                             }
                         }
                     }

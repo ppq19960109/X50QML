@@ -35,7 +35,7 @@ Item {
         }
 
         Button{
-            id:collection
+            id:cookHistroy
             Layout.preferredWidth: 210
             Layout.preferredHeight:parent.height
             Layout.alignment: Qt.AlignHCenter

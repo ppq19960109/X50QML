@@ -7,14 +7,7 @@ Item {
         console.log("PageSteamBakeRun onCompleted")
 
     }
-    enum WORKSTATE {
-        WORKSTATE_STOP = 0,
-        WORKSTATE_RESERVE = 1,
-        WORKSTATE_PREHEAT = 2,
-        WORKSTATE_RUN = 3,
-        WORKSTATE_FINISH = 4,
-        WORKSTATE_PAUSE = 5
-    }
+
     StackView.onActivated:{
         leftProgressBar.updatePaint()
         rightProgressBar.updatePaint()
@@ -37,7 +30,7 @@ Item {
             canvasDiameter:250
             percent:slider.value
             workState:QmlDevState.state.StOvState
-            workTime:workState==PageSteamBakeRun.WORKSTATE.WORKSTATE_FINISH?"返回":QmlDevState.state.StOvSetTimer+"分钟"
+            workTime:workState==devWorkState.WORKSTATE_FINISH?"返回":QmlDevState.state.StOvSetTimer+"分钟"
             workTemp:workState==0?qsTr("左腔烹饪"):qsTr(QmlDevState.state.StOvSetTemp+"℃")
             multCount:QmlDevState.state.cnt
             multCur:QmlDevState.state.current
@@ -45,7 +38,7 @@ Item {
                 anchors.fill: parent
                 propagateComposedEvents: true
                 onClicked: {
-                    if(leftProgressBar.workState==PageSteamBakeRun.WORKSTATE.WORKSTATE_FINISH)
+                    if(leftProgressBar.workState==devWorkState.WORKSTATE_FINISH)
                     {
                         mouse.accepted = false
                     }
@@ -55,11 +48,11 @@ Item {
                     }
                 }
                 onPressed: {
-                    if(leftProgressBar.workState==PageSteamBakeRun.WORKSTATE.WORKSTATE_FINISH)
+                    if(leftProgressBar.workState==devWorkState.WORKSTATE_FINISH)
                         mouse.accepted = false
                 }
                 onReleased: {
-                    if(leftProgressBar.workState==PageSteamBakeRun.WORKSTATE.WORKSTATE_FINISH)
+                    if(leftProgressBar.workState==devWorkState.WORKSTATE_FINISH)
                         mouse.accepted = false
                 }
             }
@@ -83,13 +76,13 @@ Item {
             canvasDiameter:250
             percent:slider.value
             workState:QmlDevState.state.RStOvState
-            workTime:workState==PageSteamBakeRun.WORKSTATE.WORKSTATE_FINISH?"返回":QmlDevState.state.RStOvSetTimer+"分钟"
+            workTime:workState==devWorkState.WORKSTATE_FINISH?"返回":QmlDevState.state.RStOvSetTimer+"分钟"
             workTemp:workState==0?qsTr("右腔烹饪"):qsTr(QmlDevState.state.RStOvSetTemp+"℃")
             MouseArea{
                 anchors.fill: parent
                 propagateComposedEvents: true
                 onClicked: {
-                    if(rightProgressBar.workState==PageSteamBakeRun.WORKSTATE.WORKSTATE_FINISH)
+                    if(rightProgressBar.workState==devWorkState.WORKSTATE_FINISH)
                     {
                         mouse.accepted = false
                     }
@@ -99,11 +92,11 @@ Item {
                     }
                 }
                 onPressed: {
-                    if(rightProgressBar.workState==PageSteamBakeRun.WORKSTATE.WORKSTATE_FINISH)
+                    if(rightProgressBar.workState==devWorkState.WORKSTATE_FINISH)
                         mouse.accepted = false
                 }
                 onReleased: {
-                    if(rightProgressBar.workState==PageSteamBakeRun.WORKSTATE.WORKSTATE_FINISH)
+                    if(rightProgressBar.workState==devWorkState.WORKSTATE_FINISH)
                         mouse.accepted = false
                 }
             }

@@ -14,7 +14,7 @@ Item {
     {
         listModel.clear();
         var recipe=QmlDevState.getRecipe(index);
-        for(let i = 0; i < recipe.length; ++i) {
+        for(var i = 0; i < recipe.length; ++i) {
             listModel.append(recipe[i])
         }
     }
@@ -78,7 +78,7 @@ Item {
                 console.log("详情",listModel.get(recipe.currentIndex).run)
                 var param = {};
                 param.dishName=listModel.get(recipe.currentIndex).dishName
-                param.dishCookTime=listModel.get(recipe.currentIndex).dishCookTime
+                param.cookTime=listModel.get(recipe.currentIndex).cookTime
                 param.imgSource=listModel.get(recipe.currentIndex).imgSource
                 param.details=listModel.get(recipe.currentIndex).details
                 param.cookSteps=listModel.get(recipe.currentIndex).cookSteps
@@ -142,12 +142,12 @@ Item {
             id:listModel
 
 //            ListElement {
-//                dishCook: 1
+//                cookType: 1
 //                dishName: "清蒸鱼"
 //                imgSource:"/images/peitu01.png"
 //                cookSteps:'[{"mode":1,temp:100,time:90}]'
 //                details:""
-//                collection:0
+//                collect:0
 //                time:123444
 //            }
         }
@@ -192,12 +192,12 @@ Item {
                             height: 80
                             anchors.top:parent.top
                             anchors.left: parent.left
-                            color:cookModeColor[dishCook]
+                            color:cookModeColor[cookType]
                             Text{
                                 width : parent.width;
                                 //                                               height : parent.height;
                                 anchors.centerIn: parent
-                                text: cookMode[dishCook]
+                                text: cookMode[cookType]
                                 font.pixelSize: 30
 
                                 horizontalAlignment:Text.AlignHCenter

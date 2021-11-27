@@ -21,8 +21,8 @@ Item {
         if(0===root.device)
         {
             name.text="左腔蒸烤"
-            for (let mod of leftModel) {
-                modeListModel.append(mod)
+            for (i=0; i< leftModel.length; ++i) {
+                modeListModel.append(leftModel[i])
             }
         }
         else

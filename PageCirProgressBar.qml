@@ -89,7 +89,7 @@ Item {
         Text{
             id:state
             color:"black"
-            visible: workState != PageSteamBakeRun.WORKSTATE.WORKSTATE_STOP
+            visible: workState != devWorkState.WORKSTATE_STOP
             font.pixelSize: 40
             anchors.top:parent.top
             anchors.topMargin: 30
@@ -99,7 +99,7 @@ Item {
             text: workStateArr[workState]
         }
         Button{
-            visible: workState != PageSteamBakeRun.WORKSTATE.WORKSTATE_STOP
+            visible: workState != devWorkState.WORKSTATE_STOP
             width:160
             height: 50
             anchors.centerIn: parent
@@ -123,11 +123,11 @@ Item {
                 {
                     if("左腔"==name)
                     {
-                        QmlDevState.setState("StOvState",PageSteamBakeRun.WORKSTATE.WORKSTATE_STOP)
+                        QmlDevState.setState("StOvState",devWorkState.WORKSTATE_STOP)
                     }
                     else
                     {
-                        QmlDevState.setState("RightStOvState",PageSteamBakeRun.WORKSTATE.WORKSTATE_STOP)
+                        QmlDevState.setState("RightStOvState",devWorkState.WORKSTATE_STOP)
                     }
                 }
             }
@@ -160,8 +160,8 @@ Item {
         }
     }
     Button{
-        visible: workState != PageSteamBakeRun.WORKSTATE.WORKSTATE_STOP
-        width:40
+        visible: workState != devWorkState.WORKSTATE_STOP
+        width:60
         height: width
         anchors.left: canvas.left
         anchors.top: canvas.bottom
@@ -172,23 +172,23 @@ Item {
             color:"white"
             font.pixelSize: 40
             anchors.centerIn:parent
-            text:"❌"
+            text:"x"
         }
         onClicked:{
             console.log("PageCirProgressBar name",name)
             if("左腔"==name)
             {
-                QmlDevState.setState("StOvState",PageSteamBakeRun.WORKSTATE.WORKSTATE_STOP)
+                QmlDevState.setState("StOvState",devWorkState.WORKSTATE_STOP)
             }
             else
             {
-                QmlDevState.setState("RStOvState",PageSteamBakeRun.WORKSTATE.WORKSTATE_STOP)
+                QmlDevState.setState("RStOvState",devWorkState.WORKSTATE_STOP)
             }
         }
     }
     Button{
-        visible: workState != PageSteamBakeRun.WORKSTATE.WORKSTATE_STOP
-        width:40
+        visible: workState != devWorkState.WORKSTATE_STOP
+        width:60
         height: width
         anchors.right: canvas.right
         anchors.top: canvas.bottom
@@ -205,11 +205,11 @@ Item {
             console.log("PageCirProgressBar name",name)
             if("左腔"==name)
             {
-                QmlDevState.setState("StOvState",PageSteamBakeRun.WORKSTATE.WORKSTATE_PAUSE)
+                QmlDevState.setState("StOvState",devWorkState.WORKSTATE_PAUSE)
             }
             else
             {
-                QmlDevState.setState("RStOvState",PageSteamBakeRun.WORKSTATE.WORKSTATE_PAUSE)
+                QmlDevState.setState("RStOvState",devWorkState.WORKSTATE_PAUSE)
             }
         }
     }

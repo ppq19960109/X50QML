@@ -93,7 +93,7 @@ Item {
             onClicked: {
                 console.log("startBtn",hourPathView.model[hourPathView.currentIndex],minutePathView.model[minutePathView.currentIndex])
 
-                for(let i = 0; i < root.length; i++)
+                for(var i = 0; i < root.length; i++)
                 {
                     console.log(root[i].mode,root[i].temp,root[i].time)
                     if(root.length===1)

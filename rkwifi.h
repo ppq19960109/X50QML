@@ -1,8 +1,12 @@
 #ifndef RKWIFI_H
 #define RKWIFI_H
 #ifdef USE_RK3308
-#include <DeviceIo/Rk_wifi.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+#include <DeviceIo/Rk_wifi.h>
+#include <stdbool.h>
 typedef int (*AppWiFiCallback)(int event);
 
 void wifiInit(); //WiFi初始化
@@ -16,5 +20,8 @@ int wifiScan();//获取扫描结果
 char* getWifiScanR();//获取扫描结果
 bool WifiPing();//检测网络是否接通
 
+#ifdef __cplusplus
+}
+#endif
 #endif
 #endif // RKWIFI_H

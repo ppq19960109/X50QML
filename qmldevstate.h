@@ -6,9 +6,7 @@
 #include <QByteArray>
 #include <QMap>
 #include <QtQml>
-#include<QtAlgorithms>
-#include<algorithm>
-using namespace std;
+
 #define MAX_HISTORY (40)
 #define MAX_COLLECT (4)
 
@@ -29,11 +27,9 @@ public:
     void setName(const QString &name);
     QString getName() const;
 
-    Q_INVOKABLE  void setState(const QString& name,const QVariant value);
+    Q_INVOKABLE  void setState( QString name, QVariant value);
     QVariantMap getState() const;
     //    static QmlDevState *qmlAttachedProperties(QObject *);
-
-    Q_INVOKABLE int sendUartData();
     QVariantList recipe[6];
     QVariantList history;
     Q_INVOKABLE QVariantList getRecipe(const int index);

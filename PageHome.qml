@@ -97,7 +97,7 @@ Item {
 
         SwipeView {
             id: swipeview
-            currentIndex:2
+            currentIndex:0
             width:parent.width
 
             interactive:true //是否可以滑动
