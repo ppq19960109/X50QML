@@ -22,7 +22,7 @@ Item {
         param.cookType=listModel.get(index).cookType
         param.dishName=listModel.get(index).dishName
         param.cookTime=listModel.get(index).cookTime
-        param.imgSource=listModel.get(index).imgSource
+        param.imgUrl=listModel.get(index).imgUrl
         param.details=listModel.get(index).details
         param.cookSteps=listModel.get(index).cookSteps
         param.collect=listModel.get(index).collect
@@ -108,7 +108,7 @@ Item {
                 var param = {};
                 param.dishName=listModel.get(recipe.currentIndex).dishName
                 param.cookTime=listModel.get(recipe.currentIndex).cookTime
-                param.imgSource=listModel.get(recipe.currentIndex).imgSource
+                param.imgUrl=listModel.get(recipe.currentIndex).imgUrl
                 param.details=listModel.get(recipe.currentIndex).details
                 param.cookSteps=listModel.get(recipe.currentIndex).cookSteps
 

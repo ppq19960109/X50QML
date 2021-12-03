@@ -6,7 +6,7 @@ Item {
     Component.onCompleted: {
         console.log("state",state,typeof state)
         var root=JSON.parse(state);
-        recipeImg.source=root.imgSource
+        recipeImg.source=root.imgUrl
         dishName.text=root.dishName
         cookTime.text="烹饪用时："+root.cookTime+"分钟"
         details.text=root.details

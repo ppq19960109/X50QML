@@ -1,9 +1,11 @@
 import QtQuick 2.2
 import QtQuick.Controls 2.2
-import QmlWifi 1.0
+
 Item {
     property int childLockPressCount:0
+    property bool wifiConnected:false
     //    anchors.fill: parent
+
 
     Connections { // 将目标对象信号与槽函数进行连接
         target: QmlDevState
@@ -12,7 +14,7 @@ Item {
         }
         onStateChanged: { // 处理目标对象信号的槽函数
             console.log("page home onStateChanged")
-            if(("StOvState"==name || "RStOvState"==name))
+            if(("StOvState"==key || "RStOvState"==key))
             {
                 if(value > 0)
                 {
@@ -31,64 +33,45 @@ Item {
                     }
                 }
             }
-
+            else if(("WifiEnable"==key))
+            {
+                systemSettings.wifiEnable=value
+                if(value==0)
+                {
+                    wifiConnected=false
+                }
+                console.log("WifiEnable",value)
+            }
+            else if(("WifiState"==key))
+            {
+                wifiConnected=false
+                if(value==1)
+                {
+                    wifi_connecting=true
+                }
+                else
+                {
+                    wifi_connecting=false
+                    if(value==4)
+                    {
+                        wifiConnected=true
+                    }
+                }
+                console.log("WifiState",value,wifiConnected)
+            }
         }
     }
 
     Component.onCompleted: {
         console.log("page home onCompleted")
 
-        if(systemSettings.wifiSwitch){
-            qmlWifi.scanWiFi();
-        }
     }
     StackView.onActivated:{
         console.log("page home onActivated")
 
-        if(systemSettings.wifiSwitch){
-            getWifiStatus()
-        }
-        else{
-            wifi_icon.source = "images/wifi/icon_wifi_error.png"
-        }
-    }
-    function getWifiStatus()
-    {
-        var wifi_state=qmlWifi.getWifiState()
-        console.log("pagehome getWifiStatus",wifi_state,QmlWifi.WiFiEventConnected)
-
-        if(wifi_state!==QmlWifi.WiFiEventConnected){
-            wifi_icon.source = "images/wifi/icon_wifi_error.png"
-        }
-        else{
-            wifi_icon.source = "images/wifi/wifi.png"
-        }
     }
 
-    QmlWifi{
-        id:qmlWifi
-        onWifiEvent:{
-            console.log("WiFi status:" ,event)
-        }
-    }
-    Timer{
-        property int timer_wifi_count:0
-        id:timer_wifi
-        repeat: true
-        running: systemSettings.wifiSwitch
-        interval: 30000
-        triggeredOnStart: false
-        onTriggered: {
-            console.log("pagehome timer_wifi",timer_wifi_count)
 
-            if(++timer_wifi_count>3)
-            {
-                timer_wifi_count=0;
-                qmlWifi.scanWiFi();
-            }
-            getWifiStatus()
-        }
-    }
     Rectangle{
         width:parent.width
         anchors.top:parent.top
@@ -200,7 +183,7 @@ Item {
             Image{
                 id:wifi_icon
                 anchors.centerIn: parent
-                source: "images/wifi/wifi.png"
+                source: wifiConnected ? "images/wifi/wifi.png":"images/wifi/icon_wifi_error.png"
             }
             onClicked: {
                 load_page("pageWifi")

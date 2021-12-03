@@ -12,6 +12,8 @@ ApplicationWindow {
         ,{"modelData":"空气炸","temp":220,"time":30},{"modelData":"保温烘干","temp":60,"time":30}]
     property var rightModel:{"modelData":"便捷蒸","temp":100,"time":30}
     property var devWorkState:{"WORKSTATE_STOP":0,"WORKSTATE_RESERVE":1,"WORKSTATE_PREHEAT":2,"WORKSTATE_RUN":3,"WORKSTATE_FINISH":4,"WORKSTATE_PAUSE":5}
+
+    property bool wifi_connecting: false
     Settings {
         id: systemSettings
         category: "system"
@@ -30,7 +32,7 @@ ApplicationWindow {
         //首次开机引导
         property bool firstOpenGuide: true
 
-        property bool wifiSwitch: true
+        property bool wifiEnable: true
 
         //判断儿童锁(true表示锁定，false表示未锁定)
         property bool childLock:false
@@ -39,15 +41,15 @@ ApplicationWindow {
     function getDefHistory()
     {
         var param = {};
-        param.id=0
-        param.cookType=0
+
         param.dishName=""
-        param.cookTime=0
-        param.imgSource=""
+        param.imgUrl=""
         param.details=""
         param.cookSteps=""
-        param.collect=false
-        param.time=0
+        param.timestamp=0
+        param.collect=0
+        param.cookType=0
+        param.cookTime=0
         return param
     }
 
@@ -81,6 +83,27 @@ ApplicationWindow {
         }
         return dishName
     }
+
+    function setToServer(Data)
+    {
+        var root={}
+        root.Type="SET"
+        root.Data=Data
+        var json=JSON.stringify(root)
+        console.info("setToServer:",json)
+        QmlDevState.sendToServer(json)
+    }
+
+    function getToServer(Data)
+    {
+        var root={}
+        root.Type="GET"
+        root.Data=Data
+        var json=JSON.stringify(root)
+        console.info("getToServer:",json)
+        QmlDevState.sendToServer(json)
+    }
+
     id: window
     width: 800
     height: 480
@@ -88,9 +111,36 @@ ApplicationWindow {
 
     StackView {
         id: stackView
-        initialItem: pageTest
+        initialItem: pageHome
         anchors.fill: parent
 
+    }
+    Loader{
+        //加载弹窗组件
+        id:loader_main
+        anchors.fill: parent
+    }
+    ListModel {
+        id: wifiModel
+
+        ListElement {
+            connected: 1
+            ssid: "qwertyuio"
+            level:2
+            flags:2
+        }
+        ListElement {
+            connected: 0
+            ssid: "asdfghjkl定义aa"
+            level:2
+            flags:0
+        }
+        ListElement {
+            connected: 0
+            ssid: "234556"
+            level:2
+            flags:2
+        }
     }
     Component {
         id: pageTest
@@ -102,23 +152,30 @@ ApplicationWindow {
 
                 interactive:true //是否可以滑动
 
-                Item {Image{source: "/test/images/x5/方案一/1.png" }}
-                Item {Image{source: "/test/images/x5/方案一/2.png" }}
-                Item {Image{source: "/test/images/x5/方案一/3.png" }}
-                Item {Image{source: "/test/images/x5/方案一/4.png" }}
-                Item {Image{source: "/test/images/x5/方案一/5.png" }}
+                Item {Image{source: "file:x5/方案一/1.png" }}
+                Item {Image{source: Qt.resolvedUrl("/test/images/x5/方案一/2.png")}}
+                //                Item {Image{source: "/test/images/x5/方案一/3.png" }}
+                //                Item {Image{source: "/test/images/x5/方案一/4.png" }}
+                //                Item {Image{source: "/test/images/x5/方案一/5.png" }}
 
-                Item {Image{source: "/test/images/x5/方案二/A1.png" }}
-                Item {Image{source: "/test/images/x5/方案二/A2.png" }}
-                Item {Image{source: "/test/images/x5/方案二/A3.png" }}
-                Item {Image{source: "/test/images/x5/方案二/A4.png" }}
+                //                Item {Image{source: "/test/images/x5/方案二/A1.png" }}
+                //                Item {Image{source: "/test/images/x5/方案二/A2.png" }}
+                //                Item {Image{source: "/test/images/x5/方案二/A3.png" }}
+                //                Item {Image{source: "/test/images/x5/方案二/A4.png" }}
+                //                Item {Image{source: "/test/images/x5/方案二/A4 拷贝.png" }}
+                //                Item {Image{source: "/test/images/x5/方案二/A4 拷贝 2.png" }}
 
-                Item {Image{source: "/test/images/x5/方案三/B1.png" }}
-                Item {Image{source: "/test/images/x5/方案三/B2.png" }}
-                Item {Image{source: "/test/images/x5/方案三/B3.png" }}
-                Item {Image{source: "/test/images/x5/方案三/B4.png" }}
+                //                Item {Image{source: "/test/images/x5/方案三/B1.png" }}
+                //                Item {Image{source: "/test/images/x5/方案三/B2.png" }}
+                //                Item {Image{source: "/test/images/x5/方案三/B3.png" }}
+                //                Item {Image{source: "/test/images/x5/方案三/B4.png" }}
+                //                Item {Image{source: "/test/images/x5/方案三/B5.png" }}
 
-                Item {Image{source: "/test/images/x5/方案四/C1.png" }}
+                //                Item {Image{source: "/test/images/x5/方案四.png" }}
+
+            }
+            Component.onCompleted: {
+                console.log("pageTest onCompleted")
 
             }
         }

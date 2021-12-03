@@ -3,7 +3,6 @@
 
 #include <QObject>
 #include <QDebug>
-#include "rkwifi.h"
 
 class QmlWifi : public QObject
 {
@@ -14,7 +13,6 @@ class QmlWifi : public QObject
 public:
     explicit QmlWifi(QObject *parent = nullptr);
     ~QmlWifi();
-    static QmlWifi* qmlWifi;
 
     enum WiFiEvent {
         WiFiEventNone = 0,
@@ -30,18 +28,8 @@ public:
         WPA,
         WEP
     };
-    /**
-     * @brief 打开WiFi
-     */
-    Q_INVOKABLE int enableWiFi(int enable);
 
-    Q_INVOKABLE int scanWiFi();
 
-    Q_INVOKABLE int getWifiState();
-    /**
-     * @brief QHttpAPI::get 发送get请求
-     * @param param 请求body参数
-     */
     Q_INVOKABLE QVariantList getWiFiScanResult();
 
     /**
@@ -51,9 +39,10 @@ public:
 
     QVariantList parseScanResult(QByteArray data);
     int calSignalLevel(int rssi);
-    static int wifiStatusCb(int event);
+
 signals:
-    void wifiEvent(int event);
+    void wifiStateEvent(int event);
+    void wifiScanR(QString result);
 };
 
 #endif // QMLWIFI_H

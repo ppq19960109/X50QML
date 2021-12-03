@@ -4,14 +4,10 @@
 #include <QJsonObject>
 #include <QJsonDocument>
 
-QmlWifi* QmlWifi::qmlWifi=nullptr;
 
 QmlWifi::QmlWifi(QObject *parent) : QObject(parent)
 {
-    qmlWifi=this;
-#ifdef USE_RK3308
-    wifiRegsiterCallback(wifiStatusCb);
-#endif
+
 }
 
 QmlWifi::~QmlWifi()
@@ -19,38 +15,6 @@ QmlWifi::~QmlWifi()
 
 }
 
-int QmlWifi::wifiStatusCb(int event)
-{
-    emit qmlWifi->wifiEvent(event);
-    return 0;
-}
-
-int QmlWifi::enableWiFi(int enable)
-{
-    int res=-1;
-#ifdef USE_RK3308
-    res= wifiEnable(enable);
-#endif
-    return res;
-}
-
-int QmlWifi::scanWiFi()
-{
-    int res=-1;
-#ifdef USE_RK3308
-    res= wifiScan();
-#endif
-    return res;
-}
-
-int QmlWifi::getWifiState()
-{
-    int res=0;
-#ifdef USE_RK3308
-    res= getWifiRunningState();
-#endif
-    return res;
-}
 
 QVariantList QmlWifi::getWiFiScanResult()
 {

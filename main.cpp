@@ -8,16 +8,18 @@
 
 #include "QmlWifi.h"
 #include "qmldevstate.h"
+#include "LocalClient.h"
 
 int main(int argc, char *argv[])
 {
+
     qputenv("QT_IM_MODULE", QByteArray("qtvirtualkeyboard"));
 
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 
     QGuiApplication app(argc, argv);
 
-    qmlRegisterType<QmlWifi>("QmlWifi", 1, 0, "QmlWifi");
+//    qmlRegisterType<QmlWifi>("QmlWifi", 1, 0, "QmlWifi");
 
     // app qml settings
     app.setOrganizationName("MarsOven"); //1
@@ -37,16 +39,19 @@ int main(int argc, char *argv[])
 
     QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF-8"));
 
-//    QFontDatabase fdb;
-//    QStringList fontList = fdb.families();
-//    for(int i = 0; i < fontList.size(); i++){
-//        qDebug() << "font name" << i << ": " << fontList.at(i);
-//    }
+    //    QFontDatabase fdb;
+    //    QStringList fontList = fdb.families();
+    //    for(int i = 0; i < fontList.size(); i++){
+    //        qDebug() << "font name" << i << ": " << fontList.at(i);
+    //    }
 
 
     QQmlApplicationEngine engine;
 
-    engine.rootContext()->setContextProperty("QmlDevState", new QmlDevState(&app));
+    QmlWifi* qmlWifi =new QmlWifi(&app);
+    engine.rootContext()->setContextProperty("QmlWifi", qmlWifi);
+    QmlDevState* qmlDevState =new QmlDevState(&app);
+    engine.rootContext()->setContextProperty("QmlDevState", qmlDevState);
 
     const QUrl url(QStringLiteral("qrc:/main.qml"));
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,

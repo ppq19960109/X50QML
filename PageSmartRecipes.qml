@@ -79,7 +79,7 @@ Item {
                 var param = {};
                 param.dishName=listModel.get(recipe.currentIndex).dishName
                 param.cookTime=listModel.get(recipe.currentIndex).cookTime
-                param.imgSource=listModel.get(recipe.currentIndex).imgSource
+                param.imgUrl=listModel.get(recipe.currentIndex).imgUrl
                 param.details=listModel.get(recipe.currentIndex).details
                 param.cookSteps=listModel.get(recipe.currentIndex).cookSteps
 
@@ -144,7 +144,7 @@ Item {
 //            ListElement {
 //                cookType: 1
 //                dishName: "清蒸鱼"
-//                imgSource:"/images/peitu01.png"
+//                imgUrl:"/images/peitu01.png"
 //                cookSteps:'[{"mode":1,temp:100,time:90}]'
 //                details:""
 //                collect:0
@@ -185,7 +185,7 @@ Item {
                             anchors.top:parent.top
                             anchors.bottom: recipeNme.top
                             width:parent.width
-                            source: imgSource
+                            source: imgUrl
                         }
                         Rectangle{
                             width:40

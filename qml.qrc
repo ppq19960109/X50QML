@@ -111,6 +111,8 @@
         <file>images/icon_setting_bright_max.png</file>
         <file>images/icon_setting_bright_min.png</file>
         <file>images/icon_mars_fans_club_logo.png</file>
+        <file>PageBusyIndicator.qml</file>
+        <file>PageDialog.qml</file>
     </qresource>
     <qresource prefix="/test">
         <file>images/x5/方案一/1.png</file>
@@ -122,10 +124,13 @@
         <file>images/x5/方案二/A2.png</file>
         <file>images/x5/方案二/A3.png</file>
         <file>images/x5/方案二/A4.png</file>
-        <file>images/x5/方案四/C1.png</file>
         <file>images/x5/方案三/B1.png</file>
         <file>images/x5/方案三/B2.png</file>
         <file>images/x5/方案三/B3.png</file>
         <file>images/x5/方案三/B4.png</file>
+        <file>images/x5/方案四.png</file>
+        <file>images/x5/方案三/B5.png</file>
+        <file>images/x5/方案二/A4 拷贝.png</file>
+        <file>images/x5/方案二/A4 拷贝 2.png</file>
     </qresource>
 </RCC>
