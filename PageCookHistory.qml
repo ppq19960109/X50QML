@@ -15,21 +15,28 @@ Item {
             listModel.append(recipe[i])
         }
     }
-    function getCurHistory(index)
-    {
-        var param = {};
-        param.id=listModel.get(index).id
-        param.cookType=listModel.get(index).cookType
-        param.dishName=listModel.get(index).dishName
-        param.cookTime=listModel.get(index).cookTime
-        param.imgUrl=listModel.get(index).imgUrl
-        param.details=listModel.get(index).details
-        param.cookSteps=listModel.get(index).cookSteps
-        param.collect=listModel.get(index).collect
-        param.time=listModel.get(index).time
-        return param
+//    function getCurHistory(index)
+//    {
+//        var param = {};
+//        param.id=listModel.get(index).id
+//        param.seqid=listModel.get(index).seqid
+//        param.cookType=listModel.get(index).cookType
+//        param.dishName=listModel.get(index).dishName
+//        param.cookTime=listModel.get(index).cookTime
+//        param.imgUrl=listModel.get(index).imgUrl
+//        param.details=listModel.get(index).details
+//        param.cookSteps=listModel.get(index).cookSteps
+//        param.collect=listModel.get(index).collect
+//        param.time=listModel.get(index).timestamp
+//        return param
+//    }
+    Connections { // 将目标对象信号与槽函数进行连接
+        target: QmlDevState
+        onHistoryChanged: { // 处理目标对象信号的槽函数
+            console.warn("PageCookHistory onHistoryChanged...")
+            getHistory()
+        }
     }
-
     ToolBar {
         id:topBar
         width:parent.width
@@ -205,18 +212,11 @@ Item {
                     onClicked: {
                         if(edit)
                         {
-                            if(QmlDevState.removeHistory(index)==0)
-                            {
-                               listModel.remove(index)
-                            }
+                            QmlDevState.deleteHistory(id)
                         }
                         else
                         {
-                            var val=!collect
-                            if(QmlDevState.setCollect(index,val)==0)
-                            {
-                               listModel.get(index).collect=val
-                            }
+                            QmlDevState.setCollect(index,!collect)
                         }
                     }
                 }

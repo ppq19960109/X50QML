@@ -73,7 +73,7 @@ int LocalClient::sendMessage(QByteArray& data)
     return write_len;
 }
 
-int LocalClient::uds_json_parse(char *value, unsigned int value_len)
+int LocalClient::uds_json_parse(const char *value,const int value_len)
 {
 
     QJsonDocument doucment = QJsonDocument::fromJson(QByteArray(value,value_len));
@@ -122,10 +122,11 @@ int LocalClient::uds_json_parse(char *value, unsigned int value_len)
     return 0;
 }
 
-int LocalClient::uds_recv(char *data, unsigned int len)
+int LocalClient::uds_recv(const char *byte,const int len)
 {
-    if (data == NULL)
+    if (byte == NULL)
         return -1;
+    unsigned char*data=(unsigned char*)byte;
     int ret = 0;
     int msg_len, encry, seqid;
     unsigned char verify;
@@ -144,7 +145,7 @@ int LocalClient::uds_recv(char *data, unsigned int len)
             printf("uds_recv msg_len:%d\n", msg_len);
             if (msg_len > 0)
             {
-                ret = uds_json_parse(&data[i + 6 +1], msg_len);
+                ret = uds_json_parse(&byte[i + 6 +1], msg_len);
                 if (ret == 0)
                 {
                     i += 6 + msg_len + 3;

@@ -32,15 +32,15 @@ public:
     void connectToServer();
     int sendMessage(QByteArray& data);
     int readMessage();
-    int uds_recv(char *data, unsigned int len);
-    int uds_json_parse(char *value, unsigned int value_len);
+    int uds_recv(const char *byte,const int len);
+    int uds_json_parse(const char *value,const int value_len);
     void get_all();
     QLocalSocket *m_socket;
     QTimer *timer;
     void close();
 
 signals:
-    void sendData(QJsonValue& data);
+    void sendData(const QJsonValue& data);
 private slots:
     void socketConnectedHandler();
     void socketDisConnectedHandler();

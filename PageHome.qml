@@ -10,7 +10,7 @@ Item {
     Connections { // 将目标对象信号与槽函数进行连接
         target: QmlDevState
         onNameChanged: { // 处理目标对象信号的槽函数
-
+            console.warn("Page Home onNameChanged...")
         }
         onStateChanged: { // 处理目标对象信号的槽函数
             console.log("page home onStateChanged")
@@ -60,6 +60,9 @@ Item {
                 console.log("WifiState",value,wifiConnected)
             }
         }
+//        onHistoryChanged: { // 处理目标对象信号的槽函数
+//            console.warn("Page Home onHistoryChanged...")
+//        }
     }
 
     Component.onCompleted: {

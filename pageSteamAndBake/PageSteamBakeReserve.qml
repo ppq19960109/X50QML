@@ -131,7 +131,7 @@ Item {
                 para.dishName=getDishName(root)
                 para.cookSteps=JSON.stringify(root)
 
-                QmlDevState.addSingleHistory(para)
+                QmlDevState.insertHistory(para)
             }
         }
     }

@@ -20,10 +20,11 @@ class QmlDevState : public QObject
 
     Q_PROPERTY(QString name READ getName WRITE setName NOTIFY nameChanged)
     Q_PROPERTY(QVariantMap state READ getState NOTIFY stateChanged)
+    Q_PROPERTY(QVariantList historyList READ getHistory NOTIFY historyChanged)
 public:
     //    using QObject::QObject;
     explicit QmlDevState(QObject *parent = nullptr);
-    static QmlDevState* qmlDevState;
+//    static QmlDevState* qmlDevState;
     enum LINK_VALUE_TYPE
     {
         LINK_VALUE_TYPE_NUM = 0x00,
@@ -49,35 +50,39 @@ public:
     void setName(const QString &name);
     QString getName() const;
 
-    Q_INVOKABLE  void setState( QString name, QVariant value);
+    Q_INVOKABLE  void setState(const QString &name,const QVariant& value);
     QVariantMap getState() const;
     //    static QmlDevState *qmlAttachedProperties(QObject *);
     QVariantList recipe[6];
     QVariantList history;
     Q_INVOKABLE QVariantList getRecipe(const int index);
     Q_INVOKABLE QVariantList getHistory();
-    Q_INVOKABLE int setSingleHistory(QVariantMap single);
-    Q_INVOKABLE int addSingleHistory(QVariantMap single);
-    Q_INVOKABLE int lastHistory(bool collect);
-    Q_INVOKABLE int getHistoryCount();
+    Q_INVOKABLE int insertHistory(QVariantMap &single);
+    Q_INVOKABLE int deleteHistory(const int id);
+    Q_INVOKABLE int setCollect(const int index,const bool collect);
+    void setHistory(const QVariantMap &history);
+    int coverHistory(const QJsonObject& single,QVariantMap& info);
+    int lastHistoryId(const int collect);
+    int compareHistoryCollect(const QVariantMap& single);
+    int getHistoryCount();
+    int getHistoryIndex(const int id);
 
-    Q_INVOKABLE int removeHistory(int index);
-    Q_INVOKABLE int setCollect(int index,bool collect);
 
     LocalClient client;
-    Q_INVOKABLE int sendToServer(QString data);
-    Q_INVOKABLE int sendJsonToServer(QString type,QJsonObject json);
+    Q_INVOKABLE int sendToServer(const QString &data);
+    Q_INVOKABLE int sendJsonToServer(const QString &type,const QJsonObject &json);
 private:
 
     QString myName;
     QVariantMap stateMap;
     QVariantMap stateTypeMap;
 signals:
-    void nameChanged(const QString name);
-    void stateChanged(const QString& key,const QVariant value);
+    void nameChanged(const QString& name);
+    void stateChanged(const QString& key,const QVariant& value);
+    void historyChanged(const QVariantMap& historyList);
 
 private slots:
-    void readData(QJsonValue& data);
+    void readData(const QJsonValue& data);
 };
 //QML_DECLARE_TYPEINFO(QmlDevState, QML_HAS_ATTACHED_PROPERTIES)
 #endif // QMLDEVSTATE_H
