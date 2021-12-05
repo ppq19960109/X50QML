@@ -11,8 +11,8 @@ import QtQuick.Controls 2.2
         }
         contentItem: Item {
             anchors.centerIn: parent
-            implicitWidth: 40
-            implicitHeight: 40
+            implicitWidth: parent.width
+            implicitHeight: parent.width
 
             Item {
                 id: item
@@ -35,7 +35,7 @@ import QtQuick.Controls 2.2
                     from: 0
                     to: 360
                     loops: Animation.Infinite
-                    duration: 6000
+                    duration: 7000
                 }
 
                 Repeater {

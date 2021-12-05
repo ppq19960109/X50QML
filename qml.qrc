@@ -113,6 +113,7 @@
         <file>images/icon_mars_fans_club_logo.png</file>
         <file>PageBusyIndicator.qml</file>
         <file>PageDialog.qml</file>
+        <file>pageSet/PageReleaseNotes.qml</file>
     </qresource>
     <qresource prefix="/test">
         <file>images/x5/方案一/1.png</file>

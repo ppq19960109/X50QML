@@ -3,7 +3,7 @@ import QtQuick.Controls 2.2
 
 Item {
     property int childLockPressCount:0
-    property bool wifiConnected:false
+
     //    anchors.fill: parent
 
 

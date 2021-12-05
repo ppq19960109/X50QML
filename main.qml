@@ -14,6 +14,7 @@ ApplicationWindow {
     property var devWorkState:{"WORKSTATE_STOP":0,"WORKSTATE_RESERVE":1,"WORKSTATE_PREHEAT":2,"WORKSTATE_RUN":3,"WORKSTATE_FINISH":4,"WORKSTATE_PAUSE":5}
 
     property bool wifi_connecting: false
+    property bool wifiConnected:false
     Settings {
         id: systemSettings
         category: "system"
@@ -249,6 +250,10 @@ ApplicationWindow {
         id: pageAfterGuide
         PageAfterGuide {}
     }
+    Component {
+        id: pageReleaseNotes
+        PageReleaseNotes {}
+    }
     function isExistView(pageName) {
         console.log("isExistView:",pageName)
         //        return stackView.currentItem.name===PageName
@@ -329,6 +334,9 @@ ApplicationWindow {
             break;
         case "pageAfterGuide":
             stackView.push(pageAfterGuide);
+            break;
+        case "pageReleaseNotes":
+            stackView.push(pageReleaseNotes);
             break;
         }
 
