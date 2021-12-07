@@ -12,6 +12,7 @@ ApplicationWindow {
         ,{"modelData":"空气炸","temp":220,"time":30},{"modelData":"保温烘干","temp":60,"time":30}]
     property var rightModel:{"modelData":"便捷蒸","temp":100,"time":30}
     property var devWorkState:{"WORKSTATE_STOP":0,"WORKSTATE_RESERVE":1,"WORKSTATE_PREHEAT":2,"WORKSTATE_RUN":3,"WORKSTATE_FINISH":4,"WORKSTATE_PAUSE":5}
+    property var workOperation:{"START":0,"PAUSE":1,"CANCEL":2,"CONFIRM":3,"RUN_NOW":4}
 
     property bool wifi_connecting: false
     property bool wifiConnected:false
@@ -47,10 +48,11 @@ ApplicationWindow {
         param.imgUrl=""
         param.details=""
         param.cookSteps=""
-        param.timestamp=0
+        param.timestamp=Math.floor(Date.now()/1000) //Date.parse(new Date())//(new Date().getTime())
         param.collect=0
         param.cookType=0
         param.cookTime=0
+//        console.log("timestamp",param.timestamp,Date.now())
         return param
     }
 
@@ -105,6 +107,70 @@ ApplicationWindow {
         QmlDevState.sendToServer(json)
     }
 
+    function setCooking(list)
+    {
+        console.log("setCooking")
+        var Data={}
+        if(list[0].device==0)
+        {
+            Data.LStOvMode=list[0].mode
+            Data.LStOvSetTimer=list[0].time
+            Data.LStOvSetTemp=list[0].temp
+            if(undefined == list[0].orderTime)
+            {
+                Data.LStOvOperation=workOperation.START
+            }
+            else
+            {
+                Data.LStOvOrderTimer=list[0].orderTime
+            }
+        }
+        else
+        {
+            Data.RStOvMode=list[0].mode
+            Data.RStOvSetTimer=list[0].time
+            Data.RStOvSetTemp=list[0].temp
+            if(undefined == list[0].orderTime)
+            {
+                Data.RStOvOperation=workOperation.START
+            }
+            else
+            {
+                Data.RStOvOrderTimer=list[0].orderTime
+            }
+        }
+        setToServer(Data)
+    }
+
+    function setMultiCooking(list)
+    {
+        console.log("setMultiCooking")
+        var Data={}
+        var MultiStageContent=[]
+
+        for(var i = 0; i < list.length; i++)
+        {
+            var buf={}
+            buf.Mode=list[i].mode
+            buf.Temp=list[i].temp
+            buf.Timer=list[i].time
+            MultiStageContent.push(buf)
+        }
+        if(undefined == list[0].orderTime)
+        {
+            Data.LStOvOperation=workOperation.START
+        }
+        else
+        {
+            Data.LStOvOrderTimer=list[0].orderTime
+        }
+        Data.MultiStageContent=MultiStageContent
+        setToServer(Data)
+    }
+
+    function closeLoaderMain(){
+        loader_main.sourceComponent = null
+    }
     id: window
     width: 800
     height: 480
@@ -152,27 +218,22 @@ ApplicationWindow {
                 currentIndex:0
 
                 interactive:true //是否可以滑动
+                //                Item {Image{source: "file:x5/方案一/1.png" }}
+                //                Item {Image{source: Qt.resolvedUrl("/test/images/x5/方案一/2.png")}}
 
-                Item {Image{source: "file:x5/方案一/1.png" }}
-                Item {Image{source: Qt.resolvedUrl("/test/images/x5/方案一/2.png")}}
-                //                Item {Image{source: "/test/images/x5/方案一/3.png" }}
-                //                Item {Image{source: "/test/images/x5/方案一/4.png" }}
-                //                Item {Image{source: "/test/images/x5/方案一/5.png" }}
 
-                //                Item {Image{source: "/test/images/x5/方案二/A1.png" }}
-                //                Item {Image{source: "/test/images/x5/方案二/A2.png" }}
-                //                Item {Image{source: "/test/images/x5/方案二/A3.png" }}
-                //                Item {Image{source: "/test/images/x5/方案二/A4.png" }}
-                //                Item {Image{source: "/test/images/x5/方案二/A4 拷贝.png" }}
-                //                Item {Image{source: "/test/images/x5/方案二/A4 拷贝 2.png" }}
+                Item {Image{source: "/test/x5/上下排版/1.png" }}
 
-                //                Item {Image{source: "/test/images/x5/方案三/B1.png" }}
-                //                Item {Image{source: "/test/images/x5/方案三/B2.png" }}
-                //                Item {Image{source: "/test/images/x5/方案三/B3.png" }}
-                //                Item {Image{source: "/test/images/x5/方案三/B4.png" }}
-                //                Item {Image{source: "/test/images/x5/方案三/B5.png" }}
+                Item {Image{source: "/test/x5/粗体字/1.png" }}
+                Item {Image{source: "/test/x5/D1左空右腔体.png" }}
+                Item {Image{source: "/test/x5/粗体字/2.png" }}
+                Item {Image{source: "/test/x5/粗体字/3.png" }}
+                Item {Image{source: "/test/x5/粗体字/4.png" }}
+                Item {Image{source: "/test/x5/粗体字/5.png" }}
 
-                //                Item {Image{source: "/test/images/x5/方案四.png" }}
+                Item {Image{source: "/test/x5/细体字/1.png" }}
+                Item {Image{source: "/test/x5/细体字/2.png" }}
+                Item {Image{source: "/test/x5/细体字/3.png" }}
 
             }
             Component.onCompleted: {

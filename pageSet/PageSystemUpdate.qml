@@ -3,6 +3,14 @@ import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
 import "../"
 Item {
+    property bool versionChecked: false
+
+    function otaRquest(request)
+    {
+        var Data={}
+        Data.OTARquest = request
+        setToServer(Data)
+    }
 
     Connections { // 将目标对象信号与槽函数进行连接
         target: QmlDevState
@@ -10,12 +18,40 @@ Item {
         onStateChanged: { // 处理目标对象信号的槽函数
             console.log("PageSystemUpdate onStateChanged:",key)
 
-            if("WifiScanR"==key)
+            if("OTAState"==key)
+            {
+                if(value==1)
+                {
+                    versionChecked=false
+                }
+                else if(value==2)
+                {
+                    checkStatus.visible=false
+                    versionChecked=false
+
+                    showUpdateConfirm()
+                }
+                else if(value==3)
+                {
+                    showUpdate()
+                }
+                else if(value==8)
+                {
+                    showUpdateSuccess()
+                }
+            }
+            else if(("OTAProgress"==key))
+            {
+                console.log("OTAProgress:",value)
+                showUpdateProgress(value);
+                if(value==100)
+                {
+
+                }
+            }
+            else if(("OTANewVersion"==key))
             {
 
-            }
-            else if(("WifiState"==key))
-            {
             }
         }
     }
@@ -92,7 +128,7 @@ Item {
                 color:"transparent"
             }
             Text{
-                text:"当前版本V1.0  >"
+                text:"当前版本V"+QmlDevState.state.SoftVersion+"    >"
                 color:"#fff"
                 font.pixelSize: 30
                 anchors.centerIn: parent
@@ -103,14 +139,17 @@ Item {
             }
         }
         Rectangle{
+            id:checkStatus
             width: 180
             height: 50
             anchors.top: version.bottom
             anchors.topMargin: 10
             anchors.horizontalCenter: parent.horizontalCenter
+            visible: false
             color:"#000"
             Text{
-                text:"正在检查"
+                id:checkText
+                text:versionChecked ?"正在检查":"已经是最新版本"
                 color:"#fff"
                 font.pixelSize: 30
                 anchors.left: parent.left
@@ -118,7 +157,7 @@ Item {
             }
             PageBusyIndicator{
                 id:busy
-                visible: true
+                visible: versionChecked
                 width: 40
                 height: 40
                 anchors.right: parent.right
@@ -136,7 +175,7 @@ Item {
             anchors.horizontalCenter: parent.horizontalCenter
             background:Rectangle{
                 radius: 30
-                color:"blue"
+                color:versionChecked ?"darkgray":"blue"
             }
 
             Text{
@@ -147,7 +186,11 @@ Item {
             }
 
             onClicked: {
-                showUpdateConfirm()
+                checkStatus.visible=true
+                versionChecked=true
+                otaRquest(0)
+
+                //                showUpdateConfirm()
             }
         }
     }
@@ -179,7 +222,7 @@ Item {
                     color:"transparent"
                 }
                 onClicked: {
-                    closeUpdateConfirm()
+                    closeLoaderMain()
                 }
             }
 
@@ -205,13 +248,13 @@ Item {
                 verticalAlignment: Text.AlignVCenter
 
                 wrapMode:Text.Wrap
-                text:"检测到最新版本V1.2，是否升级系统"
+                text:"检测到最新版本V"+QmlDevState.state.OTANewVersion+"，是否升级系统"
             }
 
             Button {
                 id:cancel_btn
-                width: 100
-                height: 40
+                width: 120
+                height: 50
                 anchors.bottom:parent.bottom
                 anchors.bottomMargin: 40
                 anchors.left: parent.left
@@ -231,14 +274,14 @@ Item {
                     radius: 5
                 }
                 onClicked: {
-                    closeUpdateConfirm()
+                    closeLoaderMain()
                 }
             }
 
             Button {
                 id:confirm_btn
-                width: 100
-                height: 40
+                width: 120
+                height: 50
                 anchors.bottom:parent.bottom
                 anchors.bottomMargin: 40
                 anchors.right: parent.right
@@ -258,7 +301,7 @@ Item {
                     radius: 5
                 }
                 onClicked: {
-
+                    otaRquest(1)
                 }
             }
         }
@@ -266,8 +309,108 @@ Item {
     function showUpdateConfirm(){
         loader_main.sourceComponent = component_updateConfirm
     }
-    function closeUpdateConfirm(){
-        loader_main.sourceComponent = null
+
+    Component{
+        id:component_update
+        Rectangle {
+            anchors.fill: parent
+            color: "#000"
+            function updateProgress(value){
+                updateBar.value=value
+                updateCirBar.percent=value
+                updateCirBar.updatePaint()
+            }
+            PageUpdateProgressBar{
+                id:updateCirBar
+                radius: 200
+                anchors.centerIn: parent
+                percent:0
+            }
+            ProgressBar {
+                id:updateBar
+                width: 600
+                anchors.bottom: parent.bottom
+                anchors.bottomMargin: 80
+                anchors.horizontalCenter: parent.horizontalCenter
+                from:0
+                to:100
+                value: 0
+            }
+
+            Slider {
+                id: slider
+                anchors.bottom: parent.bottom
+                anchors.bottomMargin: 20
+                anchors.horizontalCenter: parent.horizontalCenter
+                stepSize: 2
+                to: 100
+                value: 0
+                onValueChanged: {
+                    console.log("slider:",value)
+                    updateBar.value=value
+                    updateCirBar.percent=value
+                    updateCirBar.updatePaint()
+
+                }
+            }
+        }
+    }
+    function showUpdate(){
+        loader_main.sourceComponent = component_update
+    }
+    function showUpdateProgress(value){
+        loader_main.item.updateProgress(value)
+    }
+    Component{
+        id:component_updateSuccess
+        Rectangle {
+            anchors.fill: parent
+            color: "#000"
+            radius: 10
+
+            Text{
+                width:600
+                color:"white"
+                font.pixelSize: 40
+                anchors.centerIn:parent
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+
+                wrapMode:Text.Wrap
+                text:"系统已更新至最新版本V"+QmlDevState.state.OTANewVersion
+            }
+
+            Button {
+                id:confirm_btn
+                width: 150
+                height: 50
+                anchors.bottom:parent.bottom
+                anchors.bottomMargin: 40
+                anchors.horizontalCenter: parent.horizontalCenter
+                Text{
+                    width:parent.width
+                    color:"white"
+                    font.pixelSize: 30
+
+                    anchors.centerIn: parent
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                    text:"知道了"
+                }
+                background: Rectangle {
+                    color:"blue"
+                    radius: 5
+                }
+                onClicked: {
+
+                    backTopPage()
+                    closeLoaderMain()
+                }
+            }
+        }
+    }
+    function showUpdateSuccess(){
+        loader_main.sourceComponent = component_updateSuccess
     }
 }
 

@@ -7,6 +7,7 @@
 #include <QMap>
 #include <QtQml>
 #include "LocalClient.h"
+#include "qrcodeen.h"
 #define MAX_HISTORY (40)
 #define MAX_COLLECT (80)
 
@@ -25,6 +26,7 @@ public:
     //    using QObject::QObject;
     explicit QmlDevState(QObject *parent = nullptr);
 //    static QmlDevState* qmlDevState;
+
     enum LINK_VALUE_TYPE
     {
         LINK_VALUE_TYPE_NUM = 0x00,
@@ -57,7 +59,7 @@ public:
     QVariantList history;
     Q_INVOKABLE QVariantList getRecipe(const int index);
     Q_INVOKABLE QVariantList getHistory();
-    Q_INVOKABLE int insertHistory(QVariantMap &single);
+    Q_INVOKABLE int insertHistory(QVariantMap single);
     Q_INVOKABLE int deleteHistory(const int id);
     Q_INVOKABLE int setCollect(const int index,const bool collect);
     void setHistory(const QVariantMap &history);

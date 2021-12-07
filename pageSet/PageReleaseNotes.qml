@@ -55,7 +55,7 @@ Item {
         color:"#000"
         Text{
             id:version
-            text:"V1.2"
+            text:"V"+QmlDevState.state.SoftVersion
             color:"#fff"
             font.pixelSize: 35
             anchors.left: parent.left

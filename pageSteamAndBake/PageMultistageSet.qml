@@ -56,14 +56,14 @@ Item {
                 text: qsTr("启动")
             }
             onClicked: {
-                QmlDevState.setState("StOvState",3)
-                QmlDevState.setState("StOvMode",listView.model.get(0).mode)
 
-                QmlDevState.setState("StOvSetTemp",listView.model.get(0).temp)
-                QmlDevState.setState("StOvSetTimer",listView.model.get(0).time)
+                QmlDevState.setState("LStOvState",3)
+                QmlDevState.setState("LStOvMode",listView.model.get(0).mode)
+                QmlDevState.setState("LStOvRealTemp",listView.model.get(0).temp)
+                QmlDevState.setState("LStOvSetTimerLeft",listView.model.get(0).time)
 
                 QmlDevState.setState("cnt",phoneModel.count)
-                QmlDevState.setState("current",0)
+                QmlDevState.setState("current",1)
 
                 var list = [];
                 for(var i = 0; i < phoneModel.count; ++i)
@@ -75,6 +75,8 @@ Item {
                     steps.time=phoneModel.get(i).time
                     list.push(steps)
                 }
+                setMultiCooking(list)
+
                 var para =getDefHistory()
                 para.dishName=getDishName(list)
                 para.cookSteps=JSON.stringify(list)
@@ -165,109 +167,17 @@ Item {
     // 定义delegate
     Component {
         id: phoneDelegate
-
-        Item {
-            id: wrapper
-            width: parent.width
-            height: 97
-            Image{
-                source: "/images/fengexian_big.png"
-                anchors.bottom:parent.bottom
+        PageMultistageDelegate {
+            modeIndex:mode
+            tempIndex:temp
+            timeIndex:time
+            closeVisible:true
+            onClose:{
+                listView.model.remove(index)
             }
-            Button {
-                id:close
-                anchors.verticalCenter: parent.verticalCenter
-                anchors.right: parent.right
-                anchors.rightMargin: 10
-                visible:true
-                width:60
-                height:parent.height
-                background: Rectangle{
-                    color:"transparent"
-                    Image {
-                        anchors.verticalCenter: parent.verticalCenter
-                        anchors.horizontalCenter:parent.horizontalCenter
-                        source: "/images/guanbi.png"
-                    }
-                }
-                onClicked: {
-                    listView.model.remove(index)
-                }
-            }
-            Button {
-                height: parent.height
-                anchors.left: parent.left
-                anchors.right: close.left
-                anchors.verticalCenter: parent.verticalCenter
-                background: Rectangle{
-                    color:"transparent"
-                }
-                Text {
-                    id: indexText
-                    anchors.left: parent.left
-                    anchors.leftMargin: 48
-                    anchors.verticalCenter: parent.verticalCenter
-                    color:"#9AABC2"
-                    font.pixelSize: 32
-                    text:index+1
-                }
-
-                Text{
-                    id:modeText
-                    anchors.left: indexText.right
-                    anchors.leftMargin: 62
-                    anchors.verticalCenter: parent.verticalCenter
-
-                    text: leftWorkModeArr[mode]
-                    color: "#ECF4FC"
-                    font.pixelSize: 40
-                }
-
-                Text{
-                    id:tempText
-                    anchors.left: modeText.right
-                    anchors.leftMargin:62
-                    anchors.verticalCenter: parent.verticalCenter
-                    text: temp
-                    color: "#ECF4FC"
-                    font.pixelSize: 40
-                }
-
-                Text{
-                    id:tempImage
-                    anchors.left: tempText.right
-                    anchors.leftMargin:6
-                    text:"℃"
-                    anchors.verticalCenter: parent.verticalCenter
-                    color: "#ECF4FC"
-                    font.pixelSize: 36
-
-                }
-
-                Text{
-                    id:timeText
-                    anchors.left: tempImage.right
-                    anchors.leftMargin: 62
-                    anchors.verticalCenter: parent.verticalCenter
-
-                    text: time
-                    color: "#ECF4FC"
-                    font.pixelSize: 40
-                }
-
-                Text{
-                    id:timeImage
-                    anchors.left: timeText.right
-                    anchors.leftMargin:6
-                    color: "#ECF4FC"
-                    text:"分钟"
-                    font.pixelSize: 30
-                    anchors.verticalCenter: parent.verticalCenter
-                }
-                onClicked: {
-                    listClickIndex=index
-                    showTanchang()
-                }
+            onConfirm:{
+                listClickIndex=index
+                showTanchang()
             }
         }
     }

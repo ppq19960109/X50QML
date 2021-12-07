@@ -114,24 +114,19 @@
         <file>PageBusyIndicator.qml</file>
         <file>PageDialog.qml</file>
         <file>pageSet/PageReleaseNotes.qml</file>
+        <file>pageSteamAndBake/PageMultistageDelegate.qml</file>
+        <file>pageSet/PageUpdateProgressBar.qml</file>
     </qresource>
     <qresource prefix="/test">
-        <file>images/x5/方案一/1.png</file>
-        <file>images/x5/方案一/2.png</file>
-        <file>images/x5/方案一/3.png</file>
-        <file>images/x5/方案一/4.png</file>
-        <file>images/x5/方案一/5.png</file>
-        <file>images/x5/方案二/A1.png</file>
-        <file>images/x5/方案二/A2.png</file>
-        <file>images/x5/方案二/A3.png</file>
-        <file>images/x5/方案二/A4.png</file>
-        <file>images/x5/方案三/B1.png</file>
-        <file>images/x5/方案三/B2.png</file>
-        <file>images/x5/方案三/B3.png</file>
-        <file>images/x5/方案三/B4.png</file>
-        <file>images/x5/方案四.png</file>
-        <file>images/x5/方案三/B5.png</file>
-        <file>images/x5/方案二/A4 拷贝.png</file>
-        <file>images/x5/方案二/A4 拷贝 2.png</file>
+        <file>x5/上下排版/1.png</file>
+        <file>x5/粗体字/1.png</file>
+        <file>x5/粗体字/2.png</file>
+        <file>x5/粗体字/3.png</file>
+        <file>x5/粗体字/4.png</file>
+        <file>x5/粗体字/5.png</file>
+        <file>x5/细体字/1.png</file>
+        <file>x5/细体字/2.png</file>
+        <file>x5/细体字/3.png</file>
+        <file>x5/D1左空右腔体.png</file>
     </qresource>
 </RCC>

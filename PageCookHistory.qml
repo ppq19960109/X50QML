@@ -12,6 +12,7 @@ Item {
         listModel.clear();
         var recipe=QmlDevState.getHistory();
         for(var i = 0; i < recipe.length; ++i) {
+            console.log("getHistory recipe",JSON.stringify(recipe[i]))
             listModel.append(recipe[i])
         }
     }

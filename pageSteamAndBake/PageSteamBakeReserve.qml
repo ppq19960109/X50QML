@@ -92,39 +92,32 @@ Item {
             }
             onClicked: {
                 console.log("startBtn",hourPathView.model[hourPathView.currentIndex],minutePathView.model[minutePathView.currentIndex])
-
-                for(var i = 0; i < root.length; i++)
+                if(root.length===1)
                 {
-                    console.log(root[i].mode,root[i].temp,root[i].time)
-                    if(root.length===1)
+                    if(0===root[i].device)
                     {
-                        if(0===root[i].device)
-                        {
-                            QmlDevState.setState("StOvState",1)
-                            QmlDevState.setState("StOvMode",root[i].mode)
-                            QmlDevState.setState("StOvSetTemp",root[i].temp)
-                            QmlDevState.setState("StOvSetTimer",root[i].time)
-
-                        }
-                        else
-                        {
-                            QmlDevState.setState("RStOvState",1)
-                            QmlDevState.setState("RStOvSetTemp",root[i].temp)
-                            QmlDevState.setState("RStOvSetTimer",root[i].time)
-
-                        }
+                        QmlDevState.setState("LStOvState",1)
+                        QmlDevState.setState("LStOvMode",root[0].mode)
+                        QmlDevState.setState("LStOvRealTemp",root[0].temp)
+                        QmlDevState.setState("LStOvOrderTimerLeft",root[0].time)
                     }
                     else
                     {
-                        if(0===root[i].device)
-                        {
-
-                        }
-                        else
-                        {
-
-                        }
+                        QmlDevState.setState("RStOvState",1)
+                        QmlDevState.setState("RStOvRealTemp",root[0].temp)
+                        QmlDevState.setState("RStOvOrderTimerLeft",root[0].time)
                     }
+                    root[0].orderTime=hourPathView.currentIndex*60+minutePathView.currentIndex
+                    setCooking(root)
+                }
+                else
+                {
+                    QmlDevState.setState("LStOvState",1)
+                    QmlDevState.setState("LStOvMode",root[0].mode)
+                    QmlDevState.setState("LStOvRealTemp",root[0].temp)
+                    QmlDevState.setState("LStOvOrderTimerLeft",root[0].time)
+                    root[0].orderTime=hourPathView.currentIndex*60+minutePathView.currentIndex
+                    setMultiCooking(root)
                 }
 
                 var para =getDefHistory()

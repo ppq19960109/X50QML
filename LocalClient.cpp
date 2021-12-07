@@ -99,7 +99,7 @@ int LocalClient::uds_json_parse(const char *value,const int value_len)
 
     if (TYPE_EVENT== Type.toString())
     {
-        qDebug() << "Data" << Data;
+//        qDebug() << "Data" << Data << endl;
         emit sendData(Data);
     }
     else
@@ -142,7 +142,7 @@ int LocalClient::uds_recv(const char *byte,const int len)
                 continue;
             }
             verify = data[6 + msg_len +1];
-            printf("uds_recv msg_len:%d\n", msg_len);
+            printf("uds_recv msg_len:%d \r\n", msg_len);
             if (msg_len > 0)
             {
                 ret = uds_json_parse(&byte[i + 6 +1], msg_len);
@@ -172,7 +172,7 @@ int LocalClient::readMessage()
         qDebug() << "recv_data error";
         return -1;
     }
-    qDebug() << "recv_data:" <<recv_data;
+//    qDebug() << "recv_data:" <<recv_data << endl;
     uds_recv(recv_data.data(),recv_data.size());
 
     return 0;

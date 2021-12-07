@@ -90,23 +90,18 @@ Item {
             onClicked: {
                 console.log(modePathView.model.get(modePathView.currentIndex).modelData,tempPathView.model[tempPathView.currentIndex],timePathView.model[timePathView.currentIndex])
 
-                backPrePage()
-
                 if(0===root.device)
                 {
-                    QmlDevState.setState("StOvState",3)
-                    QmlDevState.setState("StOvMode",modePathView.currentIndex+1)
-
-                    QmlDevState.setState("StOvSetTemp",tempPathView.currentIndex+40)
-                    QmlDevState.setState("StOvSetTimer",timePathView.currentIndex+1)
-
+                    QmlDevState.setState("LStOvMode",modePathView.currentIndex+1)
+                    QmlDevState.setState("LStOvState",3)
+                    QmlDevState.setState("LStOvRealTemp",tempPathView.currentIndex+40)
+                    QmlDevState.setState("LStOvSetTimerLeft",timePathView.currentIndex+1)
                 }
                 else
                 {
                     QmlDevState.setState("RStOvState",2)
-
-                    QmlDevState.setState("RStOvSetTemp",tempPathView.currentIndex+40)
-                    QmlDevState.setState("RStOvSetTimer",timePathView.currentIndex+1)
+                    QmlDevState.setState("RStOvRealTemp",tempPathView.currentIndex+40)
+                    QmlDevState.setState("RStOvSetTimerLeft",timePathView.currentIndex+1)
                 }
                 var list = [];
                 var steps={}
@@ -115,6 +110,7 @@ Item {
                 steps.temp=tempPathView.currentIndex+40
                 steps.time=timePathView.currentIndex+1
                 list.push(steps)
+                setCooking(list)
 
                 var para =getDefHistory()
                 para.dishName=getDishName(list)
@@ -142,7 +138,7 @@ Item {
             onClicked: {
                 var list = [];
                 var param = {};
-                    param.device=root.device
+                param.device=root.device
                 param.mode=modePathView.currentIndex+1
                 param.temp=tempPathView.currentIndex+40
                 param.time=timePathView.currentIndex+1

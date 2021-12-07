@@ -13,9 +13,10 @@ Item {
             console.warn("Page Home onNameChanged...")
         }
         onStateChanged: { // 处理目标对象信号的槽函数
-            console.log("page home onStateChanged")
-            if(("StOvState"==key || "RStOvState"==key))
+            console.log("page home onStateChanged",key)
+            if(("LStOvState"==key || "RStOvState"==key))
             {
+                console.log("LStOvState RStOvState",value,QmlDevState.state.LStOvState,QmlDevState.state.RStOvState)
                 if(value > 0)
                 {
                     var ret=isExistView("pageSteamBakeRun")
@@ -27,7 +28,7 @@ Item {
                 }
                 else
                 {
-                    if(QmlDevState.state.StOvState===0 && QmlDevState.state.RStOvState===0)
+                    if(QmlDevState.state.LStOvState==devWorkState.WORKSTATE_STOP && QmlDevState.state.RStOvState==devWorkState.WORKSTATE_STOP)
                     {
                         backTopPage()
                     }

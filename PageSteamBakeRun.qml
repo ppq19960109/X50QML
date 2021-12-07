@@ -26,14 +26,14 @@ Item {
             width:250
             height: 250
             anchors.centerIn: parent
-            workMode:leftWorkModeArr[QmlDevState.state.StOvMode]
+            workMode:leftWorkModeArr[QmlDevState.state.LStOvMode]
             canvasDiameter:250
             percent:slider.value
-            workState:QmlDevState.state.StOvState
-            workTime:workState==devWorkState.WORKSTATE_FINISH?"返回":QmlDevState.state.StOvSetTimer+"分钟"
-            workTemp:workState==0?qsTr("左腔烹饪"):qsTr(QmlDevState.state.StOvSetTemp+"℃")
+            workState:QmlDevState.state.LStOvState
+            workTime:workState==devWorkState.WORKSTATE_FINISH?"返回":(workState==devWorkState.WORKSTATE_RESERVE?QmlDevState.state.LStOvOrderTimerLeft+"分钟":QmlDevState.state.LStOvSetTimerLeft+"分钟")
+            workTemp:workState==0?qsTr("左腔烹饪"):qsTr(QmlDevState.state.LStOvRealTemp+"℃")
             multCount:QmlDevState.state.cnt
-            multCur:QmlDevState.state.current
+            multCur:QmlDevState.state.current-1
             MouseArea{
                 anchors.fill: parent
                 propagateComposedEvents: true
@@ -76,8 +76,8 @@ Item {
             canvasDiameter:250
             percent:slider.value
             workState:QmlDevState.state.RStOvState
-            workTime:workState==devWorkState.WORKSTATE_FINISH?"返回":QmlDevState.state.RStOvSetTimer+"分钟"
-            workTemp:workState==0?qsTr("右腔烹饪"):qsTr(QmlDevState.state.RStOvSetTemp+"℃")
+            workTime:workState==devWorkState.WORKSTATE_RESERVE?"返回":(workState==devWorkState.WORKSTATE_FINISH?QmlDevState.state.RStOvSetTimerLeft+"分钟":QmlDevState.state.RStOvOrderTimerLeft+"分钟")
+            workTemp:workState==0?qsTr("右腔烹饪"):qsTr(QmlDevState.state.RStOvRealTemp+"℃")
             MouseArea{
                 anchors.fill: parent
                 propagateComposedEvents: true
@@ -117,8 +117,8 @@ Item {
                 console.log("slider:",value)
                 if(value==100)
                 {
-                    QmlDevState.setState("StOvState",4)
-                    QmlDevState.setState("RightStOvState",4)
+                    QmlDevState.setState("LStOvMode",4)
+                    QmlDevState.setState("RStOvState",4)
                 }
                 leftProgressBar.updatePaint()
                 rightProgressBar.updatePaint()

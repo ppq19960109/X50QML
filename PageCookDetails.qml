@@ -1,19 +1,29 @@
 import QtQuick 2.0
 import QtQuick.Controls 2.2
-
+import "pageSteamAndBake"
 Item {
     property var cookSteps
+
     Component.onCompleted: {
         console.log("state",state,typeof state)
         var root=JSON.parse(state);
-        recipeImg.source=root.imgUrl
-        dishName.text=root.dishName
-        cookTime.text="烹饪用时："+root.cookTime+"分钟"
-        details.text=root.details
+
         console.log("cookSteps",root.cookSteps)
-        cookSteps=JSON.parse(root.cookSteps)
-        cookSteps[0].dishName=root.dishName
-        console.log("cookSteps",JSON.stringify(cookSteps))
+        var cookSteps=JSON.parse(root.cookSteps)
+        if(root.imgUrl!="")
+        {
+            recipe.visible=true
+            recipeImg.source=root.imgUrl
+            dishName.text=root.dishName
+            cookTime.text="烹饪用时："+root.cookTime+"分钟"
+            details.text=root.details
+
+        }
+        else
+        {
+            noRecipe.visible=true
+            listView.model=cookSteps
+        }
     }
     ToolBar {
         id:topBar
@@ -99,6 +109,8 @@ Item {
     }
     //内容
     Rectangle{
+        id:recipe
+        visible:false
         width:parent.width
         anchors.top:topBar.bottom
         anchors.bottom: parent.bottom
@@ -165,6 +177,44 @@ Item {
                 }
             }
         }
+    }
 
+    Rectangle{
+        id:noRecipe
+        visible:false
+        width:parent.width
+        anchors.top:topBar.bottom
+        anchors.bottom: parent.bottom
+        color:"#000"
+
+        Component {
+            id: multiDelegate
+            PageMultistageDelegate {
+                modeIndex:modelData.mode
+                tempIndex:modelData.temp
+                timeIndex:modelData.time
+                closeVisible:false
+                onClose:{
+
+                }
+                onConfirm:{
+
+                }
+            }
+        }
+        ListView {
+            id: listView
+            anchors.fill: parent
+            interactive: false
+            delegate: multiDelegate
+//            model:
+
+            focus: true
+
+            // 连接信号槽
+            Component.onCompleted: {
+
+            }
+        }
     }
 }

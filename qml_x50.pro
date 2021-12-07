@@ -17,7 +17,8 @@ SOURCES += \
         LocalClient.cpp \
         QmlWifi.cpp \
         main.cpp \
-        qmldevstate.cpp
+        qmldevstate.cpp \
+        qrcodeen.cpp
 
 RESOURCES += qml.qrc
 
@@ -35,7 +36,9 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 #CONFIG += rk3308
 rk3308{
 DEFINES += USE_RK3308
-LIBS += -lDeviceIo -lasound
+#LIBS += -lDeviceIo -lasound
+INCLUDEPATH += libqrencode/include
+LIBS += libqrencode/lib/libqrencode.a
 }else{
 
 }
@@ -43,5 +46,6 @@ LIBS += -lDeviceIo -lasound
 HEADERS += \
     LocalClient.h \
     QmlWifi.h \
-    qmldevstate.h
+    qmldevstate.h \
+    qrcodeen.h
 

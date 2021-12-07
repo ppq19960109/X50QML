@@ -57,60 +57,29 @@ Item {
         anchors.bottom: parent.bottom
         color:"#000"
 
-        Button{
-            id:instructions
-            width: 350
-            height: 50
+        Image{
+            id:qrCodeImg
             anchors.top: parent.top
-            anchors.topMargin: 30
-            anchors.left: parent.left
-            anchors.leftMargin: 100
-            background:Rectangle{
-                color:"transparent"
-            }
-            Text{
-                text:"电子说明书   >"
-                color:"#fff"
-                font.pixelSize: 30
-//                anchors.centerIn: parent
-            }
-
-            onClicked: {
-
-            }
+            anchors.topMargin: 20
+            anchors.horizontalCenter: parent.horizontalCenter
+            source: "file:AfterSalesQrCode.png"
         }
 
-        Button{
-            id:tips
-            width: 350
-            height: 50
-            anchors.top: instructions.bottom
-            anchors.topMargin: 30
-            anchors.left: parent.left
-            anchors.leftMargin: 100
-            background:Rectangle{
-                color:"transparent"
-            }
-            Text{
-                text:"使用小贴士   >"
-                color:"#fff"
-                font.pixelSize: 30
-//                anchors.centerIn: parent
-            }
-
-            onClicked: {
-
-            }
-        }
         Text{
-
-            anchors.top: tips.bottom
-            anchors.topMargin: 30
-            anchors.left: parent.left
-            anchors.leftMargin: 100
-            text:"售后电话：XXXXX"
+            anchors.top: qrCodeImg.bottom
+            anchors.topMargin: 10
+            anchors.horizontalCenter: parent.horizontalCenter
+            text:"扫描二维码，查看设备使用说明"
             color:"#fff"
             font.pixelSize: 30
+        }
+        Text{
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: 20
+            anchors.horizontalCenter: parent.horizontalCenter
+            text:"售后电话："+QmlDevState.state.AfterSalesPhone
+            color:"#fff"
+            font.pixelSize: 40
         }
     }
 }

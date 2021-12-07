@@ -123,11 +123,11 @@ Item {
                 {
                     if("左腔"==name)
                     {
-                        QmlDevState.setState("StOvState",devWorkState.WORKSTATE_STOP)
+                        QmlDevState.setState("LStOvState",devWorkState.WORKSTATE_STOP)
                     }
                     else
                     {
-                        QmlDevState.setState("RightStOvState",devWorkState.WORKSTATE_STOP)
+                        QmlDevState.setState("RStOvState",devWorkState.WORKSTATE_STOP)
                     }
                 }
             }
@@ -178,7 +178,7 @@ Item {
             console.log("PageCirProgressBar name",name)
             if("左腔"==name)
             {
-                QmlDevState.setState("StOvState",devWorkState.WORKSTATE_STOP)
+                QmlDevState.setState("LStOvState",devWorkState.WORKSTATE_STOP)
             }
             else
             {
@@ -205,7 +205,7 @@ Item {
             console.log("PageCirProgressBar name",name)
             if("左腔"==name)
             {
-                QmlDevState.setState("StOvState",devWorkState.WORKSTATE_PAUSE)
+                QmlDevState.setState("LStOvState",devWorkState.WORKSTATE_PAUSE)
             }
             else
             {
