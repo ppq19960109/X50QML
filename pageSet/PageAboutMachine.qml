@@ -117,15 +117,15 @@ Item {
             color: "#000"
             radius: 10
             Button {
-                width:50
-                height:50
+                width:80
+                height:80
                 anchors.top:parent.top
                 anchors.topMargin: 5
                 anchors.right:parent.right
                 anchors.rightMargin: 5
 
                 Text{
-                    width:40
+                    width:80
                     color:"white"
                     font.pixelSize: 40
 

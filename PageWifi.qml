@@ -7,6 +7,7 @@ import QtQuick.VirtualKeyboard.Settings 2.2
 
 Item {
     id:root
+    enabled: loader_main.status == Loader.Null && loader_wifiInput.status == Loader.Null
     property bool isHidePwd: false
     property int scan_count: 0
 
@@ -14,42 +15,42 @@ Item {
     {
         if (rssi <= -100)
         {
-            return 0;
+            return 0
         }
         else if (rssi < -75)
         {
-            return 1;
+            return 1
         }
         else if (rssi < -55)
         {
-            return 2;
+            return 2
         }
         else
         {
-            return 3;
+            return 3
         }
     }
 
     function encrypType(flags)
     {
-        if (flags.indexOf("WPA") != -1)
+        if (flags.indexOf("WPA") !== -1)
         {
-            return 1;
+            return 1
         }
-        else if (flags.indexOf("WEP") != -1)
+        else if (flags.indexOf("WEP") !== -1)
         {
-            return 2;
+            return 2
         }
         else
         {
-            return 0;
+            return 0
         }
     }
 
 
     function setWifiList(sanR)
     {
-        var root=JSON.parse(sanR);
+        var root=JSON.parse(sanR)
         //        console.log("setWifiList:" ,sanR,root.length)
         root.sort(function(a, b){return b.rssi - a.rssi})
         wifiModel.clear()
@@ -110,7 +111,7 @@ Item {
         WifiConnect.encryp = encryp
 
         Data.WifiConnect=WifiConnect
-        wifi_connecting=true
+        wifiConnecting=true
         setToServer(Data)
     }
     function wifi_scan_timer_reset()
@@ -128,7 +129,7 @@ Item {
 
             if("WifiScanR"==key)
             {
-                setWifiList(value);
+                setWifiList(value)
             }
             else if(("WifiState"==key))
             {
@@ -155,9 +156,10 @@ Item {
         //        console.info("VirtualKeyboardSettings",VirtualKeyboardSettings.availableLocales)
         if(systemSettings.wifiEnable)
         {
-            if(wifi_connecting==false)
+            if(wifiConnecting==false)
             {
                 scanWifi()
+                scanRWifi()
             }
         }
         listView.positionViewAtBeginning()
@@ -189,7 +191,7 @@ Item {
                 opacity: 0
             }
             onClicked: {
-                backPrePage();
+                backPrePage()
             }
         }
 
@@ -220,7 +222,7 @@ Item {
                 {
                     timer_wifi_scan.interval=10000
                 }
-                if(wifi_connecting==false)
+                if(wifiConnecting==false)
                 {
                     getCurWifi()
                     scanRWifi()
@@ -228,7 +230,7 @@ Item {
             }
             else
             {
-                if(wifi_connecting==false && loader_wifiInput.sourceComponent === null)
+                if(wifiConnecting==false && loader_wifiInput.sourceComponent === null)
                 {
                     scanWifi()
                     getCurWifi()
@@ -393,7 +395,7 @@ Item {
                             listView.positionViewAtBeginning()
                         }
                         else
-                            showWifiInput(index,listView.model.get(index));
+                            showWifiInput(index,listView.model.get(index))
                     }
                 }
             }
@@ -610,7 +612,7 @@ Item {
                             }
 
                             onPressed: {
-                                //                                vkb.visible = true; //当选择输入框的时候才显示键盘
+                                //                                vkb.visible = true //当选择输入框的时候才显示键盘
                             }
                             onTextEdited:{
                                 console.log("onTextEdited len:",length)
@@ -655,7 +657,7 @@ Item {
                 //这种集成方式下点击隐藏键盘的按钮是没有效果的，
                 //只会改变active，因此我们自己处理一下
                 onActiveChanged: {
-                    //                    if(!active) { visible = false; }
+                    //                    if(!active) { visible = false }
                 }
             }
             Component.onCompleted: {

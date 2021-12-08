@@ -5,6 +5,7 @@ Item {
     property bool edit: false
     id:root
     Component.onCompleted: {
+        QmlDevState.sortHistory()
         getHistory()
     }
     function getHistory()
@@ -189,7 +190,7 @@ Item {
                 }
                 Button {
                     id:collection
-                    width:150
+                    width:200
                     height:parent.height
                     anchors.right: parent.right
                     background: Rectangle{

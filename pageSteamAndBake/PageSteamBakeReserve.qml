@@ -7,18 +7,17 @@ Item {
         var i
         var hourArray = new Array
         for(i=0; i< 12; ++i) {
-            hourArray.push(i+"小时");
+            hourArray.push(i+"小时")
         }
         hourPathView.model=hourArray
         var minuteArray = new Array
         for( i=0; i< 60; ++i) {
-            minuteArray.push(i+"分钟");
+            minuteArray.push(i+"分钟")
         }
         minutePathView.model=minuteArray
 
         console.log("state",state,typeof state)
-        root=JSON.parse(state);
-        console.log("root",root.length)
+        root=JSON.parse(state)
 
         reserveData.text=getDishName(root)
     }
@@ -56,7 +55,6 @@ Item {
         Text{
             id:pageName
             width:100
-            //            height:parent.height
             color:"#9AABC2"
             font.pixelSize: 40
             anchors.left:goBack.right
@@ -67,7 +65,6 @@ Item {
         Text{
             id:reserveData
             width:200
-            //            height:parent.height
             color:"#9AABC2"
             font.pixelSize: 40
             anchors.left:pageName.right
@@ -91,10 +88,15 @@ Item {
                 text:qsTr("启动")
             }
             onClicked: {
-                console.log("startBtn",hourPathView.model[hourPathView.currentIndex],minutePathView.model[minutePathView.currentIndex])
+                console.log("启动",hourPathView.model[hourPathView.currentIndex],minutePathView.model[minutePathView.currentIndex])
+                var page=isExistView("pageSteamBakeRun")
+                if(page!==null)
+                    backPage(page)
+                else
+                    backTopPage()
                 if(root.length===1)
                 {
-                    if(0===root[i].device)
+                    if(leftDevice===root[0].device)
                     {
                         QmlDevState.setState("LStOvState",1)
                         QmlDevState.setState("LStOvMode",root[0].mode)

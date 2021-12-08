@@ -2,18 +2,18 @@ import QtQuick 2.0
 import QtQuick.Controls 2.2
 
 Item {
-    property string name
-    property var workStateArr:["停止","预约中","预热中","运行中","烹饪完成","暂停"]
-
-    property alias workMode:mode.text
-    property alias canvasDiameter:canvas.width
+    property int device
     property real percent
 
     property int workState
+
+    property alias workMode:mode.text
+    property alias canvasDiameter:canvas.width
+
     property alias workTime:time.text
     property alias workTemp:temp.text
     property alias multCount:indicator.count
-    property alias multCur:indicator.currentIndex
+    property alias multCurrent:indicator.currentIndex
     Text{
         id:mode
         color:"white"
@@ -38,47 +38,47 @@ Item {
         height: width
         anchors.centerIn: parent
         onPaint: {
-            var ctx = getContext("2d");
+            var ctx = getContext("2d")
             ctx.save()
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.clearRect(0, 0, canvas.width, canvas.height)
             ctx.translate(canvas.width/2,canvas.height/2)
             ctx.lineWidth = 0
 
             //显示外圈
-            ctx.beginPath();
-            ctx.strokeStyle = 'white';
+            ctx.beginPath()
+            ctx.strokeStyle = 'white'
             ctx.fillStyle = 'white'
-            ctx.arc(0, 0, r, 0, 2*Math.PI);
+            ctx.arc(0, 0, r, 0, 2*Math.PI)
             ctx.closePath()
-            ctx.stroke();
+            ctx.stroke()
             ctx.fill()
             if(workState && percent<100)
             {
                 var rad=(2*percent/100-0.5)*Math.PI
-                ctx.lineCap="round";
+                ctx.lineCap="round"
                 ctx.lineWidth = lineWidth
-                ctx.beginPath();
-                ctx.strokeStyle = 'blue';
-                ctx.arc(0, 0, r, rad, 1.5*Math.PI);
-                ctx.stroke();
+                ctx.beginPath()
+                ctx.strokeStyle = 'blue'
+                ctx.arc(0, 0, r, rad, 1.5*Math.PI)
+                ctx.stroke()
 
                 //            console.log("radian:",rad,"r:",r,"Angle",360*percent/100)
-                var x = Math.cos(rad)*r;
-                var y = Math.sin(rad)*r;
+                var x = Math.cos(rad)*r
+                var y = Math.sin(rad)*r
                 //            console.log("x:",x,"y:",y)
-                ctx.beginPath();
+                ctx.beginPath()
                 ctx.fillStyle = 'blue'
-                ctx.arc(x, y, lineWidth, 0, 2*Math.PI);
+                ctx.arc(x, y, lineWidth, 0, 2*Math.PI)
                 ctx.closePath()
                 ctx.fill()
             }
             //显示百分数
-            //                ctx.font = "30px sans-serif";
-            //                ctx.textAlign = 'center';
-            //                ctx.fillStyle = "blue";
-            //                ctx.fillText(percent + '%', 0, 0);
+            //                ctx.font = "30px sans-serif"
+            //                ctx.textAlign = 'center'
+            //                ctx.fillStyle = "blue"
+            //                ctx.fillText(percent + '%', 0, 0)
 
-            ctx.restore();
+            ctx.restore()
         }
     }
     Item{
@@ -89,17 +89,17 @@ Item {
         Text{
             id:state
             color:"black"
-            visible: workState != devWorkState.WORKSTATE_STOP
+            visible: workState !== workStateEnum.WORKSTATE_STOP
             font.pixelSize: 40
             anchors.top:parent.top
             anchors.topMargin: 30
             anchors.horizontalCenter: parent.horizontalCenter
             horizontalAlignment :Text.AlignHCenter
             verticalAlignment :Text.AlignHCenter
-            text: workStateArr[workState]
+            text: workStateArray[workState]
         }
         Button{
-            visible: workState != devWorkState.WORKSTATE_STOP
+            visible: workState !== workStateEnum.WORKSTATE_STOP
             width:160
             height: 50
             anchors.centerIn: parent
@@ -118,17 +118,18 @@ Item {
                 //            text: qsTr(workTime+"分钟")
             }
             onClicked:{
-                console.log("PageCirProgressBar name",name)
-                if(workState==4)
+                console.log("PageCirProgressBar device",device)
+                if(workState===workStateEnum.WORKSTATE_FINISH)
                 {
-                    if("左腔"==name)
+                    if(leftDevice==device)
                     {
-                        QmlDevState.setState("LStOvState",devWorkState.WORKSTATE_STOP)
+                        QmlDevState.setState("LStOvState",workStateEnum.WORKSTATE_STOP)  
                     }
                     else
                     {
-                        QmlDevState.setState("RStOvState",devWorkState.WORKSTATE_STOP)
+                        QmlDevState.setState("RStOvState",workStateEnum.WORKSTATE_STOP)
                     }
+                    setCookOperation(device,workOperationEnum.CONFIRM)
                 }
             }
         }
@@ -160,8 +161,8 @@ Item {
         }
     }
     Button{
-        visible: workState != devWorkState.WORKSTATE_STOP
-        width:60
+        visible: workState !== workStateEnum.WORKSTATE_STOP
+        width:80
         height: width
         anchors.left: canvas.left
         anchors.top: canvas.bottom
@@ -175,20 +176,21 @@ Item {
             text:"x"
         }
         onClicked:{
-            console.log("PageCirProgressBar name",name)
-            if("左腔"==name)
+            console.log("PageCirProgressBar device",device)
+            if(leftDevice==device)
             {
-                QmlDevState.setState("LStOvState",devWorkState.WORKSTATE_STOP)
+                QmlDevState.setState("LStOvState",workStateEnum.WORKSTATE_STOP)
             }
             else
             {
-                QmlDevState.setState("RStOvState",devWorkState.WORKSTATE_STOP)
+                QmlDevState.setState("RStOvState",workStateEnum.WORKSTATE_STOP)
             }
+            setCookOperation(device,workOperationEnum.CANCEL)
         }
     }
     Button{
-        visible: workState != devWorkState.WORKSTATE_STOP
-        width:60
+        visible: workState !== workStateEnum.WORKSTATE_STOP
+        width:80
         height: width
         anchors.right: canvas.right
         anchors.top: canvas.bottom
@@ -202,15 +204,16 @@ Item {
             text:"||"
         }
         onClicked:{
-            console.log("PageCirProgressBar name",name)
-            if("左腔"==name)
+            console.log("PageCirProgressBar device",device)
+            if(leftDevice==device)
             {
-                QmlDevState.setState("LStOvState",devWorkState.WORKSTATE_PAUSE)
+                QmlDevState.setState("LStOvState",workStateEnum.WORKSTATE_PAUSE)
             }
             else
             {
-                QmlDevState.setState("RStOvState",devWorkState.WORKSTATE_PAUSE)
+                QmlDevState.setState("RStOvState",workStateEnum.WORKSTATE_PAUSE)
             }
+            setCookOperation(device,workOperationEnum.PAUSE)
         }
     }
 

@@ -8,17 +8,17 @@ Item {
         var i;
         var tempArray = new Array
         for(i=40; i< 230; ++i) {
-            tempArray.push(i+"℃");
+            tempArray.push(i+"℃")
         }
         tempPathView.model=tempArray
         var timeArray = new Array
         for(i=1; i< 300; ++i) {
-            timeArray.push(i+"分钟");
+            timeArray.push(i+"分钟")
         }
         timePathView.model=timeArray
         console.log("state",state,typeof state)
-        root=JSON.parse(state);
-        if(0===root.device)
+        root=JSON.parse(state)
+        if(leftDevice===root.device)
         {
             name.text="左腔蒸烤"
             for (i=0; i< leftModel.length; ++i) {
@@ -59,7 +59,7 @@ Item {
                 opacity: 0
             }
             onClicked: {
-                backPrePage();
+                backPrePage()
             }
         }
 
@@ -88,11 +88,15 @@ Item {
                 text:qsTr("启动")
             }
             onClicked: {
-                console.log(modePathView.model.get(modePathView.currentIndex).modelData,tempPathView.model[tempPathView.currentIndex],timePathView.model[timePathView.currentIndex])
-
-                if(0===root.device)
+                console.log("启动",modePathView.model.get(modePathView.currentIndex).modelData,tempPathView.model[tempPathView.currentIndex],timePathView.model[timePathView.currentIndex])
+                var page=isExistView("pageSteamBakeRun")
+                if(page!==null)
+                    backPage(page)
+                else
+                    backTopPage()
+                if(leftDevice===root.device)
                 {
-                    QmlDevState.setState("LStOvMode",modePathView.currentIndex+1)
+                    QmlDevState.setState("LStOvMode",leftWorkModeNumber[modePathView.currentIndex+1])
                     QmlDevState.setState("LStOvState",3)
                     QmlDevState.setState("LStOvRealTemp",tempPathView.currentIndex+40)
                     QmlDevState.setState("LStOvSetTimerLeft",timePathView.currentIndex+1)
@@ -103,10 +107,10 @@ Item {
                     QmlDevState.setState("RStOvRealTemp",tempPathView.currentIndex+40)
                     QmlDevState.setState("RStOvSetTimerLeft",timePathView.currentIndex+1)
                 }
-                var list = [];
+                var list = []
                 var steps={}
                 steps.device=root.device
-                steps.mode=modePathView.currentIndex+1
+                steps.mode=leftWorkModeNumber[modePathView.currentIndex+1]
                 steps.temp=tempPathView.currentIndex+40
                 steps.time=timePathView.currentIndex+1
                 list.push(steps)
@@ -136,10 +140,10 @@ Item {
                 text:qsTr("预约")
             }
             onClicked: {
-                var list = [];
-                var param = {};
+                var list = []
+                var param = {}
                 param.device=root.device
-                param.mode=modePathView.currentIndex+1
+                param.mode=leftWorkModeNumber[modePathView.currentIndex+1]
                 param.temp=tempPathView.currentIndex+40
                 param.time=timePathView.currentIndex+1
                 list.push(param)
@@ -185,7 +189,7 @@ Item {
                 currentIndex:0
                 onValueChanged: {
                     console.log(index,valueName)
-                    console.log("model value:",model.get(index).modelData);
+                    console.log("model value:",model.get(index).modelData)
                     tempPathView.currentIndex=model.get(index).temp-40;
                     timePathView.currentIndex=model.get(index).time-1;
                 }

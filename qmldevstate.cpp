@@ -68,9 +68,9 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     setState("cnt",0);
     setState("current",0);
 #endif
+    localConnected=0;
     connect(&client, SIGNAL(sendData(const QJsonValue&)), this,SLOT(readData(const QJsonValue&)));
-
-    myName="DevState";
+    connect(&client, &LocalClient::sendConnected, this,&QmlDevState::setLocalConnected);
 
     QVariantMap info;
     info.insert("id", 0);
@@ -99,7 +99,40 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     info["cookType"]=0;
     info["dishName"]="烤面包0";
     recipe[1].append(info);
+
+    info.insert("imgUrl", "");
+    history.append(info);
+
 }
+
+bool compareId(const QVariant &s1, const QVariant &s2)
+{
+    QVariantMap m1=qvariant_cast<QVariantMap>(s1);
+    QVariantMap m2=s2.value<QVariantMap>();
+    if(m1["collect"]==m2["collect"])
+    {
+        return m1["seqid"] > m2["seqid"];
+    }
+    else
+    {
+        if(m1["collect"]>0)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+}
+
+bool compareTime(const QVariant &s1, const QVariant &s2)
+{
+    QVariantMap m1=qvariant_cast<QVariantMap>(s1);
+    QVariantMap m2=s2.value<QVariantMap>();
+    return m1["timestamp"] > m2["timestamp"];
+}
+
 
 QVariantList QmlDevState::getRecipe(const int index)
 {
@@ -157,6 +190,11 @@ int QmlDevState::deleteHistory(int id)
 
     Data.insert("DeleteHistory", id);
     return sendJsonToServer("SET",Data);
+}
+
+void QmlDevState::sortHistory()
+{
+    std::sort(history.begin(), history.end(), compareId);
 }
 
 int QmlDevState::setCollect(const int index,const bool collect)
@@ -219,6 +257,7 @@ int QmlDevState::coverHistory(const QJsonObject &object, QVariantMap &info)
     QJsonValue timestamp =object.value("timestamp");
     QJsonValue cookType =object.value("cookType");
     QJsonValue cookTime =object.value("cookTime");
+    QJsonValue recipeType =object.value("recipeType");
 
     info.insert("id",id.toInt());
     info.insert("seqid",seqid.toInt());
@@ -230,34 +269,8 @@ int QmlDevState::coverHistory(const QJsonObject &object, QVariantMap &info)
     info.insert("timestamp",timestamp.toInt());
     info.insert("cookType",cookType.toInt());
     info.insert("cookTime",cookTime.toInt());
+    info.insert("recipeType",recipeType.toInt());
     return 0;
-}
-bool compareId(const QVariant &s1, const QVariant &s2)
-{
-    QVariantMap m1=qvariant_cast<QVariantMap>(s1);
-    QVariantMap m2=s2.value<QVariantMap>();
-    if(m1["collect"]==m2["collect"])
-    {
-        return m1["seqid"] > m2["seqid"];
-    }
-    else
-    {
-        if(m1["collect"]>0)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-}
-
-bool compareTime(const QVariant &s1, const QVariant &s2)
-{
-    QVariantMap m1=qvariant_cast<QVariantMap>(s1);
-    QVariantMap m2=s2.value<QVariantMap>();
-    return m1["timestamp"] > m2["timestamp"];
 }
 
 int QmlDevState::compareHistoryCollect(const QVariantMap& single)
@@ -390,7 +403,8 @@ void QmlDevState::readData(const QJsonValue &data)
 
                     if(key=="CookRecipe")
                     {
-                        recipe[0].clear();
+                        for(int i=0;i< (int)(sizeof(recipe)/sizeof(recipe[0]));++i)
+                            recipe[i].clear();
                         qDebug()<<"CookRecipe size:" <<array.size() << endl;
                     }
                     else
@@ -405,12 +419,12 @@ void QmlDevState::readData(const QJsonValue &data)
                         coverHistory(obj_array,info);
                         if(key=="CookRecipe")
                         {
-                            recipe[0].append(info);
+                            recipe[info["recipeType"].toInt()].append(info);
                         }
                         else
                         {
                             history.append(info);
-                            std::sort(history.begin(), history.end(), compareId);
+                            //                            std::sort(history.begin(), history.end(), compareId);
                         }
                         qDebug()<<key <<":"<<info<< endl;
                     }
@@ -421,7 +435,7 @@ void QmlDevState::readData(const QJsonValue &data)
                     QJsonObject object_struct =value.toObject();
                     coverHistory(object_struct,info);
                     history.append(info);
-                    std::sort(history.begin(), history.end(), compareId);
+                    //                    std::sort(history.begin(), history.end(), compareId);
                     setHistory(info);
                 }
                 else if(key=="DeleteHistory")
@@ -458,7 +472,7 @@ void QmlDevState::readData(const QJsonValue &data)
                     }
                     history[index]=cur;
 
-                    std::sort(history.begin(), history.end(), compareId);
+                    //                    std::sort(history.begin(), history.end(), compareId);
                     setHistory(cur);
                 }
             }
@@ -471,20 +485,19 @@ void QmlDevState::readData(const QJsonValue &data)
 }
 
 
-void QmlDevState::setName(const QString &name)
+void QmlDevState::setLocalConnected(const int connected)
 {
-    qDebug()<<"QmlDevState::setName"<<name;
-    if(myName!=name){
-        qDebug()<<"emit nameChanged";
-        myName=name;
-        emit nameChanged(name);
-    }
+    qDebug()<<"setLocalConnected:"<<connected;
+
+    localConnected=connected;
+    emit localConnectedChanged(connected);
+
 }
 
-QString QmlDevState::getName() const
+int QmlDevState::getLocalConnected() const
 {
-    qDebug()<<"QmlDevState::getName";
-    return myName;
+    qDebug()<<"getLocalConnected";
+    return localConnected;
 }
 
 void QmlDevState::setState(const QString& name,const QVariant& value)

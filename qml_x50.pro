@@ -14,8 +14,8 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-        LocalClient.cpp \
-        QmlWifi.cpp \
+        backlight.cpp \
+        localClient.cpp \
         main.cpp \
         qmldevstate.cpp \
         qrcodeen.cpp
@@ -41,11 +41,12 @@ INCLUDEPATH += libqrencode/include
 LIBS += libqrencode/lib/libqrencode.a
 }else{
 
+
 }
 
 HEADERS += \
-    LocalClient.h \
-    QmlWifi.h \
+    backlight.h \
+    localClient.h \
     qmldevstate.h \
     qrcodeen.h
 

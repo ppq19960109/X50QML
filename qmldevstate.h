@@ -6,7 +6,7 @@
 #include <QByteArray>
 #include <QMap>
 #include <QtQml>
-#include "LocalClient.h"
+#include "localClient.h"
 #include "qrcodeen.h"
 #define MAX_HISTORY (40)
 #define MAX_COLLECT (80)
@@ -19,13 +19,13 @@ class QmlDevState : public QObject
     //    QML_ANONYMOUS
     //    QML_ATTACHED(QmlDevState)
 
-    Q_PROPERTY(QString name READ getName WRITE setName NOTIFY nameChanged)
+    Q_PROPERTY(int localConnected READ getLocalConnected WRITE setLocalConnected NOTIFY localConnectedChanged)
     Q_PROPERTY(QVariantMap state READ getState NOTIFY stateChanged)
     Q_PROPERTY(QVariantList historyList READ getHistory NOTIFY historyChanged)
 public:
     //    using QObject::QObject;
     explicit QmlDevState(QObject *parent = nullptr);
-//    static QmlDevState* qmlDevState;
+    //    static QmlDevState* qmlDevState;
 
     enum LINK_VALUE_TYPE
     {
@@ -35,22 +35,9 @@ public:
         LINK_VALUE_TYPE_NULL,
     };
 
-    struct recipes_t
-    {
-        int id;
-        int seqid;
-        char dishName[64];
-        char imgUrl[64];
-        char details[512];
-        char cookSteps[64];
-        int timestamp;
-        int collect;
-        int cookTime;
-        int cookType;
-    };
 
-    void setName(const QString &name);
-    QString getName() const;
+    void setLocalConnected(const int connected);
+    int getLocalConnected() const;
 
     Q_INVOKABLE  void setState(const QString &name,const QVariant& value);
     QVariantMap getState() const;
@@ -61,6 +48,7 @@ public:
     Q_INVOKABLE QVariantList getHistory();
     Q_INVOKABLE int insertHistory(QVariantMap single);
     Q_INVOKABLE int deleteHistory(const int id);
+    Q_INVOKABLE void sortHistory();
     Q_INVOKABLE int setCollect(const int index,const bool collect);
     void setHistory(const QVariantMap &history);
     int coverHistory(const QJsonObject& single,QVariantMap& info);
@@ -75,11 +63,11 @@ public:
     Q_INVOKABLE int sendJsonToServer(const QString &type,const QJsonObject &json);
 private:
 
-    QString myName;
+    int localConnected;
     QVariantMap stateMap;
     QVariantMap stateTypeMap;
 signals:
-    void nameChanged(const QString& name);
+    void localConnectedChanged(const int value);
     void stateChanged(const QString& key,const QVariant& value);
     void historyChanged(const QVariantMap& historyList);
 

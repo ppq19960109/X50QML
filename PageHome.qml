@@ -5,12 +5,18 @@ Item {
     property int childLockPressCount:0
 
     //    anchors.fill: parent
-
-
     Connections { // 将目标对象信号与槽函数进行连接
         target: QmlDevState
-        onNameChanged: { // 处理目标对象信号的槽函数
-            console.warn("Page Home onNameChanged...")
+        onLocalConnectedChanged:{
+            console.log("page home onLocalConnectedChanged",value)
+            if(value > 0)
+            {
+                closeLoaderError()
+            }
+            else
+            {
+                showLoaderError()
+            }
         }
         onStateChanged: { // 处理目标对象信号的槽函数
             console.log("page home onStateChanged",key)
@@ -28,7 +34,7 @@ Item {
                 }
                 else
                 {
-                    if(QmlDevState.state.LStOvState==devWorkState.WORKSTATE_STOP && QmlDevState.state.RStOvState==devWorkState.WORKSTATE_STOP)
+                    if(QmlDevState.state.LStOvState===workStateEnum.WORKSTATE_STOP && QmlDevState.state.RStOvState===workStateEnum.WORKSTATE_STOP)
                     {
                         backTopPage()
                     }
@@ -48,11 +54,11 @@ Item {
                 wifiConnected=false
                 if(value==1)
                 {
-                    wifi_connecting=true
+                    wifiConnecting=true
                 }
                 else
                 {
-                    wifi_connecting=false
+                    wifiConnecting=false
                     if(value==4)
                     {
                         wifiConnected=true
@@ -61,14 +67,10 @@ Item {
                 console.log("WifiState",value,wifiConnected)
             }
         }
-//        onHistoryChanged: { // 处理目标对象信号的槽函数
-//            console.warn("Page Home onHistoryChanged...")
-//        }
     }
 
     Component.onCompleted: {
         console.log("page home onCompleted")
-
     }
     StackView.onActivated:{
         console.log("page home onActivated")
@@ -118,7 +120,7 @@ Item {
                 opacity: swipeview.currentIndex===0?0:1
             }
             onClicked:{
-                console.log('preBtn',swipeview.currentIndex);
+                console.log('preBtn',swipeview.currentIndex)
                 if(swipeview.currentIndex>0){
                     swipeview.currentIndex-=1
                 }
@@ -140,7 +142,7 @@ Item {
                 opacity: swipeview.currentIndex===(swipeview.count-1)?0:1
             }
             onClicked:{
-                console.log('nextBtn',swipeview.currentIndex);
+                console.log('nextBtn',swipeview.currentIndex)
                 if(swipeview.currentIndex < swipeview.count){
                     swipeview.currentIndex+=1
                 }
@@ -199,7 +201,7 @@ Item {
             width:150
             height:parent.height
             anchors.right:childLockBtn.left
-            visible: QmlDevState.state.RStoveTimingState==1
+            visible: QmlDevState.state.RStoveTimingState===1
             background: Rectangle {
                 opacity: 0
             }
@@ -271,8 +273,6 @@ Item {
                             longPressTimer.running = false
                             systemSettings.childLock=true
                             console.log("童锁键启用")
-                            //                            QmlDevState.setUartData("HoodSpeed",150)
-                            //                            QmlDevState.sendUartData()
                         }
                     }
                     else

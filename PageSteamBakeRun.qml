@@ -22,37 +22,37 @@ Item {
 
         PageCirProgressBar{
             id:leftProgressBar
-            name:"左腔"
+            device:0
             width:250
             height: 250
             anchors.centerIn: parent
-            workMode:leftWorkModeArr[QmlDevState.state.LStOvMode]
+            workMode:leftWorkModeFun(QmlDevState.state.LStOvMode)
             canvasDiameter:250
             percent:slider.value
             workState:QmlDevState.state.LStOvState
-            workTime:workState==devWorkState.WORKSTATE_FINISH?"返回":(workState==devWorkState.WORKSTATE_RESERVE?QmlDevState.state.LStOvOrderTimerLeft+"分钟":QmlDevState.state.LStOvSetTimerLeft+"分钟")
+            workTime:workState === workStateEnum.WORKSTATE_FINISH?"返回":(workState === workStateEnum.WORKSTATE_RESERVE?QmlDevState.state.LStOvOrderTimerLeft+"分钟":QmlDevState.state.LStOvSetTimerLeft+"分钟")
             workTemp:workState==0?qsTr("左腔烹饪"):qsTr(QmlDevState.state.LStOvRealTemp+"℃")
             multCount:QmlDevState.state.cnt
-            multCur:QmlDevState.state.current-1
+            multCurrent:QmlDevState.state.current-1
             MouseArea{
                 anchors.fill: parent
                 propagateComposedEvents: true
                 onClicked: {
-                    if(leftProgressBar.workState==devWorkState.WORKSTATE_FINISH)
+                    if(leftProgressBar.workState === workStateEnum.WORKSTATE_FINISH)
                     {
                         mouse.accepted = false
                     }
                     else
                     {
-                        load_page("pageSteamBakeBase",JSON.stringify({"device":"left"}))
+                        load_page("pageSteamBakeBase",JSON.stringify({"device":leftProgressBar.device}))
                     }
                 }
                 onPressed: {
-                    if(leftProgressBar.workState==devWorkState.WORKSTATE_FINISH)
+                    if(leftProgressBar.workState === workStateEnum.WORKSTATE_FINISH)
                         mouse.accepted = false
                 }
                 onReleased: {
-                    if(leftProgressBar.workState==devWorkState.WORKSTATE_FINISH)
+                    if(leftProgressBar.workState === workStateEnum.WORKSTATE_FINISH)
                         mouse.accepted = false
                 }
             }
@@ -68,7 +68,7 @@ Item {
 
         PageCirProgressBar{
             id:rightProgressBar
-            name:"右腔"
+            device:1
             width:250
             height: 250
             anchors.centerIn: parent
@@ -76,27 +76,27 @@ Item {
             canvasDiameter:250
             percent:slider.value
             workState:QmlDevState.state.RStOvState
-            workTime:workState==devWorkState.WORKSTATE_RESERVE?"返回":(workState==devWorkState.WORKSTATE_FINISH?QmlDevState.state.RStOvSetTimerLeft+"分钟":QmlDevState.state.RStOvOrderTimerLeft+"分钟")
+            workTime:workState === workStateEnum.WORKSTATE_RESERVE?"返回":(workState === workStateEnum.WORKSTATE_FINISH?QmlDevState.state.RStOvSetTimerLeft+"分钟":QmlDevState.state.RStOvOrderTimerLeft+"分钟")
             workTemp:workState==0?qsTr("右腔烹饪"):qsTr(QmlDevState.state.RStOvRealTemp+"℃")
             MouseArea{
                 anchors.fill: parent
                 propagateComposedEvents: true
                 onClicked: {
-                    if(rightProgressBar.workState==devWorkState.WORKSTATE_FINISH)
+                    if(rightProgressBar.workState === workStateEnum.WORKSTATE_FINISH)
                     {
                         mouse.accepted = false
                     }
                     else
                     {
-                        load_page("pageSteamBakeBase",JSON.stringify({"device":"right"}))
+                        load_page("pageSteamBakeBase",JSON.stringify({"device":rightProgressBar.device}))
                     }
                 }
                 onPressed: {
-                    if(rightProgressBar.workState==devWorkState.WORKSTATE_FINISH)
+                    if(rightProgressBar.workState === workStateEnum.WORKSTATE_FINISH)
                         mouse.accepted = false
                 }
                 onReleased: {
-                    if(rightProgressBar.workState==devWorkState.WORKSTATE_FINISH)
+                    if(rightProgressBar.workState === workStateEnum.WORKSTATE_FINISH)
                         mouse.accepted = false
                 }
             }

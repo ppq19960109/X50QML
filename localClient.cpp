@@ -1,8 +1,9 @@
-#include "LocalClient.h"
+#include "localClient.h"
 
 
 LocalClient::LocalClient(QObject *parent) : QObject(parent)
 {
+    timeoutCount=0;
     m_socket = new QLocalSocket();
     qDebug() << "readBufferSize:" <<m_socket->readBufferSize();
     qDebug() << "UNIX_DOMAIN:" << UNIX_DOMAIN;
@@ -15,7 +16,9 @@ LocalClient::LocalClient(QObject *parent) : QObject(parent)
 
     timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, &LocalClient::connectToServer);
+    //#ifdef USE_RK3308
     timer->start(2000);
+    //#endif
 }
 
 LocalClient::~LocalClient()
@@ -25,9 +28,15 @@ LocalClient::~LocalClient()
 int LocalClient::seqid=0;
 
 void LocalClient::connectToServer()
-{
-    qDebug("connectToServer start");
+{    qDebug("connectToServer start");
     m_socket->connectToServer(UNIX_DOMAIN);
+    ++timeoutCount;
+    if(timeoutCount==5)
+    {
+//#ifdef USE_RK3308
+        emit sendConnected(0);
+//#endif
+    }
     //    qDebug("connectToServer end");
 
     //    if (m_socket->waitForConnected(-1))
@@ -43,7 +52,7 @@ void LocalClient::get_all()
     root.insert(TYPE,TYPE_GETALL);
     root.insert(DATA,QJsonValue::Null);
     QByteArray data=QJsonDocument(root).toJson(QJsonDocument::Compact);
-    qDebug() << "get_all: "<< QString(data);
+    //    qDebug() << "get_all: "<< QString(data);
     sendMessage(data);
 }
 
@@ -99,7 +108,7 @@ int LocalClient::uds_json_parse(const char *value,const int value_len)
 
     if (TYPE_EVENT== Type.toString())
     {
-//        qDebug() << "Data" << Data << endl;
+        //        qDebug() << "Data" << Data << endl;
         emit sendData(Data);
     }
     else
@@ -172,7 +181,7 @@ int LocalClient::readMessage()
         qDebug() << "recv_data error";
         return -1;
     }
-//    qDebug() << "recv_data:" <<recv_data << endl;
+    //    qDebug() << "recv_data:" <<recv_data << endl;
     uds_recv(recv_data.data(),recv_data.size());
 
     return 0;
@@ -186,6 +195,8 @@ void LocalClient::close()
 void LocalClient::socketConnectedHandler()
 {
     qDebug() << "socketConnectedHandler";
+    timeoutCount=0;
+    emit sendConnected(1);
     get_all();
 }
 
@@ -193,6 +204,7 @@ void LocalClient::socketDisConnectedHandler()
 {
     qDebug() << "socketDisConnectedHandler";
     close();
+    emit sendConnected(0);
 }
 
 void LocalClient::socketErrorHandler(QLocalSocket::LocalSocketError error)

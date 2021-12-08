@@ -4,6 +4,7 @@ import QtQuick.Controls 2.2
 Item {
     signal showListData(var listData)
     property alias title: name.text
+
     Component.onCompleted: {
         var i;
         var tempArray = new Array
@@ -78,12 +79,10 @@ Item {
                 text:qsTr("确定")
             }
             onClicked: {
-
                 var param = {};
-                param.mode=modePathView.currentIndex+1
+                param.mode=leftWorkModeNumber[modePathView.currentIndex+1]
                 param.temp=tempPathView.currentIndex+40
                 param.time=timePathView.currentIndex+1
-                console.log('listParam'+param);
                 showListData(param);
                 dismissTanchang();
             }
@@ -137,7 +136,6 @@ Item {
                 width: parent.width/3
                 height:parent.height
                 Component.onCompleted:{
-                    //                            tempPathView.positionViewAtIndex(1, PathView.End)
                     tempPathView.currentIndex=modePathView.model.get(modePathView.currentIndex).temp-40;
                     console.log("tempPathView",tempPathView.currentIndex)
                 }

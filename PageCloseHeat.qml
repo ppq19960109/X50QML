@@ -7,12 +7,12 @@ Item {
         var i
         var hourArray = new Array
         for(i=0; i< 3; ++i) {
-            hourArray.push(i+"小时");
+            hourArray.push(i+"小时")
         }
         hourPathView.model=hourArray
         var minuteArray = new Array
         for( i=0; i< 60; ++i) {
-            minuteArray.push(i+"分钟");
+            minuteArray.push(i+"分钟")
         }
         minutePathView.model=minuteArray
 
@@ -121,7 +121,7 @@ Item {
 
                 currentIndex:0
                 Component.onCompleted:{
-                    if(QmlDevState.state.RStoveTimingState==1)
+                    if(QmlDevState.state.RStoveTimingState===1)
                         currentIndex=Math.floor(QmlDevState.state.RStoveTimingLeft/60)
                 }
             }
@@ -131,7 +131,7 @@ Item {
                 height:parent.height
 
                 Component.onCompleted:{
-                    if(QmlDevState.state.RStoveTimingState==1)
+                    if(QmlDevState.state.RStoveTimingState===1)
                         currentIndex=QmlDevState.state.RStoveTimingLeft%60
                 }
             }

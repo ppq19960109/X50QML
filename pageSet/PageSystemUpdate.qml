@@ -3,6 +3,7 @@ import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
 import "../"
 Item {
+    enabled: loader_main.status == Loader.Null
     property bool versionChecked: false
 
     function otaRquest(request)

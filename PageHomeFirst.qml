@@ -1,7 +1,6 @@
 import QtQuick 2.2
 import QtQuick.Controls 2.2
 
-
 Item {
     //    width:parent.width
     //    height: parent.height

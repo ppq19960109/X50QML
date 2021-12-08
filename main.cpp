@@ -6,9 +6,8 @@
 #include <QDebug>
 #include <QStandardPaths>
 
-#include "QmlWifi.h"
 #include "qmldevstate.h"
-#include "LocalClient.h"
+#include "localClient.h"
 
 int main(int argc, char *argv[])
 {
@@ -48,8 +47,6 @@ int main(int argc, char *argv[])
 
     QQmlApplicationEngine engine;
 
-    QmlWifi* qmlWifi =new QmlWifi(&app);
-    engine.rootContext()->setContextProperty("QmlWifi", qmlWifi);
     QmlDevState* qmlDevState =new QmlDevState(&app);
     engine.rootContext()->setContextProperty("QmlDevState", qmlDevState);
 

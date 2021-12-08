@@ -6,18 +6,17 @@ Item {
 
     Component.onCompleted: {
         console.log("state",state,typeof state)
-        var root=JSON.parse(state);
+        var root=JSON.parse(state)
 
         console.log("cookSteps",root.cookSteps)
         var cookSteps=JSON.parse(root.cookSteps)
-        if(root.imgUrl!="")
+        if(root.imgUrl!=="")
         {
             recipe.visible=true
             recipeImg.source=root.imgUrl
             dishName.text=root.dishName
             cookTime.text="烹饪用时："+root.cookTime+"分钟"
             details.text=root.details
-
         }
         else
         {
@@ -52,7 +51,7 @@ Item {
                 opacity: 0
             }
             onClicked: {
-                backPrePage();
+                backPrePage()
             }
         }
 
@@ -191,9 +190,10 @@ Item {
             id: multiDelegate
             PageMultistageDelegate {
                 modeIndex:modelData.mode
-                tempIndex:modelData.temp
-                timeIndex:modelData.time
+                tempIndex:modelData.temp+"℃"
+                timeIndex:modelData.time+"分钟"
                 closeVisible:false
+
                 onClose:{
 
                 }
@@ -204,17 +204,16 @@ Item {
         }
         ListView {
             id: listView
-            anchors.fill: parent
+            width: parent.width
+            height: 300
+//            anchors.fill: parent
+            anchors.centerIn: parent
             interactive: false
             delegate: multiDelegate
 //            model:
 
             focus: true
-
-            // 连接信号槽
-            Component.onCompleted: {
-
-            }
         }
+
     }
 }

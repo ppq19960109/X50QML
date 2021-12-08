@@ -45,61 +45,64 @@ Item {
         Text {
             id: indexText
             anchors.left: parent.left
-            anchors.leftMargin: 60
+            anchors.leftMargin: 50
             anchors.verticalCenter: parent.verticalCenter
             color:"#9AABC2"
-            font.pixelSize: 32
+            font.pixelSize: 40
             text:index+1
         }
 
         Text{
             id:modeText
+            width: 160
             anchors.left: indexText.right
-            anchors.leftMargin: 60
+            anchors.leftMargin: 50
             anchors.verticalCenter: parent.verticalCenter
 
-            text: leftWorkModeArr[modeIndex]
+            text: leftWorkModeFun(modeIndex)
             color: "#ECF4FC"
             font.pixelSize: 40
         }
 
         Text{
             id:tempText
+            width: 160
             anchors.left: modeText.right
-            anchors.leftMargin:60
+            anchors.leftMargin:50
             anchors.verticalCenter: parent.verticalCenter
             color: "#ECF4FC"
             font.pixelSize: 40
         }
 
-        Text{
-            id:tempImage
-            anchors.left: tempText.right
-            anchors.leftMargin:5
-            text:"℃"
-            anchors.verticalCenter: parent.verticalCenter
-            color: "#ECF4FC"
-            font.pixelSize: 30
-        }
+//        Text{
+//            id:tempImage
+//            anchors.left: tempText.right
+//            anchors.leftMargin:5
+//            text:"℃"
+//            anchors.verticalCenter: parent.verticalCenter
+//            color: "#ECF4FC"
+//            font.pixelSize: 30
+//        }
 
         Text{
             id:timeText
-            anchors.left: tempImage.right
-            anchors.leftMargin: 62
+            width: 160
+            anchors.left: tempText.right
+            anchors.leftMargin: 50
             anchors.verticalCenter: parent.verticalCenter
             color: "#ECF4FC"
             font.pixelSize: 40
         }
 
-        Text{
-            id:timeImage
-            anchors.left: timeText.right
-            anchors.leftMargin:5
-            color: "#ECF4FC"
-            text:"分钟"
-            font.pixelSize: 30
-            anchors.verticalCenter: parent.verticalCenter
-        }
+//        Text{
+//            id:timeImage
+//            anchors.left: timeText.right
+//            anchors.leftMargin:5
+//            color: "#ECF4FC"
+//            text:"分钟"
+//            font.pixelSize: 30
+//            anchors.verticalCenter: parent.verticalCenter
+//        }
         onClicked: {
             confirm()
         }

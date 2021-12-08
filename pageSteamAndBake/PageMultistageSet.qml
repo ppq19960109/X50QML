@@ -2,7 +2,7 @@ import QtQuick 2.0
 import QtQuick.Controls 2.2
 
 Item {
-    //点击增加状态
+
     property int listClickIndex:0
     ToolBar {
         id:topBar
@@ -29,7 +29,7 @@ Item {
                 opacity: 0
             }
             onClicked: {
-                backPrePage();
+                backPrePage()
             }
         }
 
@@ -62,17 +62,17 @@ Item {
                 QmlDevState.setState("LStOvRealTemp",listView.model.get(0).temp)
                 QmlDevState.setState("LStOvSetTimerLeft",listView.model.get(0).time)
 
-                QmlDevState.setState("cnt",phoneModel.count)
+                QmlDevState.setState("cnt",listModel.count)
                 QmlDevState.setState("current",1)
 
-                var list = [];
-                for(var i = 0; i < phoneModel.count; ++i)
+                var list = []
+                for(var i = 0; i < listModel.count; ++i)
                 {
                     var steps={}
                     steps.device=0
-                    steps.mode=phoneModel.get(i).mode
-                    steps.temp=phoneModel.get(i).temp
-                    steps.time=phoneModel.get(i).time
+                    steps.mode=listModel.get(i).mode
+                    steps.temp=listModel.get(i).temp
+                    steps.time=listModel.get(i).time
                     list.push(steps)
                 }
                 setMultiCooking(list)
@@ -102,14 +102,14 @@ Item {
                 text:qsTr("预约")
             }
             onClicked: {
-                var list = [];
-                for(var i = 0; i < phoneModel.count; ++i)
+                var list = []
+                for(var i = 0; i < listModel.count; ++i)
                 {
                     var steps={}
                     steps.device=0
-                    steps.mode=phoneModel.get(i).mode
-                    steps.temp=phoneModel.get(i).temp
-                    steps.time=phoneModel.get(i).time
+                    steps.mode=listModel.get(i).mode
+                    steps.temp=listModel.get(i).temp
+                    steps.time=listModel.get(i).time
                     list.push(steps)
                 }
                 load_page("pageSteamBakeReserve",JSON.stringify(list))
@@ -122,8 +122,6 @@ Item {
             id: footerRootItem
             width: parent.width
             anchors.topMargin: 38
-            // 自定义信号
-            signal add()
 
             // 新增按钮
             Button {
@@ -145,32 +143,26 @@ Item {
                 onClicked:{
                     listClickIndex=listView.count
                     showTanchang()
-
                 }
             }
         }
     }
     ListModel {
-        id: phoneModel
+        id: listModel
 
-        ListElement {
-            mode: 4
-            temp: 75
-            time:30
-        }
-        ListElement {
-            mode: 3
-            temp: 55
-            time:40
-        }
+//        ListElement {
+//            mode: 1
+//            temp: 75
+//            time:30
+//        }
     }
     // 定义delegate
     Component {
-        id: phoneDelegate
+        id: listDelegate
         PageMultistageDelegate {
             modeIndex:mode
-            tempIndex:temp
-            timeIndex:time
+            tempIndex:temp+"℃"
+            timeIndex:time+"分钟"
             closeVisible:true
             onClose:{
                 listView.model.remove(index)
@@ -183,7 +175,6 @@ Item {
     }
     //内容
     Rectangle{
-        id:wrapper
         width:parent.width
         height:parent.height-topBar.height
         anchors.top:topBar.bottom
@@ -197,20 +188,14 @@ Item {
             id: listView
             anchors.fill: parent
             interactive: true
-            delegate: phoneDelegate
-            model: phoneModel
+            delegate: listDelegate
+            model: listModel
 
             footer: footerView
             focus: true
             //            highlightRangeMode: ListView.StrictlyEnforceRange
             //            highlightFollowsCurrentItem: true
             //            snapMode: ListView.SnapToItem
-
-            // 连接信号槽
-            Component.onCompleted: {
-
-            }
-
         }
     }
     Component{
@@ -233,10 +218,10 @@ Item {
         Connections {
             target: loader_tanchuang.item
             onShowListData:{
-                console.log("onShowListData",listData.mode,listData.temp,listData.time,listView.count);
+                console.log("onShowListData",listData.mode,listData.temp,listData.time,listView.count)
 
                 if(listClickIndex >= listView.count){
-                    listView.model.append(listData);
+                    listView.model.append(listData)
                 }else{
                     console.log("onShowListData listClickIndex",listClickIndex)
 

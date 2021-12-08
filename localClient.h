@@ -28,6 +28,7 @@ class LocalClient : public QObject
 public:
     explicit LocalClient(QObject *parent = nullptr);
     ~LocalClient();
+    int timeoutCount;
     static int seqid;
     void connectToServer();
     int sendMessage(QByteArray& data);
@@ -41,6 +42,7 @@ public:
 
 signals:
     void sendData(const QJsonValue& data);
+    void sendConnected(const int connected);
 private slots:
     void socketConnectedHandler();
     void socketDisConnectedHandler();
