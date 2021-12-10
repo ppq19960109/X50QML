@@ -4,20 +4,43 @@ import QtQuick.Controls 2.2
 Item {
     id:root
     //头部
-    Rectangle{
+    ToolBar {
         id:topBar
         width:parent.width
-        height:96
         anchors.top:parent.top
-        color:"#000"
+        height:96
+        background:Rectangle{
+            color:"#000"
+        }
         Image {
             anchors.fill: parent
             source: "/images/main_menu/zhuangtai_bj.png"
         }
+        //back图标
+        TabButton {
+            id:goBack
+            width:80
+            height:parent.height
+            anchors.left:parent.left
+            anchors.verticalCenter: parent.verticalCenter
+            Image{
+                anchors.centerIn: parent
+                source: "/images/fanhui.png"
+            }
+            background: Rectangle {
+                opacity: 0
+            }
+            onClicked: {
+                backTopPage()
+            }
+        }
+
         Text{
+            width:100
+            //            height:parent.height
             color:"#9AABC2"
             font.pixelSize: 40
-            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.left:goBack.right
             anchors.verticalCenter: parent.verticalCenter
             text:qsTr("多段")
         }
@@ -67,7 +90,8 @@ Item {
             width:200
             anchors.top:content.bottom
             anchors.topMargin:20
-            anchors.left:parent.left
+            anchors.horizontalCenter: parent.horizontalCenter
+
             text:"下次不再提醒"
             font.pixelSize: 30
             contentItem: Text {
@@ -77,31 +101,7 @@ Item {
                 leftPadding :checkBoxRemind.indicator.width+10
             }
         }
-        Button{
-            width: img_no.width
-            height: img_no.height
-            anchors.top:checkBoxRemind.bottom
 
-            anchors.horizontalCenter: parent.horizontalCenter
-            anchors.horizontalCenterOffset: -parent.width/4
-            background:Rectangle{
-                color:"transparent"
-            }
-            Image{
-                id:img_no
-                anchors.centerIn: parent
-                source:"/images/anniu_yes.png"
-            }
-            Text{
-                text:"返回"
-                font.pixelSize: 30
-                anchors.centerIn: parent
-                color:"#ECF4FC"
-            }
-            onClicked: {
-                backPrePage();
-            }
-        }
         Button{
             id:btn_yes
             width: img_yes.width
@@ -109,7 +109,6 @@ Item {
             anchors.top:checkBoxRemind.bottom
 
             anchors.horizontalCenter: parent.horizontalCenter
-            anchors.horizontalCenterOffset: parent.width/4
             background:Rectangle{
                 color:"transparent"
             }
@@ -126,6 +125,10 @@ Item {
                 color:"#ECF4FC"
             }
             onClicked: {
+                if(checkBoxRemind.checked)
+                {
+                    systemSettings.multistageRemind=false
+                }
                 root.visible=false
             }
         }

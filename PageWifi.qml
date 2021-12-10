@@ -159,7 +159,6 @@ Item {
             if(wifiConnecting==false)
             {
                 scanWifi()
-                scanRWifi()
             }
         }
         listView.positionViewAtBeginning()
@@ -211,14 +210,18 @@ Item {
         id:timer_wifi_scan
         repeat: true
         running: systemSettings.wifiEnable
-        interval: 1000
+        interval: 500
         triggeredOnStart: true
         onTriggered: {
             console.log("timer_wifi_scan")
             if(scan_count < 3)
             {
                 ++scan_count
-                if(scan_count==3)
+                if(scan_count==1)
+                {
+                    timer_wifi_scan.interval=1000
+                }
+                else if(scan_count==3)
                 {
                     timer_wifi_scan.interval=10000
                 }

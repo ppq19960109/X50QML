@@ -53,6 +53,11 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
 
     stateTypeMap.insert("MultiStageState",LINK_VALUE_TYPE_STRUCT);
 
+    stateTypeMap.insert("RStoveTimingState",LINK_VALUE_TYPE_NUM);
+    stateTypeMap.insert("RStoveTimingOpera",LINK_VALUE_TYPE_NUM);
+    stateTypeMap.insert("RStoveTimingSet",LINK_VALUE_TYPE_NUM);
+    stateTypeMap.insert("RStoveTimingLeft",LINK_VALUE_TYPE_NUM);
+
 #ifndef USE_RK3308
     setState("LStOvMode",0);
     setState("LStOvState",0);
@@ -238,6 +243,14 @@ int QmlDevState::setCollect(const int index,const bool collect)
     }
 
     return ret;
+}
+
+void QmlDevState::systemReset()
+{
+    system("rm -rf $HOME/.config/Marssenger/*");
+    QJsonObject root;
+    root.insert("Reset",QJsonValue::Null);
+    sendJsonToServer(TYPE_SET,root);
 }
 
 void QmlDevState::setHistory(const QVariantMap &history)

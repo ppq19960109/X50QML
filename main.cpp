@@ -7,7 +7,8 @@
 #include <QStandardPaths>
 
 #include "qmldevstate.h"
-#include "localClient.h"
+#include "localclient.h"
+#include "backlight.h"
 
 int main(int argc, char *argv[])
 {
@@ -21,9 +22,9 @@ int main(int argc, char *argv[])
 //    qmlRegisterType<QmlWifi>("QmlWifi", 1, 0, "QmlWifi");
 
     // app qml settings
-    app.setOrganizationName("MarsOven"); //1
-    app.setOrganizationDomain("MarsOven.com"); //2
-    app.setApplicationName("x5"); //3
+    app.setOrganizationName("Marssenger"); //1
+    app.setOrganizationDomain("Marssenger.com"); //2
+    app.setApplicationName("X50BCZ"); //3
 
     //    int fontId = QFontDatabase::addApplicationFont("/oem/res/fonts/SourceHanSansCN-Regular.ttf");
     int fontId = QFontDatabase::addApplicationFont("simfang.ttf");
@@ -49,6 +50,8 @@ int main(int argc, char *argv[])
 
     QmlDevState* qmlDevState =new QmlDevState(&app);
     engine.rootContext()->setContextProperty("QmlDevState", qmlDevState);
+    Backlight* backlight =new Backlight(&app);
+    engine.rootContext()->setContextProperty("Backlight", backlight);
 
     const QUrl url(QStringLiteral("qrc:/main.qml"));
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,

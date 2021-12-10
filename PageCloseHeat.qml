@@ -16,6 +16,13 @@ Item {
         }
         minutePathView.model=minuteArray
 
+//        if(QmlDevState.state.RStoveTimingState===timingStateEnum.RUN)
+//        {
+//            QmlDevState.setState("RStoveTimingState",2)
+//            var Data={}
+//            Data.RStoveTimingOpera =timingOperationEnum.CANCEL
+//            setToServer(Data)
+//        }
     }
     ToolBar {
         id:topBar
@@ -45,6 +52,7 @@ Item {
             }
             onClicked: {
                 backTopPage()
+
             }
         }
 
@@ -76,10 +84,14 @@ Item {
             }
             onClicked: {
                 console.log("startBtn",hourPathView.model[hourPathView.currentIndex],minutePathView.model[minutePathView.currentIndex])
-
-                QmlDevState.setState("RStoveTimingState",1)
-                QmlDevState.setState("RStoveTimingLeft",hourPathView.currentIndex*60+minutePathView.currentIndex)
                 backPrePage()
+                QmlDevState.setState("RStoveTimingState",timingStateEnum.RUN)
+                QmlDevState.setState("RStoveTimingLeft",hourPathView.currentIndex*60+minutePathView.currentIndex)
+
+                var Data={}
+                Data.RStoveTimingOpera = timingOperationEnum.START
+                Data.RStoveTimingSet = hourPathView.currentIndex*60+minutePathView.currentIndex
+                setToServer(Data)
             }
         }
     }

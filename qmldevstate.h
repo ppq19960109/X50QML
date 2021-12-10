@@ -6,7 +6,7 @@
 #include <QByteArray>
 #include <QMap>
 #include <QtQml>
-#include "localClient.h"
+#include "localclient.h"
 #include "qrcodeen.h"
 #define MAX_HISTORY (40)
 #define MAX_COLLECT (80)
@@ -50,6 +50,7 @@ public:
     Q_INVOKABLE int deleteHistory(const int id);
     Q_INVOKABLE void sortHistory();
     Q_INVOKABLE int setCollect(const int index,const bool collect);
+    Q_INVOKABLE void systemReset();
     void setHistory(const QVariantMap &history);
     int coverHistory(const QJsonObject& single,QVariantMap& info);
     int lastHistoryId(const int collect);

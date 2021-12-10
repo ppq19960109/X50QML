@@ -82,7 +82,8 @@ Item {
             }
 
             onClicked: {
-
+                console.log("page systemReset")
+                QmlDevState.systemReset()
             }
         }
     }

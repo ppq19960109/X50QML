@@ -15,7 +15,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         backlight.cpp \
-        localClient.cpp \
+        localclient.cpp \
         main.cpp \
         qmldevstate.cpp \
         qrcodeen.cpp
@@ -46,7 +46,7 @@ LIBS += libqrencode/lib/libqrencode.a
 
 HEADERS += \
     backlight.h \
-    localClient.h \
+    localclient.h \
     qmldevstate.h \
     qrcodeen.h
 

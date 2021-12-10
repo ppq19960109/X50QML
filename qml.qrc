@@ -116,6 +116,7 @@
         <file>pageSet/PageReleaseNotes.qml</file>
         <file>pageSteamAndBake/PageMultistageDelegate.qml</file>
         <file>pageSet/PageUpdateProgressBar.qml</file>
+        <file>PageHomeBar.qml</file>
     </qresource>
     <qresource prefix="/test">
         <file>x5/上下排版/1.png</file>

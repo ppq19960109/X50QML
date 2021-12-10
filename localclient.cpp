@@ -1,4 +1,4 @@
-#include "localClient.h"
+#include "localclient.h"
 
 
 LocalClient::LocalClient(QObject *parent) : QObject(parent)
@@ -16,9 +16,9 @@ LocalClient::LocalClient(QObject *parent) : QObject(parent)
 
     timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, &LocalClient::connectToServer);
-    //#ifdef USE_RK3308
+#ifdef USE_RK3308
     timer->start(2000);
-    //#endif
+#endif
 }
 
 LocalClient::~LocalClient()
@@ -29,21 +29,21 @@ int LocalClient::seqid=0;
 
 void LocalClient::connectToServer()
 {    qDebug("connectToServer start");
-    m_socket->connectToServer(UNIX_DOMAIN);
-    ++timeoutCount;
-    if(timeoutCount==5)
-    {
-//#ifdef USE_RK3308
-        emit sendConnected(0);
-//#endif
-    }
-    //    qDebug("connectToServer end");
+     m_socket->connectToServer(UNIX_DOMAIN);
+      ++timeoutCount;
+      if(timeoutCount==5)
+      {
+#ifdef USE_RK3308
+          emit sendConnected(0);
+#endif
+      }
+      //    qDebug("connectToServer end");
 
-    //    if (m_socket->waitForConnected(-1))
-    //    {
-    //        qDebug("Connected!");
-    //    }
-    //    qDebug("connectToServer fail!");
+      //    if (m_socket->waitForConnected(-1))
+      //    {
+      //        qDebug("Connected!");
+      //    }
+      //    qDebug("connectToServer fail!");
 }
 
 void LocalClient::get_all()

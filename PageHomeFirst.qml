@@ -8,14 +8,14 @@ Item {
 
     Row {
         anchors.fill: parent
-        anchors.topMargin: 20
-        spacing: 20
-        anchors.leftMargin: 50
-        anchors.rightMargin: 50
+        anchors.topMargin: 50
+        anchors.bottomMargin: 50
+        spacing: 48
+        anchors.leftMargin: 72
+        anchors.rightMargin: 80
 
         Button{
-            id:steam
-            width: 330
+            width: 300
             height:parent.height
 
             background:Rectangle{
@@ -35,8 +35,8 @@ Item {
             }
         }
         Button{
-            id:bake
-            width: 330
+
+            width: 300
             height:parent.height
 
             background:Rectangle{

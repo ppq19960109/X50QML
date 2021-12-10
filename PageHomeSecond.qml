@@ -8,13 +8,13 @@ Item {
     //        anchors.fill: parent
     RowLayout {
         anchors.fill: parent
-        anchors.topMargin: 20
-        anchors.leftMargin: 50
-        anchors.rightMargin: 50
-
+        anchors.topMargin: 50
+        anchors.bottomMargin: 50
+        anchors.leftMargin: 76
+        anchors.rightMargin: 76
+        spacing: 30
         Button{
-            id:smartRecipe
-            Layout.preferredWidth: 210
+            Layout.preferredWidth: 196
             Layout.preferredHeight:parent.height
             Layout.alignment: Qt.AlignHCenter
 
@@ -35,8 +35,7 @@ Item {
         }
 
         Button{
-            id:cookHistroy
-            Layout.preferredWidth: 210
+            Layout.preferredWidth: 196
             Layout.preferredHeight:parent.height
             Layout.alignment: Qt.AlignHCenter
             background:Rectangle{
@@ -57,8 +56,7 @@ Item {
         }
 
         Button{
-            id:multistageCooking
-            Layout.preferredWidth: 210
+            Layout.preferredWidth: 196
             Layout.preferredHeight:parent.height
             Layout.alignment: Qt.AlignHCenter
 

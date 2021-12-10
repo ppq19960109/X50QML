@@ -14,16 +14,7 @@ Item {
     property alias workTemp:temp.text
     property alias multCount:indicator.count
     property alias multCurrent:indicator.currentIndex
-    Text{
-        id:mode
-        color:"white"
-        font.pixelSize: 30
-        anchors.bottom:canvas.top
-        anchors.bottomMargin: 10
-        anchors.horizontalCenter: parent.horizontalCenter
-        horizontalAlignment :Text.AlignHCenter
-        verticalAlignment :Text.AlignHCenter
-    }
+
     function updatePaint()
     {
         console.log("updatePaint:",mode.text)
@@ -31,7 +22,7 @@ Item {
     }
 
     Canvas{
-        property real lineWidth:10
+        property int lineWidth:4
         property real r: canvas.width/2-lineWidth
         id: canvas
         width: canvasDiameter
@@ -46,31 +37,32 @@ Item {
 
             //显示外圈
             ctx.beginPath()
+            ctx.lineWidth = 4
             ctx.strokeStyle = 'white'
-            ctx.fillStyle = 'white'
+            ctx.fillStyle = '#596767'
             ctx.arc(0, 0, r, 0, 2*Math.PI)
             ctx.closePath()
             ctx.stroke()
             ctx.fill()
             if(workState && percent<100)
             {
-                var rad=(2*percent/100-0.5)*Math.PI
-                ctx.lineCap="round"
-                ctx.lineWidth = lineWidth
-                ctx.beginPath()
-                ctx.strokeStyle = 'blue'
-                ctx.arc(0, 0, r, rad, 1.5*Math.PI)
-                ctx.stroke()
+//                var rad=(2*percent/100-0.5)*Math.PI
+//                ctx.lineCap="round"
+//                ctx.lineWidth = lineWidth
+//                ctx.beginPath()
+//                ctx.strokeStyle = 'blue'
+//                ctx.arc(0, 0, r, rad, 1.5*Math.PI)
+//                ctx.stroke()
 
                 //            console.log("radian:",rad,"r:",r,"Angle",360*percent/100)
-                var x = Math.cos(rad)*r
-                var y = Math.sin(rad)*r
-                //            console.log("x:",x,"y:",y)
-                ctx.beginPath()
-                ctx.fillStyle = 'blue'
-                ctx.arc(x, y, lineWidth, 0, 2*Math.PI)
-                ctx.closePath()
-                ctx.fill()
+//                var x = Math.cos(rad)*r
+//                var y = Math.sin(rad)*r
+
+//                ctx.beginPath()
+//                ctx.fillStyle = 'blue'
+//                ctx.arc(x, y, lineWidth, 0, 2*Math.PI)
+//                ctx.closePath()
+//                ctx.fill()
             }
             //显示百分数
             //                ctx.font = "30px sans-serif"
@@ -82,27 +74,29 @@ Item {
         }
     }
     Item{
-        width:canvas.width
-        height: canvas.height
-        anchors.centerIn: parent
+//        width:canvas.width
+//        height: canvas.height
+        anchors.fill: parent
 
         Text{
             id:state
-            color:"black"
+            color:"white"
             visible: workState !== workStateEnum.WORKSTATE_STOP
-            font.pixelSize: 40
+            font.pixelSize:workState !== workStateEnum.WORKSTATE_PREHEAT ? 30:50
             anchors.top:parent.top
-            anchors.topMargin: 30
+            anchors.topMargin: workState !== workStateEnum.WORKSTATE_PREHEAT ? 40:100
             anchors.horizontalCenter: parent.horizontalCenter
             horizontalAlignment :Text.AlignHCenter
             verticalAlignment :Text.AlignHCenter
             text: workStateArray[workState]
         }
         Button{
-            visible: workState !== workStateEnum.WORKSTATE_STOP
-            width:160
-            height: 50
-            anchors.centerIn: parent
+            visible: workState !== workStateEnum.WORKSTATE_STOP && workState !== workStateEnum.WORKSTATE_PREHEAT
+            width:time.width
+            height: time.height
+            anchors.top: parent.top
+            anchors.topMargin: 100
+            anchors.horizontalCenter: parent.horizontalCenter
             background:Rectangle{
                 color:"transparent"
                 border.color: workState==4?"black":"transparent"
@@ -110,7 +104,7 @@ Item {
             Text{
                 id:time
                 color:"black"
-                font.pixelSize: 40
+                font.pixelSize: 50
                 anchors.verticalCenter:  parent.verticalCenter
                 anchors.horizontalCenter: parent.horizontalCenter
                 horizontalAlignment :Text.AlignHCenter
@@ -134,11 +128,21 @@ Item {
             }
         }
         Text{
+            id:mode
+            color:"white"
+            font.pixelSize: 30
+            anchors.bottom:parent.bottom
+            anchors.bottomMargin: 87
+            anchors.horizontalCenter: parent.horizontalCenter
+            horizontalAlignment :Text.AlignHCenter
+            verticalAlignment :Text.AlignHCenter
+        }
+        Text{
             id:temp
-            color:"black"
-            font.pixelSize: 40
+            color:"white"
+            font.pixelSize: 30
             anchors.bottom: parent.bottom
-            anchors.bottomMargin: 40
+            anchors.bottomMargin: 45
             anchors.horizontalCenter: parent.horizontalCenter
             horizontalAlignment :Text.AlignHCenter
             verticalAlignment :Text.AlignHCenter
@@ -158,62 +162,6 @@ Item {
 //                       ?"images/main_menu/user_active"+index+".png":"images/main_menu/user_normal"+index+".png"
 //                anchors.verticalCenter:parent.verticalCenter
 //            }
-        }
-    }
-    Button{
-        visible: workState !== workStateEnum.WORKSTATE_STOP
-        width:80
-        height: width
-        anchors.left: canvas.left
-        anchors.top: canvas.bottom
-        background:Rectangle{
-            color:"transparent"
-        }
-        Text{
-            color:"white"
-            font.pixelSize: 40
-            anchors.centerIn:parent
-            text:"x"
-        }
-        onClicked:{
-            console.log("PageCirProgressBar device",device)
-            if(leftDevice==device)
-            {
-                QmlDevState.setState("LStOvState",workStateEnum.WORKSTATE_STOP)
-            }
-            else
-            {
-                QmlDevState.setState("RStOvState",workStateEnum.WORKSTATE_STOP)
-            }
-            setCookOperation(device,workOperationEnum.CANCEL)
-        }
-    }
-    Button{
-        visible: workState !== workStateEnum.WORKSTATE_STOP
-        width:80
-        height: width
-        anchors.right: canvas.right
-        anchors.top: canvas.bottom
-        background:Rectangle{
-            color:"transparent"
-        }
-        Text{
-            color:"white"
-            font.pixelSize: 40
-            anchors.centerIn:parent
-            text:"||"
-        }
-        onClicked:{
-            console.log("PageCirProgressBar device",device)
-            if(leftDevice==device)
-            {
-                QmlDevState.setState("LStOvState",workStateEnum.WORKSTATE_PAUSE)
-            }
-            else
-            {
-                QmlDevState.setState("RStOvState",workStateEnum.WORKSTATE_PAUSE)
-            }
-            setCookOperation(device,workOperationEnum.PAUSE)
         }
     }
 

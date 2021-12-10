@@ -3,8 +3,8 @@ import QtQuick.Controls 2.2
 Rectangle {
     color:"#000"
     Component.onCompleted: {
-
-
+        console.log("PageLocalSettings light",Backlight.backlightGet())
+//        lightSlider.value=Backlight.backlightGet()
     }
     ToolBar {
         id:topBar
@@ -77,16 +77,18 @@ Rectangle {
                 anchors.verticalCenter: parent.verticalCenter
             }
             PageSlider {
+                id:lightSlider
                 anchors.left:startImg.right
                 anchors.right:endImg.left
                 anchors.verticalCenter: parent.verticalCenter
-                stepSize: 1
+                stepSize: 2
                 from: 40
-                to: 250
-                value: 100
+                to: 255
+                value: Backlight.backlightGet()
                 //                displayText:value+"min"
                 onValueSlider: {
                     console.log("lightSlider:",value)
+                    Backlight.backlightSet(value)
                 }
             }
             Image{
@@ -125,10 +127,11 @@ Rectangle {
                 stepSize: 1
                 from: 1
                 to: 5
-                value: 3
+                value: systemSettings.sleepTime
                 displayText:value+"min"
                 onValueSlider: {
                     console.log("dormantSlider:",value)
+                    systemSettings.sleepTime=value
                 }
             }
             Text{

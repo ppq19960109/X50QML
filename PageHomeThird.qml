@@ -8,14 +8,14 @@ Item {
     //        anchors.fill: parent
     Row {
         anchors.fill: parent
-        anchors.topMargin: 20
-        spacing: 20
-        anchors.leftMargin: 50
-        anchors.rightMargin: 50
+        anchors.topMargin: 50
+        anchors.bottomMargin: 50
+        anchors.leftMargin: 76
+        anchors.rightMargin: 76
+        spacing: 30
 
         Button{
-            id:timer
-            width: 210
+            width: 196
             height:parent.height
 
             background:Rectangle{
@@ -36,8 +36,7 @@ Item {
         }
 
         Button{
-            id:weather
-            width: 210
+            width: 196
             height:parent.height
             background:Rectangle{
                 radius: 10

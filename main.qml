@@ -5,6 +5,11 @@ import Qt.labs.settings 1.0
 import "pageSteamAndBake"
 import "pageSet"
 ApplicationWindow {
+    id: window
+    width: 800
+    height: 480
+    visible: true
+
     property int leftDevice:0
     property int rightDevice:1
 
@@ -22,15 +27,17 @@ ApplicationWindow {
 
     property var workOperationEnum:{"START":0,"PAUSE":1,"CANCEL":2,"CONFIRM":3,"RUN_NOW":4}
 
+    property var timingStateEnum:{"STOP":0,"RUN":1,"PAUSE":2,"CONFIRM":3}
+    property var timingOperationEnum:{"START":1,"CANCEL":2}
     property bool wifiConnecting: false
     property bool wifiConnected:false
-
+    property bool sleepState: false
     Settings {
         id: systemSettings
         category: "system"
 
         //设置-休眠时间(范围:1-5,单位:分钟 )
-        property int standbyTime: 3
+        property int sleepTime: 3
 
         //运行期间临时保存设置的亮度值，在收到开机状态是把该值重新设置回去 设置-屏幕亮度
         property int brightness: 255
@@ -41,6 +48,8 @@ ApplicationWindow {
 
         //判断儿童锁(true表示锁定，false表示未锁定)
         property bool childLock:false
+
+        property bool multistageRemind:true
     }
 
     function leftWorkModeFun(n)
@@ -221,18 +230,59 @@ ApplicationWindow {
     function closeLoaderError(){
         loader_error.sourceComponent = null
     }
-    id: window
-    width: 800
-    height: 480
-    visible: true
-
+    Component.onCompleted: {
+        console.warn("Window onCompleted sleepTime:",systemSettings.sleepTime)
+        Backlight.backlightEnable()
+        timer_window.start()
+    }
     StackView {
         id: stackView
         initialItem: pageHome
         anchors.fill: parent
-
+        enabled:true
     }
+    Timer{
+        id:timer_window
+        repeat: false
+        running: false
+        interval: systemSettings.sleepTime*30000
+        triggeredOnStart: false
+        onTriggered: {
+            console.log("timer_window sleep!!!!!!!!!!!!")
+            if(stackView.depth==1)
+            {
+                Backlight.backlightDisable()
+                sleepState=true
+            }
+        }
+    }
+    MouseArea{
+        anchors.fill: parent
+        hoverEnabled:true
+        propagateComposedEvents: true
 
+        onPressed: {
+//            console.warn("Window onPressed................................",sleepState)
+            if(sleepState==true)
+            {
+                sleepState=false
+                Backlight.backlightEnable()
+                mouse.accepted = true
+            }
+            else
+            {
+                mouse.accepted = false
+            }
+            timer_window.restart()
+        }
+        //                onReleased: {
+        //                    console.warn("Window onReleased................................")
+        //                    mouse.accepted = false
+        //                }
+        //                onPositionChanged:{
+        //                console.warn("Window onPositionChanged................................")
+        //                }
+    }
     Loader{
         //加载弹窗组件
         id:loader_main
