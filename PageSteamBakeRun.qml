@@ -12,6 +12,24 @@ Item {
         leftProgressBar.updatePaint()
         rightProgressBar.updatePaint()
     }
+    Component{
+        id:pageLeftCook
+        PageLeftCook{}
+    }
+    Component{
+        id:pageRightCook
+        PageRightCook{}
+    }
+    function showNewCook(device){
+        if(device===leftDevice)
+        {
+            loader_main.sourceComponent = pageLeftCook
+        }
+        else
+        {
+            loader_main.sourceComponent = pageRightCook
+        }
+    }
 
     Rectangle{
         width:parent.width/2
@@ -26,12 +44,13 @@ Item {
             width:300
             height: 300
             anchors.centerIn: parent
-            workMode:leftWorkModeFun(QmlDevState.state.LStOvMode)
+            workColor:"#19A582"
+            workMode:workState===workStateEnum.WORKSTATE_STOP?qsTr("左腔烹饪"):QmlDevState.state.MultiMode===1?leftDishName:leftWorkModeFun(QmlDevState.state.LStOvMode)
             canvasDiameter:300
             percent:30
             workState:QmlDevState.state.LStOvState
-            workTime:workState === workStateEnum.WORKSTATE_FINISH?"返回":(workState === workStateEnum.WORKSTATE_RESERVE?QmlDevState.state.LStOvOrderTimerLeft+"分钟":QmlDevState.state.LStOvSetTimerLeft+"分钟")
-            workTemp:workState==0?qsTr("左腔烹饪"):qsTr(QmlDevState.state.LStOvRealTemp+"℃")
+            workTime:workState === workStateEnum.WORKSTATE_RESERVE?QmlDevState.state.LStOvOrderTimerLeft+"分钟":QmlDevState.state.LStOvSetTimerLeft+"分钟"
+            workTemp:qsTr(QmlDevState.state.LStOvRealTemp+"℃")
             multCount:QmlDevState.state.cnt
             multCurrent:QmlDevState.state.current-1
             MouseArea{
@@ -44,7 +63,7 @@ Item {
                     }
                     else
                     {
-                        load_page("pageSteamBakeBase",JSON.stringify({"device":leftProgressBar.device}))
+                        showNewCook(leftProgressBar.device)
                     }
                 }
                 onPressed: {
@@ -119,12 +138,13 @@ Item {
             width:300
             height: 300
             anchors.centerIn: parent
-            workMode:workState==0?qsTr("右腔"):rightWorkMode
+            workColor:"#19A582"
+            workMode:workState===workStateEnum.WORKSTATE_STOP?qsTr("右腔烹饪"):rightWorkMode
             canvasDiameter:300
             percent:20
             workState:QmlDevState.state.RStOvState
-            workTime:workState === workStateEnum.WORKSTATE_FINISH?"返回":(workState === workStateEnum.WORKSTATE_RESERVE?QmlDevState.state.RStOvSetTimerLeft+"分钟":QmlDevState.state.RStOvOrderTimerLeft+"分钟")
-            workTemp:workState==0?qsTr("右腔烹饪"):qsTr(QmlDevState.state.RStOvRealTemp+"℃")
+            workTime:workState === workStateEnum.WORKSTATE_RESERVE?QmlDevState.state.RStOvOrderTimerLeft+"分钟":QmlDevState.state.RStOvSetTimerLeft+"分钟"
+            workTemp:qsTr(QmlDevState.state.RStOvRealTemp+"℃")
             MouseArea{
                 anchors.fill: parent
                 propagateComposedEvents: true
@@ -135,7 +155,7 @@ Item {
                     }
                     else
                     {
-                        load_page("pageSteamBakeBase",JSON.stringify({"device":rightProgressBar.device}))
+                        showNewCook(rightProgressBar.device)
                     }
                 }
                 onPressed: {

@@ -7,7 +7,7 @@ Item {
     ToolBar {
         id:topBar
         width:parent.width
-        anchors.top:parent.top
+        anchors.bottom:parent.bottom
         height:96
         background:Rectangle{
             color:"#000"
@@ -42,20 +42,17 @@ Item {
             font.pixelSize: 40
             anchors.left:goBack.right
             anchors.verticalCenter: parent.verticalCenter
-            text:qsTr("多段")
+            text:qsTr("多段烹饪说明")
         }
     }
     //内容
     Rectangle{
         id:wrapper
         width:parent.width
-        anchors.top:topBar.bottom
-        anchors.bottom: parent.bottom
+        anchors.bottom:topBar.top
+        anchors.top: parent.top
         color:"#000"
-        Image {
-            source: "/images/main_menu/dibuyuans.png"
-            anchors.bottom:parent.bottom
-        }
+
         Rectangle {
             id: content
             width: parent.width - 60

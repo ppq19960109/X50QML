@@ -6,6 +6,7 @@ Item {
     property real percent
 
     property int workState
+    property var workColor
 
     property alias workMode:mode.text
     property alias canvasDiameter:canvas.width
@@ -38,32 +39,31 @@ Item {
             //显示外圈
             ctx.beginPath()
             ctx.lineWidth = 4
-            ctx.strokeStyle = 'white'
+            ctx.strokeStyle = workColor
             ctx.fillStyle = '#596767'
             ctx.arc(0, 0, r, 0, 2*Math.PI)
             ctx.closePath()
             ctx.stroke()
             ctx.fill()
-            if(workState && percent<100)
-            {
-//                var rad=(2*percent/100-0.5)*Math.PI
-//                ctx.lineCap="round"
-//                ctx.lineWidth = lineWidth
-//                ctx.beginPath()
-//                ctx.strokeStyle = 'blue'
-//                ctx.arc(0, 0, r, rad, 1.5*Math.PI)
-//                ctx.stroke()
 
-                //            console.log("radian:",rad,"r:",r,"Angle",360*percent/100)
-//                var x = Math.cos(rad)*r
-//                var y = Math.sin(rad)*r
+            //                var rad=(2*percent/100-0.5)*Math.PI
+            //                ctx.lineCap="round"
+            //                ctx.lineWidth = lineWidth
+            //                ctx.beginPath()
+            //                ctx.strokeStyle = 'blue'
+            //                ctx.arc(0, 0, r, rad, 1.5*Math.PI)
+            //                ctx.stroke()
 
-//                ctx.beginPath()
-//                ctx.fillStyle = 'blue'
-//                ctx.arc(x, y, lineWidth, 0, 2*Math.PI)
-//                ctx.closePath()
-//                ctx.fill()
-            }
+            //            console.log("radian:",rad,"r:",r,"Angle",360*percent/100)
+            //                var x = Math.cos(rad)*r
+            //                var y = Math.sin(rad)*r
+
+            //                ctx.beginPath()
+            //                ctx.fillStyle = 'blue'
+            //                ctx.arc(x, y, lineWidth, 0, 2*Math.PI)
+            //                ctx.closePath()
+            //                ctx.fill()
+
             //显示百分数
             //                ctx.font = "30px sans-serif"
             //                ctx.textAlign = 'center'
@@ -74,42 +74,54 @@ Item {
         }
     }
     Item{
-//        width:canvas.width
-//        height: canvas.height
+        //        width:canvas.width
+        //        height: canvas.height
         anchors.fill: parent
 
         Text{
             id:state
             color:"white"
             visible: workState !== workStateEnum.WORKSTATE_STOP
-            font.pixelSize:workState !== workStateEnum.WORKSTATE_PREHEAT ? 30:50
+            font.pixelSize:(workState === workStateEnum.WORKSTATE_PREHEAT ||workState === workStateEnum.WORKSTATE_FINISH) ? 50:30
             anchors.top:parent.top
-            anchors.topMargin: workState !== workStateEnum.WORKSTATE_PREHEAT ? 40:100
+            anchors.topMargin: (workState === workStateEnum.WORKSTATE_PREHEAT ||workState === workStateEnum.WORKSTATE_FINISH) ? 100:40
             anchors.horizontalCenter: parent.horizontalCenter
             horizontalAlignment :Text.AlignHCenter
             verticalAlignment :Text.AlignHCenter
             text: workStateArray[workState]
         }
+
+        Text{
+            id:time
+            visible: !(workState === workStateEnum.WORKSTATE_PREHEAT ||workState === workStateEnum.WORKSTATE_FINISH||workState === workStateEnum.WORKSTATE_STOP)
+            color:workColor
+            font.pixelSize: 50
+            anchors.top:parent.top
+            anchors.topMargin:100
+            anchors.horizontalCenter: parent.horizontalCenter
+            horizontalAlignment :Text.AlignHCenter
+            verticalAlignment :Text.AlignHCenter
+        }
+
         Button{
-            visible: workState !== workStateEnum.WORKSTATE_STOP && workState !== workStateEnum.WORKSTATE_PREHEAT
-            width:time.width
-            height: time.height
-            anchors.top: parent.top
-            anchors.topMargin: 100
+            visible: workState === workStateEnum.WORKSTATE_FINISH
+            width:150
+            height: 50
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: 80
             anchors.horizontalCenter: parent.horizontalCenter
             background:Rectangle{
                 color:"transparent"
-                border.color: workState==4?"black":"transparent"
+                border.color: "white"
             }
             Text{
-                id:time
-                color:"black"
-                font.pixelSize: 50
+                color:"white"
+                font.pixelSize: 40
                 anchors.verticalCenter:  parent.verticalCenter
                 anchors.horizontalCenter: parent.horizontalCenter
                 horizontalAlignment :Text.AlignHCenter
                 verticalAlignment :Text.AlignHCenter
-                //            text: qsTr(workTime+"分钟")
+                text: qsTr("返回")
             }
             onClicked:{
                 console.log("PageCirProgressBar device",device)
@@ -117,7 +129,7 @@ Item {
                 {
                     if(leftDevice==device)
                     {
-                        QmlDevState.setState("LStOvState",workStateEnum.WORKSTATE_STOP)  
+                        QmlDevState.setState("LStOvState",workStateEnum.WORKSTATE_STOP)
                     }
                     else
                     {
@@ -129,6 +141,7 @@ Item {
         }
         Text{
             id:mode
+            visible: workState !== workStateEnum.WORKSTATE_FINISH
             color:"white"
             font.pixelSize: 30
             anchors.bottom:parent.bottom
@@ -136,9 +149,11 @@ Item {
             anchors.horizontalCenter: parent.horizontalCenter
             horizontalAlignment :Text.AlignHCenter
             verticalAlignment :Text.AlignHCenter
+            elide : Text.ElideMiddle
         }
         Text{
             id:temp
+            visible: !(workState === workStateEnum.WORKSTATE_FINISH||workState === workStateEnum.WORKSTATE_STOP)
             color:"white"
             font.pixelSize: 30
             anchors.bottom: parent.bottom
@@ -146,7 +161,6 @@ Item {
             anchors.horizontalCenter: parent.horizontalCenter
             horizontalAlignment :Text.AlignHCenter
             verticalAlignment :Text.AlignHCenter
-            //            text: workTemp
         }
         PageIndicator {
             id:indicator
@@ -156,12 +170,6 @@ Item {
             anchors.top: temp.bottom
             anchors.horizontalCenter: parent.horizontalCenter
             interactive: true
-//            delegate: Image {
-
-//                source:index===swipeview.currentIndex
-//                       ?"images/main_menu/user_active"+index+".png":"images/main_menu/user_normal"+index+".png"
-//                anchors.verticalCenter:parent.verticalCenter
-//            }
         }
     }
 

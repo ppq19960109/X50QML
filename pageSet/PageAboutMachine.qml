@@ -10,7 +10,7 @@ Item {
     ToolBar {
         id:topBar
         width:parent.width
-        anchors.top:parent.top
+        anchors.bottom:parent.bottom
         height:96
         background:Rectangle{
             color:"#000"
@@ -53,8 +53,8 @@ Item {
     //内容
     Rectangle{
         width:parent.width
-        anchors.top:topBar.bottom
-        anchors.bottom: parent.bottom
+        anchors.bottom:topBar.top
+        anchors.top: parent.top
         color:"#000"
         Item{
             width:parent.width
@@ -114,54 +114,60 @@ Item {
         id:component_bind
         Rectangle {
             anchors.fill: parent
-            color: "#000"
-            radius: 10
-            Button {
-                width:80
-                height:80
-                anchors.top:parent.top
-                anchors.topMargin: 5
-                anchors.right:parent.right
-                anchors.rightMargin: 5
+            color: "transparent"
+            Rectangle {
+                width:500
+                height: 300
+                anchors.centerIn: parent
+                color: "#000"
+                radius: 10
+                Button {
+                    width:80
+                    height:80
+                    anchors.top:parent.top
+                    anchors.topMargin: 5
+                    anchors.right:parent.right
+                    anchors.rightMargin: 5
+
+                    Text{
+                        width:80
+                        color:"white"
+                        font.pixelSize: 40
+
+                        anchors.centerIn: parent
+                        horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment: Text.AlignVCenter
+                        text:"X"
+                    }
+                    background: Rectangle {
+                        color:"transparent"
+                    }
+                    onClicked: {
+                        closeLoaderMain()
+                    }
+                }
+                Image{
+                    id:qrCodeImg
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.horizontalCenterOffset: -qrCodeImg.width/2
+                    anchors.verticalCenter: parent.verticalCenter
+                    source: "file:QrCode.png"
+                }
 
                 Text{
-                    width:80
+                    width:200
+                    anchors.top: qrCodeImg.top
+                    anchors.left: qrCodeImg.right
+                    anchors.leftMargin: 20
                     color:"white"
-                    font.pixelSize: 40
+                    font.pixelSize: 30
+                    //                font.letterSpacing : 5
+                    font.bold :true
+                    lineHeight: 2
 
-                    anchors.centerIn: parent
-                    horizontalAlignment: Text.AlignHCenter
-                    verticalAlignment: Text.AlignVCenter
-                    text:"X"
+                    wrapMode:Text.WordWrap
+                    text:"此二维码可以：\n1：下载官方APP\n2：官方APP绑定设备"
                 }
-                background: Rectangle {
-                    color:"transparent"
-                }
-                onClicked: {
-                    closeLoaderMain()
-                }
-            }
-            Image{
-                id:qrCodeImg
-                anchors.horizontalCenter: parent.horizontalCenter
-                anchors.horizontalCenterOffset: -qrCodeImg.width/2
-                anchors.verticalCenter: parent.verticalCenter
-                source: "file:QrCode.png"
-            }
-
-            Text{
-                width:300
-                anchors.top: qrCodeImg.top
-                anchors.left: qrCodeImg.right
-                anchors.leftMargin: 20
-                color:"white"
-                font.pixelSize: 30
-//                font.letterSpacing : 5
-                font.bold :true
-                lineHeight: 2
-
-                wrapMode:Text.WordWrap
-                text:"此二维码可以：\n1：下载官方APP\n2：官方APP绑定设备"
             }
         }
     }

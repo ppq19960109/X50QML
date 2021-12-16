@@ -19,12 +19,12 @@ Item {
         console.log("state",state,typeof state)
         root=JSON.parse(state)
 
-        reserveData.text=getDishName(root)
+        reserveData.text=root.dishName
     }
     ToolBar {
         id:topBar
         width:parent.width
-        anchors.top:parent.top
+        anchors.bottom: parent.bottom
         height:96
         background:Rectangle{
             color:"#000"
@@ -88,53 +88,16 @@ Item {
                 text:qsTr("启动")
             }
             onClicked: {
-                console.log("启动",hourPathView.model[hourPathView.currentIndex],minutePathView.model[minutePathView.currentIndex])
-                var page=isExistView("pageSteamBakeRun")
-                if(page!==null)
-                    backPage(page)
-                else
-                    backTopPage()
-                if(root.length===1)
-                {
-                    if(leftDevice===root[0].device)
-                    {
-                        QmlDevState.setState("LStOvState",1)
-                        QmlDevState.setState("LStOvMode",root[0].mode)
-                        QmlDevState.setState("LStOvRealTemp",root[0].temp)
-                        QmlDevState.setState("LStOvOrderTimerLeft",root[0].time)
-                    }
-                    else
-                    {
-                        QmlDevState.setState("RStOvState",1)
-                        QmlDevState.setState("RStOvRealTemp",root[0].temp)
-                        QmlDevState.setState("RStOvOrderTimerLeft",root[0].time)
-                    }
-                    root[0].orderTime=hourPathView.currentIndex*60+minutePathView.currentIndex
-                    setCooking(root)
-                }
-                else
-                {
-                    QmlDevState.setState("LStOvState",1)
-                    QmlDevState.setState("LStOvMode",root[0].mode)
-                    QmlDevState.setState("LStOvRealTemp",root[0].temp)
-                    QmlDevState.setState("LStOvOrderTimerLeft",root[0].time)
-                    root[0].orderTime=hourPathView.currentIndex*60+minutePathView.currentIndex
-                    setMultiCooking(root)
-                }
-
-                var para =getDefHistory()
-                para.dishName=getDishName(root)
-                para.cookSteps=JSON.stringify(root)
-
-                QmlDevState.insertHistory(para)
+                console.log("PageSteamBakeReserve",hourPathView.model[hourPathView.currentIndex],minutePathView.model[minutePathView.currentIndex])
+                startCooking(root,JSON.parse(root.cookSteps),hourPathView.currentIndex*60+minutePathView.currentIndex)
             }
         }
     }
     //内容
     Rectangle{
         width:parent.width
-        anchors.top:topBar.bottom
-        anchors.bottom: parent.bottom
+        anchors.bottom:topBar.top
+        anchors.top: parent.top
         color:"#000"
 
         Image{

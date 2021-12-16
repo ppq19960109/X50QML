@@ -3,46 +3,48 @@ import QtQuick.Controls 2.2
 
 Item {
     property bool edit: false
-    id:root
+    property int cookPos: allDevice
+
     Component.onCompleted: {
+        console.log("state",state,typeof state)
+        var root=JSON.parse(state)
+        cookPos=root.device
+
         QmlDevState.sortHistory()
-        getHistory()
+        getHistory(cookPos)
     }
-    function getHistory()
+    function getHistory(pos)
     {
-        listModel.clear();
-        var recipe=QmlDevState.getHistory();
-        for(var i = 0; i < recipe.length; ++i) {
-            console.log("getHistory recipe",JSON.stringify(recipe[i]))
-            listModel.append(recipe[i])
+        var historyModel=[]
+        var historys=QmlDevState.getHistory();
+        if(historys.length===0)
+        {
+            noHistory.visible=true
+            recipeListView.model=historyModel
+            return
         }
+        recipeListView.visible=true
+        for(var i = 0; i < historys.length; ++i) {
+            if(pos ===allDevice || historys[i].cookPos===pos)
+            {
+                console.log("getHistory recipe",JSON.stringify(historys[i]))
+                historyModel.push(historys[i])
+            }
+        }
+        recipeListView.model=historyModel
     }
-//    function getCurHistory(index)
-//    {
-//        var param = {};
-//        param.id=listModel.get(index).id
-//        param.seqid=listModel.get(index).seqid
-//        param.cookType=listModel.get(index).cookType
-//        param.dishName=listModel.get(index).dishName
-//        param.cookTime=listModel.get(index).cookTime
-//        param.imgUrl=listModel.get(index).imgUrl
-//        param.details=listModel.get(index).details
-//        param.cookSteps=listModel.get(index).cookSteps
-//        param.collect=listModel.get(index).collect
-//        param.time=listModel.get(index).timestamp
-//        return param
-//    }
+
     Connections { // 将目标对象信号与槽函数进行连接
         target: QmlDevState
         onHistoryChanged: { // 处理目标对象信号的槽函数
             console.warn("PageCookHistory onHistoryChanged...")
-            getHistory()
+            getHistory(cookPos)
         }
     }
     ToolBar {
         id:topBar
         width:parent.width
-        anchors.top:parent.top
+        anchors.bottom: parent.bottom
         height:96
         background:Rectangle{
             color:"#000"
@@ -114,30 +116,33 @@ Item {
                 text:qsTr("详情")
             }
             onClicked: {
-                var param = {};
-                param.dishName=listModel.get(recipe.currentIndex).dishName
-                param.cookTime=listModel.get(recipe.currentIndex).cookTime
-                param.imgUrl=listModel.get(recipe.currentIndex).imgUrl
-                param.details=listModel.get(recipe.currentIndex).details
-                param.cookSteps=listModel.get(recipe.currentIndex).cookSteps
-
-                load_page("pageCookDetails",JSON.stringify(param))
+                load_page("pageCookDetails",JSON.stringify(recipeListView.model[recipeListView.currentIndex]))
             }
         }
     }
-    ListModel {
-        id:listModel
-    }
+
     //内容
     Rectangle{
         width:parent.width
-        anchors.top:topBar.bottom
-        anchors.bottom: parent.bottom
+        anchors.bottom:topBar.top
+        anchors.top: parent.top
         color:"#000"
 
+        Text{
+            id:noHistory
+            visible: false
+            anchors.centerIn: parent
+            text:"暂无烹饪历史"
+            font.pixelSize: 50
+            horizontalAlignment:Text.AlignHCenter
+            verticalAlignment:Text.AlignVCenter
+            color:"#fff"
+        }
+
         ListView{
-            id: recipe
-            model:listModel
+            id: recipeListView
+            visible: false
+//            model:historyModel
             width:parent.width
             height:parent.height
 
@@ -158,7 +163,7 @@ Item {
                     font.pixelSize: 40
                     horizontalAlignment:Text.AlignHCenter
                     verticalAlignment:Text.AlignVCenter
-                    color:"#fff"
+                    color:recipeListView.currentIndex===index?"#00E6B6":"#fff"
                 }
                 Button {
                     height:parent.height
@@ -168,24 +173,17 @@ Item {
                         color:"transparent"
                     }
                     Text{
-                        id:dname
                         width : parent.width;
                         anchors.centerIn: parent
-                        text: dishName
+                        text: modelData.dishName
                         font.pixelSize: 40
 
                         //                        horizontalAlignment:Text.AlignHCenter
                         verticalAlignment:Text.AlignHCenter
-                        color:"#fff"
-                    }
-                    Rectangle{
-                        width:parent.width
-                        height: 5
-                        anchors.top: dname.bottom
-                        color:recipe.currentIndex===index?"cyan":"#000"
+                        color:recipeListView.currentIndex===index?"#00E6B6":"#fff"
                     }
                     onClicked: {
-                        recipe.currentIndex=index
+                        recipeListView.currentIndex=index
                     }
                 }
                 Button {
@@ -204,21 +202,21 @@ Item {
                     Text{
                         anchors.centerIn: parent
                         visible: edit==false
-                        text: collect==false?"收藏":"已收藏"
+                        text: modelData.collect===0?"收藏":"已收藏"
                         font.pixelSize: 40
 
                         horizontalAlignment:Text.AlignHCenter
                         verticalAlignment:Text.AlignHCenter
-                        color:collect==0?"#fff":"orange"
+                        color:modelData.collect===0?"#fff":"orange"
                     }
                     onClicked: {
                         if(edit)
                         {
-                            QmlDevState.deleteHistory(id)
+                            QmlDevState.deleteHistory(modelData.id)
                         }
                         else
                         {
-                            QmlDevState.setCollect(index,!collect)
+                            QmlDevState.setCollect(index,!modelData.collect)
                         }
                     }
                 }

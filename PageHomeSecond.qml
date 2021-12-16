@@ -8,25 +8,31 @@ Item {
     //        anchors.fill: parent
     RowLayout {
         anchors.fill: parent
-        anchors.topMargin: 50
-        anchors.bottomMargin: 50
-        anchors.leftMargin: 76
-        anchors.rightMargin: 76
-        spacing: 30
+        anchors.topMargin: 40
+
+        anchors.leftMargin: 60
+        anchors.rightMargin: 60
+
+        spacing: 0
         Button{
-            Layout.preferredWidth: 196
+            Layout.preferredWidth: 225
             Layout.preferredHeight:parent.height
             Layout.alignment: Qt.AlignHCenter
 
             background:Rectangle{
                 radius: 10
-                color:"#fff"
+                color:"transparent"
+            }
+            Image {
+                source: "qrc:/x50/main/智慧菜谱.png"
             }
             Text{
                 text:"智能菜谱"
-                color:"#000"
+                color:"#fff"
                 font.pixelSize: 40
-                anchors.centerIn: parent
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.top: parent.top
+                anchors.topMargin: 55
             }
 
             onClicked: {
@@ -35,41 +41,49 @@ Item {
         }
 
         Button{
-            Layout.preferredWidth: 196
+            Layout.preferredWidth: 225
             Layout.preferredHeight:parent.height
             Layout.alignment: Qt.AlignHCenter
             background:Rectangle{
                 radius: 10
-                color:"#fff"
+                color:"transparent"
             }
-
+            Image {
+                source: "qrc:/x50/main/烹饪历史.png"
+            }
             Text{
                 text:"烹饪历史"
-                color:"#000"
+                color:"#fff"
                 font.pixelSize: 40
-                anchors.centerIn: parent
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.top: parent.top
+                anchors.topMargin: 55
             }
 
             onClicked: {
-                load_page("pageCookHistory")
+                load_page("pageCookHistory",JSON.stringify({"device":allDevice}))
             }
         }
 
         Button{
-            Layout.preferredWidth: 196
+            Layout.preferredWidth: 225
             Layout.preferredHeight:parent.height
             Layout.alignment: Qt.AlignHCenter
 
             background:Rectangle{
                 radius: 10
-                color:"#fff"
+                color:"transparent"
             }
-
+            Image {
+                source: "qrc:/x50/main/多段烹饪.png"
+            }
             Text{
                 text:"多段烹饪"
-                color:"#000"
+                color:"#fff"
                 font.pixelSize: 40
-                anchors.centerIn: parent
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.top: parent.top
+                anchors.topMargin: 55
             }
 
             onClicked: {

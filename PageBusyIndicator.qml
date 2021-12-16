@@ -6,6 +6,8 @@ import QtQuick.Controls 2.2
     BusyIndicator {
         id: control
 //        anchors.fill: parent
+        implicitWidth: 40
+        implicitHeight: 40
         background:Rectangle{
             color:"transparent"
         }

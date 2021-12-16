@@ -6,9 +6,6 @@ import QtQuick.VirtualKeyboard.Settings 2.2
 
 
 Item {
-    id:root
-    enabled: loader_main.status == Loader.Null && loader_wifiInput.status == Loader.Null
-    property bool isHidePwd: false
     property int scan_count: 0
 
     function signalLevel(rssi)
@@ -82,12 +79,7 @@ Item {
         Data.WifiEnable = enable
         setToServer(Data)
     }
-    function scanWifi()
-    {
-        var Data={}
-        Data.WifiScan = null
-        setToServer(Data)
-    }
+
     function scanRWifi()
     {
         var Data={}
@@ -137,7 +129,12 @@ Item {
                 {
                     if(value==2||value==3)
                     {
-                        showWifiError(wifiModel.get(0).ssid)
+                        showLoaderFaultImg("/x50/icon/icon_pop_th.png","联网超时，请重试")
+                    }
+                    else if(value==4)
+                    {
+                        dismissWifiInput()
+
                     }
                     wifi_scan_timer_reset()
                 }
@@ -154,13 +151,7 @@ Item {
         //        VirtualKeyboardSettings.styleName = "retro"
         //        VirtualKeyboardSettings.fullScreenMode=true
         //        console.info("VirtualKeyboardSettings",VirtualKeyboardSettings.availableLocales)
-        if(systemSettings.wifiEnable)
-        {
-            if(wifiConnecting==false)
-            {
-                scanWifi()
-            }
-        }
+
         listView.positionViewAtBeginning()
         console.log("PageWifi onCompleted WifiState:",QmlDevState.state.WifiState,systemSettings.wifiEnable,scan_count)
     }
@@ -168,8 +159,8 @@ Item {
     ToolBar {
         id:topBar
         width:parent.width
-        anchors.top:parent.top
-        height:96
+        anchors.bottom:parent.bottom
+        height:80
         Image {
             anchors.fill: parent
             source: "/images/main_menu/zhuangtai_bj.png"
@@ -195,12 +186,10 @@ Item {
         }
 
         Text{
-            width:50
             color:"#9AABC2"
             font.pixelSize: 40
             anchors.left:goBack.right
             anchors.verticalCenter: parent.verticalCenter
-
             text: qsTr("网络")
         }
 
@@ -249,14 +238,15 @@ Item {
         Item{
             id: headerViewItem
             width: parent.width
-            height: 150
+            height: 180
 
-            Image {
+            PageDivider{
                 id:divider
-                anchors.top: wifi_switch.bottom
-                anchors.topMargin: 0
-                source: "/images/bg/bg_setting_divide_line.png"
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.top: parent.top
+                anchors.topMargin: 120
             }
+
             Text {
                 text: qsTr("WiFi")
                 color: "white"
@@ -267,19 +257,23 @@ Item {
             }
             Switch {
                 id: wifi_switch
-                width: 160
-                height:80
+                //                width: indicatorImg.width
+                //                height:indicatorImg.height
                 checked:systemSettings.wifiEnable
+
                 anchors.right: parent.right
                 anchors.rightMargin: 40
+                anchors.top: parent.top
+                anchors.topMargin: 65
 
                 indicator: Item {
-                    implicitWidth: parent.width
-                    implicitHeight: parent.height
+                    implicitWidth: indicatorImg.width
+                    implicitHeight: indicatorImg.height
 
                     Image{
+                        id:indicatorImg
                         anchors.centerIn: parent
-                        source: wifi_switch.checked ?"/images/bg/bg_setting_switch_open.png":"/images/bg/bg_setting_switch_close.png"
+                        source: wifi_switch.checked ?"/x50/wifi/kai.png":"/x50/wifi/guan.png"
                     }
                 }
                 onCheckedChanged: {
@@ -295,11 +289,11 @@ Item {
                         wifiModel.clear()
                     }
                 }
-
             }
             Text {
+                visible: systemSettings.wifiEnable
                 text: qsTr("可用WiFi列表")
-                color: "#7286A3"
+                color: Qt.rgba(255,255,255,0.35)
                 font.pixelSize: 32
                 anchors.top: divider.bottom
                 anchors.topMargin: 10
@@ -314,62 +308,64 @@ Item {
         id: wifiDelegate
 
         Rectangle {
-            id: wrapper
             width: parent.width
-            height: 80
+            height: 85
             color:"transparent"
-
-            PageBusyIndicator{
-                id:busy
-                visible: connected==2
+            Rectangle {
+                id:indicator
                 width: 40
                 height: 40
+                border.color: "#fff"
                 anchors.left: parent.left
-                anchors.leftMargin: 20
+                anchors.leftMargin: 40
                 anchors.bottom: parent.bottom
-                anchors.bottomMargin: 10
-                running: visible
+                anchors.bottomMargin: 20
+
+                color:"transparent"
+                PageRotationImg {
+                    visible: connected==2
+                    anchors.centerIn: parent
+                    source: "/x50/wifi/icon_sx.png"
+                }
+                Image{
+                    visible: connected==1
+                    anchors.centerIn: parent
+                    source: "/x50/wifi/icon_selected.png"
+                }
             }
             Text {
                 id: wifi_name
                 text: qsTr(ssid)
 
                 font.pixelSize: 40
-                color:connected==1? "aqua":"#E7E7E7"
-
+                color:connected==1? "#00E6B6":"#FFF"
                 //                elide: Text.ElideRight
-                anchors.left: busy.right
+                anchors.left: indicator.right
                 anchors.leftMargin: 20
                 anchors.bottom: parent.bottom
-                anchors.bottomMargin: 10
-                onWidthChanged: {
+                anchors.bottomMargin: 15
 
-                }
             }
-            Image{
-                width: parent.width
-                source: "/images/bg/bg_setting_divide_line.png"
+            PageDivider{
+                anchors.horizontalCenter: parent.horizontalCenter
                 anchors.bottom: parent.bottom
             }
             Image {
                 id: wifi_level
-                width: 40
-                height: 32
                 anchors.right: parent.right
-                anchors.rightMargin:  30
+                anchors.rightMargin:  53
                 anchors.bottom: parent.bottom
-                anchors.bottomMargin: 13
+                anchors.bottomMargin: 14
                 source: {
                     var res
-
                     if(level === 0){
-                        res = "images/wifi/icon_wifi_signal_01.png"
+                        res = "/x50/wifi/yousuowifi 1.png"
                     }else if(level === 1){
-                        res = "images/wifi/icon_wifi_signal_02.png"
+                        res = "/x50/wifi/yousuowifi 2.png"
                     }else if(level === 2){
-                        res = "images/wifi/icon_wifi_signal_03.png"
+                        res = "/x50/wifi/yousuowifi 3.png"
                     }else if(level >= 3){
-                        res = "images/wifi/icon_wifi_signal_04.png"
+                        res = "/x50/wifi/yousuowifi 4.png"
                     }
                     return res
                 }
@@ -377,7 +373,7 @@ Item {
                     anchors.fill: parent
                     anchors.centerIn: parent
                     visible: flags > 0
-                    source: "images/wifi/icon_wifi_signal_lock.png"
+                    source: "/x50/wifi/yousuowifi 5.png"
                 }
 
             }
@@ -406,15 +402,11 @@ Item {
     }
     //内容
     Rectangle{
-        id:wrapper
+
         width:parent.width
-        height:parent.height-topBar.height
-        anchors.top:topBar.bottom
+        anchors.top:parent.top
+        anchors.bottom:topBar.top
         color:"#000"
-        Image {
-            source: "/images/main_menu/dibuyuans.png"
-            anchors.bottom:parent.bottom
-        }
 
         ListView {
             id: listView
@@ -427,7 +419,6 @@ Item {
             focus: true
             clip: true
             highlightRangeMode: ListView.ApplyRange
-
             //            snapMode: ListView.SnapToItem
             //            boundsBehavior:Flickable.StopAtBounds
 
@@ -451,23 +442,23 @@ Item {
             property int wifi_flags
             property int index
             property bool permit_connect:false
+            color:"#000"
 
             MouseArea{
                 anchors.fill: parent
                 onClicked: {
-                    //                    textField.focus=false
+                    textField.focus=false
                 }
             }
             ToolBar {
                 id:topBar
                 width:parent.width
-                anchors.top:parent.top
-                height:96
-                Image {
-                    anchors.fill: parent
-                    source: "/images/main_menu/zhuangtai_bj.png"
+                anchors.bottom:parent.bottom
+                height:80
+                background: Rectangle {
+                    color:"#000"
+                    opacity: 0.15
                 }
-
                 //back图标
                 TabButton {
                     id:goBack
@@ -488,17 +479,16 @@ Item {
                     }
                 }
                 Text{
-                    width:40
-                    color:"#9AABC2"
+                    color:"#FFF"
                     font.pixelSize: 40
                     anchors.left:goBack.right
                     anchors.verticalCenter: parent.verticalCenter
-                    text:"密码"
+                    text:"网络"
                 }
                 Text{
                     id:wifiName
                     width:300
-                    color:"#9AABC2"
+                    color:"#FFF"
                     font.pixelSize: 40
                     elide: Text.ElideRight
 
@@ -507,143 +497,123 @@ Item {
                     verticalAlignment: Text.AlignVCenter
                     text:wifi_ssid
                 }
-                TabButton {
-                    id:connect
-                    width:120
-                    height:parent.height
-                    anchors.right:parent.right
-                    anchors.verticalCenter: parent.verticalCenter
-                    checked:false
-                    //                    text: qsTr("连接")
-                    //                    font.pixelSize: 40
-
-                    //                    contentItem: Text{
-                    //                        color:"#9AABC2"
-                    //                        font.pixelSize: 40
-                    //                        text:connect.text
-                    //                        elide: Text.ElideRight
-                    //                        horizontalAlignment: Text.AlignHCenter
-                    //                        verticalAlignment: Text.AlignVCenter
-                    //                    }
-                    Text{
-                        id:stepName
-                        color:permit_connect?"#9AABC2":"white"
-                        font.pixelSize: 40
-                        anchors.centerIn:parent
-                        text: qsTr("连接")
-                    }
-                    background: Rectangle {
-                        opacity: 0
-                        //                        color:"transparent"
-                    }
-                    onClicked: {
-                        console.log("Button connect:" , wifi_ssid,textField.text,wifi_flags)
-                        if(permit_connect)
-                        {
-                            connectWiFi(wifi_ssid,textField.text,wifi_flags)
-                            //                        sleep(100)
-                            wifiModel.setProperty(0,"connected",0)
-                            wifiModel.setProperty(index,"connected",2)
-                            wifiModel.move(index,0,1)
-
-                            listView.positionViewAtBeginning()
-                            dismissWifiInput()
-                        }
-                    }
-                }
             }
 
             Rectangle{
                 width:parent.width
-                anchors.left: parent.left
-                anchors.top:topBar.bottom
-                anchors.bottom: parent.bottom
-                color:"#000"
-
-                Image {
-                    id:botImg
-                    width:parent.width
-                    anchors.bottom:parent.bottom
-                    source: "/images/main_menu/dibuyuans.png"
-                }
+                anchors.bottom:topBar.top
+                anchors.top: parent.top
+                color:"transparent"
 
                 Frame{
-                    id:frame
-                    //                    width:parent.width
-                    height: 90
+                    width:parent.width
+                    height: 120
                     anchors.top: parent.top
-                    anchors.left: parent.left
-                    anchors.leftMargin: 20
-                    anchors.right: parent.right
-                    anchors.rightMargin: 20
 
                     background: Rectangle{
                         anchors.fill: parent
                         color:"transparent"
                     }
-                    Image {
-                        anchors.top: parent.bottom
-                        source: "/images/bg/bg_setting_divide_line.png"
+                    PageDivider{
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        anchors.bottom: parent.bottom
                     }
-                    RowLayout{
-                        id:rowLayout
-                        anchors.fill: parent
+                    TextField {
+                        id:textField
+                        height: parent.height
+                        anchors.left: parent.left
+                        anchors.right: connectBtn.left
+                        leftPadding: 20
+                        rightPadding: 20
+                        font.pixelSize: 40
+                        color: "#ECF4FC"
+                        echoMode: TextInput.Normal//TextInput.Password:TextInput.Normal
+                        passwordCharacter: "*"
+                        passwordMaskDelay: 1
+                        placeholderText: qsTr("密码")
 
-                        TextField {
-                            id:textField
-                            Layout.fillHeight: true
-                            Layout.fillWidth: true
-                            leftPadding: 20
-                            rightPadding: 20
-                            font.pixelSize: 40
-                            color: "#ECF4FC"
-                            echoMode: root.isHidePwd?TextInput.Password:TextInput.Normal
-                            passwordCharacter: "*"
-                            passwordMaskDelay: 1
-                            placeholderText: qsTr("请输入密码")
+                        activeFocusOnPress:true
+                        overwriteMode: false
+                        inputMethodHints:Qt.ImhNoAutoUppercase
 
-                            activeFocusOnPress:true
-                            overwriteMode: false
-                            inputMethodHints:Qt.ImhNoAutoUppercase
-
-                            maximumLength: 30
-                            focus: true
-                            background: Rectangle {
-                                anchors.fill: parent
-                                color: "transparent"
-                                //                                opacity: 0
-                            }
-
-                            onPressed: {
-                                //                                vkb.visible = true //当选择输入框的时候才显示键盘
-                            }
-                            onTextEdited:{
-                                console.log("onTextEdited len:",length)
-                                if(length>=8)
-                                {
-                                    permit_connect=true
-                                }
-                                else
-                                {
-                                    permit_connect=false
-                                }
-                            }
-                            //                            onTextChanged: {//text属性信号处理
-                            //                                   console.log("TonTextChanged len:", length)
-                            //                            }
+                        onAccepted: {
+                            console.log("onAccepted")
+                            //                            textField.focus = true    /* 结束输入操作行为 */
                         }
-                        Item{
-                            width: 60
-                            height: parent.height
-                            Image{
-                                anchors.centerIn: parent
-                                source: root.isHidePwd?"/images/icon_pwd_invisible.png":"/images/icon_pwd_visible.png"
+                        focus: true
+                        background: Rectangle {
+                            anchors.fill: parent
+                            color: "transparent"
+                        }
+                        onPressed: {
+                            vkb.visible = true //当选择输入框的时候才显示键盘
+                        }
+                        onTextEdited:{
+                            console.log("onTextEdited len:",length)
+                            if(length>=8)
+                            {
+                                permit_connect=true
                             }
-                            MouseArea{
-                                anchors.fill: parent
-                                onClicked: {
-                                    root.isHidePwd = !root.isHidePwd
-                                }
+                            else
+                            {
+                                permit_connect=false
+                            }
+                        }
+                    }
+
+                    //                    PageBusyIndicator{
+                    //                        id:connectBusy
+                    //                        anchors.right:connectBtn.left
+                    //                        anchors.rightMargin: 15
+                    //                        anchors.verticalCenter: parent.verticalCenter
+                    //                        visible: false
+                    //                        running: visible
+                    //                    }
+
+                    PageRotationImg {
+                        id: connectBusy
+                        visible: false
+                        anchors.right:connectBtn.left
+                        anchors.rightMargin: 15
+                        anchors.verticalCenter: parent.verticalCenter
+                        source: "/x50/wifi/icon_sx.png"
+                    }
+                    Button {
+                        id:connectBtn
+                        width:160
+                        height:parent.height
+                        anchors.right:parent.right
+                        anchors.rightMargin: 40
+                        anchors.verticalCenter: parent.verticalCenter
+
+                        //                    text: qsTr("连接")
+                        //                    font.pixelSize: 40
+
+                        //                    contentItem: Text{
+                        //                        color:"#9AABC2"
+                        //                        font.pixelSize: 40
+                        //                        text:connect.text
+                        //                        elide: Text.ElideRight
+                        //                        horizontalAlignment: Text.AlignHCenter
+                        //                        verticalAlignment: Text.AlignVCenter
+                        //                    }
+                        Text{
+                            id:connectText
+                            color:permit_connect?"#00E6B6":"white"
+                            font.pixelSize: 40
+                            anchors.centerIn:parent
+                            text: qsTr("连接")
+                        }
+                        background: Rectangle {
+                            opacity: 0
+                        }
+                        onClicked: {
+                            console.log("Button connect:" , wifi_ssid,textField.text,wifi_flags)
+                            if(permit_connect)
+                            {
+                                connectWiFi(wifi_ssid,textField.text,wifi_flags)
+                                connectText.text="正在连接"
+                                connectBusy.visible=true
                             }
                         }
                     }
@@ -652,7 +622,7 @@ Item {
             InputPanel {
                 id: vkb
                 visible: true
-                active:true
+                //                active:true
                 anchors.right: parent.right
                 anchors.left: parent.left
                 anchors.bottom: parent.bottom
@@ -660,7 +630,7 @@ Item {
                 //这种集成方式下点击隐藏键盘的按钮是没有效果的，
                 //只会改变active，因此我们自己处理一下
                 onActiveChanged: {
-                    //                    if(!active) { visible = false }
+                    if(!active) { visible = false }
                 }
             }
             Component.onCompleted: {
@@ -678,32 +648,10 @@ Item {
         loader_wifiInput.item.index=index
     }
     function dismissWifiInput(){
+        listView.positionViewAtBeginning()
         loader_wifiInput.sourceComponent = null
     }
-    Component{
-        id:component_wifiError
-        PageDialog{
-            hint_text:"密码不正确"
-            confirm_text:"好"
-            checkbox_visible:false
-            onCancel:{
-                console.info("onCancel")
-                closeWifiError()
-            }
-            onConfirm:{
-                console.info("onConfirm")
-                closeWifiError()
-            }
-        }
-    }
-    function showWifiError(ssid){
-        loader_main.sourceComponent = component_wifiError
-        loader_main.item.hint_text=ssid+"\n密码不正确"
-    }
 
-    function closeWifiError(){
-        loader_main.sourceComponent = null
-    }
     Loader{
         //加载弹窗组件
         id:loader_wifiInput

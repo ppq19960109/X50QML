@@ -117,17 +117,55 @@
         <file>pageSteamAndBake/PageMultistageDelegate.qml</file>
         <file>pageSet/PageUpdateProgressBar.qml</file>
         <file>PageHomeBar.qml</file>
-    </qresource>
-    <qresource prefix="/test">
-        <file>x5/上下排版/1.png</file>
-        <file>x5/粗体字/1.png</file>
-        <file>x5/粗体字/2.png</file>
-        <file>x5/粗体字/3.png</file>
-        <file>x5/粗体字/4.png</file>
-        <file>x5/粗体字/5.png</file>
-        <file>x5/细体字/1.png</file>
-        <file>x5/细体字/2.png</file>
-        <file>x5/细体字/3.png</file>
-        <file>x5/D1左空右腔体.png</file>
+        <file>PageLeftCook.qml</file>
+        <file>PageRightCook.qml</file>
+        <file>PageFaultPopup.qml</file>
+        <file>x50/icon/icon_close@2x.png</file>
+        <file>x50/icon/icon_pop_th.png</file>
+        <file>x50/icon/icon_pop_th2.png</file>
+        <file>x50/wifi/kai.png</file>
+        <file>x50/wifi/WIFI.png</file>
+        <file>x50/wifi/yousuowifi2.png</file>
+        <file>x50/wifi/yousuowifi 1.png</file>
+        <file>x50/wifi/yousuowifi 3.png</file>
+        <file>x50/wifi/yousuowifi 4.png</file>
+        <file>x50/wifi/guan.png</file>
+        <file>PageDivider.qml</file>
+        <file>x50/wifi/yousuowifi 5.png</file>
+        <file>x50/wifi/icon_selected.png</file>
+        <file>x50/wifi/yousuowifi 7.png</file>
+        <file>x50/wifi/icon_sx.png</file>
+        <file>PageRotationImg.qml</file>
+        <file>x50/main/icon_leftgo.png</file>
+        <file>x50/main/icon_rightgo.png</file>
+        <file>x50/main/icon_ts_k.png</file>
+        <file>x50/main/icon_wife_nor.png</file>
+        <file>x50/main/icon_wife_w.png</file>
+        <file>x50/main/多段烹饪.png</file>
+        <file>x50/main/定时关火.png</file>
+        <file>x50/main/智慧菜谱.png</file>
+        <file>x50/main/烹饪历史.png</file>
+        <file>x50/main/背景.png</file>
+        <file>x50/main/设置.png</file>
+        <file>x50/main/icon_wind_1.png</file>
+        <file>x50/main/icon_wind_3.png</file>
+        <file>x50/main/icon_wind_2.png</file>
+        <file>x50/steam/icon_上下加热.png</file>
+        <file>x50/steam/icon_上下加热缩小.png</file>
+        <file>x50/steam/icon_保暖烘干.png</file>
+        <file>x50/steam/icon_保暖烘干缩小.png</file>
+        <file>x50/steam/icon_热风烧烤.png</file>
+        <file>x50/steam/icon_热风烧烤缩小.png</file>
+        <file>x50/steam/icon_空气炸.png</file>
+        <file>x50/steam/icon_空气炸缩小.png</file>
+        <file>x50/steam/icon_立体热风.png</file>
+        <file>x50/steam/icon_立体热风缩小.png</file>
+        <file>x50/steam/icon_蒸汽烤.png</file>
+        <file>x50/steam/icon_蒸汽烤缩小.png</file>
+        <file>x50/steam/icon_高温蒸.png</file>
+        <file>x50/steam/icon_高温蒸缩小.png</file>
+        <file>x50/steam/黑色块.png</file>
+        <file>x50/icon/icon_wife_nor.png</file>
+        <file>x50/steam/icon_便捷蒸.png</file>
     </qresource>
 </RCC>

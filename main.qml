@@ -1,10 +1,11 @@
 import QtQuick 2.2
 import QtQuick.Controls 2.2
 import Qt.labs.settings 1.0
+import QtQuick.Window 2.2
 
 import "pageSteamAndBake"
 import "pageSet"
-ApplicationWindow {
+Window {
     id: window
     width: 800
     height: 480
@@ -12,15 +13,18 @@ ApplicationWindow {
 
     property int leftDevice:0
     property int rightDevice:1
+    property int allDevice:2
+
+    property string leftDishName:""
 
     property var leftWorkMode: ["未设定", "经典蒸", "快速蒸", "热风烧烤", "上下加热", "立体热风", "蒸汽烤", "空气炸", "保温烘干"]
     property var leftWorkModeNumber:[0,1,2,35,36,38,40,42,72]
-    property string rightWorkMode:"小腔速蒸"
+    property string rightWorkMode:"便捷蒸"
 
-    property var leftModel:[{"modelData":"经典蒸","temp":100,"time":30},{"modelData":"快速蒸","temp":120,"time":20},{"modelData":"热风烧烤","temp":200,"time":60}
-        ,{"modelData":"上下加热","temp":180,"time":120},{"modelData":"立体热风","temp":180,"time":120},{"modelData":"蒸汽烤","temp":150,"time":60}
-        ,{"modelData":"空气炸","temp":220,"time":30},{"modelData":"保温烘干","temp":60,"time":30}]
-    property var rightModel:{"modelData":"便捷蒸","temp":100,"time":30}
+    property var leftModel:[{"modelData":1,"temp":100,"time":30},{"modelData":2,"temp":120,"time":20},{"modelData":3,"temp":200,"time":60}
+        ,{"modelData":4,"temp":180,"time":120},{"modelData":5,"temp":180,"time":120},{"modelData":6,"temp":150,"time":60}
+        ,{"modelData":7,"temp":220,"time":30},{"modelData":8,"temp":60,"time":30}]
+    property var rightModel:{"modelData":0,"temp":100,"time":30}
 
     property var workStateEnum:{"WORKSTATE_STOP":0,"WORKSTATE_RESERVE":1,"WORKSTATE_PREHEAT":2,"WORKSTATE_RUN":3,"WORKSTATE_FINISH":4,"WORKSTATE_PAUSE":5}
     property var workStateArray:["停止","预约中","预热中","运行中","烹饪完成","暂停"]
@@ -52,8 +56,15 @@ ApplicationWindow {
         property bool multistageRemind:true
     }
 
+    function scanWifi()
+    {
+        var Data={}
+        Data.WifiScan = null
+        setToServer(Data)
+    }
     function leftWorkModeFun(n)
     {
+        console.log("leftWorkModeFun",n)
         var mode
         switch(n)
         {
@@ -99,17 +110,24 @@ ApplicationWindow {
         param.collect=0
         param.cookType=0
         param.cookTime=0
+        param.cookPos=0
         return param
     }
 
     function getDishName(root)
     {
         var dishName=""
+
         for(var i = 0; i < root.length; i++)
         {
             console.log(root[i].mode,root[i].temp,root[i].time,leftWorkModeFun(root[i].mode))
             if(root.length===1)
             {
+                if(root[0].dishName !== undefined)
+                {
+                    return root[0].dishName
+                }
+
                 if(leftDevice===root[i].device)
                     dishName=leftWorkModeFun(root[i].mode)+"-"+root[i].temp+"℃-"+root[i].time+"分钟"
                 else
@@ -158,22 +176,22 @@ ApplicationWindow {
         setToServer(Data)
     }
 
-    function setCooking(list)
+    function setCooking(list,orderTime,cookPos)
     {
         console.log("setCooking")
         var Data={}
-        if(list[0].device===leftDevice)
+        if(cookPos===leftDevice)
         {
             Data.LStOvMode=list[0].mode
             Data.LStOvSetTimer=list[0].time
             Data.LStOvSetTemp=list[0].temp
-            if(undefined === list[0].orderTime)
+            if(undefined !== orderTime && orderTime > 0)
             {
-                Data.LStOvOperation=workOperationEnum.START
+                Data.LStOvOrderTimer=orderTime
             }
             else
             {
-                Data.LStOvOrderTimer=list[0].orderTime
+                Data.LStOvOperation=workOperationEnum.START
             }
         }
         else
@@ -181,19 +199,19 @@ ApplicationWindow {
             Data.RStOvMode=list[0].mode
             Data.RStOvSetTimer=list[0].time
             Data.RStOvSetTemp=list[0].temp
-            if(undefined === list[0].orderTime)
+            if(undefined !== orderTime && orderTime > 0)
             {
-                Data.RStOvOperation=workOperationEnum.START
+                Data.RStOvOrderTimer=orderTime
             }
             else
             {
-                Data.RStOvOrderTimer=list[0].orderTime
+                Data.RStOvOperation=workOperationEnum.START
             }
         }
         setToServer(Data)
     }
 
-    function setMultiCooking(list)
+    function setMultiCooking(list,orderTime,dishName)
     {
         console.log("setMultiCooking")
         var Data={}
@@ -207,16 +225,74 @@ ApplicationWindow {
             buf.Timer=list[i].time
             MultiStageContent.push(buf)
         }
-        if(undefined === list[0].orderTime)
+        if(undefined !== orderTime && orderTime > 0)
         {
-            Data.LStOvOperation=workOperationEnum.START
+            Data.LStOvOrderTimer=orderTime
         }
         else
         {
-            Data.LStOvOrderTimer=list[0].orderTime
+            Data.LStOvOperation=workOperationEnum.START
         }
-        Data.MultiStageContent=MultiStageContent
+
+        if(undefined === dishName || null === dishName)
+        {
+            Data.MultiStageContent=MultiStageContent
+        }
+        else
+        {
+            Data.CookbookParam=MultiStageContent
+            leftDishName=dishName
+        }
         setToServer(Data)
+    }
+
+    function startCooking(root,cookSteps,orderTime)
+    {
+        var page=isExistView("pageSteamBakeRun")
+        if(page!==null)
+            backPage(page)
+        else
+            backTopPage()
+
+        if(cookSteps.length===1 && (undefined === cookSteps[0].number || 0 === cookSteps[0].number))
+        {
+            if(leftDevice===cookSteps[0].device)
+            {
+                QmlDevState.setState("LStOvState",1)
+                QmlDevState.setState("LStOvMode",cookSteps[0].mode)
+                QmlDevState.setState("LStOvRealTemp",cookSteps[0].temp)
+                QmlDevState.setState("LStOvSetTimerLeft",cookSteps[0].time)
+                QmlDevState.setState("LStOvOrderTimerLeft",cookSteps[0].time)
+            }
+            else
+            {
+                QmlDevState.setState("RStOvState",1)
+                QmlDevState.setState("RStOvRealTemp",cookSteps[0].temp)
+                QmlDevState.setState("RStOvSetTimerLeft",cookSteps[0].time)
+                QmlDevState.setState("RStOvOrderTimerLeft",cookSteps[0].time)
+            }
+            setCooking(cookSteps,orderTime,root.cookPos)
+        }
+        else
+        {
+            QmlDevState.setState("LStOvState",1)
+            QmlDevState.setState("LStOvMode",cookSteps[0].mode)
+            QmlDevState.setState("LStOvRealTemp",cookSteps[0].temp)
+            QmlDevState.setState("LStOvOrderTimerLeft",cookSteps[0].time)
+
+            QmlDevState.setState("cnt",cookSteps.length)
+            QmlDevState.setState("current",1)
+            if(root.imgUrl!=="")
+            {
+                setMultiCooking(cookSteps,orderTime,root.dishName)
+            }
+            else
+            {
+                setMultiCooking(cookSteps,orderTime)
+            }
+        }
+
+        QmlDevState.insertHistory(root)
     }
 
     function closeLoaderMain(){
@@ -230,10 +306,42 @@ ApplicationWindow {
     function closeLoaderError(){
         loader_error.sourceComponent = null
     }
+    Component{
+        id:component_fault
+        PageFaultPopup {
+            hintTopText:""
+            hintTopImgSrc:""
+            hintCenterText:""
+            hintBottomText:""
+            hintHeight:292
+            onCancel:{
+                closeLoaderError()
+            }
+        }
+    }
+    function showLoaderFault(hintTopText,hintBottomText){
+        loader_error.sourceComponent = component_fault
+        loader_error.item.hintTopText=hintTopText
+        loader_error.item.hintBottomText=hintBottomText
+    }
+    function showLoaderFaultCenter(hintCenterText,hintHeight){
+        loader_error.sourceComponent = component_fault
+        loader_error.item.hintCenterText=hintCenterText
+        loader_error.item.hintHeight=hintHeight
+    }
+    function showLoaderFaultImg(imageUrl,hintBottomText){
+        loader_error.sourceComponent = component_fault
+        loader_error.item.hintTopImgSrc=imageUrl
+        loader_error.item.hintBottomText=hintBottomText
+    }
+
     Component.onCompleted: {
         console.warn("Window onCompleted sleepTime:",systemSettings.sleepTime)
         Backlight.backlightEnable()
         timer_window.start()
+
+        //        var list=Backlight.getAllFileName("x5")
+        //        console.log("getAllFileName",list)
     }
     StackView {
         id: stackView
@@ -256,33 +364,33 @@ ApplicationWindow {
             }
         }
     }
-    MouseArea{
-        anchors.fill: parent
-        hoverEnabled:true
-        propagateComposedEvents: true
+//    MouseArea{
+//        anchors.fill: parent
+//        hoverEnabled:true
+//        propagateComposedEvents: true
 
-        onPressed: {
-//            console.warn("Window onPressed................................",sleepState)
-            if(sleepState==true)
-            {
-                sleepState=false
-                Backlight.backlightEnable()
-                mouse.accepted = true
-            }
-            else
-            {
-                mouse.accepted = false
-            }
-            timer_window.restart()
-        }
-        //                onReleased: {
-        //                    console.warn("Window onReleased................................")
-        //                    mouse.accepted = false
-        //                }
-        //                onPositionChanged:{
-        //                console.warn("Window onPositionChanged................................")
-        //                }
-    }
+//        onPressed: {
+//            //            console.warn("Window onPressed................................",sleepState)
+//            if(sleepState==true)
+//            {
+//                sleepState=false
+//                Backlight.backlightEnable()
+//                mouse.accepted = true
+//            }
+//            else
+//            {
+//                mouse.accepted = false
+//            }
+//            timer_window.restart()
+//        }
+//        //                onReleased: {
+//        //                    console.warn("Window onReleased................................")
+//        //                    mouse.accepted = false
+//        //                }
+//        //                onPositionChanged:{
+//        //                console.warn("Window onPositionChanged................................")
+//        //                }
+//    }
     Loader{
         //加载弹窗组件
         id:loader_main
@@ -340,7 +448,25 @@ ApplicationWindow {
         }
         ListElement {
             connected: 0
-            ssid: "234556"
+            ssid: "rrrrq"
+            level:2
+            flags:2
+        }
+        ListElement {
+            connected: 0
+            ssid: "wwsf"
+            level:2
+            flags:2
+        }
+        ListElement {
+            connected: 0
+            ssid: "tty-lll"
+            level:2
+            flags:2
+        }
+        ListElement {
+            connected: 0
+            ssid: "744uuu"
             level:2
             flags:2
         }
@@ -356,21 +482,13 @@ ApplicationWindow {
                 interactive:true //是否可以滑动
                 //                Item {Image{source: "file:x5/方案一/1.png" }}
                 //                Item {Image{source: Qt.resolvedUrl("/test/images/x5/方案一/2.png")}}
+                //                Item {Image{source: "/test/x5/上下排版/1.png" }}
+                Repeater {
+                    id: repeater
+                    model: Backlight.getAllFileName("x5")//["A1首页","A2首页左滑"]
 
-
-                Item {Image{source: "/test/x5/上下排版/1.png" }}
-
-                Item {Image{source: "/test/x5/粗体字/1.png" }}
-                Item {Image{source: "/test/x5/D1左空右腔体.png" }}
-                Item {Image{source: "/test/x5/粗体字/2.png" }}
-                Item {Image{source: "/test/x5/粗体字/3.png" }}
-                Item {Image{source: "/test/x5/粗体字/4.png" }}
-                Item {Image{source: "/test/x5/粗体字/5.png" }}
-
-                Item {Image{source: "/test/x5/细体字/1.png" }}
-                Item {Image{source: "/test/x5/细体字/2.png" }}
-                Item {Image{source: "/test/x5/细体字/3.png" }}
-
+                    Item {Image{source: "file:"+modelData }}
+                }
             }
             Component.onCompleted: {
                 console.log("pageTest onCompleted")
@@ -485,6 +603,13 @@ ApplicationWindow {
             stackView.pop(null)
             break;
         case "pageWifi":
+            if(systemSettings.wifiEnable)
+            {
+                if(wifiConnecting==false)
+                {
+                    scanWifi()
+                }
+            }
             stackView.push(pageWifi)
             break;
         case "pageSteamBakeBase": //蒸烤设置页面
@@ -509,7 +634,7 @@ ApplicationWindow {
             stackView.push(pageCookDetails, {"state":args})
             break;
         case "pageCookHistory":
-            stackView.push(pageCookHistory)
+            stackView.push(pageCookHistory, {"state":args})
             break;
         case "pageCloseHeat":
             stackView.push(pageCloseHeat)

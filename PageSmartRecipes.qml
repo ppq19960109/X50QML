@@ -1,4 +1,4 @@
-import QtQuick 2.2
+import QtQuick 2.7
 import QtQuick.Controls 2.2
 
 Item {
@@ -6,19 +6,81 @@ Item {
     property var  menuId: ['蔬菜','肉类','水产','面点']
     property var  cookMode: ["蒸","烤","多段"]
     property var  cookModeColor: ["#19A582","#EC7A00","#EC7A00"]
-    id:root
+
     Component.onCompleted: {
         getRecipe(menuList.currentIndex)
     }
     function getRecipe(index)
     {
-        listModel.clear();
-        var recipe=QmlDevState.getRecipe(index);
-        for(var i = 0; i < recipe.length; ++i) {
-            listModel.append(recipe[i])
-        }
+        recipeListView.model=QmlDevState.getRecipe(index);
     }
 
+    ToolBar {
+        id:topBar
+        width:parent.width
+        anchors.bottom: parent.bottom
+        height:80
+        background:Rectangle{
+            color:"#2B2E2E"
+        }
+        Image {
+            anchors.fill: parent
+            source: "/images/main_menu/zhuangtai_bj.png"
+        }
+        //back图标
+        TabButton {
+            id:goBack
+            width:80
+            height:parent.height
+            anchors.left:parent.left
+            anchors.verticalCenter: parent.verticalCenter
+            Image{
+                anchors.centerIn: parent
+                source: "/images/fanhui.png"
+            }
+            background: Rectangle {
+                opacity: 0
+            }
+            onClicked: {
+                backPrePage()
+            }
+        }
+
+        Text{
+            id:name
+            width:80
+            color:"#FFF"
+            font.pixelSize: 40
+            anchors.left:goBack.right
+            anchors.verticalCenter: parent.verticalCenter
+            text:qsTr("智慧菜谱")
+        }
+
+        //详情
+        TabButton{
+            width:100
+            height:50
+            anchors.right:parent.right
+            anchors.rightMargin: 40
+            anchors.verticalCenter: parent.verticalCenter
+            background:Rectangle{
+                color:"transparent"
+                border.color:"#00E6B6"
+                radius: 8
+            }
+            Text{
+                color:"#00E6B6"
+                font.pixelSize: 30
+                anchors.centerIn:parent
+                horizontalAlignment:Text.AlignHCenter
+                verticalAlignment:Text.AlignVCenter
+                text:qsTr("详情")
+            }
+            onClicked: {
+                load_page("pageCookDetails",JSON.stringify(recipeListView.model[recipeListView.currentIndex]))
+            }
+        }
+    }
     //内容
     Rectangle{
         width:parent.width
@@ -68,19 +130,6 @@ Item {
                 }
             }
         }
-        ListModel {
-            id:listModel
-
-//            ListElement {
-//                cookType: 1
-//                dishName: "清蒸鱼"
-//                imgUrl:"/images/peitu01.png"
-//                cookSteps:'[{"mode":1,temp:100,time:90}]'
-//                details:""
-//                collect:0
-//                time:123444
-//            }
-        }
 
         Rectangle{
 
@@ -89,7 +138,7 @@ Item {
             anchors.right: parent.right
             color:"#404545"
             ListView{
-                id: recipe
+                id: recipeListView
                 model:listModel
                 width:parent.width
                 height:parent.height
@@ -104,7 +153,7 @@ Item {
                     width:250
                     height:parent.height
                     color:"transparent"
-                    radius: 8
+
                     Button {
                         width:220
                         height:330
@@ -112,24 +161,25 @@ Item {
                         anchors.right: parent.right
                         background: Rectangle{
                             color:"transparent"
+                            radius: 16
                         }
                         Image{
                             anchors.top:parent.top
-                            anchors.bottom: recipeNme.top
+                            anchors.bottom: recipeName.top
                             width:parent.width
-                            source: imgUrl
+                            source: modelData.imgUrl
                         }
                         Rectangle{
                             width:88
                             height: 48
                             anchors.top:parent.top
                             anchors.left: parent.left
-                            color:cookModeColor[cookType]
+                            color:cookModeColor[modelData.cookType]
                             radius: 16
                             Text{
                                 width : parent.width;
                                 anchors.centerIn: parent
-                                text: cookMode[cookType]
+                                text: cookMode[modelData.cookType]
                                 font.pixelSize: 30
 
                                 horizontalAlignment:Text.AlignHCenter
@@ -139,13 +189,13 @@ Item {
                             }
                         }
                         Rectangle{
-                            id:recipeNme
+                            id:recipeName
                             width:parent.width
                             height: 60
                             anchors.bottom: parent.bottom
                             color:"lightslategray"
                             Text{
-                                text: dishName
+                                text: modelData.dishName
                                 font.pixelSize: 40
                                 anchors.centerIn: parent
                                 color:"#fff"
@@ -155,88 +205,16 @@ Item {
                                 width:parent.width
                                 height: 5
                                 anchors.bottom: parent.bottom
-                                color:recipe.currentIndex===index?"blue":"#000"
+                                color:recipeListView.currentIndex===index?"blue":"#000"
                             }
                         }
                         onClicked: {
-                            recipe.currentIndex=index
+                            recipeListView.currentIndex=index
                         }
                     }
                 }
             }
         }
-
     }
-    ToolBar {
-        id:topBar
-        width:parent.width
-        anchors.bottom: parent.bottom
-        height:80
-        background:Rectangle{
-            color:"#2B2E2E"
-        }
-        Image {
-            anchors.fill: parent
-            source: "/images/main_menu/zhuangtai_bj.png"
-        }
-        //back图标
-        TabButton {
-            id:goBack
-            width:80
-            height:parent.height
-            anchors.left:parent.left
-            anchors.verticalCenter: parent.verticalCenter
-            Image{
-                anchors.centerIn: parent
-                source: "/images/fanhui.png"
-            }
-            background: Rectangle {
-                opacity: 0
-            }
-            onClicked: {
-                backPrePage();
-            }
-        }
 
-        Text{
-            id:name
-            width:80
-            color:"#FFF"
-            font.pixelSize: 40
-            anchors.left:goBack.right
-            anchors.verticalCenter: parent.verticalCenter
-            text:qsTr("智慧菜谱")
-        }
-
-        //详情
-        TabButton{
-            width:88
-            height:44
-            anchors.right:parent.right
-            anchors.rightMargin: 40
-            anchors.verticalCenter: parent.verticalCenter
-            background:Rectangle{
-                color:"transparent"
-                border.color:"#00E6B6"
-                radius: 8
-            }
-            Text{
-                color:"#00E6B6"
-                font.pixelSize: 40
-                anchors.centerIn:parent
-                text:qsTr("详情")
-            }
-            onClicked: {
-                console.log("详情",listModel.get(recipe.currentIndex).run)
-                var param = {};
-                param.dishName=listModel.get(recipe.currentIndex).dishName
-                param.cookTime=listModel.get(recipe.currentIndex).cookTime
-                param.imgUrl=listModel.get(recipe.currentIndex).imgUrl
-                param.details=listModel.get(recipe.currentIndex).details
-                param.cookSteps=listModel.get(recipe.currentIndex).cookSteps
-
-                load_page("pageCookDetails",JSON.stringify(param))
-            }
-        }
-    }
 }

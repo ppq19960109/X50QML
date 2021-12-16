@@ -51,12 +51,21 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     stateTypeMap.insert("RStOvOrderTimer",LINK_VALUE_TYPE_NUM);
     stateTypeMap.insert("RStOvOrderTimerLeft",LINK_VALUE_TYPE_NUM);
 
+    stateTypeMap.insert("MultiMode",LINK_VALUE_TYPE_NUM);
     stateTypeMap.insert("MultiStageState",LINK_VALUE_TYPE_STRUCT);
 
     stateTypeMap.insert("RStoveTimingState",LINK_VALUE_TYPE_NUM);
     stateTypeMap.insert("RStoveTimingOpera",LINK_VALUE_TYPE_NUM);
     stateTypeMap.insert("RStoveTimingSet",LINK_VALUE_TYPE_NUM);
     stateTypeMap.insert("RStoveTimingLeft",LINK_VALUE_TYPE_NUM);
+
+    stateTypeMap.insert("HoodStoveLink",LINK_VALUE_TYPE_NUM);
+    stateTypeMap.insert("HoodLightLink",LINK_VALUE_TYPE_NUM);
+    stateTypeMap.insert("HoodOffTimer",LINK_VALUE_TYPE_NUM);
+    stateTypeMap.insert("HoodOffLeftTime",LINK_VALUE_TYPE_NUM);
+    stateTypeMap.insert("SteamOffTime",LINK_VALUE_TYPE_NUM);
+    stateTypeMap.insert("SteamOffLeftTime",LINK_VALUE_TYPE_NUM);
+    stateTypeMap.insert("HoodSpeed",LINK_VALUE_TYPE_NUM);
 
 #ifndef USE_RK3308
     setState("LStOvMode",0);
@@ -72,6 +81,8 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
 
     setState("cnt",0);
     setState("current",0);
+
+    setState("HoodSpeed",2);
 #endif
     localConnected=0;
     connect(&client, SIGNAL(sendData(const QJsonValue&)), this,SLOT(readData(const QJsonValue&)));
@@ -84,9 +95,9 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
 
     info.insert("dishName", "清蒸鱼");
     info.insert("imgUrl", "/images/peitu01.png");
-    info.insert("cookSteps", "[{\"device\":0,\"mode\":5,\"temp\":100,\"time\":90}]");
+    info.insert("cookSteps", "[{\"device\":0,\"mode\":35,\"temp\":100,\"time\":90}]");
     info.insert("details", "食材：\n鸡蛋2个，蛤蜊50g，盐2g，油3滴葱花30g\n步骤：\n1、鱼片加入适量鸡蛋，料酒、升降、盐，醋、糖，搅拌均匀后加一点淀粉（淀粉加水）增加粘度\n2、鱼片加入适量鸡蛋，料酒、升降、盐，醋、糖，搅拌均匀后加一点淀粉（淀粉加水）增加粘度\n3、鱼片加入适量鸡蛋，料酒、升降、盐，醋、糖，搅拌均匀后加一点淀粉（淀粉加水）增加粘度");
-    info.insert("collect", false);
+    info.insert("collect", 0);
     info.insert("timestamp", 0);
 
     recipe[0].append(info);
@@ -389,11 +400,11 @@ void QmlDevState::readData(const QJsonValue &data)
                 qDebug()<<"key:"<<key<<"value:"<<value.toString();
                 if("QrCode"==key)
                 {
-                    QrcodeEn::encodeImage("http://club.marssenger.com/hxr/download.html?pk=a1n3oZED0Y8&dn=X5B-ChengWei-01",4,key+".png");
+                    QrcodeEn::encodeImage("http://club.marssenger.com/hxr/download.html?pk=a1n3oZED0Y8&dn=X5B-ChengWei-01",2,key+".png");
                 }
                 else if("AfterSalesQrCode"==key)
                 {
-                    QrcodeEn::encodeImage("http://club.marssenger.com/hxr/download.html?pk=a1n3oZED0Y8",4,key+".png");
+                    QrcodeEn::encodeImage("http://club.marssenger.com/hxr/download.html?pk=a1n3oZED0Y8",2,key+".png");
                 }
             }
             else if(LINK_VALUE_TYPE_STRUCT==value_type)

@@ -7,7 +7,7 @@ Item {
     ToolBar {
         id:topBar
         width:parent.width
-        anchors.top:parent.top
+        anchors.bottom:parent.bottom
         height:96
         Image {
             anchors.fill: parent
@@ -57,31 +57,22 @@ Item {
             }
             onClicked: {
 
-                QmlDevState.setState("LStOvState",3)
-                QmlDevState.setState("LStOvMode",listView.model.get(0).mode)
-                QmlDevState.setState("LStOvRealTemp",listView.model.get(0).temp)
-                QmlDevState.setState("LStOvSetTimerLeft",listView.model.get(0).time)
-
-                QmlDevState.setState("cnt",listModel.count)
-                QmlDevState.setState("current",1)
-
                 var list = []
                 for(var i = 0; i < listModel.count; ++i)
                 {
                     var steps={}
-                    steps.device=0
                     steps.mode=listModel.get(i).mode
                     steps.temp=listModel.get(i).temp
                     steps.time=listModel.get(i).time
+                    steps.number=i+1
                     list.push(steps)
                 }
-                setMultiCooking(list)
 
                 var para =getDefHistory()
                 para.dishName=getDishName(list)
                 para.cookSteps=JSON.stringify(list)
 
-                QmlDevState.insertHistory(para)
+                startCooking(para,list,0)
             }
         }
 
@@ -177,12 +168,8 @@ Item {
     Rectangle{
         width:parent.width
         height:parent.height-topBar.height
-        anchors.top:topBar.bottom
+        anchors.bottom:topBar.top
         color:"#000"
-        Image {
-            source: "/images/main_menu/dibuyuans.png"
-            anchors.bottom:parent.bottom
-        }
 
         ListView {
             id: listView

@@ -10,7 +10,7 @@ Item {
     ToolBar {
         id:topBar
         width:parent.width
-        anchors.top:parent.top
+        anchors.bottom:parent.bottom
         height:96
         background:Rectangle{
             color:"#000"
@@ -53,8 +53,8 @@ Item {
     //内容
     Rectangle{
         width:parent.width
-        anchors.top:topBar.bottom
-        anchors.bottom: parent.bottom
+        anchors.bottom:topBar.top
+        anchors.top: parent.top
         color:"#000"
 
         Image{

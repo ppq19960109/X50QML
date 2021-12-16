@@ -10,28 +10,36 @@ Item {
         anchors.fill: parent
         anchors.topMargin: 50
         anchors.bottomMargin: 50
-        spacing: 48
-        anchors.leftMargin: 72
-        anchors.rightMargin: 80
+        spacing: 50
+        anchors.leftMargin: 75
+        anchors.rightMargin: 75
 
         Button{
             width: 300
             height:parent.height
 
             background:Rectangle{
-                color:"#fff"
-                radius: 10
-            }
-
-            Text{
                 color:"#000"
-                text:qsTr("左腔蒸烤")
-                font.pixelSize:40
-                anchors.centerIn: parent
+                radius: 16
             }
-
+            Text{
+                color:"#FFF"
+                text:qsTr("左腔")
+                font.pixelSize:50
+                anchors.top: parent.top
+                anchors.topMargin: 30
+                anchors.horizontalCenter: parent.horizontalCenter
+            }
+            Text{
+                color:"#FFF"
+                text:qsTr("蒸烤一体")
+                font.pixelSize:32
+                anchors.top: parent.top
+                anchors.topMargin: 100
+                anchors.horizontalCenter: parent.horizontalCenter
+            }
             onClicked: {
-                load_page("pageSteamBakeBase",JSON.stringify({"device":0}))
+                load_page("pageSteamBakeBase",JSON.stringify({"device":leftDevice}))
             }
         }
         Button{
@@ -40,17 +48,27 @@ Item {
             height:parent.height
 
             background:Rectangle{
-                color:"#fff"
-                radius: 10
+                color:"#000"
+                radius: 16
             }
             Text{
-                color:"#000"
-                text:qsTr("右腔速蒸")
-                font.pixelSize:40
-                anchors.centerIn: parent
+                color:"#FFF"
+                text:qsTr("右腔")
+                font.pixelSize:50
+                anchors.top: parent.top
+                anchors.topMargin: 30
+                anchors.horizontalCenter: parent.horizontalCenter
+            }
+            Text{
+                color:"#FFF"
+                text:qsTr("便捷速蒸")
+                font.pixelSize:32
+                anchors.top: parent.top
+                anchors.topMargin: 100
+                anchors.horizontalCenter: parent.horizontalCenter
             }
             onClicked: {
-                load_page("pageSteamBakeBase",JSON.stringify({"device":1}))
+                load_page("pageSteamBakeBase",JSON.stringify({"device":rightDevice}))
             }
         }
     }

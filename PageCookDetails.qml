@@ -2,14 +2,15 @@ import QtQuick 2.0
 import QtQuick.Controls 2.2
 import "pageSteamAndBake"
 Item {
+    property var root
     property var cookSteps
 
     Component.onCompleted: {
         console.log("state",state,typeof state)
-        var root=JSON.parse(state)
+        root=JSON.parse(state)
 
-        console.log("cookSteps",root.cookSteps)
-        var cookSteps=JSON.parse(root.cookSteps)
+        cookSteps=JSON.parse(root.cookSteps)
+
         if(root.imgUrl!=="")
         {
             recipe.visible=true
@@ -17,6 +18,8 @@ Item {
             dishName.text=root.dishName
             cookTime.text="烹饪用时："+root.cookTime+"分钟"
             details.text=root.details
+
+            cookSteps[0].dishName=root.dishName
         }
         else
         {
@@ -27,7 +30,7 @@ Item {
     ToolBar {
         id:topBar
         width:parent.width
-        anchors.top:parent.top
+        anchors.bottom: parent.bottom
         height:96
         background:Rectangle{
             color:"#000"
@@ -81,8 +84,7 @@ Item {
                 text:qsTr("启动")
             }
             onClicked: {
-
-
+                startCooking(root,cookSteps,0)
             }
         }
         //预约
@@ -102,7 +104,7 @@ Item {
                 text:qsTr("预约")
             }
             onClicked: {
-                load_page("pageSteamBakeReserve",JSON.stringify(cookSteps))
+                load_page("pageSteamBakeReserve",JSON.stringify(root))
             }
         }
     }
@@ -111,8 +113,8 @@ Item {
         id:recipe
         visible:false
         width:parent.width
-        anchors.top:topBar.bottom
-        anchors.bottom: parent.bottom
+        anchors.bottom:topBar.top
+        anchors.top: parent.top
         color:"#000"
 
         Rectangle{
@@ -182,8 +184,8 @@ Item {
         id:noRecipe
         visible:false
         width:parent.width
-        anchors.top:topBar.bottom
-        anchors.bottom: parent.bottom
+        anchors.bottom:topBar.top
+        anchors.top: parent.top
         color:"#000"
 
         Component {

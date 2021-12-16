@@ -19,21 +19,21 @@ int main(int argc, char *argv[])
 
     QGuiApplication app(argc, argv);
 
-//    qmlRegisterType<QmlWifi>("QmlWifi", 1, 0, "QmlWifi");
+    //    qmlRegisterType<QmlWifi>("QmlWifi", 1, 0, "QmlWifi");
 
     // app qml settings
     app.setOrganizationName("Marssenger"); //1
     app.setOrganizationDomain("Marssenger.com"); //2
     app.setApplicationName("X50BCZ"); //3
 
-    //    int fontId = QFontDatabase::addApplicationFont("/oem/res/fonts/SourceHanSansCN-Regular.ttf");
-    int fontId = QFontDatabase::addApplicationFont("simfang.ttf");
+    int fontId = QFontDatabase::addApplicationFont("SourceHanSansCN-Regular.ttf");
+    //    int fontId = QFontDatabase::addApplicationFont("simfang.ttf");
     QStringList fontFamilies = QFontDatabase::applicationFontFamilies(fontId);
     qDebug()<<"fontfamilies: "<<fontFamilies;
 
     qDebug()<<"FontsLocation"<<QStandardPaths::standardLocations(QStandardPaths::FontsLocation);
     QFont font;
-    font.setFamily("FangSong");//设置全局字体
+    font.setFamily("Source Han Sans CN");//设置全局字体
     app.setFont(font);
     //中文支持
 

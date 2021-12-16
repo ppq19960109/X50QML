@@ -2,38 +2,35 @@ import QtQuick 2.7
 import QtQuick.Controls 2.2
 
 Rectangle {
-    property alias hint_text: hint.text
-    property alias confirm_text: confirm_btn_text.text
-    property alias checkbox_visible: checkbox.visible
+    property alias hintTopText: hintTop.text
+    property alias confirmText: confirmBtnText.text
+    property alias checkboxVisible: control.visible
+    property alias hintHeight: hint.height
     signal cancel()
     signal confirm()
 
     anchors.fill: parent
-    color: "transparent"
+    color: "#000"
+    opacity: 0.6
     Rectangle {
+        id:hint
         anchors.centerIn: parent
-        implicitWidth: 500
-        implicitHeight: 280
+        implicitWidth: 600
+        implicitHeight: 358
         color: "#000"
-        radius: 10
+        radius: 16
+
         Button {
-            id:cancel_btn
-            width:50
-            height:50
+//            width:50
+//            height:50
             anchors.top:parent.top
-            anchors.topMargin: 5
+            anchors.topMargin: 33
             anchors.right:parent.right
-            anchors.rightMargin: 5
+            anchors.rightMargin: 33
 
-            Text{
-                width:40
-                color:"white"
-                font.pixelSize: 40
-
+            Image {
                 anchors.centerIn: parent
-                horizontalAlignment: Text.AlignHCenter
-                verticalAlignment: Text.AlignVCenter
-                text:"X"
+                source: "/x50/icon/icon_close@2x.png"
             }
             background: Rectangle {
                 color:"transparent"
@@ -44,12 +41,12 @@ Rectangle {
         }
 
         Text{
-            id:hint
-            width:400
+            id:hintTop
+            width:parent.width
             color:"white"
-            font.pixelSize: 35
+            font.pixelSize: 40
             anchors.top: parent.top
-            anchors.topMargin: 20
+            anchors.topMargin: 45
             anchors.horizontalCenter: parent.horizontalCenter
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
@@ -58,36 +55,53 @@ Rectangle {
         }
 
         CheckBox {
-            id:checkbox
-            width:150
+            id:control
+            width:200
             height:30
-            anchors.bottom:confirm_btn.top
-            anchors.bottomMargin: 15
+            anchors.bottom:confirmBtn.top
+            anchors.bottomMargin: 42
             anchors.horizontalCenter: parent.horizontalCenter
             checked: false
             text: qsTr("下次不再提醒")
             contentItem: Text {
-                width:200
+                width:parent.width
                 text: parent.text
-                font.pixelSize: 25
+                font.pixelSize: 30
                 opacity: 1.0
                 color: "white"
                 verticalAlignment: Text.AlignVCenter
-                leftPadding: checkbox.indicator.width + checkbox.spacing
+                leftPadding: control.indicator.width + control.spacing
             }
+//            indicator: Rectangle {
+//                implicitWidth: 24
+//                implicitHeight: 24
+//                x: control.leftPadding
+//                y: parent.height / 2 - height / 2
+//                radius: 3
+//                border.color: control.down ? "#17a81a" : "#21be2b"
+
+//                Rectangle {
+//                    width: 14
+//                    height: 14
+//                    x: 6
+//                    y: 6
+//                    radius: 2
+//                    color: control.down ? "#17a81a" : "#21be2b"
+//                    visible: control.checked
+//                }
+//            }
         }
         Button {
-            id:confirm_btn
-            width:150
-            height:40
+            id:confirmBtn
+            width:176
+            height:64
             anchors.bottom:parent.bottom
-            anchors.bottomMargin: 20
+            anchors.bottomMargin: 40
             anchors.horizontalCenter: parent.horizontalCenter
 
             Text{
-                id:confirm_btn_text
-                width:300
-                color:"white"
+                id:confirmBtnText
+                color:"#00E6B6"
                 font.pixelSize: 30
 
                 anchors.centerIn: parent
@@ -95,8 +109,9 @@ Rectangle {
                 verticalAlignment: Text.AlignVCenter
             }
             background: Rectangle {
-                color:"blue"
-                radius: 5
+                color:"transparent"
+                border.color:"#00E6B6"
+                radius: 8
             }
             onClicked: {
                 confirm()
