@@ -33,14 +33,13 @@ qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
-#CONFIG += rk3308
+CONFIG += rk3308
 rk3308{
 DEFINES += USE_RK3308
 #LIBS += -lDeviceIo -lasound
 INCLUDEPATH += libqrencode/include
 LIBS += libqrencode/lib/libqrencode.a
 }else{
-
 
 }
 

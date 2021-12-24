@@ -1,108 +1,104 @@
 import QtQuick 2.2
 import QtQuick.Controls 2.2
-
+import "../"
 Item {
     property alias closeVisible: close.visible
 
-    property int modeIndex
-    property alias tempIndex: tempText.text
-    property alias timeIndex: timeText.text
+      property alias nameText: nameText.text
+//    property int modeIndex
+//    property alias tempIndex: tempText.text
+//    property alias timeIndex: timeText.text
 
-    signal close()
+    signal cancel()
     signal confirm()
 
     implicitWidth: parent.width
     implicitHeight: 100
 
+    PageDivider{
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.bottom: parent.bottom
+    }
     Button {
         id:close
-        width:50
+        width:delImg.width
         height:parent.height
         anchors.verticalCenter: parent.verticalCenter
         anchors.right: parent.right
-        anchors.rightMargin: 10
+        anchors.rightMargin: 40
         visible:true
 
         background: Rectangle{
             color:"transparent"
             Image {
+                id:delImg
                 anchors.centerIn: parent
-                source: "/images/guanbi.png"
+                source: "qrc:/x50/icon/icon_delete.png"
             }
         }
         onClicked: {
-            close()
+            cancel()
         }
     }
     Button {
         height: parent.height
         anchors.left: parent.left
         anchors.right: close.left
-        anchors.verticalCenter: parent.verticalCenter
+
         background: Rectangle{
             color:"transparent"
         }
+
         Text {
             id: indexText
             anchors.left: parent.left
-            anchors.leftMargin: 50
+            anchors.leftMargin: 40
             anchors.verticalCenter: parent.verticalCenter
-            color:"#9AABC2"
+            color:"#FFF"
             font.pixelSize: 40
-            text:index+1
+            text:index+1+"、"
         }
-
         Text{
-            id:modeText
-            width: 160
+            id:nameText
             anchors.left: indexText.right
-            anchors.leftMargin: 50
+            anchors.leftMargin: 20
+            anchors.right: parent.right
             anchors.verticalCenter: parent.verticalCenter
 
-            text: leftWorkModeFun(modeIndex)
-            color: "#ECF4FC"
+            color: "#FFF"
             font.pixelSize: 40
         }
 
-        Text{
-            id:tempText
-            width: 160
-            anchors.left: modeText.right
-            anchors.leftMargin:50
-            anchors.verticalCenter: parent.verticalCenter
-            color: "#ECF4FC"
-            font.pixelSize: 40
-        }
+        //        Text{
+        //            id:modeText
+        //            width: 160
+        //            anchors.left: indexText.right
+        //            anchors.leftMargin: 50
+        //            anchors.verticalCenter: parent.verticalCenter
 
-//        Text{
-//            id:tempImage
-//            anchors.left: tempText.right
-//            anchors.leftMargin:5
-//            text:"℃"
-//            anchors.verticalCenter: parent.verticalCenter
-//            color: "#ECF4FC"
-//            font.pixelSize: 30
-//        }
+        //            text: leftWorkModeFun(modeIndex)
+        //            color: "#FFF"
+        //            font.pixelSize: 40
+        //        }
 
-        Text{
-            id:timeText
-            width: 160
-            anchors.left: tempText.right
-            anchors.leftMargin: 50
-            anchors.verticalCenter: parent.verticalCenter
-            color: "#ECF4FC"
-            font.pixelSize: 40
-        }
-
-//        Text{
-//            id:timeImage
-//            anchors.left: timeText.right
-//            anchors.leftMargin:5
-//            color: "#ECF4FC"
-//            text:"分钟"
-//            font.pixelSize: 30
-//            anchors.verticalCenter: parent.verticalCenter
-//        }
+        //        Text{
+        //            id:tempText
+        //            width: 160
+        //            anchors.left: modeText.right
+        //            anchors.leftMargin:50
+        //            anchors.verticalCenter: parent.verticalCenter
+        //            color: "#FFF"
+        //            font.pixelSize: 40
+        //        }
+        //        Text{
+        //            id:timeText
+        //            width: 160
+        //            anchors.left: tempText.right
+        //            anchors.leftMargin: 50
+        //            anchors.verticalCenter: parent.verticalCenter
+        //            color: "#FFF"
+        //            font.pixelSize: 40
+        //        }
         onClicked: {
             confirm()
         }

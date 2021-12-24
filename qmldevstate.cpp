@@ -7,7 +7,10 @@
 //QmlDevState* QmlDevState::qmlDevState;
 QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
 {
+//    stateTypeMap.insert("APPBind",LINK_VALUE_TYPE_NUM);
+    stateTypeMap.insert("SteamStart",LINK_VALUE_TYPE_NULL);
     stateTypeMap.insert("SoftVersion",LINK_VALUE_TYPE_STRING);
+    stateTypeMap.insert("ErrorCodeShow",LINK_VALUE_TYPE_NUM);
 
     stateTypeMap.insert("WifiState",LINK_VALUE_TYPE_NUM);
     stateTypeMap.insert("WifiEnable",LINK_VALUE_TYPE_NUM);
@@ -41,6 +44,7 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     stateTypeMap.insert("LStOvRealTemp",LINK_VALUE_TYPE_NUM);
     stateTypeMap.insert("LStOvOrderTimer",LINK_VALUE_TYPE_NUM);
     stateTypeMap.insert("LStOvOrderTimerLeft",LINK_VALUE_TYPE_NUM);
+    stateTypeMap.insert("LStOvDoorState",LINK_VALUE_TYPE_NUM);
 
     stateTypeMap.insert("RStOvState",LINK_VALUE_TYPE_NUM);
     stateTypeMap.insert("RStOvOperation",LINK_VALUE_TYPE_NUM);
@@ -50,10 +54,13 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     stateTypeMap.insert("RStOvRealTemp",LINK_VALUE_TYPE_NUM);
     stateTypeMap.insert("RStOvOrderTimer",LINK_VALUE_TYPE_NUM);
     stateTypeMap.insert("RStOvOrderTimerLeft",LINK_VALUE_TYPE_NUM);
+    stateTypeMap.insert("RStOvDoorState",LINK_VALUE_TYPE_NUM);
 
     stateTypeMap.insert("MultiMode",LINK_VALUE_TYPE_NUM);
     stateTypeMap.insert("MultiStageState",LINK_VALUE_TYPE_STRUCT);
 
+    stateTypeMap.insert("LStoveStatus",LINK_VALUE_TYPE_NUM);
+    stateTypeMap.insert("RStoveStatus",LINK_VALUE_TYPE_NUM);
     stateTypeMap.insert("RStoveTimingState",LINK_VALUE_TYPE_NUM);
     stateTypeMap.insert("RStoveTimingOpera",LINK_VALUE_TYPE_NUM);
     stateTypeMap.insert("RStoveTimingSet",LINK_VALUE_TYPE_NUM);
@@ -67,7 +74,13 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     stateTypeMap.insert("SteamOffLeftTime",LINK_VALUE_TYPE_NUM);
     stateTypeMap.insert("HoodSpeed",LINK_VALUE_TYPE_NUM);
 
+    localConnected=0;
+    connect(&client, SIGNAL(sendData(const QJsonValue&)), this,SLOT(readData(const QJsonValue&)));
+    connect(&client, &LocalClient::sendConnected, this,&QmlDevState::setLocalConnected);
+
 #ifndef USE_RK3308
+    setState("AppBind",0);
+
     setState("LStOvMode",0);
     setState("LStOvState",0);
     setState("LStOvSetTimerLeft",0);
@@ -83,18 +96,15 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     setState("current",0);
 
     setState("HoodSpeed",2);
-#endif
-    localConnected=0;
-    connect(&client, SIGNAL(sendData(const QJsonValue&)), this,SLOT(readData(const QJsonValue&)));
-    connect(&client, &LocalClient::sendConnected, this,&QmlDevState::setLocalConnected);
+
 
     QVariantMap info;
     info.insert("id", 0);
     info.insert("cookType", 0);
     info.insert("cookTime", 120);
-
+    info.insert("cookPos", 0);
     info.insert("dishName", "清蒸鱼");
-    info.insert("imgUrl", "/images/peitu01.png");
+    info.insert("imgUrl", "recipes/peitu01.png");
     info.insert("cookSteps", "[{\"device\":0,\"mode\":35,\"temp\":100,\"time\":90}]");
     info.insert("details", "食材：\n鸡蛋2个，蛤蜊50g，盐2g，油3滴葱花30g\n步骤：\n1、鱼片加入适量鸡蛋，料酒、升降、盐，醋、糖，搅拌均匀后加一点淀粉（淀粉加水）增加粘度\n2、鱼片加入适量鸡蛋，料酒、升降、盐，醋、糖，搅拌均匀后加一点淀粉（淀粉加水）增加粘度\n3、鱼片加入适量鸡蛋，料酒、升降、盐，醋、糖，搅拌均匀后加一点淀粉（淀粉加水）增加粘度");
     info.insert("collect", 0);
@@ -118,7 +128,9 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
 
     info.insert("imgUrl", "");
     history.append(info);
-
+    info["dishName"]="烤鱼";
+    history.append(info);
+#endif
 }
 
 bool compareId(const QVariant &s1, const QVariant &s2)
@@ -213,7 +225,7 @@ void QmlDevState::sortHistory()
     std::sort(history.begin(), history.end(), compareId);
 }
 
-int QmlDevState::setCollect(const int index,const bool collect)
+int QmlDevState::setCollect(const int index,const int collect)
 {
     int ret=-1;
     qDebug()<< "setCollect" << index << "," << collect;
@@ -282,6 +294,7 @@ int QmlDevState::coverHistory(const QJsonObject &object, QVariantMap &info)
     QJsonValue cookType =object.value("cookType");
     QJsonValue cookTime =object.value("cookTime");
     QJsonValue recipeType =object.value("recipeType");
+    QJsonValue cookPos =object.value("cookPos");
 
     info.insert("id",id.toInt());
     info.insert("seqid",seqid.toInt());
@@ -294,6 +307,7 @@ int QmlDevState::coverHistory(const QJsonObject &object, QVariantMap &info)
     info.insert("cookType",cookType.toInt());
     info.insert("cookTime",cookTime.toInt());
     info.insert("recipeType",recipeType.toInt());
+    info.insert("cookPos",cookPos.toInt());
     return 0;
 }
 
@@ -389,6 +403,7 @@ void QmlDevState::readData(const QJsonValue &data)
         {
             qDebug()<<"key:"<<key<<"value type:"<<value_type<< endl;
             QJsonValue value =object.value(it.key());
+
             if(LINK_VALUE_TYPE_NUM==value_type)
             {
                 setState(key,value.toInt());
@@ -400,11 +415,11 @@ void QmlDevState::readData(const QJsonValue &data)
                 qDebug()<<"key:"<<key<<"value:"<<value.toString();
                 if("QrCode"==key)
                 {
-                    QrcodeEn::encodeImage("http://club.marssenger.com/hxr/download.html?pk=a1n3oZED0Y8&dn=X5B-ChengWei-01",2,key+".png");
+                    QrcodeEn::encodeImage(value.toString(),4,key+".png");
                 }
                 else if("AfterSalesQrCode"==key)
                 {
-                    QrcodeEn::encodeImage("http://club.marssenger.com/hxr/download.html?pk=a1n3oZED0Y8",2,key+".png");
+                    QrcodeEn::encodeImage(value.toString(),4,key+".png");
                 }
             }
             else if(LINK_VALUE_TYPE_STRUCT==value_type)
@@ -419,6 +434,15 @@ void QmlDevState::readData(const QJsonValue &data)
                     QJsonValue mac_address =object_struct.value("mac_address");
                     setState("bssid",bssid.toString());
                     qDebug()<<"key:"<<"bssid"<<"value:"<<bssid.toString();
+                }
+                else if(key=="MultiStageState")
+                {
+                    QJsonObject object_struct =value.toObject();
+                    QJsonValue cnt =object_struct.value("cnt");
+                    QJsonValue current =object_struct.value("current");
+
+                    setState("cnt",cnt.toInt());
+                    setState("current",current.toInt());
                 }
                 else if(key=="CookRecipe" || key=="CookHistory")
                 {
@@ -499,6 +523,10 @@ void QmlDevState::readData(const QJsonValue &data)
                     //                    std::sort(history.begin(), history.end(), compareId);
                     setHistory(cur);
                 }
+            }
+            else if(LINK_VALUE_TYPE_NULL==value_type)
+            {
+                setState(key,0);
             }
         }
         else

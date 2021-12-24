@@ -3,24 +3,15 @@ import QtQuick.Controls 2.2
 
 Rectangle {
     property alias hintTopText: hintTop.text
+    property alias hintBottomText: hintBottom.text
+    property alias cancelText: cancelBtnText.text
     property alias confirmText: confirmBtnText.text
-    property alias checkboxVisible: control.visible
     property alias hintHeight: hint.height
     signal cancel()
     signal confirm()
-
     MouseArea{
         anchors.fill: parent
-//        hoverEnabled:true
-//        propagateComposedEvents: true
-//        onPressed: {
-//            mouse.accepted = true
-//        }
     }
-    Component.onCompleted: {
-        console.log("PageDialog",closeImg.width)
-    }
-
     anchors.fill: parent
     color: "transparent"
     Rectangle {
@@ -31,14 +22,11 @@ Rectangle {
     Rectangle {
         id:hint
         anchors.centerIn: parent
-        implicitWidth: 600
-        implicitHeight: 358
+        implicitWidth: 680
+        implicitHeight: 360
         color: "transparent"
-         border.color: "#fff"
 //        radius: 16
         Image {
-//            fillMode:Image.PreserveAspectCrop
-
             anchors.fill: parent
             source: "qrc:/x50/main/圆角矩形 3209.png"
         }
@@ -66,10 +54,11 @@ Rectangle {
         Text{
             id:hintTop
             width:parent.width
+            visible: hintTop.text!=""
             color:"white"
             font.pixelSize: 40
             anchors.top: parent.top
-            anchors.topMargin: 45
+            anchors.topMargin: 50
             anchors.horizontalCenter: parent.horizontalCenter
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
@@ -77,28 +66,65 @@ Rectangle {
             wrapMode:Text.Wrap
         }
 
-        PageCheckBox {
-            id:control
-
-            anchors.bottom:confirmBtn.top
-            anchors.bottomMargin: 30
+        Text{
+            id:hintBottom
+            visible: hintBottom.text!=""
+            width:parent.width
+            color:"white"
+            font.pixelSize: 35
+            anchors.top: parent.top
+            anchors.topMargin: 130
             anchors.horizontalCenter: parent.horizontalCenter
-            checked: false
+            horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignVCenter
+
+            wrapMode:Text.WrapAnywhere
         }
         Button {
-            id:confirmBtn
-            width:195
-            height:85
+            id:cancelBtn
+            width: 175+20
+            height: 65+20
             anchors.bottom:parent.bottom
-            anchors.bottomMargin: 30
-            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.bottomMargin: 40
+            anchors.left: parent.left
+            anchors.leftMargin: 130
+            Text{
+                id:cancelBtnText
+                anchors.centerIn: parent
+                color:"white"
+                font.pixelSize: 30
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+                text:"取消"
+            }
+            background: Rectangle {
+                width:175
+                height:65
+                anchors.centerIn: parent
+                color:"transparent"
+                border.color:"#FFF"
+                radius: 8
+            }
+            onClicked: {
+                cancel()
+            }
+        }
+
+        Button {
+            id:confirmBtn
+            width:175+20
+            height:65+20
+            anchors.bottom:parent.bottom
+            anchors.bottomMargin: 40
+            anchors.right: parent.right
+            anchors.rightMargin: 130
 
             Text{
                 id:confirmBtnText
+                anchors.centerIn: parent
                 color:"#00E6B6"
                 font.pixelSize: 30
 
-                anchors.centerIn: parent
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
             }

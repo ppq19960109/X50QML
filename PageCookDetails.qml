@@ -14,7 +14,7 @@ Item {
         if(root.imgUrl!=="")
         {
             recipe.visible=true
-            recipeImg.source=root.imgUrl
+            recipeImg.source="file:"+root.imgUrl
             dishName.text=root.dishName
             cookTime.text="烹饪用时："+root.cookTime+"分钟"
             details.text=root.details
@@ -26,112 +26,56 @@ Item {
             noRecipe.visible=true
             listView.model=cookSteps
         }
+        permitSteamStartStatus(1)
     }
-    ToolBar {
+    Image {
+        anchors.fill: parent
+        source: "/x50/main/背景.png"
+    }
+    PageBackBar{
         id:topBar
         width:parent.width
-        anchors.bottom: parent.bottom
-        height:96
-        background:Rectangle{
-            color:"#000"
-        }
-        Image {
-            anchors.fill: parent
-            source: "/images/main_menu/zhuangtai_bj.png"
-        }
-        //back图标
-        TabButton {
-            id:goBack
-            width:80
-            height:parent.height
-            anchors.left:parent.left
-            anchors.verticalCenter: parent.verticalCenter
-            Image{
-                anchors.centerIn: parent
-                source: "/images/fanhui.png"
-            }
-            background: Rectangle {
-                opacity: 0
-            }
-            onClicked: {
-                backPrePage()
-            }
+        anchors.bottom:parent.bottom
+        height:80
+        name:"详情"
+        leftBtnText:qsTr("启动")
+        rightBtnText:qsTr("预约")
+        onClose:{
+            permitSteamStartStatus(0)
+             backPrePage()
         }
 
-        Text{
-            id:name
-            width:80
-            color:"#9AABC2"
-            font.pixelSize: 40
-            anchors.left:goBack.right
-            anchors.verticalCenter: parent.verticalCenter
-            text:qsTr("详情")
+        onLeftClick:{
+           startCooking(root,cookSteps,0)
         }
-
-        //启动
-        TabButton{
-            id:startBtn
-            width:160
-            height:parent.height
-            anchors.right:reserve.left
-            background:Rectangle{
-                color:"transparent"
-            }
-            Text{
-                color:"#ECF4FC"
-                font.pixelSize: 40
-                anchors.centerIn:parent
-                text:qsTr("启动")
-            }
-            onClicked: {
-                startCooking(root,cookSteps,0)
-            }
-        }
-        //预约
-        TabButton{
-            id:reserve
-            width:160
-            height:parent.height
-            anchors.right:parent.right
-            anchors.rightMargin: 10
-            background:Rectangle{
-                color:"transparent"
-            }
-            Text{
-                color:"#ECF4FC"
-                font.pixelSize: 40
-                anchors.centerIn:parent
-                text:qsTr("预约")
-            }
-            onClicked: {
-                load_page("pageSteamBakeReserve",JSON.stringify(root))
-            }
+        onRightClick:{
+             load_page("pageSteamBakeReserve",JSON.stringify(root))
         }
     }
+
     //内容
     Rectangle{
         id:recipe
         visible:false
+        enabled: visible
         width:parent.width
         anchors.bottom:topBar.top
         anchors.top: parent.top
-        color:"#000"
+        color:"transparent"
 
         Rectangle{
             id:leftContent
-            width:250
+            width:300
             height:parent.height
-            color:"#000"
+            color:"transparent"
             Rectangle{
-                width:parent.width
-                height:300
+                width:220
+                height:330
                 anchors.centerIn: parent
-                color:"#000"
+                color:"transparent"
                 Image{
                     id:recipeImg
-                    anchors.top:parent.top
-                    anchors.bottom: dishName.top
-                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.fill: parent
                 }
                 Text{
                     id:dishName
@@ -148,7 +92,7 @@ Item {
             height:parent.height
             anchors.left: leftContent.right
             anchors.right: parent.right
-            color:"#000"
+            color:"transparent"
 
             Text{
                 id:cookTime
@@ -183,32 +127,28 @@ Item {
     Rectangle{
         id:noRecipe
         visible:false
+        enabled: visible
         width:parent.width
         anchors.bottom:topBar.top
         anchors.top: parent.top
-        color:"#000"
+        color:"transparent"
 
         Component {
             id: multiDelegate
             PageMultistageDelegate {
-                modeIndex:modelData.mode
-                tempIndex:modelData.temp+"℃"
-                timeIndex:modelData.time+"分钟"
+                nameText:leftWorkModeFun(modelData.mode)+"-"+modelData.temp+"℃"+"-"+modelData.time+"分钟"
+//                modeIndex:modelData.mode
+//                tempIndex:modelData.temp+"℃"
+//                timeIndex:modelData.time+"分钟"
                 closeVisible:false
-
-                onClose:{
-
-                }
-                onConfirm:{
-
-                }
             }
         }
         ListView {
             id: listView
             width: parent.width
-            height: 300
 //            anchors.fill: parent
+//            anchors.topMargin: 50
+            height: listView.model.length*100
             anchors.centerIn: parent
             interactive: false
             delegate: multiDelegate

@@ -12,10 +12,10 @@ ToolBar {
     TabButton {
         id:wifi
         enabled:!systemSettings.childLock
-        width: wifi_icon.width
+        width: wifi_icon.width+40
         height:parent.height
         anchors.left:parent.left
-        anchors.leftMargin: 40
+        anchors.leftMargin: 20
 
         background: Rectangle {
             opacity: 0
@@ -33,10 +33,10 @@ ToolBar {
     TabButton {
         id:wind
         enabled:!systemSettings.childLock
-        width: wind_icon.width
+        width: wind_icon.width+40
         height:parent.height
-        anchors.left:parent.left
-        anchors.leftMargin: 140
+        anchors.left:wifi.right
+//        anchors.leftMargin: 140
 
         background: Rectangle {
             opacity: 0
@@ -53,14 +53,16 @@ ToolBar {
     TabButton {
         id:closeHeat
         enabled:!systemSettings.childLock
-        width:150
+        width:time.width+closeHeatImg.width+20
         height:parent.height
         anchors.right:childLockBtn.left
+        anchors.rightMargin: 20
         visible: QmlDevState.state.RStoveTimingState===timingStateEnum.RUN
         background: Rectangle {
             opacity: 0
         }
         Image{
+            id:closeHeatImg
             anchors.right: time.left
             anchors.rightMargin: 20
             anchors.verticalCenter: parent.verticalCenter
@@ -71,10 +73,11 @@ ToolBar {
             anchors.verticalCenter: parent.verticalCenter
             color:"#fff"
             text:"0"+Math.floor(QmlDevState.state.RStoveTimingLeft/60)+":"+Math.floor(QmlDevState.state.RStoveTimingLeft%60/10)+(QmlDevState.state.RStoveTimingLeft%60%10)//qsTr("01:12")
-            font.pixelSize:40
+            font.pixelSize:35
             anchors.right: parent.right
         }
         onClicked: {
+            console.log("closeHeat btn",time.width,closeHeatImg.width)
             if(visible)
                 load_page("pageCloseHeat")
         }
@@ -82,10 +85,10 @@ ToolBar {
     //童锁按钮
     TabButton{
         id:childLockBtn
-        width:tongsuoImg.width
+        width:tongsuoImg.width+40
         height:parent.height
         anchors.right:parent.right
-        anchors.rightMargin: 30
+        anchors.rightMargin: 10
         background:Rectangle{
             color:"transparent"
         }
@@ -119,7 +122,7 @@ ToolBar {
                 if(systemSettings.childLock === true)
                 {
                     longPressTimer.running = false
-                    if(childLockPressCount < 3){
+                    if(childLockPressCount < 2){
                         console.log("请长按童锁键取消童锁")
                     }
                     else

@@ -4,7 +4,7 @@ import QtQuick.Controls 2.2
 Item {
     property bool edit: false
     property int cookPos: allDevice
-
+    property int historyCurrentIndex:0
     Component.onCompleted: {
         console.log("state",state,typeof state)
         var root=JSON.parse(state)
@@ -32,6 +32,7 @@ Item {
             }
         }
         recipeListView.model=historyModel
+        recipeListView.currentIndex=historyCurrentIndex
     }
 
     Connections { // 将目标对象信号与槽函数进行连接
@@ -41,99 +42,45 @@ Item {
             getHistory(cookPos)
         }
     }
-    ToolBar {
+    Image {
+        anchors.fill: parent
+        source: "/x50/main/背景.png"
+    }
+    PageBackBar{
         id:topBar
         width:parent.width
-        anchors.bottom: parent.bottom
-        height:96
-        background:Rectangle{
-            color:"#000"
-        }
-        Image {
-            anchors.fill: parent
-            source: "/images/main_menu/zhuangtai_bj.png"
-        }
-        //back图标
-        TabButton {
-            id:goBack
-            width:80
-            height:parent.height
-            anchors.left:parent.left
-            anchors.verticalCenter: parent.verticalCenter
-            Image{
-                anchors.centerIn: parent
-                source: "/images/fanhui.png"
-            }
-            background: Rectangle {
-                opacity: 0
-            }
-            onClicked: {
-                backPrePage();
-            }
-        }
-
-        Text{
-            id:name
-            width:80
-            color:"#9AABC2"
-            font.pixelSize: 40
-            anchors.left:goBack.right
-            anchors.verticalCenter: parent.verticalCenter
-            text:qsTr("烹饪历史")
-        }
-        //编辑
-        TabButton{
-            width:160
-            height:parent.height
-            anchors.right:details.left
-            background:Rectangle{
-                color:"transparent"
-            }
-            Text{
-                color:"#ECF4FC"
-                font.pixelSize: 40
-                anchors.centerIn:parent
-                text:edit?qsTr("取消编辑"):qsTr("编辑")
-            }
-            onClicked: {
+        anchors.bottom:parent.bottom
+        height:80
+        name:qsTr("烹饪历史")
+        leftBtnText:edit?qsTr("完成"):qsTr("管理")
+        leftBtnOpacity:noHistory.visible==true?0.6:1
+        rightBtnText:qsTr("详情")
+        rightBtnOpacity:noHistory.visible==true?0.6:edit===true?0.6:1
+        onLeftClick:{
+            if(noHistory.visible==false)
                 edit=!edit
-            }
         }
-        //详情
-        TabButton{
-            id:details
-            width:160
-            height:parent.height
-            anchors.right:parent.right
-            anchors.rightMargin: 10
-            background:Rectangle{
-                color:"transparent"
-            }
-            Text{
-                color:"#ECF4FC"
-                font.pixelSize: 40
-                anchors.centerIn:parent
-                text:qsTr("详情")
-            }
-            onClicked: {
+        onRightClick:{
+            if(noHistory.visible==false && edit===false)
                 load_page("pageCookDetails",JSON.stringify(recipeListView.model[recipeListView.currentIndex]))
-            }
+        }
+        onClose:{
+            backPrePage()
         }
     }
-
     //内容
     Rectangle{
         width:parent.width
         anchors.bottom:topBar.top
         anchors.top: parent.top
-        color:"#000"
+        color:"transparent"
 
         Text{
             id:noHistory
             visible: false
             anchors.centerIn: parent
             text:"暂无烹饪历史"
-            font.pixelSize: 50
+            font.pixelSize: 40
             horizontalAlignment:Text.AlignHCenter
             verticalAlignment:Text.AlignVCenter
             color:"#fff"
@@ -142,28 +89,36 @@ Item {
         ListView{
             id: recipeListView
             visible: false
-//            model:historyModel
+            //            model:historyModel
             width:parent.width
-            height:parent.height
-
+            //            height:parent.height
+            anchors.bottom:parent.bottom
+            anchors.bottomMargin: 20
+            anchors.top: parent.top
+            anchors.topMargin: 20
             //            highlightRangeMode: ListView.StrictlyEnforceRange
             boundsBehavior:Flickable.StopAtBounds
             clip: true
             currentIndex:0
             delegate: Rectangle{
                 width:parent.width
-                height:96
-                color:"#000"
+                height:100
+                color:"transparent"
+                PageDivider{
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.bottom:parent.bottom
+                }
                 Text{
                     id:number
-                    width : 96
-                    height: 96
+                    width:60
+                    height:100
                     anchors.left: parent.left
-                    text: index+1
+                    anchors.leftMargin: 40
+                    text: index+1+"、"
                     font.pixelSize: 40
                     horizontalAlignment:Text.AlignHCenter
                     verticalAlignment:Text.AlignVCenter
-                    color:recipeListView.currentIndex===index?"#00E6B6":"#fff"
+                    color:recipeListView.currentIndex===index?"#00E6B6":"#FFF"
                 }
                 Button {
                     height:parent.height
@@ -197,7 +152,7 @@ Item {
                     Image{
                         visible: edit
                         anchors.centerIn: parent
-                        source: "/images/shanchu-icon.png"
+                        source: "qrc:/x50/icon/icon_delete.png"
                     }
                     Text{
                         anchors.centerIn: parent
@@ -207,16 +162,18 @@ Item {
 
                         horizontalAlignment:Text.AlignHCenter
                         verticalAlignment:Text.AlignHCenter
-                        color:modelData.collect===0?"#fff":"orange"
+                        color:recipeListView.currentIndex===index?"#00E6B6":modelData.collect===0?"#FFF":"#FFB613"
                     }
                     onClicked: {
                         if(edit)
                         {
                             QmlDevState.deleteHistory(modelData.id)
+                            historyCurrentIndex=recipeListView.currentIndex-1
                         }
                         else
                         {
                             QmlDevState.setCollect(index,!modelData.collect)
+                            historyCurrentIndex=recipeListView.currentIndex
                         }
                     }
                 }

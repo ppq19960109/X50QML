@@ -14,71 +14,25 @@ Item {
     {
         recipeListView.model=QmlDevState.getRecipe(index);
     }
-
-    ToolBar {
+    Image {
+        anchors.fill: parent
+        source: "/x50/main/背景.png"
+    }
+    PageBackBar{
         id:topBar
         width:parent.width
-        anchors.bottom: parent.bottom
+        anchors.bottom:parent.bottom
         height:80
-        background:Rectangle{
-            color:"#2B2E2E"
+        name:qsTr("智慧菜谱")
+        leftBtnText:qsTr("")
+        rightBtnText:qsTr("详情")
+        onLeftClick:{
         }
-        Image {
-            anchors.fill: parent
-            source: "/images/main_menu/zhuangtai_bj.png"
+        onRightClick:{
+            load_page("pageCookDetails",JSON.stringify(recipeListView.model[recipeListView.currentIndex]))
         }
-        //back图标
-        TabButton {
-            id:goBack
-            width:80
-            height:parent.height
-            anchors.left:parent.left
-            anchors.verticalCenter: parent.verticalCenter
-            Image{
-                anchors.centerIn: parent
-                source: "/images/fanhui.png"
-            }
-            background: Rectangle {
-                opacity: 0
-            }
-            onClicked: {
-                backPrePage()
-            }
-        }
-
-        Text{
-            id:name
-            width:80
-            color:"#FFF"
-            font.pixelSize: 40
-            anchors.left:goBack.right
-            anchors.verticalCenter: parent.verticalCenter
-            text:qsTr("智慧菜谱")
-        }
-
-        //详情
-        TabButton{
-            width:100
-            height:50
-            anchors.right:parent.right
-            anchors.rightMargin: 40
-            anchors.verticalCenter: parent.verticalCenter
-            background:Rectangle{
-                color:"transparent"
-                border.color:"#00E6B6"
-                radius: 8
-            }
-            Text{
-                color:"#00E6B6"
-                font.pixelSize: 30
-                anchors.centerIn:parent
-                horizontalAlignment:Text.AlignHCenter
-                verticalAlignment:Text.AlignVCenter
-                text:qsTr("详情")
-            }
-            onClicked: {
-                load_page("pageCookDetails",JSON.stringify(recipeListView.model[recipeListView.currentIndex]))
-            }
+        onClose:{
+            backPrePage()
         }
     }
     //内容
@@ -86,12 +40,14 @@ Item {
         width:parent.width
         anchors.top:parent.top
         anchors.bottom: topBar.top
-
+        color:"transparent"
         Rectangle{
             id:leftContent
             width:150
             height:parent.height
-            color:"#000"
+            color:"transparent"
+            //            color:"#000"
+            //            opacity: 0.15
             ListView{
                 id:menuList
                 model:menuId
@@ -103,13 +59,14 @@ Item {
                 delegate: Rectangle{
                     height: 100
                     width:parent.width
-                    color:menuList.currentIndex===index?"#333837":"#3A403F"
+                    color:"transparent"
                     Button {
                         width:parent.width
                         height:parent.height
                         anchors.centerIn: parent
                         background: Rectangle{
-                            color:"transparent"
+                            color:"#000"
+                            opacity: menuList.currentIndex===index?0.3:0.15
                         }
                         Text{
                             text: modelData
@@ -136,7 +93,7 @@ Item {
             height:parent.height
             anchors.left: leftContent.right
             anchors.right: parent.right
-            color:"#404545"
+            color:"transparent"
             ListView{
                 id: recipeListView
                 model:listModel
@@ -161,13 +118,15 @@ Item {
                         anchors.right: parent.right
                         background: Rectangle{
                             color:"transparent"
-                            radius: 16
+//                            radius: 16
+                            border.width: 4
+                            border.color: recipeListView.currentIndex===index?cookModeColor[modelData.cookType]:"transparent"
                         }
                         Image{
-                            anchors.top:parent.top
-                            anchors.bottom: recipeName.top
-                            width:parent.width
-                            source: modelData.imgUrl
+                            anchors.fill: parent
+                            anchors.margins: 4
+//                            fillMode:Image.PreserveAspectFit
+                            source: "file:"+modelData.imgUrl
                         }
                         Rectangle{
                             width:88
@@ -193,19 +152,13 @@ Item {
                             width:parent.width
                             height: 60
                             anchors.bottom: parent.bottom
-                            color:"lightslategray"
+                            color:"transparent"
                             Text{
                                 text: modelData.dishName
                                 font.pixelSize: 40
                                 anchors.centerIn: parent
                                 color:"#fff"
 
-                            }
-                            Rectangle{
-                                width:parent.width
-                                height: 5
-                                anchors.bottom: parent.bottom
-                                color:recipeListView.currentIndex===index?"blue":"#000"
                             }
                         }
                         onClicked: {

@@ -3,6 +3,21 @@ import QtQuick.Controls 2.2
 import "../"
 Item {
     property var root
+    function steamStart()
+    {
+        console.log("PageSteamBakeReserve",hourPathView.model[hourPathView.currentIndex],minutePathView.model[minutePathView.currentIndex])
+        startCooking(root,JSON.parse(root.cookSteps),hourPathView.currentIndex*60+minutePathView.currentIndex)
+    }
+
+    Connections { // 将目标对象信号与槽函数进行连接
+        target: QmlDevState
+        onStateChanged: { // 处理目标对象信号的槽函数
+            if("SteamStart"==key)
+            {
+                steamStart()
+            }
+        }
+    }
     Component.onCompleted: {
         var i
         var hourArray = new Array
@@ -19,107 +34,62 @@ Item {
         console.log("state",state,typeof state)
         root=JSON.parse(state)
 
-        reserveData.text=root.dishName
     }
-    ToolBar {
+    //'<font size="5">测试</font>
+    Image {
+        anchors.fill: parent
+        source: "/x50/main/背景.png"
+    }
+
+    PageBackBar{
         id:topBar
         width:parent.width
-        anchors.bottom: parent.bottom
-        height:96
-        background:Rectangle{
-            color:"#000"
-        }
-        Image {
-            anchors.fill: parent
-            source: "/images/main_menu/zhuangtai_bj.png"
-        }
-        //back图标
-        TabButton {
-            id:goBack
-            width:80
-            height:parent.height
-            anchors.left:parent.left
-            anchors.verticalCenter: parent.verticalCenter
-            Image{
-                anchors.centerIn: parent
-                source: "/images/fanhui.png"
-            }
-            background: Rectangle {
-                opacity: 0
-            }
-            onClicked: {
-                backTopPage()
-            }
+        anchors.bottom:parent.bottom
+        height:80
+        name:"预约  <font size='-1'>("+root.dishName+")</font>"
+        leftBtnText:qsTr("")
+        rightBtnText:qsTr("启动")
+        onClose:{
+                backPrePage()
         }
 
-        Text{
-            id:pageName
-            width:100
-            color:"#9AABC2"
-            font.pixelSize: 40
-            anchors.left:goBack.right
-            anchors.verticalCenter: parent.verticalCenter
-            text:qsTr("预约")
-        }
-
-        Text{
-            id:reserveData
-            width:200
-            color:"#9AABC2"
-            font.pixelSize: 40
-            anchors.left:pageName.right
-            anchors.verticalCenter: parent.verticalCenter
+        onLeftClick:{
 
         }
-
-        //启动
-        TabButton{
-            id:startBtn
-            width:160
-            height:parent.height
-            anchors.right:parent.right
-            background:Rectangle{
-                color:"transparent"
-            }
-            Text{
-                color:"#ECF4FC"
-                font.pixelSize: 40
-                anchors.centerIn:parent
-                text:qsTr("启动")
-            }
-            onClicked: {
-                console.log("PageSteamBakeReserve",hourPathView.model[hourPathView.currentIndex],minutePathView.model[minutePathView.currentIndex])
-                startCooking(root,JSON.parse(root.cookSteps),hourPathView.currentIndex*60+minutePathView.currentIndex)
-            }
+        onRightClick:{
+                steamStart()
         }
     }
+
     //内容
     Rectangle{
         width:parent.width
         anchors.bottom:topBar.top
         anchors.top: parent.top
-        color:"#000"
+        color:"transparent"
 
-        Image{
-            width:parent.width
-            source: "/images/fengexian.png"
+        PageDivider{
+            anchors.horizontalCenter: parent.horizontalCenter
             anchors.top:parent.top
-            anchors.topMargin:rowPathView.height/3
-
+            anchors.topMargin:rowPathView.height/3+50
         }
-        Image{
-            width:parent.width
-            source: "/images/fengexian.png"
+        PageDivider{
+            anchors.horizontalCenter: parent.horizontalCenter
             anchors.top:parent.top
-            anchors.topMargin:rowPathView.height/3*2
+            anchors.topMargin:rowPathView.height/3*2+50
+        }
+        Image {
+            anchors.centerIn: parent
+            source: "qrc:/x50/steam/黑色块.png"
         }
         ListModel {
             id:modeListModel
         }
         Row {
             id:rowPathView
-            width: parent.width
-            height:parent.height
+            width: parent.width-80
+            height:parent.height-100
+            anchors.centerIn: parent
             spacing: 10
 
             DataPathView {

@@ -1,83 +1,58 @@
 import QtQuick 2.0
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
+import "../"
 Item {
 
     Component.onCompleted: {
 
 
     }
-    ToolBar {
+    Image {
+        anchors.fill: parent
+        source: "/x50/main/背景.png"
+    }
+    PageBackBar{
         id:topBar
         width:parent.width
         anchors.bottom:parent.bottom
-        height:96
-        background:Rectangle{
-            color:"#000"
+        height:80
+        name:qsTr("设置")
+        leftBtnText:qsTr("")
+        rightBtnText:qsTr("")
+        onClose:{
+            backPrePage()
         }
-        Image {
-            anchors.fill: parent
-            source: "/images/main_menu/zhuangtai_bj.png"
-        }
-        //back图标
-        TabButton {
-            id:goBack
-            width:80
-            height:parent.height
-            anchors.left:parent.left
-            anchors.verticalCenter: parent.verticalCenter
-            Image{
-                anchors.centerIn: parent
-                source: "/images/fanhui.png"
-            }
-            background: Rectangle {
-                opacity: 0
-            }
-            onClicked: {
-                backPrePage()
-            }
-        }
-
-        Text{
-            id:pageName
-            width:100
-            //            height:parent.height
-            color:"#9AABC2"
-            font.pixelSize: 40
-            anchors.left:goBack.right
-            anchors.verticalCenter: parent.verticalCenter
-            text:qsTr("设置")
-        }
-
     }
+
     //内容
     Rectangle{
         width:parent.width
         anchors.bottom:topBar.top
         anchors.top: parent.top
-
-        color:"#000"
+        color:"transparent"
 
         GridLayout{
-            width:parent.width-60
-            height: parent.height-50
+            width:parent.width-80
+            height: parent.height-90
             anchors.centerIn: parent
             rows: 2
             columns: 3
-            rowSpacing: 10
-            columnSpacing: 10
+            rowSpacing: 30
+            columnSpacing: 20
 
             Button{
-                Layout.preferredWidth: 220
-                Layout.preferredHeight:160
+                Layout.preferredWidth: 210
+                Layout.preferredHeight:140
                 Layout.alignment: Qt.AlignHCenter|Qt.AlignVCenter
                 background:Rectangle{
                     radius: 10
-                    color:"#fff"
+                    color:"transparent"
+                    border.color: "#97A3A1"
                 }
                 Text{
                     text:"网络"
-                    color:"#000"
+                    color:"#FFF"
                     font.pixelSize: 35
                     anchors.centerIn: parent
                 }
@@ -87,16 +62,17 @@ Item {
                 }
             }
             Button{
-                Layout.preferredWidth: 220
-                Layout.preferredHeight:160
+                Layout.preferredWidth: 210
+                Layout.preferredHeight:140
                 Layout.alignment: Qt.AlignHCenter|Qt.AlignVCenter
                 background:Rectangle{
                     radius: 10
-                    color:"#fff"
+                    color:"transparent"
+                    border.color: "#97A3A1"
                 }
                 Text{
                     text:"本机设置"
-                    color:"#000"
+                    color:"#FFF"
                     font.pixelSize: 35
                     anchors.centerIn: parent
                 }
@@ -106,16 +82,17 @@ Item {
                 }
             }
             Button{
-                Layout.preferredWidth: 220
-                Layout.preferredHeight:160
+                Layout.preferredWidth: 250
+                Layout.preferredHeight:140
                 Layout.alignment: Qt.AlignHCenter|Qt.AlignVCenter
                 background:Rectangle{
                     radius: 10
-                    color:"#fff"
+                    color:"transparent"
+                    border.color: "#97A3A1"
                 }
                 Text{
                     text:"恢复出厂设置"
-                    color:"#000"
+                    color:"#FFF"
                     font.pixelSize: 35
                     anchors.centerIn: parent
                 }
@@ -125,16 +102,17 @@ Item {
                 }
             }
             Button{
-                Layout.preferredWidth: 220
-                Layout.preferredHeight:160
+                Layout.preferredWidth: 210
+                Layout.preferredHeight:140
                 Layout.alignment: Qt.AlignHCenter|Qt.AlignVCenter
                 background:Rectangle{
                     radius: 10
-                    color:"#fff"
+                    color:"transparent"
+                    border.color: "#97A3A1"
                 }
                 Text{
                     text:"系统更新"
-                    color:"#000"
+                    color:"#FFF"
                     font.pixelSize: 35
                     anchors.centerIn: parent
                 }
@@ -144,16 +122,17 @@ Item {
                 }
             }
             Button{
-                Layout.preferredWidth: 220
-                Layout.preferredHeight:160
+                Layout.preferredWidth: 210
+                Layout.preferredHeight:140
                 Layout.alignment: Qt.AlignHCenter|Qt.AlignVCenter
                 background:Rectangle{
                     radius: 10
-                    color:"#fff"
+                    color:"transparent"
+                    border.color: "#97A3A1"
                 }
                 Text{
                     text:"关于本机"
-                    color:"#000"
+                    color:"#FFF"
                     font.pixelSize: 35
                     anchors.centerIn: parent
                 }
@@ -163,16 +142,17 @@ Item {
                 }
             }
             Button{
-                Layout.preferredWidth: 220
-                Layout.preferredHeight:160
+                Layout.preferredWidth: 250
+                Layout.preferredHeight:140
                 Layout.alignment: Qt.AlignHCenter|Qt.AlignVCenter
                 background:Rectangle{
                     radius: 10
-                    color:"#fff"
+                    color:"transparent"
+                    border.color: "#97A3A1"
                 }
                 Text{
                     text:"售后指南"
-                    color:"#000"
+                    color:"#FFF"
                     font.pixelSize: 35
                     anchors.centerIn: parent
                 }

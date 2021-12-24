@@ -16,74 +16,41 @@ Item {
         }
         minutePathView.model=minuteArray
 
-//        if(QmlDevState.state.RStoveTimingState===timingStateEnum.RUN)
-//        {
-//            QmlDevState.setState("RStoveTimingState",2)
-//            var Data={}
-//            Data.RStoveTimingOpera =timingOperationEnum.CANCEL
-//            setToServer(Data)
-//        }
+        //        if(QmlDevState.state.RStoveTimingState===timingStateEnum.RUN)
+        //        {
+        //            QmlDevState.setState("RStoveTimingState",2)
+        //            var Data={}
+        //            Data.RStoveTimingOpera =timingOperationEnum.CANCEL
+        //            setToServer(Data)
+        //        }
+        if(QmlDevState.state.RStoveStatus!==1)
+            showLoaderFaultCenter("右灶未开启\n开启后才可定时关火",275)
     }
-    ToolBar {
+
+    Image {
+        anchors.fill: parent
+        source: "/x50/main/背景.png"
+    }
+
+    PageBackBar{
         id:topBar
         width:parent.width
         anchors.bottom:parent.bottom
-        height:96
-        background:Rectangle{
-            color:"#000"
-        }
-        Image {
-            anchors.fill: parent
-            source: "/images/main_menu/zhuangtai_bj.png"
-        }
-        //back图标
-        TabButton {
-            id:goBack
-            width:80
-            height:parent.height
-            anchors.left:parent.left
-            anchors.verticalCenter: parent.verticalCenter
-            Image{
-                anchors.centerIn: parent
-                source: "/images/fanhui.png"
-            }
-            background: Rectangle {
-                opacity: 0
-            }
-            onClicked: {
-                backTopPage()
-
-            }
+        height:80
+        name:"定时关火  <font size='-1'>(右灶开启后才可定时关火)</font>"
+        leftBtnText:qsTr("")
+        rightBtnText:qsTr("启动")
+        onClose:{
+            backPrePage()
         }
 
-        Text{
-            id:pageName
-            width:100
-            //            height:parent.height
-            color:"#9AABC2"
-            font.pixelSize: 40
-            anchors.left:goBack.right
-            anchors.verticalCenter: parent.verticalCenter
-            text:qsTr("定时关火")
-        }
+        onLeftClick:{
 
-        //启动
-        TabButton{
-            id:startBtn
-            width:160
-            height:parent.height
-            anchors.right:parent.right
-            background:Rectangle{
-                color:"transparent"
-            }
-            Text{
-                color:"#ECF4FC"
-                font.pixelSize: 40
-                anchors.centerIn:parent
-                text:qsTr("启动")
-            }
-            onClicked: {
-                console.log("startBtn",hourPathView.model[hourPathView.currentIndex],minutePathView.model[minutePathView.currentIndex])
+        }
+        onRightClick:{
+            if(QmlDevState.state.RStoveStatus===1)
+            {
+                console.log("PageCloseHeat",hourPathView.model[hourPathView.currentIndex],minutePathView.model[minutePathView.currentIndex])
                 backPrePage()
                 QmlDevState.setState("RStoveTimingState",timingStateEnum.RUN)
                 QmlDevState.setState("RStoveTimingLeft",hourPathView.currentIndex*60+minutePathView.currentIndex)
@@ -95,35 +62,36 @@ Item {
             }
         }
     }
+
     //内容
     Rectangle{
         width:parent.width
         anchors.bottom:topBar.top
         anchors.top: parent.top
-        color:"#000"
+        color:"transparent"
 
-        Image{
-            width:parent.width
-            source: "/images/fengexian.png"
+        PageDivider{
+            anchors.horizontalCenter: parent.horizontalCenter
             anchors.top:parent.top
-            anchors.topMargin:rowPathView.height/3
+            anchors.topMargin:rowPathView.height/3+50
+        }
+        PageDivider{
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.top:parent.top
+            anchors.topMargin:rowPathView.height/3*2+50
+        }
+        Image {
+            anchors.centerIn: parent
+            source: "qrc:/x50/steam/黑色块.png"
+        }
 
-        }
-        Image{
-            width:parent.width
-            source: "/images/fengexian.png"
-            anchors.top:parent.top
-            anchors.topMargin:rowPathView.height/3*2
-        }
-        ListModel {
-            id:modeListModel
-        }
         Row {
             id:rowPathView
-            width: parent.width
-            height:parent.height
+            width: parent.width-80
+            height:parent.height-100
             anchors.top:parent.top
-            anchors.bottom: prompt.top
+            anchors.bottom: parent.bottom
+            anchors.centerIn: parent
             spacing: 10
 
             DataPathView {
@@ -148,21 +116,12 @@ Item {
                 }
             }
             Text{
-                width:120
+                //                width:120
                 color:"white"
                 font.pixelSize: 40
                 anchors.verticalCenter: parent.verticalCenter
                 text:qsTr("后定时关火")
             }
-        }
-        Text{
-            id:prompt
-            //            width:120
-            anchors.bottom:parent.bottom
-            color:"white"
-            font.pixelSize: 30
-            anchors.horizontalCenter: parent.horizontalCenter
-            text:qsTr("右灶开启后才可定时关火")
         }
     }
 }

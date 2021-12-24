@@ -13,8 +13,6 @@ Item {
 
     property alias workTime:time.text
     property alias workTemp:temp.text
-    property alias multCount:indicator.count
-    property alias multCurrent:indicator.currentIndex
 
     function updatePaint()
     {
@@ -23,7 +21,7 @@ Item {
     }
 
     Canvas{
-        property int lineWidth:4
+        property int lineWidth:1
         property real r: canvas.width/2-lineWidth
         id: canvas
         width: canvasDiameter
@@ -38,13 +36,13 @@ Item {
 
             //显示外圈
             ctx.beginPath()
-            ctx.lineWidth = 4
+            ctx.lineWidth = lineWidth
             ctx.strokeStyle = workColor
-            ctx.fillStyle = '#596767'
+//            ctx.fillStyle = '#596767'
             ctx.arc(0, 0, r, 0, 2*Math.PI)
             ctx.closePath()
             ctx.stroke()
-            ctx.fill()
+//            ctx.fill()
 
             //                var rad=(2*percent/100-0.5)*Math.PI
             //                ctx.lineCap="round"
@@ -73,9 +71,11 @@ Item {
             ctx.restore()
         }
     }
-    Item{
+    Rectangle{
         //        width:canvas.width
         //        height: canvas.height
+        color:"transparent"
+//        border.color: "#fff"
         anchors.fill: parent
 
         Text{
@@ -86,27 +86,25 @@ Item {
             anchors.top:parent.top
             anchors.topMargin: (workState === workStateEnum.WORKSTATE_PREHEAT ||workState === workStateEnum.WORKSTATE_FINISH) ? 100:40
             anchors.horizontalCenter: parent.horizontalCenter
-            horizontalAlignment :Text.AlignHCenter
-            verticalAlignment :Text.AlignHCenter
+//            horizontalAlignment :Text.AlignHCenter
+//            verticalAlignment :Text.AlignHCenter
             text: workStateArray[workState]
         }
-
         Text{
             id:time
             visible: !(workState === workStateEnum.WORKSTATE_PREHEAT ||workState === workStateEnum.WORKSTATE_FINISH||workState === workStateEnum.WORKSTATE_STOP)
             color:workColor
             font.pixelSize: 50
             anchors.top:parent.top
-            anchors.topMargin:100
+            anchors.topMargin:80
             anchors.horizontalCenter: parent.horizontalCenter
-            horizontalAlignment :Text.AlignHCenter
-            verticalAlignment :Text.AlignHCenter
+//            horizontalAlignment :Text.AlignHCenter
+//            verticalAlignment :Text.AlignHCenter
         }
-
         Button{
             visible: workState === workStateEnum.WORKSTATE_FINISH
-            width:150
-            height: 50
+            width:160
+            height: 55
             anchors.bottom: parent.bottom
             anchors.bottomMargin: 80
             anchors.horizontalCenter: parent.horizontalCenter
@@ -116,7 +114,7 @@ Item {
             }
             Text{
                 color:"white"
-                font.pixelSize: 40
+                font.pixelSize: 25
                 anchors.verticalCenter:  parent.verticalCenter
                 anchors.horizontalCenter: parent.horizontalCenter
                 horizontalAlignment :Text.AlignHCenter
@@ -139,13 +137,20 @@ Item {
                 }
             }
         }
+        Image {
+            visible: workState === workStateEnum.WORKSTATE_STOP
+            anchors.top:parent.top
+            anchors.topMargin:70
+            anchors.horizontalCenter: parent.horizontalCenter
+            source: "qrc:/x50/steam/icon_yqpr.png"
+        }
         Text{
             id:mode
             visible: workState !== workStateEnum.WORKSTATE_FINISH
             color:"white"
-            font.pixelSize: 30
+            font.pixelSize: workState === workStateEnum.WORKSTATE_STOP?35:30
             anchors.bottom:parent.bottom
-            anchors.bottomMargin: 87
+            anchors.bottomMargin: workState === workStateEnum.WORKSTATE_STOP?75:85
             anchors.horizontalCenter: parent.horizontalCenter
             horizontalAlignment :Text.AlignHCenter
             verticalAlignment :Text.AlignHCenter
@@ -162,16 +167,7 @@ Item {
             horizontalAlignment :Text.AlignHCenter
             verticalAlignment :Text.AlignHCenter
         }
-        PageIndicator {
-            id:indicator
-            visible: count != 0
-            count: 0
-            currentIndex: 0
-            anchors.top: temp.bottom
-            anchors.horizontalCenter: parent.horizontalCenter
-            interactive: true
-        }
-    }
 
+    }
 
 }

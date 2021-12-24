@@ -36,12 +36,14 @@ Window {
     property bool wifiConnecting: false
     property bool wifiConnected:false
     property bool sleepState: false
+    property var wifiConnectInfo:{"ssid":"","psk":"","encryp":0}
+
     Settings {
         id: systemSettings
         category: "system"
 
         //设置-休眠时间(范围:1-5,单位:分钟 )
-        property int sleepTime: 3
+        property int sleepTime: 4
 
         //运行期间临时保存设置的亮度值，在收到开机状态是把该值重新设置回去 设置-屏幕亮度
         property int brightness: 255
@@ -54,13 +56,147 @@ Window {
         property bool childLock:false
 
         property bool multistageRemind:true
+        property var wifiPasswdArray
     }
 
+    function deleteWifiInfo(wifiInfo)
+    {
+        if(wifiInfo.ssid=="" ||wifiInfo.psk=="" || wifiInfo.encryp===0)
+            return
+        var wifiPasswdArray=systemSettings.wifiPasswdArray
+        if(typeof wifiPasswdArray!="object")
+        {
+            console.log("wifiPasswdArray not Object")
+            return
+        }
+        var i;
+        var len=wifiPasswdArray.length
+        for( i = 0; i < len; i++)
+        {
+            if(wifiPasswdArray[i].ssid===wifiInfo.ssid)
+            {
+                console.log("remove ssid:",i,wifiPasswdArray[i].ssid,wifiInfo.ssid)
+                wifiPasswdArray.splice(i,1)
+                break;
+            }
+        }
+
+        if(i===len)
+        {
+            return
+        }
+        systemSettings.wifiPasswdArray=wifiPasswdArray
+                console.log("deleteWifiInfo wifiPasswd:")
+//                for( i = 0; i < systemSettings.wifiPasswdArray.length; i++)
+//                {
+//                    console.log("ssid:",systemSettings.wifiPasswdArray[i].ssid)
+//                    console.log("psk:",systemSettings.wifiPasswdArray[i].psk)
+//                    console.log("encryp:",systemSettings.wifiPasswdArray[i].encryp)
+//                }
+    }
+
+    function addWifiInfo(wifiInfo)
+    {
+        if(wifiInfo.ssid=="" ||wifiInfo.psk=="" || wifiInfo.encryp===0)
+            return
+        var wifiPasswdArray=systemSettings.wifiPasswdArray
+
+        if(typeof wifiPasswdArray!="object")
+        {
+            console.log("wifiPasswdArray not Object")
+            wifiPasswdArray=new Array
+        }
+
+        var i;
+        for(i = 0; i < wifiPasswdArray.length; i++)
+        {
+            if(wifiPasswdArray[i].ssid===wifiInfo.ssid)
+            {
+                if(wifiPasswdArray[i].psk===wifiInfo.psk && wifiPasswdArray[i].encryp===wifiInfo.encryp)
+                {
+                    return
+                }
+                console.log("change ssid:",i,wifiPasswdArray[i].ssid,wifiInfo.ssid)
+                wifiPasswdArray[i].psk=wifiInfo.psk
+                wifiPasswdArray[i].encryp=wifiInfo.encryp
+                break;
+            }
+        }
+        if(i===wifiPasswdArray.length)
+        {
+            var newWifiInfo={}
+            newWifiInfo.ssid=wifiInfo.ssid
+            newWifiInfo.psk=wifiInfo.psk
+            newWifiInfo.encryp=wifiInfo.encryp
+            console.log("add ssid:",newWifiInfo.ssid)
+            wifiPasswdArray.push(newWifiInfo)
+        }
+        systemSettings.wifiPasswdArray=wifiPasswdArray
+        //        console.log("addWifiInfo wifiPasswd:")
+        //        for( i = 0; i < systemSettings.wifiPasswdArray.length; i++)
+        //        {
+        //            console.log("ssid:",systemSettings.wifiPasswdArray[i].ssid)
+        //            console.log("psk:",systemSettings.wifiPasswdArray[i].psk)
+        //            console.log("encryp:",systemSettings.wifiPasswdArray[i].encryp)
+        //        }
+    }
+
+    function getWifiInfo(ssid)
+    {
+        if(ssid=="")
+            return
+        var wifiPasswdArray=systemSettings.wifiPasswdArray
+        if(typeof wifiPasswdArray!="object")
+        {
+            console.log("wifiPasswdArray not Object")
+            return
+        }
+        var i;
+        for(i = 0; i < wifiPasswdArray.length; i++)
+        {
+            if(wifiPasswdArray[i].ssid===ssid)
+            {
+                var wifiInfo={}
+                wifiInfo.ssid=wifiPasswdArray[i].ssid
+                wifiInfo.psk=wifiPasswdArray[i].psk
+                wifiInfo.encryp=wifiPasswdArray[i].encryp
+                console.log("get ssid:",wifiInfo.ssid,wifiInfo.psk,wifiInfo.encryp)
+                return wifiInfo
+            }
+        }
+        if(i===wifiPasswdArray.length)
+        {
+            return
+        }
+    }
+    function updateSleepTime(time)
+    {
+        systemSettings.sleepTime=time
+        timer_window.interval=systemSettings.sleepTime*60000
+    }
+    function otaRquest(request)
+    {
+        var Data={}
+        Data.OTARquest = request
+        setToServer(Data)
+    }
+    function permitSteamStartStatus(status)
+    {
+        var Data={}
+        Data.PermitSteamStartStatus = status
+        setToServer(Data)
+    }
     function scanWifi()
     {
         var Data={}
         Data.WifiScan = null
         setToServer(Data)
+    }
+    function getWifiState()
+    {
+        var Data={}
+        Data.WifiState = null
+        getToServer(Data)
     }
     function leftWorkModeFun(n)
     {
@@ -98,7 +234,42 @@ Window {
         }
         return mode
     }
-
+    function leftWorkModeNumberFun(n)
+    {
+        console.log("leftWorkModeFun",n)
+        var mode
+        switch(n)
+        {
+        case 1:
+            mode=1
+            break
+        case 2:
+            mode=2
+            break
+        case 35:
+            mode=3
+            break
+        case 36:
+            mode=4
+            break
+        case 38:
+            mode=5
+            break
+        case 40:
+            mode=6
+            break
+        case 42:
+            mode=7
+            break
+        case 72:
+            mode=8
+            break
+        default:
+            mode=0
+            break
+        }
+        return mode
+    }
     function getDefHistory()
     {
         var param = {}
@@ -114,21 +285,21 @@ Window {
         return param
     }
 
-    function getDishName(root)
+    function getDishName(root,cookPos)
     {
         var dishName=""
+
+        if(root[0].dishName !== undefined)
+        {
+            return root[0].dishName
+        }
 
         for(var i = 0; i < root.length; i++)
         {
             console.log(root[i].mode,root[i].temp,root[i].time,leftWorkModeFun(root[i].mode))
-            if(root.length===1)
+            if(root.length===1 && root[i].number == null)
             {
-                if(root[0].dishName !== undefined)
-                {
-                    return root[0].dishName
-                }
-
-                if(leftDevice===root[i].device)
+                if(leftDevice===cookPos)
                     dishName=leftWorkModeFun(root[i].mode)+"-"+root[i].temp+"℃-"+root[i].time+"分钟"
                 else
                     dishName=rightWorkMode+"-"+root[i].temp+"℃-"+root[i].time+"分钟"
@@ -256,7 +427,7 @@ Window {
 
         if(cookSteps.length===1 && (undefined === cookSteps[0].number || 0 === cookSteps[0].number))
         {
-            if(leftDevice===cookSteps[0].device)
+            if(leftDevice===root.cookPos)
             {
                 QmlDevState.setState("LStOvState",1)
                 QmlDevState.setState("LStOvMode",cookSteps[0].mode)
@@ -299,10 +470,6 @@ Window {
         loader_main.sourceComponent = null
     }
 
-    function showLoaderError(){
-        if(loader_error.status == Loader.Null)
-            loader_error.sourceComponent = component_systemError
-    }
     function closeLoaderError(){
         loader_error.sourceComponent = null
     }
@@ -319,10 +486,12 @@ Window {
             }
         }
     }
-    function showLoaderFault(hintTopText,hintBottomText){
+    function showLoaderFault(hintTopText,hintBottomText,closeVisible){
         loader_error.sourceComponent = component_fault
         loader_error.item.hintTopText=hintTopText
         loader_error.item.hintBottomText=hintBottomText
+        if(closeVisible!=null)
+            loader_error.item.closeVisible=closeVisible
     }
     function showLoaderFaultCenter(hintCenterText,hintHeight){
         loader_error.sourceComponent = component_fault
@@ -334,14 +503,46 @@ Window {
         loader_error.item.hintTopImgSrc=imageUrl
         loader_error.item.hintBottomText=hintBottomText
     }
-
+    Component{
+        id:component_bind
+        PageDialogQrcode{
+            onCancel: {
+                closeLoaderMain()
+            }
+        }
+    }
+    function showQrcodeBind(title){
+        loader_main.sourceComponent = component_bind
+        loader_main.item.hintTopText=title
+    }
     Component.onCompleted: {
         console.warn("Window onCompleted sleepTime:",systemSettings.sleepTime)
         Backlight.backlightEnable()
+        Backlight.backlightSet(systemSettings.brightness)
         timer_window.start()
-
         //        var list=Backlight.getAllFileName("x5")
         //        console.log("getAllFileName",list)
+
+        if(systemSettings.wifiPasswdArray!=null)
+        {
+            var i
+            console.log("systemSettings.wifiPasswdArray",systemSettings.wifiPasswdArray.length)
+            for( i = 0; i < systemSettings.wifiPasswdArray.length; i++)
+            {
+                console.log("ssid:",systemSettings.wifiPasswdArray[i].ssid)
+                console.log("psk:",systemSettings.wifiPasswdArray[i].psk)
+                console.log("encryp:",systemSettings.wifiPasswdArray[i].encryp)
+            }
+        }
+//        wifiConnectInfo.ssid="123"
+//        wifiConnectInfo.psk="1234567890123"
+//        wifiConnectInfo.encryp=2
+//        addWifiInfo(wifiConnectInfo)
+
+//        wifiConnectInfo.ssid="1234"
+//        addWifiInfo(wifiConnectInfo)
+
+//        deleteWifiInfo(wifiConnectInfo)
     }
     StackView {
         id: stackView
@@ -353,44 +554,48 @@ Window {
         id:timer_window
         repeat: false
         running: false
-        interval: systemSettings.sleepTime*30000
+        interval: systemSettings.sleepTime*60000
         triggeredOnStart: false
         onTriggered: {
             console.log("timer_window sleep!!!!!!!!!!!!")
             if(stackView.depth==1)
             {
-                Backlight.backlightDisable()
+//                Backlight.backlightDisable()
+                Backlight.backlightSet(0)
                 sleepState=true
             }
         }
     }
-//    MouseArea{
-//        anchors.fill: parent
-//        hoverEnabled:true
-//        propagateComposedEvents: true
 
-//        onPressed: {
-//            //            console.warn("Window onPressed................................",sleepState)
-//            if(sleepState==true)
-//            {
-//                sleepState=false
+
+    MouseArea{
+        anchors.fill: parent
+        hoverEnabled:true
+        propagateComposedEvents: true
+
+        onPressed: {
+            console.warn("Window onPressed................................",sleepState)
+            if(sleepState==true)
+            {
+                sleepState=false
 //                Backlight.backlightEnable()
-//                mouse.accepted = true
-//            }
-//            else
-//            {
-//                mouse.accepted = false
-//            }
-//            timer_window.restart()
-//        }
-//        //                onReleased: {
-//        //                    console.warn("Window onReleased................................")
-//        //                    mouse.accepted = false
-//        //                }
-//        //                onPositionChanged:{
-//        //                console.warn("Window onPositionChanged................................")
-//        //                }
-//    }
+                Backlight.backlightSet(systemSettings.brightness)
+                mouse.accepted = true
+            }
+            else
+            {
+                mouse.accepted = false
+            }
+            timer_window.restart()
+        }
+        //                onReleased: {
+        //                    console.warn("Window onReleased................................")
+        //                    mouse.accepted = false
+        //                }
+        //                onPositionChanged:{
+        //                console.warn("Window onPositionChanged................................")
+        //                }
+    }
     Loader{
         //加载弹窗组件
         id:loader_main
@@ -405,71 +610,45 @@ Window {
         sourceComponent:null
     }
 
-    Component{
-        id:component_systemError
-        Rectangle {
-            anchors.fill: parent
-            color: "#000"
-
-            Text{
-                width:600
-                color:"white"
-                font.pixelSize: 60
-                anchors.centerIn:parent
-                horizontalAlignment: Text.AlignHCenter
-                verticalAlignment: Text.AlignVCenter
-
-                wrapMode:Text.Wrap
-                text:"系统错误,请重启设备"
-            }
-
-            MouseArea{
-                anchors.fill: parent
-                hoverEnabled:false
-                propagateComposedEvents: false
-            }
-        }
-    }
-
     ListModel {
         id: wifiModel
 
-        ListElement {
-            connected: 1
-            ssid: "qwertyuio"
-            level:2
-            flags:2
-        }
-        ListElement {
-            connected: 0
-            ssid: "asdfghjkl定义aa"
-            level:2
-            flags:0
-        }
-        ListElement {
-            connected: 0
-            ssid: "rrrrq"
-            level:2
-            flags:2
-        }
-        ListElement {
-            connected: 0
-            ssid: "wwsf"
-            level:2
-            flags:2
-        }
-        ListElement {
-            connected: 0
-            ssid: "tty-lll"
-            level:2
-            flags:2
-        }
-        ListElement {
-            connected: 0
-            ssid: "744uuu"
-            level:2
-            flags:2
-        }
+        //                ListElement {
+        //                    connected: 1
+        //                    ssid: "qwertyuio"
+        //                    level:2
+        //                    flags:2
+        //                }
+        //                ListElement {
+        //                    connected: 0
+        //                    ssid: "asdfghjkl定义aa"
+        //                    level:2
+        //                    flags:0
+        //                }
+        //                ListElement {
+        //                    connected: 0
+        //                    ssid: "123"
+        //                    level:2
+        //                    flags:2
+        //                }
+        //        ListElement {
+        //            connected: 0
+        //            ssid: "wwsf"
+        //            level:2
+        //            flags:2
+        //        }
+        //        ListElement {
+        //            connected: 0
+        //            ssid: "tty-lll"
+        //            level:2
+        //            flags:2
+        //        }
+        //        ListElement {
+        //            connected: 0
+        //            ssid: "744uuu"
+        //            level:2
+        //            flags:2
+        //        }
     }
     Component {
         id: pageTest

@@ -10,16 +10,19 @@ Item {
         anchors.fill: parent
         anchors.topMargin: 50
         anchors.bottomMargin: 50
-        spacing: 50
+        spacing: 10
         anchors.leftMargin: 75
         anchors.rightMargin: 75
 
         Button{
-            width: 300
+            width: 325
             height:parent.height
-
+            Image {
+                anchors.fill: parent
+                source: "qrc:/x50/main/圆角矩形 3209.png"
+            }
             background:Rectangle{
-                color:"#000"
+                color:"transparent"
                 radius: 16
             }
             Text{
@@ -38,17 +41,25 @@ Item {
                 anchors.topMargin: 100
                 anchors.horizontalCenter: parent.horizontalCenter
             }
+            Image {
+                anchors.bottom: parent.bottom
+                anchors.bottomMargin: -30
+                anchors.horizontalCenter: parent.horizontalCenter
+                source: "qrc:/x50/main/烤鸡.png"
+            }
             onClicked: {
                 load_page("pageSteamBakeBase",JSON.stringify({"device":leftDevice}))
             }
         }
         Button{
-
-            width: 300
+            width: 325
             height:parent.height
-
+            Image {
+                anchors.fill: parent
+                source: "qrc:/x50/main/圆角矩形 3209.png"
+            }
             background:Rectangle{
-                color:"#000"
+                color:"transparent"
                 radius: 16
             }
             Text{
@@ -66,6 +77,12 @@ Item {
                 anchors.top: parent.top
                 anchors.topMargin: 100
                 anchors.horizontalCenter: parent.horizontalCenter
+            }
+            Image {
+                anchors.bottom: parent.bottom
+                anchors.bottomMargin: -30
+                anchors.horizontalCenter: parent.horizontalCenter
+                source: "qrc:/x50/main/icon_蒸包子.png"
             }
             onClicked: {
                 load_page("pageSteamBakeBase",JSON.stringify({"device":rightDevice}))

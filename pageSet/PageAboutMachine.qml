@@ -1,178 +1,140 @@
 import QtQuick 2.0
 import QtQuick.Controls 2.2
-
+import "../"
 Item {
 
     Component.onCompleted: {
-
-
+        infoModel.get(0).value=QmlDevState.state.ProductCategory
+        infoModel.get(1).value=QmlDevState.state.ProductModel
+        infoModel.get(2).value=QmlDevState.state.DeviceName
+        listView.model=infoModel
+        console.log("infoModel",listView.model.count)
     }
-    ToolBar {
+    Image {
+        anchors.fill: parent
+        source: "/x50/main/背景.png"
+    }
+    PageBackBar{
         id:topBar
         width:parent.width
         anchors.bottom:parent.bottom
-        height:96
-        background:Rectangle{
-            color:"#000"
+        height:80
+        name:qsTr("关于本机")
+        leftBtnText:qsTr("")
+        rightBtnText:qsTr("")
+        onClose:{
+            backPrePage()
         }
-        Image {
-            anchors.fill: parent
-            source: "/images/main_menu/zhuangtai_bj.png"
-        }
-        //back图标
-        TabButton {
-            id:goBack
-            width:80
-            height:parent.height
-            anchors.left:parent.left
-            anchors.verticalCenter: parent.verticalCenter
-            Image{
-                anchors.centerIn: parent
-                source: "/images/fanhui.png"
-            }
-            background: Rectangle {
-                opacity: 0
-            }
-            onClicked: {
-                backPrePage()
-            }
-        }
+    }
+    ListModel {
+        id: infoModel
 
-        Text{
-            id:pageName
-            width:100
-            //            height:parent.height
-            color:"#9AABC2"
-            font.pixelSize: 40
-            anchors.left:goBack.right
-            anchors.verticalCenter: parent.verticalCenter
-            text:qsTr("关于本机")
+        ListElement {
+            key: "品类："
+            value: ""
         }
+        ListElement {
+            key: "型号："
+            value: ""
+        }
+        ListElement {
+            key: "device ID："
+            value: ""
+        }
+    }
 
+    Component {
+        id: infoDelegate
+        Item{
+            width: parent.width
+            height: 70
+            Text{
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.left: parent.left
+                text:key
+                color:"#fff"
+                font.pixelSize: 35
+            }
+            Text{
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.right: parent.right
+                text:value
+                color:"#fff"
+                font.pixelSize: 35
+            }
+            PageDivider{
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.bottom: parent.bottom
+            }
+        }
     }
     //内容
     Rectangle{
         width:parent.width
         anchors.bottom:topBar.top
         anchors.top: parent.top
-        color:"#000"
+        color:"transparent"
         Item{
-            width:parent.width
-            height: parent.height
-            anchors.left: parent.left
-            anchors.leftMargin: 100
-            Text{
-                id:category
+            width:parent.width-80
+            height: parent.height-80
+            anchors.centerIn: parent
+            ListView {
+                id: listView
+                width: parent.width
+                height: listView.model.count*70
                 anchors.top: parent.top
-                anchors.topMargin: 30
+                anchors.horizontalCenter: parent.horizontalCenter
+                interactive: false
+                delegate: infoDelegate
 
-                text:"品类："+QmlDevState.state.ProductCategory
-                color:"#fff"
-                font.pixelSize: 30
-            }
-
-            Text{
-                id:model
-                anchors.top: category.bottom
-                anchors.topMargin: 30
-
-                text:"型号："+QmlDevState.state.ProductModel
-                color:"#fff"
-                font.pixelSize: 30
-            }
-            Text{
-                id:deviceId
-                anchors.top: model.bottom
-                anchors.topMargin: 30
-
-                text:"device ID："+QmlDevState.state.DeviceName
-                color:"#fff"
-                font.pixelSize: 30
+                focus: true
             }
             Button{
-                width: 350
-                height: 50
-                anchors.top: deviceId.bottom
-                anchors.topMargin: 30
+                width: parent.width
+                height: 70
+                anchors.top: listView.bottom
 
+                PageDivider{
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.bottom: parent.bottom
+                }
                 background:Rectangle{
                     color:"transparent"
                 }
                 Text{
-                    text:"绑定官方APP            >"
+                    text:"绑定官方APP"
                     color:"#fff"
                     font.pixelSize: 30
-                }
-
-                onClicked: {
-                    showBind()
-                }
-            }
-        }
-    }
-    Component{
-        id:component_bind
-        Rectangle {
-            anchors.fill: parent
-            color: "transparent"
-            Rectangle {
-                width:500
-                height: 300
-                anchors.centerIn: parent
-                color: "#000"
-                radius: 10
-                Button {
-                    width:80
-                    height:80
-                    anchors.top:parent.top
-                    anchors.topMargin: 5
-                    anchors.right:parent.right
-                    anchors.rightMargin: 5
-
-                    Text{
-                        width:80
-                        color:"white"
-                        font.pixelSize: 40
-
-                        anchors.centerIn: parent
-                        horizontalAlignment: Text.AlignHCenter
-                        verticalAlignment: Text.AlignVCenter
-                        text:"X"
-                    }
-                    background: Rectangle {
-                        color:"transparent"
-                    }
-                    onClicked: {
-                        closeLoaderMain()
-                    }
-                }
-                Image{
-                    id:qrCodeImg
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    anchors.horizontalCenterOffset: -qrCodeImg.width/2
                     anchors.verticalCenter: parent.verticalCenter
-                    source: "file:QrCode.png"
+                    anchors.left: parent.left
+                    horizontalAlignment:Text.AlignHCenter
+                    verticalAlignment:Text.AlignVCenter
                 }
-
-                Text{
-                    width:200
-                    anchors.top: qrCodeImg.top
-                    anchors.left: qrCodeImg.right
-                    anchors.leftMargin: 20
-                    color:"white"
-                    font.pixelSize: 30
-                    //                font.letterSpacing : 5
-                    font.bold :true
-                    lineHeight: 2
-
-                    wrapMode:Text.WordWrap
-                    text:"此二维码可以：\n1：下载官方APP\n2：官方APP绑定设备"
+//                Text{
+//                    text:" 已绑定火粉俱乐部"
+//                    visible: QmlDevState.state.APPBind==1
+//                    color:"#fff"
+//                    font.pixelSize: 30
+//                    anchors.verticalCenter: parent.verticalCenter
+//                    anchors.right: qrcodeImg.left
+//                    anchors.rightMargin: 20
+//                    horizontalAlignment:Text.AlignHCenter
+//                    verticalAlignment:Text.AlignVCenter
+//                }
+                Image {
+                    id:qrcodeImg
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.right: parent.right
+                    source: "qrc:/x50/set/gengduo.png"
+                }
+                onClicked: {
+//                    console.log("AppBind",QmlDevState.state.APPBind)
+//                    if(QmlDevState.state.APPBind==0)
+                        showQrcodeBind("此二维码可以")
                 }
             }
         }
     }
-    function showBind(){
-        loader_main.sourceComponent = component_bind
-    }
+
 }
 

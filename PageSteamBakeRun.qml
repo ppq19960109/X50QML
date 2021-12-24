@@ -5,7 +5,7 @@ Item {
     property string name: "pageSteamBakeRun"
     Component.onCompleted: {
         console.log("PageSteamBakeRun onCompleted")
-
+        permitSteamStartStatus(0)
     }
 
     StackView.onActivated:{
@@ -30,29 +30,33 @@ Item {
             loader_main.sourceComponent = pageRightCook
         }
     }
-
+    Image {
+        anchors.fill: parent
+        source: "/x50/main/背景.png"
+    }
     Rectangle{
         width:parent.width/2
         anchors.top:parent.top
         anchors.bottom: statusBar.top
         anchors.left: parent.left
-        color:"#4A5150"
+        color:"transparent"
 
         PageCirProgressBar{
             id:leftProgressBar
             device:0
             width:300
             height: 300
-            anchors.centerIn: parent
-            workColor:"#19A582"
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.left: parent.left
+            anchors.leftMargin: 75
+
+            workColor:workState===workStateEnum.WORKSTATE_STOP?"#FFF":"#19A582"
             workMode:workState===workStateEnum.WORKSTATE_STOP?qsTr("左腔烹饪"):QmlDevState.state.MultiMode===1?leftDishName:leftWorkModeFun(QmlDevState.state.LStOvMode)
             canvasDiameter:300
             percent:30
             workState:QmlDevState.state.LStOvState
             workTime:workState === workStateEnum.WORKSTATE_RESERVE?QmlDevState.state.LStOvOrderTimerLeft+"分钟":QmlDevState.state.LStOvSetTimerLeft+"分钟"
             workTemp:qsTr(QmlDevState.state.LStOvRealTemp+"℃")
-            multCount:QmlDevState.state.cnt
-            multCurrent:QmlDevState.state.current-1
             MouseArea{
                 anchors.fill: parent
                 propagateComposedEvents: true
@@ -78,51 +82,63 @@ Item {
         }
         Button{
             visible: leftProgressBar.workState !== workStateEnum.WORKSTATE_STOP
-            width:56
+            width:95
             height: width
             anchors.left: leftProgressBar.left
-            anchors.leftMargin: 24
+            anchors.leftMargin: 5
             anchors.bottom: leftProgressBar.bottom
-            anchors.bottomMargin: 10
+            anchors.bottomMargin: -10
             background:Rectangle{
-                color:"#000"
-                radius: 30
-                border.color: "#FFF"
+                color:"transparent"
             }
-            Text{
-                color:"white"
-                font.pixelSize: 40
+            Image {
                 anchors.centerIn:parent
-                text:"x"
+                source: "qrc:/x50/steam/icon_close.png"
             }
             onClicked:{
-                QmlDevState.setState("LStOvState",workStateEnum.WORKSTATE_STOP)
-                setCookOperation(leftDevice,workOperationEnum.CANCEL)
+                if(QmlDevState.state.LStOvState === workStateEnum.WORKSTATE_RESERVE)
+                    showCancelRun("左腔","预约")
+                else
+                    showCancelRun("左腔","运行")
             }
         }
         Button{
             visible: leftProgressBar.workState !== workStateEnum.WORKSTATE_STOP
-            width:56
+            width:95
             height: width
             anchors.right: leftProgressBar.right
-            anchors.rightMargin: 24
+            anchors.rightMargin: 5
             anchors.bottom: leftProgressBar.bottom
-            anchors.bottomMargin: 10
+            anchors.bottomMargin: -10
             background:Rectangle{
-                color:"#000"
-                radius: 30
-                border.color: "#FFF"
+                color:"transparent"
             }
-            Text{
-                color:"white"
-                font.pixelSize: 40
+            Image {
                 anchors.centerIn:parent
-                text:"||"
+                source: QmlDevState.state.LStOvState===workStateEnum.WORKSTATE_PAUSE?"qrc:/x50/steam/icon_start.png":"qrc:/x50/steam/icon_close(1).png"
             }
             onClicked:{
-                QmlDevState.setState("LStOvState",workStateEnum.WORKSTATE_PAUSE)
-                setCookOperation(leftDevice,workOperationEnum.PAUSE)
+                if(QmlDevState.state.LStOvState===workStateEnum.WORKSTATE_PAUSE)
+                {
+                    QmlDevState.setState("LStOvState",workStateEnum.WORKSTATE_RUN)
+                    setCookOperation(leftDevice,workOperationEnum.START)
+                }
+                else
+                {
+                    QmlDevState.setState("LStOvState",workStateEnum.WORKSTATE_PAUSE)
+                    setCookOperation(leftDevice,workOperationEnum.PAUSE)
+                }
             }
+        }
+        PageIndicator {
+            id:leftIndicator
+            visible: true
+            count: QmlDevState.state.cnt
+            currentIndex: QmlDevState.state.current-1
+            anchors.top: leftProgressBar.bottom
+            anchors.topMargin: 20
+            anchors.horizontalCenter: parent.horizontalCenter
+            interactive: true
         }
     }
     Rectangle{
@@ -130,15 +146,18 @@ Item {
         anchors.top:parent.top
         anchors.bottom: statusBar.top
         anchors.right: parent.right
-        color:"#4A5150"
+        color:"transparent"
 
         PageCirProgressBar{
             id:rightProgressBar
             device:1
             width:300
             height: 300
-            anchors.centerIn: parent
-            workColor:"#19A582"
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.right: parent.right
+            anchors.rightMargin: 75
+
+            workColor:workState===workStateEnum.WORKSTATE_STOP?"#FFF":"#19A582"
             workMode:workState===workStateEnum.WORKSTATE_STOP?qsTr("右腔烹饪"):rightWorkMode
             canvasDiameter:300
             percent:20
@@ -170,80 +189,116 @@ Item {
         }
         Button{
             visible: rightProgressBar.workState !== workStateEnum.WORKSTATE_STOP
-            width:56
+            width:95
             height: width
             anchors.left: rightProgressBar.left
-            anchors.leftMargin: 24
+            anchors.leftMargin: 5
             anchors.bottom: rightProgressBar.bottom
-            anchors.bottomMargin: 10
+            anchors.bottomMargin: -10
             background:Rectangle{
-                color:"#000"
-                radius: 30
-                border.color: "#FFF"
+                color:"transparent"
             }
-            Text{
-                color:"white"
-                font.pixelSize: 40
+            Image {
                 anchors.centerIn:parent
-                text:"x"
+                source: "qrc:/x50/steam/icon_close.png"
             }
             onClicked:{
-                QmlDevState.setState("RStOvState",workStateEnum.WORKSTATE_STOP)
-                setCookOperation(rightDevice,workOperationEnum.CANCEL)
+                if(QmlDevState.state.RStOvState === workStateEnum.WORKSTATE_RESERVE)
+                    showCancelRun("右腔","预约")
+                else
+                    showCancelRun("右腔","运行")
             }
         }
         Button{
             visible: rightProgressBar.workState !== workStateEnum.WORKSTATE_STOP
-            width:56
+            width:95
             height: width
             anchors.right: rightProgressBar.right
-            anchors.rightMargin: 24
+            anchors.rightMargin: 5
             anchors.bottom: rightProgressBar.bottom
-            anchors.bottomMargin: 10
+            anchors.bottomMargin: -10
             background:Rectangle{
-                color:"#000"
-                radius: 30
-                border.color: "#FFF"
+                color:"transparent"
             }
-            Text{
-                color:"white"
-                font.pixelSize: 40
+            Image {
                 anchors.centerIn:parent
-                text:"||"
+                source: QmlDevState.state.RStOvState===workStateEnum.WORKSTATE_PAUSE?"qrc:/x50/steam/icon_start.png":"qrc:/x50/steam/icon_close(1).png"
             }
             onClicked:{
-                QmlDevState.setState("RStOvState",workStateEnum.WORKSTATE_PAUSE)
-                setCookOperation(rightDevice,workOperationEnum.PAUSE)
-            }
-        }
-    }
-        Rectangle{
-            id:statusBar
-            width:parent.width
-            height: 80
-            anchors.bottom: parent.bottom
-            Slider {
-                id: slider
-                anchors.centerIn: parent
-                stepSize: 2
-                to: 100
-                value: 30
-                onValueChanged: {
-                    console.log("slider:",value)
-                    if(value==100)
-                    {
-                        QmlDevState.setState("LStOvState",4)
-                        QmlDevState.setState("RStOvState",4)
-                    }
-                    leftProgressBar.updatePaint()
-                    rightProgressBar.updatePaint()
+                if(QmlDevState.state.RStOvState===workStateEnum.WORKSTATE_PAUSE)
+                {
+                    QmlDevState.setState("RStOvState",workStateEnum.WORKSTATE_RUN)
+                    setCookOperation(rightDevice,workOperationEnum.START)
+                }
+                else
+                {
+                    QmlDevState.setState("RStOvState",workStateEnum.WORKSTATE_STOP)
+                    setCookOperation(rightDevice,workOperationEnum.CANCEL)
                 }
             }
         }
-//    PageHomeBar {
-//        id:statusBar
-//        width:parent.width
-//        anchors.bottom: parent.bottom
-//        height:80
-//    }
+
+    }
+    //        Rectangle{
+    //            id:statusBar
+    //            width:parent.width
+    //            height: 80
+    //            anchors.bottom: parent.bottom
+    //            Slider {
+    //                id: slider
+    //                anchors.centerIn: parent
+    //                stepSize: 2
+    //                to: 100
+    //                value: 30
+    //                onValueChanged: {
+    //                    console.log("slider:",value)
+    //                    if(value==100)
+    //                    {
+    //                        QmlDevState.setState("LStOvState",4)
+    //                        QmlDevState.setState("RStOvState",4)
+    //                    }
+    //                    leftProgressBar.updatePaint()
+    //                    rightProgressBar.updatePaint()
+    //                }
+    //            }
+    //        }
+    PageHomeBar {
+        id:statusBar
+        width:parent.width
+        anchors.bottom: parent.bottom
+        height:80
+        windImg:QmlDevState.state.HoodSpeed===0?"":"qrc:/x50/main/icon_wind_"+QmlDevState.state.HoodSpeed+".png"
+    }
+    Component{
+        id:component_cancelRun
+        PageDialogConfirm{
+            hintTopText:""
+            hintBottomText:""
+            cancelText:"取消"
+            confirmText:"继续工作"
+            hintHeight:280
+            onCancel: {
+                closeLoaderMain()
+                if(hintTopText.indexOf("左腔")!=-1)
+                {
+                    QmlDevState.setState("LStOvState",workStateEnum.WORKSTATE_STOP)
+                    setCookOperation(leftDevice,workOperationEnum.CANCEL)
+                }
+                else
+                {
+                    QmlDevState.setState("RStOvState",workStateEnum.WORKSTATE_STOP)
+                    setCookOperation(rightDevice,workOperationEnum.CANCEL)
+                }
+            }
+            onConfirm: {
+                closeLoaderMain()
+            }
+        }
+    }
+    function showCancelRun(device,state){
+        loader_main.sourceComponent = component_cancelRun
+        loader_main.item.hintTopText= "是否取消"+device+state+"？"
+        loader_main.item.cancelText= "取消"+state
+    }
+
 }

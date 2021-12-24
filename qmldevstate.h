@@ -49,7 +49,7 @@ public:
     Q_INVOKABLE int insertHistory(QVariantMap single);
     Q_INVOKABLE int deleteHistory(const int id);
     Q_INVOKABLE void sortHistory();
-    Q_INVOKABLE int setCollect(const int index,const bool collect);
+    Q_INVOKABLE int setCollect(const int index,const int collect);
     Q_INVOKABLE void systemReset();
     void setHistory(const QVariantMap &history);
     int coverHistory(const QJsonObject& single,QVariantMap& info);

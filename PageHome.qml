@@ -5,6 +5,123 @@ Item {
     property int childLockPressCount:0
     //    anchors.fill: parent
 
+    Component{
+        id:component_updateConfirm
+        PageDialogConfirm{
+            hintTopText:"系统更新"
+            hintBottomText:"检测到最新版本 "+QmlDevState.state.OTANewVersion+"\n是否升级系统?"
+            confirmText:"升级"
+            hintHeight:360
+            onCancel: {
+                closeLoaderMain()
+            }
+            onConfirm: {
+                //               closeLoaderMain()
+                otaRquest(1)
+            }
+        }
+    }
+    function showUpdateConfirm(){
+        loader_main.sourceComponent = component_updateConfirm
+    }
+
+    Component{
+        id:component_update
+        Rectangle {
+            anchors.fill: parent
+            color: "transparent"
+            property alias updateProgress: updateBar.value
+            MouseArea{
+                anchors.fill: parent
+            }
+            Image {
+                anchors.fill: parent
+                source: "/x50/main/背景.png"
+            }
+            Image {
+                anchors.top: parent.top
+                anchors.topMargin: 155
+                anchors.horizontalCenter: parent.horizontalCenter
+                source: "qrc:/x50/set/jiazaizhong.png"
+            }
+            Text {
+                anchors.top: parent.top
+                anchors.topMargin: 300
+                anchors.horizontalCenter: parent.horizontalCenter
+                color:"#FFF"
+                font.pixelSize: 40
+                text: qsTr(updateBar.value+"%")
+            }
+            ProgressBar {
+                id:updateBar
+                width: 650
+                anchors.bottom: parent.bottom
+                anchors.bottomMargin: 100
+                anchors.horizontalCenter: parent.horizontalCenter
+                from:0
+                to:100
+                value: 0
+
+                background: Rectangle {
+                    implicitWidth: parent.width
+                    implicitHeight: 4
+                    color: "#FFF"
+                    opacity: 0.35
+                    radius: 2
+                }
+
+                contentItem: Item {
+                    implicitWidth: parent.width
+                    implicitHeight: 4
+
+                    Rectangle {
+                        width: updateBar.visualPosition * parent.width
+                        height: parent.height
+                        radius: 2
+                        color: "#00E6B6"
+                    }
+                }
+            }
+
+            //            Slider {
+            //                id: slider
+            //                anchors.bottom: parent.bottom
+            //                anchors.bottomMargin: 20
+            //                anchors.horizontalCenter: parent.horizontalCenter
+            //                stepSize: 2
+            //                to: 100
+            //                value: 0
+            //                onValueChanged: {
+            //                    console.log("slider:",value)
+            //                    updateBar.value=value
+            //                }
+            //            }
+        }
+    }
+    function showUpdate(){
+        loader_main.sourceComponent = component_update
+    }
+    function showUpdateProgress(value){
+        loader_main.item.updateProgress=value
+    }
+    Component{
+        id:component_updateSuccess
+        PageFaultPopup {
+            hintTopText:""
+            hintTopImgSrc:""
+            hintCenterText:"系统已更新至最新版本 "+QmlDevState.state.OTANewVersion
+            hintBottomText:""
+            hintHeight:275
+            onCancel:{
+                closeLoaderMain()
+                backTopPage()
+            }
+        }
+    }
+    function showUpdateSuccess(){
+        loader_main.sourceComponent = component_updateSuccess
+    }
+
     Connections { // 将目标对象信号与槽函数进行连接
         target: QmlDevState
         onLocalConnectedChanged:{
@@ -12,10 +129,11 @@ Item {
             if(value > 0)
             {
                 closeLoaderError()
+                permitSteamStartStatus(0)
             }
             else
             {
-                showLoaderError()
+                showLoaderFault("通讯板故障！","请拨打售后电话<font color='#00E6B6'>400-888-8490</font><br/>咨询售后人员",false)
             }
         }
         onStateChanged: { // 处理目标对象信号的槽函数
@@ -40,7 +158,74 @@ Item {
                     }
                 }
             }
-            else if(("WifiEnable"==key))
+            else if("ErrorCodeShow"==key)
+            {
+                console.log("ErrorCodeShow:",value)
+                switch (value) {
+                case 1:
+                    showLoaderFault("左腔蒸箱加热异常！","请拨打售后电话<font color='#00E6B6'>400-888-8490</font><br/>咨询售后人员");
+                    break
+                case 3:
+                    showLoaderFault("水箱缺水","水箱缺水，请及时加水");
+                    break
+                case 4:
+                    showLoaderFault("左腔蒸箱干烧！","请暂停使用左腔蒸箱并<br/>拨打售后电话<font color='#00E6B6'>400-888-8490</font>");
+                    break
+                case 5:
+                    showLoaderFault("左腔干烧检测电路故障！","请拨打售后电话<font color='#00E6B6'>400-888-8490</font><br/>咨询售后人员")
+                    break
+                case 6:
+                    showLoaderFault("防火墙传感器故障！","请拨打售后电话<font color='#00E6B6'>400-888-8490</font><br/>咨询售后人员")
+                    break
+                case 7:
+                    showLoaderFault("烟机进风口出现火情！","请及时关闭灶具旋钮 等待温度降低后使用")
+                    break
+                case 8:
+                    showLoaderFault("燃气泄漏","燃气有泄露风险\n请立即关闭灶具旋钮\n关闭总阀并开窗通气")
+                    break
+                case 9:
+                    showLoaderFault("电源板串口故障！","请拨打售后电话<font color='#00E6B6'>400-888-8490</font><br/>咨询售后人员");
+                    break
+                case 10:
+                    showLoaderFault("左腔烤箱加热异常！","请拨打售后电话<font color='#00E6B6'>400-888-8490</font><br/>咨询售后人员");
+                    break
+                case 12:
+                    showLoaderFault("右腔蒸箱加热异常！","请拨打售后电话<font color='#00E6B6'>400-888-8490</font><br/>咨询售后人员");
+                    break
+                case 13:
+                    showLoaderFault("右腔蒸箱干烧","请暂停使用右腔蒸箱并<br/>拨打售后电话<font color='#00E6B6'>400-888-8490</font>");
+                    break
+                case 14:
+                    showLoaderFault("右腔干烧检测电路故障！","请拨打售后电话<font color='#00E6B6'>400-888-8490</font><br/>咨询售后人员")
+                    break
+                case 20:
+                    showLoaderFault("手势板故障！","请拨打售后电话<font color='#00E6B6'>400-888-8490</font><br/>咨询售后人员");
+                    break
+                default:
+                    break
+                }
+            }
+            else if("ProductionTest"==key)
+            {
+
+            }
+            else if("LStOvDoorState"==key)
+            {
+                if(value==1)
+                {
+                    if(QmlDevState.state.LStOvState!==workStateEnum.WORKSTATE_STOP)
+                        showLoaderFaultCenter("左腔门开启，工作暂停",275)
+                }
+            }
+            else if("RStOvDoorState"==key)
+            {
+                if(value==1)
+                {
+                    if(QmlDevState.state.RStOvState!==workStateEnum.WORKSTATE_STOP)
+                        showLoaderFaultCenter("右腔门开启，工作暂停",275)
+                }
+            }
+            else if("WifiEnable"==key)
             {
                 systemSettings.wifiEnable=value
                 if(value==0)
@@ -59,31 +244,60 @@ Item {
                 else
                 {
                     wifiConnecting=false
-                    if(value==4)
+                    if(value==2 || value==3)
+                    {
+                        deleteWifiInfo(wifiConnectInfo)
+                    }
+                    else if(value==4)
                     {
                         wifiConnected=true
+                        addWifiInfo(wifiConnectInfo)
                     }
                 }
                 console.log("WifiState",value,wifiConnected)
             }
+            else if("OTAState"==key)
+            {
+                if(value==1)
+                {
+                }
+                else if(value==2)
+                {
+                    showUpdateConfirm()
+                }
+                else if(value==3)
+                {
+                    showUpdate()
+                }
+                else if(value==8)
+                {
+                    showUpdateSuccess()
+                }
+            }
+            else if(("OTAProgress"==key))
+            {
+                console.log("OTAProgress:",value)
+                showUpdateProgress(value);
+                if(value==100)
+                {
 
+                }
+            }
         }
     }
 
     Component.onCompleted: {
         console.log("page home onCompleted")
-        //        systemSettings.setValue("multistageRemind",true)
-        //        showLoaderFault("烤箱加热异常！","请拨打售后电话<font color='#00E6B6'>400-888-8490</font><br/>咨询售后人员");
-        //        showLoaderFault("蒸箱干烧告警！","请暂停使用蒸箱并<br/>拨打售后电话<font color='#00E6B6'>400-888-8490</font>");
-        //        showLoaderFault("烟机进风口高温告警！","请及时关闭旋塞阀\n等待温度降低后使用");
-        //        showLoaderFault("燃气泄漏告警！","燃气已泄露\n请立即复位塞阀\n关闭总阀并开窗通气");
+
+        //        systemSettings.multistageRemind=true
+
         //        showLoaderFaultImg("/x50/icon/icon_pop_th.png","记得及时清理油盒\n保持清洁哦")
-        //        showLoaderFaultCenter("左腔门开启，工作暂停",274)
-        //        showLoaderFaultCenter("右灶未开启\n开启后才可定时关火",274)
+        //        showLoaderFaultCenter("左腔门开启，工作暂停",275)
+        //                showLoaderFaultCenter("右灶未开启\n开启后才可定时关火",275)
     }
     StackView.onActivated:{
         console.log("page home onActivated")
-
+        permitSteamStartStatus(0)
     }
     Image {
         anchors.fill: parent
@@ -94,7 +308,7 @@ Item {
         width:parent.width
         anchors.bottom: parent.bottom
         height:80
-        windImg:QmlDevState.state.HoodSpeed===0?"":"qrc:/x50/main/icon_wind_"+QmlDevState.state.HoodSpeed+".png"
+        windImg:(QmlDevState.state.HoodSpeed==0 || QmlDevState.state.HoodSpeed==null)?"":"qrc:/x50/main/icon_wind_"+QmlDevState.state.HoodSpeed+".png"
     }
     Rectangle{
         enabled:!systemSettings.childLock

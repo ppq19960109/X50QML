@@ -2,104 +2,24 @@
     <qresource prefix="/">
         <file>main.qml</file>
         <file>PageHome.qml</file>
-        <file>images/main_menu/dingshiqi.png</file>
-        <file>images/main_menu/kao_bj.png</file>
-        <file>images/main_menu/shezhi.png</file>
-        <file>images/main_menu/tianqi.png</file>
-        <file>images/main_menu/wodejilu.png</file>
-        <file>images/main_menu/xiaoxi.png</file>
-        <file>images/main_menu/zheng_bj.png</file>
-        <file>images/main_menu/zhinengcaipu.png</file>
-        <file>images/main_menu/zhuangtai_bj.png</file>
-        <file>images/wifi/icon_wifi_01_blue.png</file>
-        <file>images/wifi/icon_wifi_02_blue.png</file>
-        <file>images/wifi/icon_wifi_03_blue.png</file>
-        <file>images/wifi/icon_wifi_04_blue.png</file>
-        <file>images/wifi/icon_wifi_big.png</file>
-        <file>images/wifi/icon_wifi_connected.png</file>
-        <file>images/wifi/icon_wifi_error.png</file>
-        <file>images/wifi/icon_wifi_signal_01.png</file>
-        <file>images/wifi/icon_wifi_signal_02.png</file>
-        <file>images/wifi/icon_wifi_signal_03.png</file>
-        <file>images/wifi/icon_wifi_signal_04.png</file>
-        <file>images/wifi/icon_wifi_signal_lock.png</file>
-        <file>images/wifi/wifi.png</file>
-        <file>images/wifi/WIFI (.png</file>
         <file>images/main_menu/naozhong.png</file>
-        <file>images/main_menu/tongsuokai.png</file>
         <file>images/main_menu/tongsuokai_sz.png</file>
-        <file>images/main_menu/queshuitubiao.png</file>
-        <file>images/main_menu/youhua.png</file>
-        <file>images/main_menu/zuohua.png</file>
-        <file>images/main_menu/dibuyuans.png</file>
-        <file>images/main_menu/user_active0.png</file>
-        <file>images/main_menu/user_active1.png</file>
-        <file>images/main_menu/user_active2.png</file>
-        <file>images/main_menu/user_normal0.png</file>
-        <file>images/main_menu/user_normal1.png</file>
-        <file>images/main_menu/user_normal2.png</file>
         <file>PageHomeFirst.qml</file>
         <file>PageHomeSecond.qml</file>
-        <file>images/main_menu/yuredaquan.png</file>
-        <file>images/main_menu/yurezhuan.png</file>
         <file>PageHomeThird.qml</file>
-        <file>images/main_menu/beijing.png</file>
-        <file>images/dingshi/dingshi.png</file>
-        <file>images/dingshi/dingshi_bj2.png</file>
-        <file>images/dingshi/dingshiqi_bj.png</file>
         <file>pageSteamAndBake/PageSteamBakeBase.qml</file>
-        <file>images/fanhui.png</file>
-        <file>images/anniu.png</file>
-        <file>images/anniu_bj.png</file>
-        <file>images/anniu_yes.png</file>
-        <file>images/xiahuaxian.png</file>
         <file>pageSteamAndBake/DataPathView.qml</file>
-        <file>images/fengexian.png</file>
-        <file>images/fengexian_big.png</file>
         <file>pageSteamAndBake/PageSteamBakeMultistage.qml</file>
         <file>pageSteamAndBake/PageMultistageRemind.qml</file>
         <file>pageSteamAndBake/PageMultistageSet.qml</file>
-        <file>images/xinzeng.png</file>
-        <file>images/bianji.png</file>
-        <file>images/guanbi.png</file>
-        <file>pageSteamAndBake/PageMultistagePopUp.qml</file>
-        <file>images/dibutanchuang_bj.png</file>
         <file>PageWifi.qml</file>
-        <file>images/bg/bg_btn_common.png</file>
-        <file>images/bg/bg_clock.png</file>
-        <file>images/bg/bg_clock_big.png</file>
-        <file>images/bg/bg_clock_hour.png</file>
-        <file>images/bg/bg_clock_hour_big.png</file>
-        <file>images/bg/bg_clock_minute.png</file>
-        <file>images/bg/bg_clock_minute_big.png</file>
-        <file>images/bg/bg_clock_second.png</file>
-        <file>images/bg/bg_clock_second_big.png</file>
-        <file>images/bg/bg_scrollbar.png</file>
-        <file>images/bg/bg_scrollbar_thumb.png</file>
-        <file>images/bg/bg_setting_about_machine_btn.png</file>
-        <file>images/bg/bg_setting_bright_btn.png</file>
-        <file>images/bg/bg_setting_date_btn.png</file>
-        <file>images/bg/bg_setting_divide_line.png</file>
-        <file>images/bg/bg_setting_network_btn.png</file>
-        <file>images/bg/bg_setting_recovery_factory_btn.png</file>
-        <file>images/bg/bg_setting_recovery_factory_confirm_btn.png</file>
-        <file>images/bg/bg_setting_standby_btn.png</file>
-        <file>images/bg/bg_setting_switch_close.png</file>
-        <file>images/bg/bg_setting_switch_open.png</file>
-        <file>images/bg/bg_setting_system_update_btn.png</file>
-        <file>images/bg/bg_setting_time_confirm.png</file>
-        <file>images/bg/bg_setting_time_select.png</file>
-        <file>images/icon_pwd_invisible.png</file>
-        <file>images/icon_pwd_visible.png</file>
         <file>PageSteamBakeRun.qml</file>
         <file>PageCirProgressBar.qml</file>
         <file>PageCirWaveProgressBar.qml</file>
         <file>PageCookDetails.qml</file>
         <file>pageSteamAndBake/PageSteamBakeReserve.qml</file>
         <file>PageSmartRecipes.qml</file>
-        <file>images/peitu01.png</file>
         <file>PageCookHistory.qml</file>
-        <file>images/shanchu-icon.png</file>
         <file>PageCloseHeat.qml</file>
         <file>pageSet/PageSet.qml</file>
         <file>pageSet/PageLocalSettings.qml</file>
@@ -108,9 +28,6 @@
         <file>pageSet/PageAboutMachine.qml</file>
         <file>pageSet/PageAfterGuide.qml</file>
         <file>pageSet/PageSlider.qml</file>
-        <file>images/icon_setting_bright_max.png</file>
-        <file>images/icon_setting_bright_min.png</file>
-        <file>images/icon_mars_fans_club_logo.png</file>
         <file>PageBusyIndicator.qml</file>
         <file>PageDialog.qml</file>
         <file>pageSet/PageReleaseNotes.qml</file>
@@ -120,12 +37,10 @@
         <file>PageLeftCook.qml</file>
         <file>PageRightCook.qml</file>
         <file>PageFaultPopup.qml</file>
-        <file>x50/icon/icon_close@2x.png</file>
         <file>x50/icon/icon_pop_th.png</file>
         <file>x50/icon/icon_pop_th2.png</file>
         <file>x50/wifi/kai.png</file>
         <file>x50/wifi/WIFI.png</file>
-        <file>x50/wifi/yousuowifi2.png</file>
         <file>x50/wifi/yousuowifi 1.png</file>
         <file>x50/wifi/yousuowifi 3.png</file>
         <file>x50/wifi/yousuowifi 4.png</file>
@@ -167,5 +82,29 @@
         <file>x50/steam/黑色块.png</file>
         <file>x50/icon/icon_wife_nor.png</file>
         <file>x50/steam/icon_便捷蒸.png</file>
+        <file>x50/steam/icon_close.png</file>
+        <file>x50/steam/icon_close(1).png</file>
+        <file>x50/steam/icon_yqpr.png</file>
+        <file>PageBackBar.qml</file>
+        <file>PageCheckBox.qml</file>
+        <file>x50/icon/icon_add.png</file>
+        <file>x50/icon/icon_delete.png</file>
+        <file>x50/steam/icon_start.png</file>
+        <file>PageDialogConfirm.qml</file>
+        <file>x50/set/huadonganniu.png</file>
+        <file>x50/set/icon_light_big.png</file>
+        <file>x50/set/icon_light_small.png</file>
+        <file>x50/set/gengduo.png</file>
+        <file>x50/set/jiazaizhong.png</file>
+        <file>x50/set/logo.png</file>
+        <file>PageDialogQrcode.qml</file>
+        <file>x50/main/icon_蒸包子.png</file>
+        <file>x50/main/圆角矩形 3209.png</file>
+        <file>x50/main/烤鸡.png</file>
+        <file>x50/main/iocn_kuang_w.png</file>
+        <file>x50/main/iocn_kuang_x.png</file>
+        <file>x50/icon/icon_close.png</file>
+        <file>x50/icon/icon_close2.png</file>
+        <file>x50/wifi/yousuowifi 2.png</file>
     </qresource>
 </RCC>

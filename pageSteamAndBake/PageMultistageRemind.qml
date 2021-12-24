@@ -1,48 +1,29 @@
 import QtQuick 2.9
 import QtQuick.Controls 2.2
-
+import "../"
 Item {
     id:root
-    //头部
-    ToolBar {
+
+    Image {
+        anchors.fill: parent
+        source: "/x50/main/背景.png"
+    }
+    PageBackBar{
         id:topBar
         width:parent.width
         anchors.bottom:parent.bottom
-        height:96
-        background:Rectangle{
-            color:"#000"
+        height:80
+        name:qsTr("多段烹饪说明")
+        leftBtnText:""
+        rightBtnText:""
+        onLeftClick:{
+            edit=!edit
         }
-        Image {
-            anchors.fill: parent
-            source: "/images/main_menu/zhuangtai_bj.png"
+        onRightClick:{
+            load_page("pageCookDetails",JSON.stringify(recipeListView.model[recipeListView.currentIndex]))
         }
-        //back图标
-        TabButton {
-            id:goBack
-            width:80
-            height:parent.height
-            anchors.left:parent.left
-            anchors.verticalCenter: parent.verticalCenter
-            Image{
-                anchors.centerIn: parent
-                source: "/images/fanhui.png"
-            }
-            background: Rectangle {
-                opacity: 0
-            }
-            onClicked: {
-                backTopPage()
-            }
-        }
-
-        Text{
-            width:100
-            //            height:parent.height
-            color:"#9AABC2"
-            font.pixelSize: 40
-            anchors.left:goBack.right
-            anchors.verticalCenter: parent.verticalCenter
-            text:qsTr("多段烹饪说明")
+        onClose:{
+            backPrePage()
         }
     }
     //内容
@@ -51,14 +32,15 @@ Item {
         width:parent.width
         anchors.bottom:topBar.top
         anchors.top: parent.top
-        color:"#000"
+        color:"transparent"
 
         Rectangle {
             id: content
-            width: parent.width - 60
-            height: 190
+            width: parent.width - 120
             anchors.top:parent.top
-            anchors.topMargin:28
+            anchors.topMargin:50
+            anchors.bottom: checkBoxRemind.top
+            anchors.bottomMargin: 30
             //            anchors.leftMargin: 30
             //            anchors.rightMargin: 30
             anchors.horizontalCenter: parent.horizontalCenter
@@ -74,52 +56,44 @@ Item {
                     width: flick.width
                     height: flick.height
                     text:"在设置中，您可以将该次烹饪，拆分为1至3段，并分别设置每段参数，以实现用多段温度、时长来烹饪食物。"
-                    font.pixelSize: 34
-                    color:"#9AABC2"
+                    font.pixelSize: 35
+                    lineHeight: 1.4
+                    color:"#FFF"
                     //                    clip :true
                     wrapMode: Text.WordWrap
                     //                    elide: Text.ElideRight
                 }
             }
         }
-        CheckBox {
+        PageCheckBox {
             id:checkBoxRemind
             width:200
-            anchors.top:content.bottom
-            anchors.topMargin:20
+            height:30
+            anchors.bottom:nextBtn.top
+            anchors.bottomMargin: 40
             anchors.horizontalCenter: parent.horizontalCenter
-
-            text:"下次不再提醒"
-            font.pixelSize: 30
-            contentItem: Text {
-                text: checkBoxRemind.text
-                font: checkBoxRemind.font
-                color:"#7286A4"
-                leftPadding :checkBoxRemind.indicator.width+10
-            }
+            checked: false
         }
-
         Button{
-            id:btn_yes
-            width: img_yes.width
-            height: img_yes.height
-            anchors.top:checkBoxRemind.bottom
-
+            id:nextBtn
+            width: 175
+            height: 65
+            anchors.bottom:parent.bottom
+            anchors.bottomMargin: 40
             anchors.horizontalCenter: parent.horizontalCenter
             background:Rectangle{
                 color:"transparent"
+                border.color:"#00E6B6"
+                radius: 8
             }
-            Image{
-                id:img_yes
-                anchors.centerIn: parent
-                source:"/images/anniu_yes.png"
-            }
+
             Text{
                 text:"下一步"
+                color:"#00E6B6"
                 font.pixelSize: 30
-                anchors.horizontalCenter:parent.horizontalCenter
-                anchors.verticalCenter: parent.verticalCenter
-                color:"#ECF4FC"
+                anchors.centerIn:parent
+                horizontalAlignment:Text.AlignHCenter
+                verticalAlignment:Text.AlignVCenter
             }
             onClicked: {
                 if(checkBoxRemind.checked)

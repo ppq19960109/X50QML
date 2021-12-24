@@ -3,13 +3,57 @@ import QtQuick.Controls 2.2
 
 Item {
     property alias model:pathView.model
-    property alias delegate:pathView.delegate
+    property int delegateIndex:0
     property alias currentIndex:pathView.currentIndex
     signal valueChanged(var index,var valueName)
     id:root
     //        anchors.fill: parent
 
+    Component {
+        id: rectDelegate
+        Item  {
+            property int textFont:PathView.isCurrentItem ? 45 : 35
+            property var textColor:PathView.isCurrentItem ?"#00E6B6":'white'
+            width:parent.width
+            height:parent.height/parent.pathItemCount
+//            opacity: PathView.isCurrentItem ? 1 : 0.5
 
+            Text {
+                id:text
+                anchors.centerIn: parent
+                color:textColor
+                font.pixelSize: textFont
+                text: modelData
+            }
+        }
+    }
+    Component {
+        id: modeDelegate
+        Item  {
+            property int textFont:PathView.isCurrentItem ? 45 : 35
+            property var textColor:PathView.isCurrentItem ?"#00E6B6":'white'
+            property var imgUrl:PathView.isCurrentItem ?leftWorkBigImg[modelData]:leftWorkSmallImg[modelData]
+            width:parent.width
+            height:parent.height/parent.pathItemCount
+//            opacity: PathView.isCurrentItem ? 1 : 0.5
+
+            Image {
+                anchors.right: text.left
+                anchors.rightMargin: 10
+                anchors.verticalCenter: text.verticalCenter
+                source: imgUrl
+            }
+            Text {
+                id:text
+                anchors.verticalCenter:  parent.verticalCenter
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.horizontalCenterOffset: 20
+                color:textColor
+                font.pixelSize: textFont
+                text: modelData==0?rightWorkMode:leftWorkMode[modelData]
+            }
+        }
+    }
     PathView {
         id:pathView
         anchors.fill: parent
@@ -23,7 +67,7 @@ Item {
         highlightRangeMode: PathView.StrictlyEnforceRange;
 
 //        model:textModel
-//        delegate:rectDelegate
+        delegate:delegateIndex==0?rectDelegate:modeDelegate
 
         path : Path{
             startX: root.width/2
@@ -36,7 +80,6 @@ Item {
         }
         onMovementEnded: {
             console.log("currentIndex:",currentIndex);
-
             valueChanged(currentIndex,"model");
         }
 

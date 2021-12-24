@@ -24,12 +24,13 @@ Item {
             width: control.availableWidth
             height: implicitHeight
             radius: 2
-            color: "gray"
+            color: "#FFF"
+            opacity: 0.35
 
             Rectangle {
                 width: control.visualPosition * parent.width
                 height: parent.height
-                color: "blue"
+                color: "#00E6B6"
                 radius: 2
             }
         }
@@ -41,21 +42,26 @@ Item {
             implicitWidth: 30
             implicitHeight: 90
             //                    border.color: "#fff"
-            Rectangle {
+//            Rectangle {
+//                anchors.centerIn: parent
+//                implicitWidth: 30
+//                implicitHeight: 30
+//                radius: 13
+//                color: control.pressed ? "red" : "blue"
+//                border.color: "#bdbebf"
+//            }
+            Image {
                 anchors.centerIn: parent
-                implicitWidth: 30
-                implicitHeight: 30
-                radius: 13
-                color: control.pressed ? "red" : "blue"
-                border.color: "#bdbebf"
+                source: "qrc:/x50/set/huadonganniu.png"
             }
             Text{
                 id:cur
                 color:"#fff"
                 visible: text!=null
                 text:displayText
-                font.pixelSize:30
+                font.pixelSize:35
                 anchors.bottom: parent.bottom
+                anchors.bottomMargin: -25
                 anchors.horizontalCenter: parent.horizontalCenter
             }
         }

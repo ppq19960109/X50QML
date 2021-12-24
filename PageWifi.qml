@@ -52,6 +52,7 @@ Item {
         root.sort(function(a, b){return b.rssi - a.rssi})
         wifiModel.clear()
         var result={}
+
         for(var i = 0; i < root.length; ++i) {
             if(root[i].ssid==="")
                 continue
@@ -63,12 +64,18 @@ Item {
 
             if(root[i].bssid===QmlDevState.state.bssid)
             {
+                if(wifiConnected==false)
+                    wifiConnected=true
                 result.connected=1
                 wifiModel.insert(0,result)
             }
             else
                 wifiModel.append(result)
             console.log("result:",QmlDevState.state.bssid,root[i].bssid,root[i].rssi,result.connected,result.ssid,result.level,result.flags)
+        }
+        if(QmlDevState.state.bssid=="")
+        {
+            wifiConnected=false
         }
     }
 
@@ -97,12 +104,12 @@ Item {
     function connectWiFi(ssid,psk,encryp)
     {
         var Data={}
-        var WifiConnect={}
-        WifiConnect.ssid = ssid
-        WifiConnect.psk = psk
-        WifiConnect.encryp = encryp
 
-        Data.WifiConnect=WifiConnect
+        wifiConnectInfo.ssid = ssid
+        wifiConnectInfo.psk = psk
+        wifiConnectInfo.encryp = encryp
+
+        Data.WifiConnect=wifiConnectInfo
         wifiConnecting=true
         setToServer(Data)
     }
@@ -111,6 +118,7 @@ Item {
         console.log("wifi_scan_timer_reset")
         scan_count=0
         timer_wifi_scan.interval=1000
+        timer_wifi_scan.restart()
     }
 
     Connections { // 将目标对象信号与槽函数进行连接
@@ -134,7 +142,7 @@ Item {
                     else if(value==4)
                     {
                         dismissWifiInput()
-
+                        showQrcodeBind("连接成功！")
                     }
                     wifi_scan_timer_reset()
                 }
@@ -143,6 +151,11 @@ Item {
                     scanWifi()
                 }
 
+            }
+            else if("WifiEnable"==key)
+            {
+                if(value==1)
+                    wifi_scan_timer_reset()
             }
         }
     }
@@ -156,44 +169,6 @@ Item {
         console.log("PageWifi onCompleted WifiState:",QmlDevState.state.WifiState,systemSettings.wifiEnable,scan_count)
     }
 
-    ToolBar {
-        id:topBar
-        width:parent.width
-        anchors.bottom:parent.bottom
-        height:80
-        Image {
-            anchors.fill: parent
-            source: "/images/main_menu/zhuangtai_bj.png"
-        }
-
-        //back图标
-        TabButton {
-            id:goBack
-            width:80
-            height:parent.height
-            anchors.left:parent.left
-            anchors.verticalCenter: parent.verticalCenter
-            Image{
-                anchors.centerIn: parent
-                source: "/images/fanhui.png"
-            }
-            background: Rectangle {
-                opacity: 0
-            }
-            onClicked: {
-                backPrePage()
-            }
-        }
-
-        Text{
-            color:"#9AABC2"
-            font.pixelSize: 40
-            anchors.left:goBack.right
-            anchors.verticalCenter: parent.verticalCenter
-            text: qsTr("网络")
-        }
-
-    }
     Timer{
 
         id:timer_wifi_scan
@@ -231,7 +206,27 @@ Item {
             }
         }
     }
+    Image {
+        anchors.fill: parent
+        source: "/x50/main/背景.png"
+    }
+    PageBackBar{
+        id:topBar
+        width:parent.width
+        anchors.bottom:parent.bottom
+        height:80
+        name:qsTr("网络")
+        leftBtnText:qsTr("")
+        rightBtnText:qsTr("")
+        onLeftClick:{
+        }
+        onRightClick:{
 
+        }
+        onClose:{
+            backPrePage()
+        }
+    }
     Component {
         id: headerView
 
@@ -283,6 +278,7 @@ Item {
 
                     if(wifi_switch.checked)
                     {
+
                     }
                     else
                     {
@@ -315,7 +311,7 @@ Item {
                 id:indicator
                 width: 40
                 height: 40
-                border.color: "#fff"
+                //                border.color: "#fff"
                 anchors.left: parent.left
                 anchors.leftMargin: 40
                 anchors.bottom: parent.bottom
@@ -394,7 +390,22 @@ Item {
                             listView.positionViewAtBeginning()
                         }
                         else
-                            showWifiInput(index,listView.model.get(index))
+                        {
+                            var wifiInfo=getWifiInfo(ssid)
+                            console.log("wifiInfo",wifiInfo,typeof wifiInfo)
+                            if(wifiInfo==null)
+                            {
+                                showWifiInput(index,listView.model.get(index))
+                            }
+                            else
+                            {
+                                connectWiFi(wifiInfo.ssid,wifiInfo.psk,wifiInfo.encryp)
+                                connected=2
+                                wifiModel.setProperty(0,"connected",0)
+                                wifiModel.move(index,0,1)
+                                listView.positionViewAtBeginning()
+                            }
+                        }
                     }
                 }
             }
@@ -406,7 +417,7 @@ Item {
         width:parent.width
         anchors.top:parent.top
         anchors.bottom:topBar.top
-        color:"#000"
+        color:"transparent"
 
         ListView {
             id: listView
@@ -450,52 +461,21 @@ Item {
                     textField.focus=false
                 }
             }
-            ToolBar {
+            Image {
+                anchors.fill: parent
+                source: "/x50/main/背景.png"
+            }
+            PageBackBar{
                 id:topBar
                 width:parent.width
                 anchors.bottom:parent.bottom
                 height:80
-                background: Rectangle {
-                    color:"#000"
-                    opacity: 0.15
-                }
-                //back图标
-                TabButton {
-                    id:goBack
-                    width:40
-                    height:parent.height
-                    anchors.left:parent.left
-                    anchors.leftMargin: 20
-                    anchors.verticalCenter: parent.verticalCenter
-                    Image{
-                        anchors.centerIn: parent
-                        source: "/images/fanhui.png"
-                    }
-                    background: Rectangle {
-                        opacity: 0
-                    }
-                    onClicked: {
-                        dismissWifiInput()
-                    }
-                }
-                Text{
-                    color:"#FFF"
-                    font.pixelSize: 40
-                    anchors.left:goBack.right
-                    anchors.verticalCenter: parent.verticalCenter
-                    text:"网络"
-                }
-                Text{
-                    id:wifiName
-                    width:300
-                    color:"#FFF"
-                    font.pixelSize: 40
-                    elide: Text.ElideRight
-
-                    anchors.centerIn: parent
-                    horizontalAlignment: Text.AlignHCenter
-                    verticalAlignment: Text.AlignVCenter
-                    text:wifi_ssid
+                name:"网络"
+                centerText:wifi_ssid
+                leftBtnText:qsTr("")
+                rightBtnText:qsTr("")
+                onClose:{
+                    backPrePage()
                 }
             }
 
@@ -572,7 +552,7 @@ Item {
 
                     PageRotationImg {
                         id: connectBusy
-                        visible: false
+                        visible: wifiConnecting==true?true:false
                         anchors.right:connectBtn.left
                         anchors.rightMargin: 15
                         anchors.verticalCenter: parent.verticalCenter
@@ -602,7 +582,7 @@ Item {
                             color:permit_connect?"#00E6B6":"white"
                             font.pixelSize: 40
                             anchors.centerIn:parent
-                            text: qsTr("连接")
+                            text: wifiConnecting==true?"正在连接":qsTr("连接")
                         }
                         background: Rectangle {
                             opacity: 0
@@ -612,8 +592,6 @@ Item {
                             if(permit_connect)
                             {
                                 connectWiFi(wifi_ssid,textField.text,wifi_flags)
-                                connectText.text="正在连接"
-                                connectBusy.visible=true
                             }
                         }
                     }
