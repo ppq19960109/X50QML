@@ -66,7 +66,7 @@ ToolBar {
             anchors.right: time.left
             anchors.rightMargin: 20
             anchors.verticalCenter: parent.verticalCenter
-            source: "/images/main_menu/naozhong.png"
+            source: "qrc:/x50/main/icon_time.png"
         }
         Text{
             id:time

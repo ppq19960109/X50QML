@@ -3,9 +3,9 @@ import QtQuick.Controls 2.2
 
 Item {
     //定义全局分类菜谱
-    property var  menuId: ['蔬菜','肉类','水产','面点']
+    property var  menuId: ['水产','面点','肉类','蔬菜']
     property var  cookMode: ["蒸","烤","多段"]
-    property var  cookModeColor: ["#19A582","#EC7A00","#EC7A00"]
+    property var  cookModeColor: ["#19A582","#EC7A00","#298FD1"]
 
     Component.onCompleted: {
         getRecipe(menuList.currentIndex)

@@ -6,6 +6,8 @@ Item {
 
     function steamStart()
     {
+        if(listModel.count==0)
+            return
         var list = []
         for(var i = 0; i < listModel.count; ++i)
         {
@@ -35,7 +37,8 @@ Item {
         }
     }
     Component.onCompleted: {
-        permitSteamStartStatus(1)
+        if(systemSettings.multistageRemind==false)
+            permitSteamStartStatus(1)
     }
 
     Image {
@@ -47,13 +50,15 @@ Item {
         width:parent.width
         anchors.bottom:parent.bottom
         height:80
-        name:qsTr("多段烹饪 （最多可添加三段烹饪）")
+        name:qsTr("多段烹饪（最多可添加三段烹饪）")
         leftBtnText:qsTr("启动")
         rightBtnText:qsTr("预约")
         onLeftClick:{
             steamStart()
         }
         onRightClick:{
+            if(listModel.count==0)
+                return
             var list = []
             for(var i = 0; i < listModel.count; ++i)
             {

@@ -82,7 +82,8 @@ Item {
            onConfirm: {
                closeLoaderMain()
                console.log("page systemReset")
-               QmlDevState.systemReset()
+               systemReset()
+               backTopPage()
            }
         }
     }

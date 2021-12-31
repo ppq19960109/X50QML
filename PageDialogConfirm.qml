@@ -24,12 +24,12 @@ Rectangle {
         anchors.centerIn: parent
         implicitWidth: 680
         implicitHeight: 360
-        color: "transparent"
-//        radius: 16
-        Image {
-            anchors.fill: parent
-            source: "qrc:/x50/main/圆角矩形 3209.png"
-        }
+        color: "#596767"
+        radius: 16
+//        Image {
+//            anchors.fill: parent
+//            source: "qrc:/x50/main/圆角矩形 3209.png"
+//        }
         Button {
             width:closeImg.width+60
             height:closeImg.height+60

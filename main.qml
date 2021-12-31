@@ -5,12 +5,13 @@ import QtQuick.Window 2.2
 
 import "pageSteamAndBake"
 import "pageSet"
+import "pageProductionTest"
 Window {
     id: window
     width: 800
     height: 480
     visible: true
-
+    property string uiVersion:"1.0"
     property int leftDevice:0
     property int rightDevice:1
     property int allDevice:2
@@ -55,10 +56,33 @@ Window {
         //判断儿童锁(true表示锁定，false表示未锁定)
         property bool childLock:false
 
+        property bool leftCookDialog:true
+        property bool rightCookDialog:true
         property bool multistageRemind:true
+        property bool multistageDialog:true
         property var wifiPasswdArray
     }
 
+    function systemReset()
+    {
+        var Data={}
+        Data.reset = null
+        setToServer(Data)
+
+        //systemSettings.sleepTime=4
+        updateSleepTime(4)
+        systemSettings.brightness=255
+        Backlight.backlightSet(systemSettings.brightness)
+        systemSettings.firstOpenGuide=true
+        if(systemSettings.wifiEnable!=true)
+        {
+            systemSettings.wifiEnable=true
+            enableWifi(true)
+        }
+        systemSettings.childLock=false
+        systemSettings.multistageRemind=true
+        systemSettings.wifiPasswdArray=[]
+    }
     function deleteWifiInfo(wifiInfo)
     {
         if(wifiInfo.ssid=="" ||wifiInfo.psk=="" || wifiInfo.encryp===0)
@@ -86,13 +110,13 @@ Window {
             return
         }
         systemSettings.wifiPasswdArray=wifiPasswdArray
-                console.log("deleteWifiInfo wifiPasswd:")
-//                for( i = 0; i < systemSettings.wifiPasswdArray.length; i++)
-//                {
-//                    console.log("ssid:",systemSettings.wifiPasswdArray[i].ssid)
-//                    console.log("psk:",systemSettings.wifiPasswdArray[i].psk)
-//                    console.log("encryp:",systemSettings.wifiPasswdArray[i].encryp)
-//                }
+        console.log("deleteWifiInfo wifiPasswd:")
+        //                for( i = 0; i < systemSettings.wifiPasswdArray.length; i++)
+        //                {
+        //                    console.log("ssid:",systemSettings.wifiPasswdArray[i].ssid)
+        //                    console.log("psk:",systemSettings.wifiPasswdArray[i].psk)
+        //                    console.log("encryp:",systemSettings.wifiPasswdArray[i].encryp)
+        //                }
     }
 
     function addWifiInfo(wifiInfo)
@@ -186,10 +210,36 @@ Window {
         Data.PermitSteamStartStatus = status
         setToServer(Data)
     }
+    function enableWifi(enable)
+    {
+        systemSettings.wifiEnable=enable
+        var Data={}
+        Data.WifiEnable = enable
+        setToServer(Data)
+    }
     function scanWifi()
     {
         var Data={}
         Data.WifiScan = null
+        setToServer(Data)
+    }
+    function scanRWifi()
+    {
+        var Data={}
+        Data.WifiScanR = null
+        getToServer(Data)
+    }
+
+    function connectWiFi(ssid,psk,encryp)
+    {
+        var Data={}
+
+        wifiConnectInfo.ssid = ssid
+        wifiConnectInfo.psk = psk
+        wifiConnectInfo.encryp = encryp
+
+        Data.WifiConnect=wifiConnectInfo
+        wifiConnecting=true
         setToServer(Data)
     }
     function getWifiState()
@@ -280,7 +330,7 @@ Window {
         param.timestamp=Math.floor(Date.now()/1000) //Date.parse(new Date())//(new Date().getTime())
         param.collect=0
         param.cookType=0
-        param.cookTime=0
+        param.recipeType=0
         param.cookPos=0
         return param
     }
@@ -412,7 +462,7 @@ Window {
         else
         {
             Data.CookbookParam=MultiStageContent
-            leftDishName=dishName
+            Data.CookbookName=dishName
         }
         setToServer(Data)
     }
@@ -452,7 +502,7 @@ Window {
             QmlDevState.setState("LStOvOrderTimerLeft",cookSteps[0].time)
 
             QmlDevState.setState("cnt",cookSteps.length)
-            QmlDevState.setState("current",1)
+            QmlDevState.setState("current",2)
             if(root.imgUrl!=="")
             {
                 setMultiCooking(cookSteps,orderTime,root.dishName)
@@ -534,19 +584,19 @@ Window {
                 console.log("encryp:",systemSettings.wifiPasswdArray[i].encryp)
             }
         }
-//        wifiConnectInfo.ssid="123"
-//        wifiConnectInfo.psk="1234567890123"
-//        wifiConnectInfo.encryp=2
-//        addWifiInfo(wifiConnectInfo)
+        //        wifiConnectInfo.ssid="123"
+        //        wifiConnectInfo.psk="1234567890123"
+        //        wifiConnectInfo.encryp=2
+        //        addWifiInfo(wifiConnectInfo)
 
-//        wifiConnectInfo.ssid="1234"
-//        addWifiInfo(wifiConnectInfo)
+        //        wifiConnectInfo.ssid="1234"
+        //        addWifiInfo(wifiConnectInfo)
 
-//        deleteWifiInfo(wifiConnectInfo)
+        //        deleteWifiInfo(wifiConnectInfo)
     }
     StackView {
         id: stackView
-        initialItem: pageHome
+        initialItem: pageHome // pageHome pageTestFront
         anchors.fill: parent
         enabled:true
     }
@@ -558,9 +608,9 @@ Window {
         triggeredOnStart: false
         onTriggered: {
             console.log("timer_window sleep!!!!!!!!!!!!")
-            if(stackView.depth==1)
+            if(QmlDevState.state.HoodSpeed == 0 &&QmlDevState.state.LStoveStatus == 0 && QmlDevState.state.RStoveStatus == 0 &&QmlDevState.state.RStOvState == 0 && QmlDevState.state.LStOvState == 0 && QmlDevState.state.OTAState == 0 && QmlDevState.state.ErrorCodeShow == 0 && QmlDevState.localConnected == 1 && isExistView("PageTestFront")==null)
             {
-//                Backlight.backlightDisable()
+                //                Backlight.backlightDisable()
                 Backlight.backlightSet(0)
                 sleepState=true
             }
@@ -574,11 +624,11 @@ Window {
         propagateComposedEvents: true
 
         onPressed: {
-            console.warn("Window onPressed................................",sleepState)
+            console.warn("Window onPressed................................")
             if(sleepState==true)
             {
                 sleepState=false
-//                Backlight.backlightEnable()
+                //                Backlight.backlightEnable()
                 Backlight.backlightSet(systemSettings.brightness)
                 mouse.accepted = true
             }
@@ -586,15 +636,16 @@ Window {
             {
                 mouse.accepted = false
             }
+
             timer_window.restart()
         }
         //                onReleased: {
         //                    console.warn("Window onReleased................................")
         //                    mouse.accepted = false
         //                }
-        //                onPositionChanged:{
-        //                console.warn("Window onPositionChanged................................")
-        //                }
+//                        onPositionChanged:{
+//                        console.warn("Window onPositionChanged................................")
+//                        }
     }
     Loader{
         //加载弹窗组件
@@ -643,12 +694,7 @@ Window {
         //            level:2
         //            flags:2
         //        }
-        //        ListElement {
-        //            connected: 0
-        //            ssid: "744uuu"
-        //            level:2
-        //            flags:2
-        //        }
+
     }
     Component {
         id: pageTest
@@ -748,6 +794,30 @@ Window {
         id: pageReleaseNotes
         PageReleaseNotes {}
     }
+    Component {
+        id: pageTestFront
+        PageTestFront {}
+    }
+    Component {
+        id: pageIntelligentDetection
+        PageIntelligentDetection {}
+    }
+    Component {
+        id: pageScreenTest
+        PageScreenTest {}
+    }
+    Component {
+        id: pageScreenLine
+        PageScreenLine {}
+    }
+    Component {
+        id: pageScreenClick
+        PageScreenClick {}
+    }
+    Component {
+        id: pageScreenLCD
+        PageScreenLCD {}
+    }
     function isExistView(pageName) {
         console.log("isExistView:",pageName)
         //        return stackView.currentItem.name===PageName
@@ -839,6 +909,25 @@ Window {
         case "pageReleaseNotes":
             stackView.push(pageReleaseNotes)
             break;
+        case "pageTestFront":
+            stackView.push(pageTestFront)
+            break;
+        case "pageIntelligentDetection":
+            stackView.push(pageIntelligentDetection)
+            break;
+        case "pageScreenTest":
+            stackView.push(pageScreenTest)
+            break;
+        case "pageScreenLine":
+            stackView.push(pageScreenLine)
+            break;
+        case "pageScreenClick":
+            stackView.push(pageScreenClick)
+            break;
+        case "pageScreenLCD":
+            stackView.push(pageScreenLCD)
+            break;
+
         }
 
         console.log("stackView depth:"+stackView.depth)

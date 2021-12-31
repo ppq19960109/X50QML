@@ -50,6 +50,8 @@ Item {
         onRightClick:{
             if(QmlDevState.state.RStoveStatus===1)
             {
+                if(hourPathView.currentIndex==0 && minutePathView.currentIndex==0)
+                    return
                 console.log("PageCloseHeat",hourPathView.model[hourPathView.currentIndex],minutePathView.model[minutePathView.currentIndex])
                 backPrePage()
                 QmlDevState.setState("RStoveTimingState",timingStateEnum.RUN)

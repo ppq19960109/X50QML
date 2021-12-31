@@ -9,7 +9,7 @@
 #include "localclient.h"
 #include "qrcodeen.h"
 #define MAX_HISTORY (40)
-#define MAX_COLLECT (80)
+#define MAX_COLLECT (40)
 
 
 

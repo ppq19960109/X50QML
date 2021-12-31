@@ -79,21 +79,6 @@ Item {
         }
     }
 
-    function enableWifi(enable)
-    {
-        systemSettings.wifiEnable=enable
-        var Data={}
-        Data.WifiEnable = enable
-        setToServer(Data)
-    }
-
-    function scanRWifi()
-    {
-        var Data={}
-        Data.WifiScanR = null
-        getToServer(Data)
-    }
-
     function getCurWifi()
     {
         var Data={}
@@ -101,18 +86,6 @@ Item {
         getToServer(Data)
     }
 
-    function connectWiFi(ssid,psk,encryp)
-    {
-        var Data={}
-
-        wifiConnectInfo.ssid = ssid
-        wifiConnectInfo.psk = psk
-        wifiConnectInfo.encryp = encryp
-
-        Data.WifiConnect=wifiConnectInfo
-        wifiConnecting=true
-        setToServer(Data)
-    }
     function wifi_scan_timer_reset()
     {
         console.log("wifi_scan_timer_reset")
@@ -133,6 +106,7 @@ Item {
             }
             else if(("WifiState"==key))
             {
+                console.log("page wifi WifiState:",value)
                 if(value > 1)
                 {
                     if(value==2||value==3)
@@ -142,7 +116,7 @@ Item {
                     else if(value==4)
                     {
                         dismissWifiInput()
-                        showQrcodeBind("连接成功！")
+//                        showQrcodeBind("连接成功！")
                     }
                     wifi_scan_timer_reset()
                 }
@@ -475,7 +449,7 @@ Item {
                 leftBtnText:qsTr("")
                 rightBtnText:qsTr("")
                 onClose:{
-                    backPrePage()
+                    dismissWifiInput()
                 }
             }
 

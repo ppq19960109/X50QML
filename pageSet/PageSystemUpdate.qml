@@ -43,7 +43,7 @@ Item {
     }
     Component.onCompleted: {
 
-//        showUpdate()
+        //        showUpdate()
     }
     Image {
         anchors.fill: parent
@@ -120,15 +120,15 @@ Item {
                 anchors.left: parent.left
                 anchors.verticalCenter: parent.verticalCenter
             }
-//            PageBusyIndicator{
-//                id:busy
-//                visible: versionChecked
-//                width: 40
-//                height: 40
-//                anchors.right: parent.right
-//                anchors.verticalCenter: parent.verticalCenter
-//                running: visible
-//            }
+            //            PageBusyIndicator{
+            //                id:busy
+            //                visible: versionChecked
+            //                width: 40
+            //                height: 40
+            //                anchors.right: parent.right
+            //                anchors.verticalCenter: parent.verticalCenter
+            //                running: visible
+            //            }
         }
 
         Button{
@@ -149,9 +149,17 @@ Item {
                 anchors.centerIn: parent
             }
             onClicked: {
-                checkStatus.visible=true
-                versionChecked=true
-                otaRquest(0)
+                if(wifiConnected)
+                {
+                    checkStatus.visible=true
+                    versionChecked=true
+                    otaRquest(0)
+                }
+                else
+                {
+                    showLoaderFaultImg("/x50/icon/icon_pop_th.png","未连网，请连接网络后再试")
+                }
+
                 //                showUpdateConfirm()
             }
         }

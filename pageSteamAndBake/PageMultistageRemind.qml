@@ -101,6 +101,7 @@ Item {
                     systemSettings.multistageRemind=false
                 }
                 root.visible=false
+                permitSteamStartStatus(1)
             }
         }
     }

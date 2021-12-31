@@ -51,7 +51,7 @@ Item {
             anchors.leftMargin: 75
 
             workColor:workState===workStateEnum.WORKSTATE_STOP?"#FFF":"#19A582"
-            workMode:workState===workStateEnum.WORKSTATE_STOP?qsTr("左腔烹饪"):QmlDevState.state.MultiMode===1?leftDishName:leftWorkModeFun(QmlDevState.state.LStOvMode)
+            workMode:workState===workStateEnum.WORKSTATE_STOP?qsTr("左腔烹饪"):QmlDevState.state.MultiMode===1?QmlDevState.state.CookbookName:leftWorkModeFun(QmlDevState.state.LStOvMode)
             canvasDiameter:300
             percent:30
             workState:QmlDevState.state.LStOvState
@@ -137,8 +137,21 @@ Item {
             currentIndex: QmlDevState.state.current-1
             anchors.top: leftProgressBar.bottom
             anchors.topMargin: 20
-            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.horizontalCenter: leftProgressBar.horizontalCenter
             interactive: true
+            delegate: Rectangle {
+                color:"transparent"
+                implicitWidth: indicator.implicitWidth+5
+                implicitHeight: 4
+                Rectangle {
+                    id:indicator
+                    implicitWidth: index===leftIndicator.currentIndex?25:10
+                    implicitHeight: 4
+                    anchors.centerIn: parent
+                    radius: implicitHeight/2
+                    color:index===leftIndicator.currentIndex?leftProgressBar.workColor:"#FFF"
+                }
+            }
         }
     }
     Rectangle{

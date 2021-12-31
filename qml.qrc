@@ -106,5 +106,12 @@
         <file>x50/icon/icon_close.png</file>
         <file>x50/icon/icon_close2.png</file>
         <file>x50/wifi/yousuowifi 2.png</file>
+        <file>pageProductionTest/PageTestFront.qml</file>
+        <file>pageProductionTest/PageIntelligentDetection.qml</file>
+        <file>pageProductionTest/PageScreenTest.qml</file>
+        <file>pageProductionTest/PageScreenLine.qml</file>
+        <file>pageProductionTest/PageScreenClick.qml</file>
+        <file>pageProductionTest/PageScreenLCD.qml</file>
+        <file>x50/main/icon_time.png</file>
     </qresource>
 </RCC>

@@ -47,8 +47,8 @@ Item {
                 Layout.alignment: Qt.AlignHCenter|Qt.AlignVCenter
                 background:Rectangle{
                     radius: 10
-                    color:"transparent"
-                    border.color: "#97A3A1"
+                    color:"#596767"
+//                    border.color: "#373A3A"
                 }
                 Text{
                     text:"网络"
@@ -67,8 +67,8 @@ Item {
                 Layout.alignment: Qt.AlignHCenter|Qt.AlignVCenter
                 background:Rectangle{
                     radius: 10
-                    color:"transparent"
-                    border.color: "#97A3A1"
+                    color:"#596767"
+//                    border.color: "#97A3A1"
                 }
                 Text{
                     text:"本机设置"
@@ -87,8 +87,8 @@ Item {
                 Layout.alignment: Qt.AlignHCenter|Qt.AlignVCenter
                 background:Rectangle{
                     radius: 10
-                    color:"transparent"
-                    border.color: "#97A3A1"
+                    color:"#596767"
+//                    border.color: "#97A3A1"
                 }
                 Text{
                     text:"恢复出厂设置"
@@ -107,8 +107,8 @@ Item {
                 Layout.alignment: Qt.AlignHCenter|Qt.AlignVCenter
                 background:Rectangle{
                     radius: 10
-                    color:"transparent"
-                    border.color: "#97A3A1"
+                    color:"#596767"
+//                    border.color: "#97A3A1"
                 }
                 Text{
                     text:"系统更新"
@@ -127,8 +127,8 @@ Item {
                 Layout.alignment: Qt.AlignHCenter|Qt.AlignVCenter
                 background:Rectangle{
                     radius: 10
-                    color:"transparent"
-                    border.color: "#97A3A1"
+                    color:"#596767"
+//                    border.color: "#97A3A1"
                 }
                 Text{
                     text:"关于本机"
@@ -147,8 +147,8 @@ Item {
                 Layout.alignment: Qt.AlignHCenter|Qt.AlignVCenter
                 background:Rectangle{
                     radius: 10
-                    color:"transparent"
-                    border.color: "#97A3A1"
+                    color:"#596767"
+//                    border.color: "#97A3A1"
                 }
                 Text{
                     text:"售后指南"

@@ -16,7 +16,6 @@ Item {
             recipe.visible=true
             recipeImg.source="file:"+root.imgUrl
             dishName.text=root.dishName
-            cookTime.text="烹饪用时："+root.cookTime+"分钟"
             details.text=root.details
 
             cookSteps[0].dishName=root.dishName
@@ -25,6 +24,7 @@ Item {
         {
             noRecipe.visible=true
             listView.model=cookSteps
+            listView.height=cookSteps.length*100
         }
         permitSteamStartStatus(1)
     }
@@ -94,19 +94,11 @@ Item {
             anchors.right: parent.right
             color:"transparent"
 
-            Text{
-                id:cookTime
-                anchors.top:parent.top
-                anchors.left:parent.left
-
-                font.pixelSize: 40
-                color:"#fff"
-            }
             Flickable {
                 id: flick
-                width: parent.width
-                anchors.top:cookTime.bottom
-                anchors.bottom: parent.bottom
+                width: parent.width - 80
+                height: parent.height - 80
+                anchors.verticalCenter: parent.verticalCenter
                 contentWidth: details.width
                 contentHeight: details.height
                 clip: true
@@ -114,11 +106,31 @@ Item {
                     id: details
                     width: flick.width
                     //                    height: flick.height
-                    font.pixelSize: 34
+                    font.pixelSize: 30
+                    lineHeight: 1.2
                     color:"#fff"
                     //                                        clip :true
                     wrapMode: Text.WordWrap
                     //                    elide: Text.ElideRight
+                }
+
+                ScrollBar.vertical: ScrollBar {
+                    parent: flick.parent
+                    anchors.top: flick.top
+                    anchors.left: flick.right
+                    anchors.leftMargin: 40
+                    anchors.bottom: flick.bottom
+                    background:Rectangle{
+                        implicitWidth: 4
+                        color:"#000"
+                        radius: width / 2
+                    }
+                    contentItem: Rectangle {
+                        implicitWidth: 4
+                        implicitHeight: 100
+                        radius: width / 2
+                        color: "#00E6B6"
+                    }
                 }
             }
         }
@@ -148,7 +160,7 @@ Item {
             width: parent.width
 //            anchors.fill: parent
 //            anchors.topMargin: 50
-            height: listView.model.length*100
+//            height: listView.model.length*100
             anchors.centerIn: parent
             interactive: false
             delegate: multiDelegate

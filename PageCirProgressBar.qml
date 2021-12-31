@@ -21,7 +21,7 @@ Item {
     }
 
     Canvas{
-        property int lineWidth:1
+        property int lineWidth:2
         property real r: canvas.width/2-lineWidth
         id: canvas
         width: canvasDiameter

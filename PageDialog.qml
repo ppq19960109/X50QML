@@ -5,6 +5,7 @@ Rectangle {
     property alias hintTopText: hintTop.text
     property alias confirmText: confirmBtnText.text
     property alias checkboxVisible: control.visible
+    property alias checkboxState: control.checked
     property alias hintHeight: hint.height
     signal cancel()
     signal confirm()
@@ -33,15 +34,13 @@ Rectangle {
         anchors.centerIn: parent
         implicitWidth: 600
         implicitHeight: 358
-        color: "transparent"
-         border.color: "#fff"
-//        radius: 16
-        Image {
-//            fillMode:Image.PreserveAspectCrop
-
-            anchors.fill: parent
-            source: "qrc:/x50/main/圆角矩形 3209.png"
-        }
+        color: "#596767"
+//         border.color: "#fff"
+        radius: 16
+//        Image {
+//            anchors.fill: parent
+//            source: "qrc:/x50/main/圆角矩形 3209.png"
+//        }
         Button {
             width:closeImg.width+60
             height:closeImg.height+60

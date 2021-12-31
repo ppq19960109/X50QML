@@ -32,9 +32,25 @@ Item {
         para.dishName=getDishName(list,para.cookPos)
         para.cookSteps=JSON.stringify(list)
         para.cookTime=timePathView.currentIndex+1
+        console.log("para:",JSON.stringify(para))
 
-        showLoaderSteam1()
-        //                startCooking(para,list,0)
+        if(root.device===leftDevice)
+        {
+            if(systemSettings.leftCookDialog==true)
+            {
+                showLoaderSteam1()
+                return
+            }
+        }
+        else
+        {
+            if(systemSettings.rightCookDialog==true)
+            {
+                showLoaderSteam1()
+                return
+            }
+        }
+        startCooking(para,list,0)
     }
 
     Connections { // 将目标对象信号与槽函数进行连接
@@ -90,6 +106,7 @@ Item {
     Component{
         id:component_steam1
         PageDialog{
+            id:steamDialog1
             hintHeight: 358
             hintTopText:"请将食物放入"+(root.device===leftDevice?"左腔":"右腔")+"\n将水箱加满水"
             confirmText:"开始烹饪"
@@ -101,12 +118,24 @@ Item {
             onConfirm:{
                 console.info("component_steam1 onConfirm")
                 showLoaderSteam2()
+                if(steamDialog1.checkboxState)
+                {
+                    if(root.device===leftDevice)
+                    {
+                        systemSettings.leftCookDialog=false
+                    }
+                    else
+                    {
+                        systemSettings.rightCookDialog=false
+                    }
+                }
             }
         }
     }
     Component{
         id:component_steam2
         PageDialog{
+            id:steamDialog2
             hintHeight: 306
             hintTopText:"请将食物放入"+(root.device===leftDevice?"左腔":"右腔")
             confirmText:"开始烹饪"
@@ -119,6 +148,17 @@ Item {
                 console.info("component_steam2 onConfirm")
                 closeLoaderMain()
                 startCooking(para,JSON.parse(para.cookSteps),0)
+                if(steamDialog2.checkboxState)
+                {
+                    if(root.device===leftDevice)
+                    {
+                        systemSettings.leftCookDialog=false
+                    }
+                    else
+                    {
+                        systemSettings.rightCookDialog=false
+                    }
+                }
             }
         }
     }

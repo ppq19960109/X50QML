@@ -7,9 +7,11 @@
 //QmlDevState* QmlDevState::qmlDevState;
 QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
 {
-//    stateTypeMap.insert("APPBind",LINK_VALUE_TYPE_NUM);
+    //    stateTypeMap.insert("APPBind",LINK_VALUE_TYPE_NUM);
     stateTypeMap.insert("SteamStart",LINK_VALUE_TYPE_NULL);
+    stateTypeMap.insert("ProductionTest",LINK_VALUE_TYPE_NULL);
     stateTypeMap.insert("SoftVersion",LINK_VALUE_TYPE_STRING);
+    stateTypeMap.insert("Reset",LINK_VALUE_TYPE_NUM);
     stateTypeMap.insert("ErrorCodeShow",LINK_VALUE_TYPE_NUM);
 
     stateTypeMap.insert("WifiState",LINK_VALUE_TYPE_NUM);
@@ -29,7 +31,10 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
 
     stateTypeMap.insert("ProductCategory",LINK_VALUE_TYPE_STRING);
     stateTypeMap.insert("ProductModel",LINK_VALUE_TYPE_STRING);
+    stateTypeMap.insert("ProductKey",LINK_VALUE_TYPE_STRING);
     stateTypeMap.insert("DeviceName",LINK_VALUE_TYPE_STRING);
+    stateTypeMap.insert("ProductSecret",LINK_VALUE_TYPE_STRING);
+    stateTypeMap.insert("DeviceSecret",LINK_VALUE_TYPE_STRING);
     stateTypeMap.insert("QrCode",LINK_VALUE_TYPE_STRING);
 
     stateTypeMap.insert("AfterSalesPhone",LINK_VALUE_TYPE_STRING);
@@ -58,6 +63,7 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
 
     stateTypeMap.insert("MultiMode",LINK_VALUE_TYPE_NUM);
     stateTypeMap.insert("MultiStageState",LINK_VALUE_TYPE_STRUCT);
+    stateTypeMap.insert("CookbookName",LINK_VALUE_TYPE_STRING);
 
     stateTypeMap.insert("LStoveStatus",LINK_VALUE_TYPE_NUM);
     stateTypeMap.insert("RStoveStatus",LINK_VALUE_TYPE_NUM);
@@ -93,7 +99,7 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     setState("RStOvOrderTimerLeft",0);
 
     setState("cnt",0);
-    setState("current",0);
+    setState("current",1);
 
     setState("HoodSpeed",2);
 
@@ -101,7 +107,6 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     QVariantMap info;
     info.insert("id", 0);
     info.insert("cookType", 0);
-    info.insert("cookTime", 120);
     info.insert("cookPos", 0);
     info.insert("dishName", "清蒸鱼");
     info.insert("imgUrl", "recipes/peitu01.png");
@@ -204,8 +209,9 @@ int QmlDevState::insertHistory(QVariantMap single)
         item.insert("cookSteps", single["cookSteps"].toString());
         item.insert("timestamp", single["timestamp"].toInt());
         item.insert("collect", single["collect"].toInt());
-        item.insert("cookTime", single["cookTime"].toInt());
         item.insert("cookType", single["cookType"].toInt());
+        item.insert("recipeType", 0);
+        item.insert("cookPos", single["cookPos"].toInt());
 
         Data.insert("InsertHistory", item);
         ret=sendJsonToServer("SET",Data);
@@ -215,8 +221,9 @@ int QmlDevState::insertHistory(QVariantMap single)
 int QmlDevState::deleteHistory(int id)
 {
     QJsonObject Data;
-
-    Data.insert("DeleteHistory", id);
+    QJsonArray array;
+    array.append(id);
+    Data.insert("DeleteHistory", array);
     return sendJsonToServer("SET",Data);
 }
 
@@ -270,7 +277,8 @@ int QmlDevState::setCollect(const int index,const int collect)
 
 void QmlDevState::systemReset()
 {
-    system("rm -rf $HOME/.config/Marssenger/*");
+    //system("rm -rf $HOME/.config/Marssenger/*");
+
     QJsonObject root;
     root.insert("Reset",QJsonValue::Null);
     sendJsonToServer(TYPE_SET,root);
@@ -292,7 +300,6 @@ int QmlDevState::coverHistory(const QJsonObject &object, QVariantMap &info)
     QJsonValue collect =object.value("collect");
     QJsonValue timestamp =object.value("timestamp");
     QJsonValue cookType =object.value("cookType");
-    QJsonValue cookTime =object.value("cookTime");
     QJsonValue recipeType =object.value("recipeType");
     QJsonValue cookPos =object.value("cookPos");
 
@@ -305,7 +312,6 @@ int QmlDevState::coverHistory(const QJsonObject &object, QVariantMap &info)
     info.insert("collect",collect.toInt());
     info.insert("timestamp",timestamp.toInt());
     info.insert("cookType",cookType.toInt());
-    info.insert("cookTime",cookTime.toInt());
     info.insert("recipeType",recipeType.toInt());
     info.insert("cookPos",cookPos.toInt());
     return 0;
@@ -467,7 +473,7 @@ void QmlDevState::readData(const QJsonValue &data)
                         coverHistory(obj_array,info);
                         if(key=="CookRecipe")
                         {
-                            recipe[info["recipeType"].toInt()].append(info);
+                            recipe[info["recipeType"].toInt()-1].append(info);
                         }
                         else
                         {
@@ -488,11 +494,16 @@ void QmlDevState::readData(const QJsonValue &data)
                 }
                 else if(key=="DeleteHistory")
                 {
-                    int id=value.toInt();
-                    int index=getHistoryIndex(id);
-                    QVariantMap cur=history[index].toMap();
-                    if(index>=0)
-                        history.removeAt(index);
+                    QJsonArray array=value.toArray();
+                    QVariantMap cur;
+                    for(int i=0;i<array.size();++i)
+                    {
+                        int id=array.at(i).toInt();
+                        int index=getHistoryIndex(id);
+                        cur=history[index].toMap();
+                        if(index>=0)
+                            history.removeAt(index);
+                    }
                     setHistory(cur);
                 }
                 else if(key=="UpdateHistory")

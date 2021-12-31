@@ -207,7 +207,7 @@ Item {
             }
             else if("ProductionTest"==key)
             {
-
+                load_page("pageTestFront")
             }
             else if("LStOvDoorState"==key)
             {
@@ -343,12 +343,20 @@ Item {
             anchors.bottomMargin: 15
             anchors.horizontalCenter: parent.horizontalCenter
             interactive: true
-            //            delegate: Image {
+            delegate: Rectangle {
+                color:"transparent"
+                implicitWidth: indicatorCir.implicitWidth+8
+                implicitHeight: 6
+                Rectangle {
+                    id:indicatorCir
+                    implicitWidth: index===swipeview.currentIndex?8:6
+                    implicitHeight: implicitWidth
+                    anchors.centerIn: parent
+                    radius: implicitWidth/2
+                    color:index===swipeview.currentIndex?"#FFF":"#000"
+                }
+            }
 
-            //                source:index===swipeview.currentIndex
-            //                       ?"images/main_menu/user_active"+index+".png":"images/main_menu/user_normal"+index+".png"
-            //                anchors.verticalCenter:parent.verticalCenter
-            //            }
         }
         Button{
             id:preBtn
