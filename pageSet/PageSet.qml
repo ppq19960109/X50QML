@@ -45,10 +45,8 @@ Item {
                 Layout.preferredWidth: 210
                 Layout.preferredHeight:140
                 Layout.alignment: Qt.AlignHCenter|Qt.AlignVCenter
-                background:Rectangle{
-                    radius: 10
-                    color:"#596767"
-//                    border.color: "#373A3A"
+                background:PageGradient{
+                    anchors.fill: parent
                 }
                 Text{
                     text:"网络"
@@ -65,10 +63,8 @@ Item {
                 Layout.preferredWidth: 210
                 Layout.preferredHeight:140
                 Layout.alignment: Qt.AlignHCenter|Qt.AlignVCenter
-                background:Rectangle{
-                    radius: 10
-                    color:"#596767"
-//                    border.color: "#97A3A1"
+                background:PageGradient{
+                    anchors.fill: parent
                 }
                 Text{
                     text:"本机设置"
@@ -85,10 +81,8 @@ Item {
                 Layout.preferredWidth: 250
                 Layout.preferredHeight:140
                 Layout.alignment: Qt.AlignHCenter|Qt.AlignVCenter
-                background:Rectangle{
-                    radius: 10
-                    color:"#596767"
-//                    border.color: "#97A3A1"
+                background:PageGradient{
+                    anchors.fill: parent
                 }
                 Text{
                     text:"恢复出厂设置"
@@ -105,10 +99,8 @@ Item {
                 Layout.preferredWidth: 210
                 Layout.preferredHeight:140
                 Layout.alignment: Qt.AlignHCenter|Qt.AlignVCenter
-                background:Rectangle{
-                    radius: 10
-                    color:"#596767"
-//                    border.color: "#97A3A1"
+                background:PageGradient{
+                    anchors.fill: parent
                 }
                 Text{
                     text:"系统更新"
@@ -125,10 +117,8 @@ Item {
                 Layout.preferredWidth: 210
                 Layout.preferredHeight:140
                 Layout.alignment: Qt.AlignHCenter|Qt.AlignVCenter
-                background:Rectangle{
-                    radius: 10
-                    color:"#596767"
-//                    border.color: "#97A3A1"
+                background:PageGradient{
+                    anchors.fill: parent
                 }
                 Text{
                     text:"关于本机"
@@ -145,10 +135,8 @@ Item {
                 Layout.preferredWidth: 250
                 Layout.preferredHeight:140
                 Layout.alignment: Qt.AlignHCenter|Qt.AlignVCenter
-                background:Rectangle{
-                    radius: 10
-                    color:"#596767"
-//                    border.color: "#97A3A1"
+                background:PageGradient{
+                    anchors.fill: parent
                 }
                 Text{
                     text:"售后指南"

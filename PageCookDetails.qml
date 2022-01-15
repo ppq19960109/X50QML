@@ -5,6 +5,16 @@ Item {
     property var root
     property var cookSteps
 
+    function getCookTime(cookSteps)
+    {
+        var cookTime=0;
+        for(var i = 0; i < cookSteps.length; i++)
+        {
+            cookTime+=cookSteps[i].time
+        }
+        return cookTime;
+    }
+
     Component.onCompleted: {
         console.log("state",state,typeof state)
         root=JSON.parse(state)
@@ -15,8 +25,9 @@ Item {
         {
             recipe.visible=true
             recipeImg.source="file:"+root.imgUrl
-            dishName.text=root.dishName
+            dishName.text="菜名："+root.dishName
             details.text=root.details
+            cookTime.text="烹饪用时："+getCookTime(cookSteps)+"分钟"
 
             cookSteps[0].dishName=root.dishName
         }
@@ -65,40 +76,58 @@ Item {
 
         Rectangle{
             id:leftContent
-            width:300
+            width:260
             height:parent.height
             color:"transparent"
             Rectangle{
-                width:220
-                height:330
+                width:260
+                height:370
                 anchors.centerIn: parent
+
                 color:"transparent"
                 Image{
                     id:recipeImg
                     anchors.fill: parent
                 }
-                Text{
-                    id:dishName
-                    anchors.bottom:parent.bottom
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    font.pixelSize: 40
-                    color:"#fff"
-                }
+
             }
         }
 
         Rectangle{
 
-            height:parent.height
+//            height:parent.height
+            anchors.top:parent.top
+            anchors.topMargin: 30
+            anchors.bottom:parent.bottom
+            anchors.bottomMargin: 20
             anchors.left: leftContent.right
-            anchors.right: parent.right
-            color:"transparent"
 
+            anchors.right: parent.right
+            anchors.rightMargin: 40
+            color:"transparent"
+            Text{
+                id:dishName
+                anchors.top:parent.top
+                anchors.left: parent.left
+                font.pixelSize: 40
+                color:"#fff"
+            }
+            Text{
+                id:cookTime
+                anchors.top:dishName.bottom
+                anchors.topMargin: 10
+                anchors.left: parent.left
+                font.pixelSize: 40
+                color:"#fff"
+            }
             Flickable {
                 id: flick
-                width: parent.width - 80
-                height: parent.height - 80
-                anchors.verticalCenter: parent.verticalCenter
+                width: parent.width
+//                height: parent.height
+                anchors.top: cookTime.bottom
+                anchors.topMargin: 20
+                anchors.bottom: parent.bottom
+
                 contentWidth: details.width
                 contentHeight: details.height
                 clip: true
@@ -107,7 +136,7 @@ Item {
                     width: flick.width
                     //                    height: flick.height
                     font.pixelSize: 30
-                    lineHeight: 1.2
+                    lineHeight: 1.3
                     color:"#fff"
                     //                                        clip :true
                     wrapMode: Text.WordWrap
@@ -118,7 +147,7 @@ Item {
                     parent: flick.parent
                     anchors.top: flick.top
                     anchors.left: flick.right
-                    anchors.leftMargin: 40
+                    anchors.leftMargin: 20
                     anchors.bottom: flick.bottom
                     background:Rectangle{
                         implicitWidth: 4

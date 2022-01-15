@@ -10,7 +10,8 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     //    stateTypeMap.insert("APPBind",LINK_VALUE_TYPE_NUM);
     stateTypeMap.insert("SteamStart",LINK_VALUE_TYPE_NULL);
     stateTypeMap.insert("ProductionTest",LINK_VALUE_TYPE_NULL);
-    stateTypeMap.insert("SoftVersion",LINK_VALUE_TYPE_STRING);
+    stateTypeMap.insert("ElcSWVersion",LINK_VALUE_TYPE_STRING);
+    stateTypeMap.insert("ComSWVersion",LINK_VALUE_TYPE_STRING);
     stateTypeMap.insert("Reset",LINK_VALUE_TYPE_NUM);
     stateTypeMap.insert("ErrorCodeShow",LINK_VALUE_TYPE_NUM);
 
@@ -36,6 +37,7 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     stateTypeMap.insert("ProductSecret",LINK_VALUE_TYPE_STRING);
     stateTypeMap.insert("DeviceSecret",LINK_VALUE_TYPE_STRING);
     stateTypeMap.insert("QrCode",LINK_VALUE_TYPE_STRING);
+    stateTypeMap.insert("UpdateLog",LINK_VALUE_TYPE_STRING);
 
     stateTypeMap.insert("AfterSalesPhone",LINK_VALUE_TYPE_STRING);
     stateTypeMap.insert("AfterSalesQrCode",LINK_VALUE_TYPE_STRING);
@@ -102,14 +104,14 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     setState("current",1);
 
     setState("HoodSpeed",2);
-
+    setState("UpdateLog","1、新增：产品详情页视频展示功能；\n2、新增：网站前台版权标识样式切换功能\n3、优化：会员中心社会化登陆功能，用户可通过扫码关注设定的公众号登录；\n4、优化：安装商城模块后，可在网站后台内容管理中直接添加和编辑商品；\n5、优化：用户购买版权标识修改许可后，后台版权");
 
     QVariantMap info;
     info.insert("id", 0);
     info.insert("cookType", 0);
     info.insert("cookPos", 0);
     info.insert("dishName", "清蒸鱼");
-    info.insert("imgUrl", "recipes/peitu01.png");
+    info.insert("imgUrl", "recipes/Baking/满头(2).png");
     info.insert("cookSteps", "[{\"device\":0,\"mode\":35,\"temp\":100,\"time\":90}]");
     info.insert("details", "食材：\n鸡蛋2个，蛤蜊50g，盐2g，油3滴葱花30g\n步骤：\n1、鱼片加入适量鸡蛋，料酒、升降、盐，醋、糖，搅拌均匀后加一点淀粉（淀粉加水）增加粘度\n2、鱼片加入适量鸡蛋，料酒、升降、盐，醋、糖，搅拌均匀后加一点淀粉（淀粉加水）增加粘度\n3、鱼片加入适量鸡蛋，料酒、升降、盐，醋、糖，搅拌均匀后加一点淀粉（淀粉加水）增加粘度");
     info.insert("collect", 0);
@@ -117,7 +119,7 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
 
     recipe[0].append(info);
     info["cookType"]=1;
-    info["dishName"]="烤鱼";
+    info["dishName"]="烤鱼富贵黄金糕";
     recipe[0].append(info);
     info["cookType"]=2;
     info["dishName"]="红烧鱼";

@@ -19,7 +19,7 @@ Rectangle {
 
     Component.onCompleted: {
         scanWifi()
-        if(QmlDevState.state.SoftVersion==null)
+        if(QmlDevState.state.ComSWVersion==null)
         {
             version.color="red"
             versionText.text="通讯异常"
@@ -176,7 +176,7 @@ Rectangle {
 
                 Text{
                     id:versionText
-                    text:"电源板软件版本号:"+QmlDevState.state.SoftVersion+"\n屏幕模组软件版本号:"+uiVersion
+                    text:"电控板软件版本号:"+QmlDevState.state.ElcSWVersion+"\n通讯板软件版本号:"+QmlDevState.state.ComSWVersion+"\n屏幕模组软件版本号:"+uiVersion
                     color:"#FFF"
                     font.pixelSize: 30
                     anchors.centerIn: parent

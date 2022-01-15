@@ -26,10 +26,9 @@ Rectangle {
         implicitHeight: 292
         color: "#596767"
         radius: 16
-//        Image {
-//            anchors.fill: parent
-//            source: "qrc:/x50/main/圆角矩形 3209.png"
-//        }
+        PageDialogGradient{
+            anchors.fill: parent
+        }
         Button {
             id:closeBtn
             visible: true

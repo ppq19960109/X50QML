@@ -84,11 +84,16 @@ int LocalClient::sendMessage(QByteArray& data)
 
 int LocalClient::uds_json_parse(const char *value,const int value_len)
 {
-
-    QJsonDocument doucment = QJsonDocument::fromJson(QByteArray(value,value_len));
+    QJsonParseError error;
+    QJsonDocument doucment = QJsonDocument::fromJson(QByteArray(value,value_len),&error);
+    if(error.error!=QJsonParseError::NoError)
+    {
+        qDebug() << "QJsonDocument fromJson:"<< error.error<< ","<<error.errorString();
+        return -1;
+    }
     if (!doucment.isObject())
     {
-        qDebug("JSON Parse Error");
+        qDebug() << "JSON Parse Error:";
         return -1;
     }
     QJsonObject object = doucment.object();
@@ -152,6 +157,7 @@ int LocalClient::uds_recv(const char *byte,const int len)
             }
             verify = data[6 + msg_len +1];
             printf("uds_recv msg_len:%d \r\n", msg_len);
+            //            qDebug() << QByteArray(&byte[i + 6 +1],msg_len) << endl;
             if (msg_len > 0)
             {
                 ret = uds_json_parse(&byte[i + 6 +1], msg_len);

@@ -37,10 +37,9 @@ Rectangle {
         color: "#596767"
 //         border.color: "#fff"
         radius: 16
-//        Image {
-//            anchors.fill: parent
-//            source: "qrc:/x50/main/圆角矩形 3209.png"
-//        }
+        PageDialogGradient{
+            anchors.fill: parent
+        }
         Button {
             width:closeImg.width+60
             height:closeImg.height+60

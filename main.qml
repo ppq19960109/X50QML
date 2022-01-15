@@ -16,8 +16,6 @@ Window {
     property int rightDevice:1
     property int allDevice:2
 
-    property string leftDishName:""
-
     property var leftWorkMode: ["未设定", "经典蒸", "快速蒸", "热风烧烤", "上下加热", "立体热风", "蒸汽烤", "空气炸", "保温烘干"]
     property var leftWorkModeNumber:[0,1,2,35,36,38,40,42,72]
     property string rightWorkMode:"便捷蒸"
@@ -110,7 +108,7 @@ Window {
             return
         }
         systemSettings.wifiPasswdArray=wifiPasswdArray
-        console.log("deleteWifiInfo wifiPasswd:")
+        //        console.log("deleteWifiInfo wifiPasswd:")
         //                for( i = 0; i < systemSettings.wifiPasswdArray.length; i++)
         //                {
         //                    console.log("ssid:",systemSettings.wifiPasswdArray[i].ssid)
@@ -383,6 +381,22 @@ Window {
         console.info("getToServer:",json)
         QmlDevState.sendToServer(json)
     }
+    function getAllToServer()
+    {
+        var root={}
+        root.Type="GETALL"
+        root.Data=null
+        var json=JSON.stringify(root)
+        console.info("getAllToServer:",json)
+        QmlDevState.sendToServer(json)
+    }
+    function setBuzControl(operation)
+    {
+        var Data={}
+        Data.BuzControl=operation
+
+        setToServer(Data)
+    }
     function setCookOperation(device,operation)
     {
         var Data={}
@@ -531,7 +545,9 @@ Window {
             hintCenterText:""
             hintBottomText:""
             hintHeight:292
+
             onCancel:{
+                setBuzControl(0)
                 closeLoaderError()
             }
         }
@@ -643,9 +659,9 @@ Window {
         //                    console.warn("Window onReleased................................")
         //                    mouse.accepted = false
         //                }
-//                        onPositionChanged:{
-//                        console.warn("Window onPositionChanged................................")
-//                        }
+        //                        onPositionChanged:{
+        //                        console.warn("Window onPositionChanged................................")
+        //                        }
     }
     Loader{
         //加载弹窗组件
@@ -720,6 +736,10 @@ Window {
 
             }
         }
+    }
+    Component {
+        id: pageGradient
+        PageGradient {}
     }
     Component {
         id: pageHome

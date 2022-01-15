@@ -113,5 +113,8 @@
         <file>pageProductionTest/PageScreenClick.qml</file>
         <file>pageProductionTest/PageScreenLCD.qml</file>
         <file>x50/main/icon_time.png</file>
+        <file>x50/main/bj_mb.png</file>
+        <file>PageGradient.qml</file>
+        <file>PageDialogGradient.qml</file>
     </qresource>
 </RCC>

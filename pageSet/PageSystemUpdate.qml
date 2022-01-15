@@ -88,7 +88,7 @@ Item {
             }
             Text{
                 id:curVer
-                text:"当前版本 "+QmlDevState.state.SoftVersion
+                text:"当前版本 "+QmlDevState.state.ComSWVersion
                 color:"#fff"
                 font.pixelSize: 40
                 anchors.centerIn: parent

@@ -26,10 +26,9 @@ Rectangle {
         implicitHeight: 360
         color: "#596767"
         radius: 16
-//        Image {
-//            anchors.fill: parent
-//            source: "qrc:/x50/main/圆角矩形 3209.png"
-//        }
+        PageGradient{
+            anchors.fill: parent
+        }
         Button {
             width:closeImg.width+60
             height:closeImg.height+60

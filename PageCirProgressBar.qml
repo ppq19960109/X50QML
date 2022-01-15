@@ -22,7 +22,7 @@ Item {
 
     Canvas{
         property int lineWidth:2
-        property real r: canvas.width/2-lineWidth
+        property real r: canvas.width/2//-lineWidth
         id: canvas
         width: canvasDiameter
         height: width
@@ -82,9 +82,9 @@ Item {
             id:state
             color:"white"
             visible: workState !== workStateEnum.WORKSTATE_STOP
-            font.pixelSize:(workState === workStateEnum.WORKSTATE_PREHEAT ||workState === workStateEnum.WORKSTATE_FINISH) ? 50:30
+            font.pixelSize:(workState === workStateEnum.WORKSTATE_PREHEAT ||workState === workStateEnum.WORKSTATE_FINISH) ? 50:32
             anchors.top:parent.top
-            anchors.topMargin: (workState === workStateEnum.WORKSTATE_PREHEAT ||workState === workStateEnum.WORKSTATE_FINISH) ? 100:40
+            anchors.topMargin: (workState === workStateEnum.WORKSTATE_PREHEAT ||workState === workStateEnum.WORKSTATE_FINISH) ? 100:45
             anchors.horizontalCenter: parent.horizontalCenter
 //            horizontalAlignment :Text.AlignHCenter
 //            verticalAlignment :Text.AlignHCenter
@@ -95,8 +95,9 @@ Item {
             visible: !(workState === workStateEnum.WORKSTATE_PREHEAT ||workState === workStateEnum.WORKSTATE_FINISH||workState === workStateEnum.WORKSTATE_STOP)
             color:workColor
             font.pixelSize: 50
+            font.bold: true
             anchors.top:parent.top
-            anchors.topMargin:80
+            anchors.topMargin:100
             anchors.horizontalCenter: parent.horizontalCenter
 //            horizontalAlignment :Text.AlignHCenter
 //            verticalAlignment :Text.AlignHCenter
@@ -146,6 +147,7 @@ Item {
         }
         Text{
             id:mode
+            width:220
             visible: workState !== workStateEnum.WORKSTATE_FINISH
             color:"white"
             font.pixelSize: workState === workStateEnum.WORKSTATE_STOP?35:30
@@ -154,7 +156,7 @@ Item {
             anchors.horizontalCenter: parent.horizontalCenter
             horizontalAlignment :Text.AlignHCenter
             verticalAlignment :Text.AlignHCenter
-            elide : Text.ElideMiddle
+            elide : Text.ElideRight
         }
         Text{
             id:temp

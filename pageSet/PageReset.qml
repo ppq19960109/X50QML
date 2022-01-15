@@ -8,6 +8,27 @@ Item {
 
 
     }
+    Connections { // 将目标对象信号与槽函数进行连接
+        target: QmlDevState
+
+        onStateChanged: { // 处理目标对象信号的槽函数
+            console.log("PageReset:",key)
+
+            if("Reset"==key)
+            {
+
+                if(value==0)
+                {
+
+                }
+                else
+                {
+
+                }
+                backTopPage()
+            }
+        }
+    }
     Image {
         anchors.fill: parent
         source: "/x50/main/背景.png"
@@ -72,19 +93,19 @@ Item {
     Component{
         id:component_resetConfirm
         PageDialogConfirm{
-           hintTopText:"操作确认"
-           hintBottomText:"该操作将会清除您的个人数据\n包括烹饪记录、设备预设等\n请确认是否重置？"
-           confirmText:"重置设备"
-           hintHeight:410
-           onCancel: {
-               closeLoaderMain()
-           }
-           onConfirm: {
-               closeLoaderMain()
-               console.log("page systemReset")
-               systemReset()
-               backTopPage()
-           }
+            hintTopText:"操作确认"
+            hintBottomText:"该操作将会清除您的个人数据\n包括烹饪记录、设备预设等\n请确认是否重置？"
+            confirmText:"重置设备"
+            hintHeight:410
+            onCancel: {
+                closeLoaderMain()
+            }
+            onConfirm: {
+                closeLoaderMain()
+                console.log("page systemReset")
+                systemReset()
+
+            }
         }
     }
     function showResetConfirm(){

@@ -43,10 +43,8 @@ Item {
                 Layout.preferredWidth: 300
                 Layout.preferredHeight:160
                 Layout.alignment: Qt.AlignHCenter|Qt.AlignVCenter
-                background:Rectangle{
-                    radius: 10
-                    color:"transparent"
-                    border.color: "#97A3A1"
+                background:PageGradient{
+                    anchors.fill: parent
                 }
                 Text{
                     text:"右腔速蒸"
@@ -64,10 +62,9 @@ Item {
                 Layout.preferredWidth: 300
                 Layout.preferredHeight:160
                 Layout.alignment: Qt.AlignHCenter|Qt.AlignVCenter
-                background:Rectangle{
-                    radius: 10
-                    color:"transparent"
-                    border.color: "#97A3A1"
+
+                background:PageGradient{
+                    anchors.fill: parent
                 }
                 Text{
                     text:"烹饪历史"

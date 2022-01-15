@@ -33,44 +33,55 @@ Item {
         anchors.top: parent.top
         color:"transparent"
 
-        GridLayout{
-            width:parent.width-160
-            height: parent.height-60
-            anchors.centerIn: parent
-            rows: 2
-            columns: 2
-            rowSpacing: 20
-            columnSpacing: 40
+        Button{
+            width: 300
+            height:340
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.left: parent.left
+            anchors.leftMargin: 80
 
-            Button{
-                Layout.preferredWidth: 300
-                Layout.preferredHeight:160
-//                Layout.alignment: Qt.AlignHCenter|Qt.AlignVCenter
-                background:Rectangle{
-                    radius: 10
-                    color:"transparent"
-                    border.color: "#97A3A1"
-                }
-                Text{
-                    text:"左腔烹饪"
-                    color:"#FFF"
-                    font.pixelSize: 35
-                    anchors.centerIn: parent
-                }
-
-                onClicked: {
-                    closeLoaderMain()
-                    load_page("pageSteamBakeBase",JSON.stringify({"device":leftDevice}))
-                }
+            background:PageGradient{
+                anchors.fill: parent
             }
+            Text{
+                color:"#FFF"
+                text:qsTr("左腔蒸烤")
+                font.pixelSize:35
+                anchors.top: parent.top
+                anchors.topMargin: 30
+                anchors.horizontalCenter: parent.horizontalCenter
+            }
+
+            Image {
+                anchors.bottom: parent.bottom
+                anchors.bottomMargin: 50
+                anchors.horizontalCenter: parent.horizontalCenter
+                source: "qrc:/x50/main/烤鸡.png"
+            }
+            onClicked: {
+                closeLoaderMain()
+                load_page("pageSteamBakeBase",JSON.stringify({"device":leftDevice}))
+            }
+        }
+
+        GridLayout{
+            width:300
+            height: 340
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.right: parent.right
+            anchors.rightMargin: 80
+            rows: 3
+            columns: 1
+            rowSpacing: 0
+            columnSpacing: 0
+
             Button{
                 Layout.preferredWidth: 300
-                Layout.preferredHeight:160
+                Layout.preferredHeight:100
+                Layout.maximumHeight:100
                 Layout.alignment: Qt.AlignHCenter|Qt.AlignVCenter
-                background:Rectangle{
-                    radius: 10
-                    color:"transparent"
-                    border.color: "#97A3A1"
+                background:PageGradient{
+                    anchors.fill: parent
                 }
                 Text{
                     text:"智慧菜谱"
@@ -86,12 +97,10 @@ Item {
             }
             Button{
                 Layout.preferredWidth: 300
-                Layout.preferredHeight:160
+                Layout.preferredHeight:100
                 Layout.alignment: Qt.AlignHCenter|Qt.AlignVCenter
-                background:Rectangle{
-                    radius: 10
-                    color:"transparent"
-                    border.color: "#97A3A1"
+                background:PageGradient{
+                    anchors.fill: parent
                 }
                 Text{
                     text:"烹饪历史"
@@ -107,12 +116,10 @@ Item {
             }
             Button{
                 Layout.preferredWidth: 300
-                Layout.preferredHeight:160
+                Layout.preferredHeight:100
                 Layout.alignment: Qt.AlignHCenter|Qt.AlignVCenter
-                background:Rectangle{
-                    radius: 10
-                    color:"transparent"
-                    border.color: "#97A3A1"
+                background:PageGradient{
+                    anchors.fill: parent
                 }
                 Text{
                     text:"多段烹饪"

@@ -27,7 +27,7 @@ Item {
         for(var i = 0; i < historys.length; ++i) {
             if(pos ===allDevice || historys[i].cookPos===pos)
             {
-                console.log("getHistory recipe",JSON.stringify(historys[i]))
+                console.log("getHistory ",JSON.stringify(historys[i]))
                 historyModel.push(historys[i])
             }
         }
