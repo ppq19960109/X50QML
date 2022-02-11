@@ -4,7 +4,7 @@ import "pageSteamAndBake"
 Item {
     property var root
     property var cookSteps
-
+    property int cookPos:0
     function getCookTime(cookSteps)
     {
         var cookTime=0;
@@ -36,6 +36,7 @@ Item {
             noRecipe.visible=true
             listView.model=cookSteps
             listView.height=cookSteps.length*100
+            cookPos=root.cookPos
         }
         permitSteamStartStatus(1)
     }
@@ -53,14 +54,14 @@ Item {
         rightBtnText:qsTr("预约")
         onClose:{
             permitSteamStartStatus(0)
-             backPrePage()
+            backPrePage()
         }
 
         onLeftClick:{
-           startCooking(root,cookSteps,0)
+            startCooking(root,cookSteps,0)
         }
         onRightClick:{
-             load_page("pageSteamBakeReserve",JSON.stringify(root))
+            load_page("pageSteamBakeReserve",JSON.stringify(root))
         }
     }
 
@@ -95,7 +96,7 @@ Item {
 
         Rectangle{
 
-//            height:parent.height
+            //            height:parent.height
             anchors.top:parent.top
             anchors.topMargin: 30
             anchors.bottom:parent.bottom
@@ -123,7 +124,7 @@ Item {
             Flickable {
                 id: flick
                 width: parent.width
-//                height: parent.height
+                //                height: parent.height
                 anchors.top: cookTime.bottom
                 anchors.topMargin: 20
                 anchors.bottom: parent.bottom
@@ -177,23 +178,23 @@ Item {
         Component {
             id: multiDelegate
             PageMultistageDelegate {
-                nameText:leftWorkModeFun(modelData.mode)+"-"+modelData.temp+"℃"+"-"+modelData.time+"分钟"
-//                modeIndex:modelData.mode
-//                tempIndex:modelData.temp+"℃"
-//                timeIndex:modelData.time+"分钟"
+                nameText:(cookPos>0?rightWorkMode:leftWorkModeFun(modelData.mode))+"-"+modelData.temp+"℃"+"-"+modelData.time+"分钟"
+                //                modeIndex:modelData.mode
+                //                tempIndex:modelData.temp+"℃"
+                //                timeIndex:modelData.time+"分钟"
                 closeVisible:false
             }
         }
         ListView {
             id: listView
             width: parent.width
-//            anchors.fill: parent
-//            anchors.topMargin: 50
-//            height: listView.model.length*100
+            //            anchors.fill: parent
+            //            anchors.topMargin: 50
+            //            height: listView.model.length*100
             anchors.centerIn: parent
             interactive: false
             delegate: multiDelegate
-//            model:
+            //            model:
 
             focus: true
         }

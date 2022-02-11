@@ -173,7 +173,7 @@ Item {
             leftBtnText:""
             rightBtnText:"确定"
             modePathViewIndex:listClickIndex >= listView.count?undefined:leftWorkModeNumberFun(listView.model.get(listClickIndex).mode)-1
-            tempPathViewIndex:listClickIndex >= listView.count?undefined:listView.model.get(listClickIndex).temp-40
+            tempPathViewIndex:listClickIndex >= listView.count?undefined:listView.model.get(listClickIndex).temp-leftModel[modePathViewIndex].minTemp
             timePathViewIndex:listClickIndex >= listView.count?undefined:listView.model.get(listClickIndex).time-1
         }
     }

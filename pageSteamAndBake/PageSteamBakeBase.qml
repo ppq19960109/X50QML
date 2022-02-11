@@ -23,15 +23,14 @@ Item {
         var steps={}
         steps.device=root.device
         steps.mode=leftWorkModeNumber[modePathView.currentIndex+1]
-        steps.temp=tempPathView.currentIndex+40
-        steps.time=timePathView.currentIndex+1
+        steps.temp=parseInt(tempPathView.model[tempPathView.currentIndex])
+        steps.time=parseInt(timePathView.model[timePathView.currentIndex])
         list.push(steps)
 
         para =getDefHistory()
         para.cookPos=root.device
         para.dishName=getDishName(list,para.cookPos)
         para.cookSteps=JSON.stringify(list)
-        para.cookTime=timePathView.currentIndex+1
         console.log("para:",JSON.stringify(para))
 
         if(root.device===leftDevice)
@@ -64,14 +63,11 @@ Item {
         }
     }
     Component.onCompleted: {
+        console.log("PageSteamBakeBase onCompleted")
         var i;
-        var tempArray = new Array
-        for(i=40; i< 230; ++i) {
-            tempArray.push(i+"℃")
-        }
-        tempPathView.model=tempArray
+
         var timeArray = new Array
-        for(i=1; i< 300; ++i) {
+        for(i=1; i< 180; ++i) {
             timeArray.push(i+"分钟")
         }
         timePathView.model=timeArray
@@ -91,6 +87,7 @@ Item {
                 topBar.name="右腔速蒸"
                 modeListModel.append(rightModel)
             }
+            permitSteamStartStatus(1)
         }
         else
         {
@@ -101,7 +98,7 @@ Item {
                 }
             }
         }
-        permitSteamStartStatus(1)
+
     }
     Component{
         id:component_steam1
@@ -182,13 +179,14 @@ Item {
         leftBtnText:qsTr("启动")
         rightBtnText:qsTr("预约")
         onClose:{
-            permitSteamStartStatus(0)
+
             if(multiMode>0)
             {
                 dismissTanchang();
             }
             else
             {
+                permitSteamStartStatus(0)
                 backPrePage()
             }
         }
@@ -201,8 +199,8 @@ Item {
             {
                 var param = {};
                 param.mode=leftWorkModeNumber[modePathView.currentIndex+1]
-                param.temp=tempPathView.currentIndex+40
-                param.time=timePathView.currentIndex+1
+                param.temp=parseInt(tempPathView.model[tempPathView.currentIndex])
+                param.time=parseInt(timePathView.model[timePathView.currentIndex])
                 showListData(param);
                 dismissTanchang();
             }
@@ -211,15 +209,14 @@ Item {
                 var list = []
                 var steps={}
                 steps.mode=leftWorkModeNumber[modePathView.currentIndex+1]
-                steps.temp=tempPathView.currentIndex+40
-                steps.time=timePathView.currentIndex+1
+                steps.temp=parseInt(tempPathView.model[tempPathView.currentIndex])
+                steps.time=parseInt(timePathView.model[timePathView.currentIndex])
                 list.push(steps)
 
                 var para =getDefHistory()
                 para.cookPos=root.device
                 para.dishName=getDishName(list,para.cookPos)
                 para.cookSteps=JSON.stringify(list)
-                para.cookTime=timePathView.currentIndex+1
 
                 load_page("pageSteamBakeReserve",JSON.stringify(para))
             }
@@ -267,18 +264,52 @@ Item {
                 currentIndex:0
                 onValueChanged: {
                     console.log(index,valueName)
-                    console.log("model value:",model.get(index).modelData)
-                    tempPathView.currentIndex=model.get(index).temp-40;
+                    console.log("model onValueChanged:",model.get(index).modelData)
+                    var minTemp=model.get(index).minTemp
+                    var maxTemp=model.get(index).maxTemp
+                    var tempArray=[]
+                    for(var i=minTemp; i<= maxTemp; ++i) {
+                        tempArray.push(i+"℃")
+                    }
+                    tempPathView.model=tempArray
+                    tempPathView.currentIndex=model.get(index).temp-model.get(index).minTemp;
                     timePathView.currentIndex=model.get(index).time-1;
+
                 }
                 Component.onCompleted:{
-                    if(tempPathViewIndex===undefined)
+                    console.log("modePathView",modePathView.currentIndex,modePathViewIndex)
+                    if(modePathViewIndex===undefined)
                     {
 
                     }
                     else
                     {
                         modePathView.currentIndex=modePathViewIndex
+                    }
+                    var minTemp=model.get(modePathView.currentIndex).minTemp
+                    var maxTemp=model.get(modePathView.currentIndex).maxTemp
+                    var tempArray=[]
+                    for(var i=minTemp; i<= maxTemp; ++i) {
+                        tempArray.push(i+"℃")
+                    }
+                    tempPathView.model=tempArray
+
+                    if(tempPathViewIndex===undefined)
+                    {
+                        tempPathView.currentIndex=modePathView.model.get(modePathView.currentIndex).temp-modePathView.model.get(modePathView.currentIndex).minTemp;
+                    }
+                    else
+                    {
+                        tempPathView.currentIndex=tempPathViewIndex
+                    }
+
+                    if(timePathViewIndex===undefined)
+                    {
+                        timePathView.currentIndex=modePathView.model.get(modePathView.currentIndex).time-1;
+                    }
+                    else
+                    {
+                        timePathView.currentIndex=timePathViewIndex
                     }
                 }
             }
@@ -289,15 +320,7 @@ Item {
                 delegateIndex:0
                 Component.onCompleted:{
                     console.log("tempPathView",tempPathView.currentIndex,tempPathViewIndex)
-                    if(tempPathViewIndex===undefined)
-                    {
-                        //                            tempPathView.positionViewAtIndex(1, PathView.End)
-                        tempPathView.currentIndex=modePathView.model.get(modePathView.currentIndex).temp-40;
-                    }
-                    else
-                    {
-                        tempPathView.currentIndex=tempPathViewIndex
-                    }
+
                 }
             }
             DataPathView {
@@ -306,15 +329,7 @@ Item {
                 height:parent.height
                 delegateIndex:0
                 Component.onCompleted:{
-                    if(timePathViewIndex===undefined)
-                    {
-                        timePathView.currentIndex=modePathView.model.get(modePathView.currentIndex).time-1;
-                        console.log("timePathView",timePathView.currentIndex)
-                    }
-                    else
-                    {
-                        timePathView.currentIndex=timePathViewIndex
-                    }
+                    console.log("timePathView",timePathView.currentIndex,timePathViewIndex)
                 }
             }
         }

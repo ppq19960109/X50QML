@@ -111,7 +111,7 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     info.insert("cookType", 0);
     info.insert("cookPos", 0);
     info.insert("dishName", "清蒸鱼");
-    info.insert("imgUrl", "recipes/Baking/满头(2).png");
+    info.insert("imgUrl", "recipes/Vegetables/蒜蓉粉丝娃娃菜.png");
     info.insert("cookSteps", "[{\"device\":0,\"mode\":35,\"temp\":100,\"time\":90}]");
     info.insert("details", "食材：\n鸡蛋2个，蛤蜊50g，盐2g，油3滴葱花30g\n步骤：\n1、鱼片加入适量鸡蛋，料酒、升降、盐，醋、糖，搅拌均匀后加一点淀粉（淀粉加水）增加粘度\n2、鱼片加入适量鸡蛋，料酒、升降、盐，醋、糖，搅拌均匀后加一点淀粉（淀粉加水）增加粘度\n3、鱼片加入适量鸡蛋，料酒、升降、盐，醋、糖，搅拌均匀后加一点淀粉（淀粉加水）增加粘度");
     info.insert("collect", 0);
@@ -119,23 +119,23 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
 
     recipe[0].append(info);
     info["cookType"]=1;
-    info["dishName"]="烤鱼富贵黄金糕";
+    info["dishName"]="桂花蜂蜜烤南瓜";
     recipe[0].append(info);
     info["cookType"]=2;
-    info["dishName"]="红烧鱼";
+    info["dishName"]="腊肉蒸芋艿";
     recipe[0].append(info);
     info["cookType"]=1;
 
-    info["dishName"]="烤面包";
+    info["dishName"]="蒜香茄子";
     recipe[0].append(info);
 
     info["cookType"]=0;
-    info["dishName"]="烤面包0";
+    info["dishName"]="蒜蓉粉丝娃娃菜";
     recipe[1].append(info);
 
     info.insert("imgUrl", "");
     history.append(info);
-    info["dishName"]="烤鱼";
+    info["dishName"]="烤豆腐";
     history.append(info);
 #endif
 }
@@ -286,9 +286,9 @@ void QmlDevState::systemReset()
     sendJsonToServer(TYPE_SET,root);
 }
 
-void QmlDevState::setHistory(const QVariantMap &history)
+void QmlDevState::setHistory(const QString& action,const QVariantMap &history)
 {
-    emit historyChanged(history);
+    emit historyChanged(action,history);
 }
 
 int QmlDevState::coverHistory(const QJsonObject &object, QVariantMap &info)
@@ -492,7 +492,7 @@ void QmlDevState::readData(const QJsonValue &data)
                     coverHistory(object_struct,info);
                     history.append(info);
                     //                    std::sort(history.begin(), history.end(), compareId);
-                    setHistory(info);
+                    setHistory(key,info);
                 }
                 else if(key=="DeleteHistory")
                 {
@@ -504,9 +504,12 @@ void QmlDevState::readData(const QJsonValue &data)
                         int index=getHistoryIndex(id);
                         cur=history[index].toMap();
                         if(index>=0)
+                        {
                             history.removeAt(index);
+                            break;
+                        }
                     }
-                    setHistory(cur);
+                    setHistory(key,cur);
                 }
                 else if(key=="UpdateHistory")
                 {
@@ -534,7 +537,7 @@ void QmlDevState::readData(const QJsonValue &data)
                     history[index]=cur;
 
                     //                    std::sort(history.begin(), history.end(), compareId);
-                    setHistory(cur);
+                    setHistory(key,cur);
                 }
             }
             else if(LINK_VALUE_TYPE_NULL==value_type)

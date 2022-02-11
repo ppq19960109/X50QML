@@ -51,7 +51,7 @@ public:
     Q_INVOKABLE void sortHistory();
     Q_INVOKABLE int setCollect(const int index,const int collect);
     Q_INVOKABLE void systemReset();
-    void setHistory(const QVariantMap &history);
+    void setHistory(const QString& action,const QVariantMap &history);
     int coverHistory(const QJsonObject& single,QVariantMap& info);
     int lastHistoryId(const int collect);
     int compareHistoryCollect(const QVariantMap& single);
@@ -70,7 +70,7 @@ private:
 signals:
     void localConnectedChanged(const int value);
     void stateChanged(const QString& key,const QVariant& value);
-    void historyChanged(const QVariantMap& historyList);
+    void historyChanged(const QString& action,const QVariantMap& history);
 
 private slots:
     void readData(const QJsonValue& data);

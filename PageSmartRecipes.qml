@@ -57,18 +57,20 @@ Item {
                 clip: true
                 orientation:ListView.Vertical
                 currentIndex:0
-                delegate: Rectangle{
+                delegate: Item{
                     height: 100
                     width:parent.width
-                    color:"transparent"
+
                     Button {
                         width:parent.width
-                        height:parent.height
-                        anchors.centerIn: parent
+                        height:parent.height-1
+                        anchors.top: parent.top
                         background: Rectangle{
+                            anchors.fill: parent
                             color:"#000"
                             opacity: menuList.currentIndex===index?0.3:0.15
                         }
+
                         Text{
                             text: modelData
                             font.pixelSize: 40
@@ -136,7 +138,7 @@ Item {
                             anchors.verticalCenter: parent.verticalCenter
                             color:"transparent"
                             Text{
-                                width:parent.width-10
+                                width:parent.width-20
                                 text: modelData.dishName
                                 font.pixelSize: 35
                                 anchors.centerIn: parent
@@ -151,15 +153,15 @@ Item {
                         id:recipeBtn
                         width:222
                         height:332
-//                        anchors.verticalCenter: parent.verticalCenter
-//                        anchors.right: parent.right
+                        //                        anchors.verticalCenter: parent.verticalCenter
+                        //                        anchors.right: parent.right
                         anchors.horizontalCenter: parent.horizontalCenter
                         anchors.top: parent.top
                         anchors.topMargin: 8
                         clip:true
                         background: Rectangle{
-//                            width:parent.width+2
-//                            height:parent.height+2
+                            //                            width:parent.width+2
+                            //                            height:parent.height+2
                             color:"transparent"
                             radius: 16
                             border.width: 4

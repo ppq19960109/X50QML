@@ -16,14 +16,14 @@ Window {
     property int rightDevice:1
     property int allDevice:2
 
-    property var leftWorkMode: ["未设定", "经典蒸", "快速蒸", "热风烧烤", "上下加热", "立体热风", "蒸汽烤", "空气炸", "保温烘干"]
+    property var leftWorkMode: ["未设定", "经典蒸", "高温蒸", "热风烧烤", "上下加热", "立体热风", "蒸汽烤", "空气炸", "保温烘干"]
     property var leftWorkModeNumber:[0,1,2,35,36,38,40,42,72]
     property string rightWorkMode:"便捷蒸"
 
-    property var leftModel:[{"modelData":1,"temp":100,"time":30},{"modelData":2,"temp":120,"time":20},{"modelData":3,"temp":200,"time":60}
-        ,{"modelData":4,"temp":180,"time":120},{"modelData":5,"temp":180,"time":120},{"modelData":6,"temp":150,"time":60}
-        ,{"modelData":7,"temp":220,"time":30},{"modelData":8,"temp":60,"time":30}]
-    property var rightModel:{"modelData":0,"temp":100,"time":30}
+    property var leftModel:[{"modelData":1,"temp":100,"time":30,"minTemp":40,"maxTemp":100},{"modelData":2,"temp":120,"time":20,"minTemp":101,"maxTemp":120},{"modelData":3,"temp":200,"time":60,"minTemp":50,"maxTemp":230}
+        ,{"modelData":4,"temp":180,"time":120,"minTemp":50,"maxTemp":230},{"modelData":5,"temp":180,"time":120,"minTemp":50,"maxTemp":230},{"modelData":6,"temp":150,"time":60,"minTemp":50,"maxTemp":200}
+        ,{"modelData":7,"temp":220,"time":15,"minTemp":200,"maxTemp":230},{"modelData":8,"temp":60,"time":30,"minTemp":50,"maxTemp":120}]
+    property var rightModel:{"modelData":0,"temp":100,"time":30,"minTemp":40,"maxTemp":100}
 
     property var workStateEnum:{"WORKSTATE_STOP":0,"WORKSTATE_RESERVE":1,"WORKSTATE_PREHEAT":2,"WORKSTATE_RUN":3,"WORKSTATE_FINISH":4,"WORKSTATE_PAUSE":5}
     property var workStateArray:["停止","预约中","预热中","运行中","烹饪完成","暂停"]
@@ -460,14 +460,6 @@ Window {
             buf.Timer=list[i].time
             MultiStageContent.push(buf)
         }
-        if(undefined !== orderTime && orderTime > 0)
-        {
-            Data.LStOvOrderTimer=orderTime
-        }
-        else
-        {
-            Data.LStOvOperation=workOperationEnum.START
-        }
 
         if(undefined === dishName || null === dishName)
         {
@@ -477,6 +469,15 @@ Window {
         {
             Data.CookbookParam=MultiStageContent
             Data.CookbookName=dishName
+        }
+
+        if(undefined !== orderTime && orderTime > 0)
+        {
+            Data.LStOvOrderTimer=orderTime
+        }
+        else
+        {
+            Data.LStOvOperation=workOperationEnum.START
         }
         setToServer(Data)
     }

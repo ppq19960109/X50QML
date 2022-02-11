@@ -5,6 +5,7 @@ Item {
     property bool edit: false
     property int cookPos: allDevice
     property int historyCurrentIndex:0
+    //    property alias historyModel:recipeListView.model
     Component.onCompleted: {
         console.log("state",state,typeof state)
         var root=JSON.parse(state)
@@ -13,33 +14,66 @@ Item {
         QmlDevState.sortHistory()
         getHistory(cookPos)
     }
+    ListModel {
+        id:historyModel
+    }
     function getHistory(pos)
     {
-        var historyModel=[]
+        historyModel.clear()
         var historys=QmlDevState.getHistory();
         if(historys.length===0)
         {
             noHistory.visible=true
-            recipeListView.model=historyModel
+            recipeListView.visible=false
+
             return
         }
+        noHistory.visible=false
         recipeListView.visible=true
+
         for(var i = 0; i < historys.length; ++i) {
             if(pos ===allDevice || historys[i].cookPos===pos)
             {
                 console.log("getHistory ",JSON.stringify(historys[i]))
-                historyModel.push(historys[i])
+                historyModel.append(historys[i])
             }
         }
-        recipeListView.model=historyModel
-        recipeListView.currentIndex=historyCurrentIndex
+    }
+
+    function changeHistory(action,value)
+    {
+        var i
+        if(action=="InsertHistory")
+        {
+            historyModel.append(value)
+        }
+        else if(action=="DeleteHistory")
+        {
+            for( i = 0; i < historyModel.count; ++i) {
+                if(value.id==historyModel.get(i).id)
+                {
+                    historyModel.remove(i,1)
+                    break
+                }
+            }
+        }
+        else if(action=="UpdateHistory")
+        {
+            for( i = 0; i < historyModel.count; ++i) {
+                if(value.id==historyModel.get(i).id)
+                {
+                    historyModel.set(i,value)
+                    break
+                }
+            }
+        }
     }
 
     Connections { // 将目标对象信号与槽函数进行连接
         target: QmlDevState
         onHistoryChanged: { // 处理目标对象信号的槽函数
             console.warn("PageCookHistory onHistoryChanged...")
-            getHistory(cookPos)
+            changeHistory(action,history)
         }
     }
     Image {
@@ -62,7 +96,7 @@ Item {
         }
         onRightClick:{
             if(noHistory.visible==false && edit===false)
-                load_page("pageCookDetails",JSON.stringify(recipeListView.model[recipeListView.currentIndex]))
+                load_page("pageCookDetails",JSON.stringify(recipeListView.model.get(recipeListView.currentIndex)))
         }
         onClose:{
             backPrePage()
@@ -89,15 +123,15 @@ Item {
         ListView{
             id: recipeListView
             visible: false
-            //            model:historyModel
+            model:historyModel
             width:parent.width
             //            height:parent.height
             anchors.bottom:parent.bottom
             anchors.bottomMargin: 20
             anchors.top: parent.top
             anchors.topMargin: 20
-            //            highlightRangeMode: ListView.StrictlyEnforceRange
-            boundsBehavior:Flickable.StopAtBounds
+            highlightRangeMode: ListView.StrictlyEnforceRange
+            //            boundsBehavior:Flickable.StopAtBounds
             clip: true
             currentIndex:0
             delegate: Rectangle{
@@ -130,7 +164,7 @@ Item {
                     Text{
                         width : parent.width;
                         anchors.centerIn: parent
-                        text: modelData.dishName
+                        text: dishName
                         font.pixelSize: 40
 
                         //                        horizontalAlignment:Text.AlignHCenter
@@ -157,22 +191,22 @@ Item {
                     Text{
                         anchors.centerIn: parent
                         visible: edit==false
-                        text: modelData.collect===0?"收藏":"已收藏"
+                        text: collect===0?"收藏":"已收藏"
                         font.pixelSize: 40
 
                         horizontalAlignment:Text.AlignHCenter
                         verticalAlignment:Text.AlignHCenter
-                        color:recipeListView.currentIndex===index?"#00E6B6":modelData.collect===0?"#FFF":"#FFB613"
+                        color:recipeListView.currentIndex===index?"#00E6B6":collect===0?"#FFF":"#FFB613"
                     }
                     onClicked: {
                         if(edit)
                         {
-                            QmlDevState.deleteHistory(modelData.id)
+                            QmlDevState.deleteHistory(id)
                             historyCurrentIndex=recipeListView.currentIndex-1
                         }
                         else
                         {
-                            QmlDevState.setCollect(index,!modelData.collect)
+                            QmlDevState.setCollect(index,!collect)
                             historyCurrentIndex=recipeListView.currentIndex
                         }
                     }
