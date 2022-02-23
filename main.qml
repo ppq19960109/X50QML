@@ -36,6 +36,7 @@ Window {
     property bool wifiConnected:false
     property bool sleepState: false
     property var wifiConnectInfo:{"ssid":"","psk":"","encryp":0}
+    property var multiModeEnum:{"NONE":0,"RECIPE":1,"MULTISTAGE":2}
 
     Settings {
         id: systemSettings
@@ -78,6 +79,8 @@ Window {
             enableWifi(true)
         }
         systemSettings.childLock=false
+        systemSettings.leftCookDialog=true
+        systemSettings.rightCookDialog=true
         systemSettings.multistageRemind=true
         systemSettings.wifiPasswdArray=[]
     }
@@ -108,13 +111,6 @@ Window {
             return
         }
         systemSettings.wifiPasswdArray=wifiPasswdArray
-        //        console.log("deleteWifiInfo wifiPasswd:")
-        //                for( i = 0; i < systemSettings.wifiPasswdArray.length; i++)
-        //                {
-        //                    console.log("ssid:",systemSettings.wifiPasswdArray[i].ssid)
-        //                    console.log("psk:",systemSettings.wifiPasswdArray[i].psk)
-        //                    console.log("encryp:",systemSettings.wifiPasswdArray[i].encryp)
-        //                }
     }
 
     function addWifiInfo(wifiInfo)
@@ -154,13 +150,6 @@ Window {
             wifiPasswdArray.push(newWifiInfo)
         }
         systemSettings.wifiPasswdArray=wifiPasswdArray
-        //        console.log("addWifiInfo wifiPasswd:")
-        //        for( i = 0; i < systemSettings.wifiPasswdArray.length; i++)
-        //        {
-        //            console.log("ssid:",systemSettings.wifiPasswdArray[i].ssid)
-        //            console.log("psk:",systemSettings.wifiPasswdArray[i].psk)
-        //            console.log("encryp:",systemSettings.wifiPasswdArray[i].encryp)
-        //        }
     }
 
     function getWifiInfo(ssid)
@@ -415,6 +404,7 @@ Window {
     {
         console.log("setCooking")
         var Data={}
+        Data.MultiMode=multiModeEnum.NONE
         if(cookPos===leftDevice)
         {
             Data.LStOvMode=list[0].mode
@@ -463,10 +453,12 @@ Window {
 
         if(undefined === dishName || null === dishName)
         {
+            Data.MultiMode=multiModeEnum.MULTISTAGE
             Data.MultiStageContent=MultiStageContent
         }
         else
         {
+            Data.MultiMode=multiModeEnum.RECIPE
             Data.CookbookParam=MultiStageContent
             Data.CookbookName=dishName
         }
@@ -490,8 +482,11 @@ Window {
         else
             backTopPage()
 
+        console.log("startCooking:",JSON.stringify(root),JSON.stringify(cookSteps))
         if(cookSteps.length===1 && (undefined === cookSteps[0].number || 0 === cookSteps[0].number))
         {
+
+            setCooking(cookSteps,orderTime,root.cookPos)
             if(leftDevice===root.cookPos)
             {
                 QmlDevState.setState("LStOvState",1)
@@ -507,17 +502,10 @@ Window {
                 QmlDevState.setState("RStOvSetTimerLeft",cookSteps[0].time)
                 QmlDevState.setState("RStOvOrderTimerLeft",cookSteps[0].time)
             }
-            setCooking(cookSteps,orderTime,root.cookPos)
+
         }
         else
         {
-            QmlDevState.setState("LStOvState",1)
-            QmlDevState.setState("LStOvMode",cookSteps[0].mode)
-            QmlDevState.setState("LStOvRealTemp",cookSteps[0].temp)
-            QmlDevState.setState("LStOvOrderTimerLeft",cookSteps[0].time)
-
-            QmlDevState.setState("cnt",cookSteps.length)
-            QmlDevState.setState("current",2)
             if(root.imgUrl!=="")
             {
                 setMultiCooking(cookSteps,orderTime,root.dishName)
@@ -526,9 +514,14 @@ Window {
             {
                 setMultiCooking(cookSteps,orderTime)
             }
-        }
+            QmlDevState.setState("LStOvState",1)
+            QmlDevState.setState("LStOvMode",cookSteps[0].mode)
+            QmlDevState.setState("LStOvRealTemp",cookSteps[0].temp)
+            QmlDevState.setState("LStOvOrderTimerLeft",cookSteps[0].time)
 
-        QmlDevState.insertHistory(root)
+            QmlDevState.setState("cnt",cookSteps.length)
+            QmlDevState.setState("current",2)
+        }
     }
 
     function closeLoaderMain(){
@@ -601,15 +594,10 @@ Window {
                 console.log("encryp:",systemSettings.wifiPasswdArray[i].encryp)
             }
         }
-        //        wifiConnectInfo.ssid="123"
-        //        wifiConnectInfo.psk="1234567890123"
-        //        wifiConnectInfo.encryp=2
-        //        addWifiInfo(wifiConnectInfo)
-
-        //        wifiConnectInfo.ssid="1234"
-        //        addWifiInfo(wifiConnectInfo)
-
-        //        deleteWifiInfo(wifiConnectInfo)
+        systemSettings.childLock=false
+    }
+    Image {
+        source: "/x50/main/背景.png"
     }
     StackView {
         id: stackView
@@ -641,7 +629,7 @@ Window {
         propagateComposedEvents: true
 
         onPressed: {
-            console.warn("Window onPressed................................")
+            console.warn("Window onPressed")
             if(sleepState==true)
             {
                 sleepState=false
@@ -677,7 +665,12 @@ Window {
         anchors.fill: parent
         sourceComponent:null
     }
-
+    Loader{
+        //加载弹窗组件
+        id:loader_lock_screen
+        anchors.fill: parent
+        sourceComponent:null
+    }
     ListModel {
         id: wifiModel
 
@@ -759,10 +752,7 @@ Window {
         id: pageSteamBakeBase
         PageSteamBakeBase {}
     }
-    Component {
-        id: pageSteamBakeMultistage
-        PageSteamBakeMultistage {}
-    }
+
     Component {
         id: pageMultistageSet
         PageMultistageSet {}
@@ -849,19 +839,19 @@ Window {
 
     function backPrePage() {
         if(stackView.depth>0)
-            stackView.pop()
+            stackView.pop(StackView.Immediate)
         console.log("stackView depth:"+stackView.depth)
     }
 
     function backTopPage() {
         if(stackView.depth>0)
-            stackView.pop(null)
+            stackView.pop(null,StackView.Immediate)
         console.log("stackView depth:"+stackView.depth)
     }
 
     function backPage(page) {
         if(stackView.depth>0)
-            stackView.pop(page)
+            stackView.pop(page,StackView.Immediate)
         console.log("backPage stackView depth:"+stackView.depth)
     }
 
@@ -870,7 +860,7 @@ Window {
 
         switch (page) {
         case "pageHome":
-            stackView.pop(null)
+            stackView.pop(null,StackView.Immediate)
             break;
         case "pageWifi":
             if(systemSettings.wifiEnable)
@@ -880,73 +870,70 @@ Window {
                     scanWifi()
                 }
             }
-            stackView.push(pageWifi)
+            stackView.push(pageWifi,StackView.Immediate)
             break;
         case "pageSteamBakeBase": //蒸烤设置页面
-            stackView.push(pageSteamBakeBase, {"state":args})
-            break;
-        case "pageSteamBakeMultistage":
-            stackView.push(pageSteamBakeMultistage)
+            stackView.push(pageSteamBakeBase, {"state":args},StackView.Immediate)
             break;
         case "pageMultistageSet":
-            stackView.push(pageMultistageSet)
+            stackView.push(pageMultistageSet,StackView.Immediate)
             break;
         case "pageSteamBakeRun": //蒸烤页面
-            stackView.push(pageSteamBakeRun, {"state":args})
+            stackView.push(pageSteamBakeRun, {"state":args},StackView.Immediate)
             break;
         case "pageSteamBakeReserve": //页面
-            stackView.push(pageSteamBakeReserve, {"state":args})
+            stackView.push(pageSteamBakeReserve, {"state":args},StackView.Immediate)
             break;
         case "pageSmartRecipes": //页面
-            stackView.push(pageSmartRecipes)
+            stackView.push(pageSmartRecipes,StackView.Immediate)
             break;
         case "pageCookDetails":
-            stackView.push(pageCookDetails, {"state":args})
+            stackView.push(pageCookDetails, {"state":args},StackView.Immediate)
             break;
         case "pageCookHistory":
-            stackView.push(pageCookHistory, {"state":args})
+            stackView.push(pageCookHistory, {"state":args},StackView.Immediate)
             break;
         case "pageCloseHeat":
-            stackView.push(pageCloseHeat)
+            stackView.push(pageCloseHeat,StackView.Immediate)
             break;
         case "pageSet":
-            stackView.push(pageSet)
+            stackView.push(pageSet,StackView.Immediate)
             break;
         case "pageLocalSettings":
-            stackView.push(pageLocalSettings)
+            stackView.push(pageLocalSettings,StackView.Immediate)
             break;
         case "pageReset":
-            stackView.push(pageReset)
+            stackView.push(pageReset,StackView.Immediate)
             break;
         case "pageSystemUpdate":
-            stackView.push(pageSystemUpdate)
+            stackView.push(pageSystemUpdate,StackView.Immediate)
             break;
         case "pageAboutMachine":
-            stackView.push(pageAboutMachine)
+            stackView.push(pageAboutMachine,StackView.Immediate)
             break;
         case "pageAfterGuide":
-            stackView.push(pageAfterGuide)
+            stackView.push(pageAfterGuide,StackView.Immediate)
             break;
         case "pageReleaseNotes":
-            stackView.push(pageReleaseNotes)
+            stackView.push(pageReleaseNotes,StackView.Immediate)
             break;
         case "pageTestFront":
-            stackView.push(pageTestFront)
+            stackView.push(pageTestFront,StackView.Immediate)
             break;
         case "pageIntelligentDetection":
-            stackView.push(pageIntelligentDetection)
+            stackView.push(pageIntelligentDetection,StackView.Immediate)
             break;
         case "pageScreenTest":
-            stackView.push(pageScreenTest)
+            stackView.push(pageScreenTest,StackView.Immediate)
             break;
         case "pageScreenLine":
-            stackView.push(pageScreenLine)
+            stackView.push(pageScreenLine,StackView.Immediate)
             break;
         case "pageScreenClick":
-            stackView.push(pageScreenClick)
+            stackView.push(pageScreenClick,StackView.Immediate)
             break;
         case "pageScreenLCD":
-            stackView.push(pageScreenLCD)
+            stackView.push(pageScreenLCD,StackView.Immediate)
             break;
 
         }

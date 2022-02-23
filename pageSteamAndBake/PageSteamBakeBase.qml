@@ -114,7 +114,7 @@ Item {
             }
             onConfirm:{
                 console.info("component_steam1 onConfirm")
-                showLoaderSteam2()
+
                 if(steamDialog1.checkboxState)
                 {
                     if(root.device===leftDevice)
@@ -126,6 +126,7 @@ Item {
                         systemSettings.rightCookDialog=false
                     }
                 }
+                showLoaderSteam2()
             }
         }
     }
@@ -142,9 +143,8 @@ Item {
                 closeLoaderMain()
             }
             onConfirm:{
-                console.info("component_steam2 onConfirm")
-                closeLoaderMain()
-                startCooking(para,JSON.parse(para.cookSteps),0)
+                console.info("component_steam2 onConfirm",root.device)
+
                 if(steamDialog2.checkboxState)
                 {
                     if(root.device===leftDevice)
@@ -156,6 +156,8 @@ Item {
                         systemSettings.rightCookDialog=false
                     }
                 }
+                closeLoaderMain()
+                startCooking(para,JSON.parse(para.cookSteps),0)
             }
         }
     }
@@ -166,9 +168,14 @@ Item {
         loader_main.sourceComponent = component_steam2
     }
     Image {
-        anchors.fill: parent
         source: "/x50/main/背景.png"
     }
+
+    //    PageGradient{
+    //        anchors.fill: parent
+    //        radius:0
+    //        border.width:0
+    //    }
 
     PageBackBar{
         id:topBar

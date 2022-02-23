@@ -36,10 +36,6 @@ Item {
 
     }
     //'<font size="5">测试</font>
-    Image {
-        anchors.fill: parent
-        source: "/x50/main/背景.png"
-    }
 
     PageBackBar{
         id:topBar

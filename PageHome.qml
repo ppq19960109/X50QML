@@ -2,7 +2,7 @@ import QtQuick 2.2
 import QtQuick.Controls 2.2
 
 Item {
-    property int childLockPressCount:0
+
     //    anchors.fill: parent
 
     Component{
@@ -298,8 +298,6 @@ Item {
     Component.onCompleted: {
         console.log("page home onCompleted")
 
-        //        systemSettings.multistageRemind=true
-
         //        showLoaderFaultImg("/x50/icon/icon_pop_th.png","记得及时清理油盒\n保持清洁哦")
         //        showLoaderFaultCenter("左腔门开启，工作暂停",275)
         //                showLoaderFaultCenter("右灶未开启\n开启后才可定时关火",275)
@@ -308,10 +306,7 @@ Item {
         console.log("page home onActivated")
         permitSteamStartStatus(0)
     }
-    Image {
-        anchors.fill: parent
-        source: "/x50/main/背景.png"
-    }
+
     PageHomeBar {
         id:topBar
         width:parent.width
@@ -320,7 +315,6 @@ Item {
         windImg:(QmlDevState.state.HoodSpeed==0 || QmlDevState.state.HoodSpeed==null)?"":"qrc:/x50/main/icon_wind_"+QmlDevState.state.HoodSpeed+".png"
     }
     Rectangle{
-        enabled:!systemSettings.childLock
         width:parent.width
         anchors.top:parent.top
         anchors.bottom:topBar.top

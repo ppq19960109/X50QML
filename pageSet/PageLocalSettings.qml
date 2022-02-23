@@ -7,10 +7,7 @@ Rectangle {
         console.log("PageLocalSettings light",Backlight.backlightGet())
 //        lightSlider.value=Backlight.backlightGet()
     }
-    Image {
-        anchors.fill: parent
-        source: "/x50/main/背景.png"
-    }
+
     PageBackBar{
         id:topBar
         width:parent.width

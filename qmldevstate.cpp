@@ -161,14 +161,6 @@ bool compareId(const QVariant &s1, const QVariant &s2)
     }
 }
 
-bool compareTime(const QVariant &s1, const QVariant &s2)
-{
-    QVariantMap m1=qvariant_cast<QVariantMap>(s1);
-    QVariantMap m2=s2.value<QVariantMap>();
-    return m1["timestamp"] > m2["timestamp"];
-}
-
-
 QVariantList QmlDevState::getRecipe(const int index)
 {
     return recipe[index];
@@ -179,47 +171,6 @@ QVariantList QmlDevState::getHistory()
 }
 
 
-int QmlDevState::insertHistory(QVariantMap single)
-{
-    int ret=-1;
-    qDebug() << "insertHistory" << single;
-
-    single["timestamp"]= QDateTime::currentDateTime().toSecsSinceEpoch();
-    int id=compareHistoryCollect(single);
-    if(id>=0)
-    {
-        QJsonObject Data;
-        QJsonObject item;
-        item.insert("id", id);
-        item.insert("timestamp", single["timestamp"].toInt());
-        Data.insert("UpdateHistory", item);
-        ret=sendJsonToServer("SET",Data);
-    }
-    else
-    {
-        if(getHistoryCount()>=MAX_HISTORY)
-        {
-            int id=lastHistoryId(false);
-            if(id>=0)
-                ret=deleteHistory(id);
-        }
-        QJsonObject Data;
-        QJsonObject item;
-        item.insert("dishName", single["dishName"].toString());
-        item.insert("imgUrl", single["imgUrl"].toString());
-        item.insert("details", single["details"].toString());
-        item.insert("cookSteps", single["cookSteps"].toString());
-        item.insert("timestamp", single["timestamp"].toInt());
-        item.insert("collect", single["collect"].toInt());
-        item.insert("cookType", single["cookType"].toInt());
-        item.insert("recipeType", 0);
-        item.insert("cookPos", single["cookPos"].toInt());
-
-        Data.insert("InsertHistory", item);
-        ret=sendJsonToServer("SET",Data);
-    }
-    return ret;
-}
 int QmlDevState::deleteHistory(int id)
 {
     QJsonObject Data;
@@ -241,22 +192,6 @@ int QmlDevState::setCollect(const int index,const int collect)
 
     QVariantMap cur=history[index].toMap();
 
-    int lastId=-1;
-    if(collect)
-    {
-        if(history.size()-getHistoryCount()>=MAX_COLLECT)
-        {
-            lastId=lastHistoryId(true);
-        }
-    }
-    else
-    {
-        if(getHistoryCount()>=MAX_HISTORY)
-        {
-            lastId=lastHistoryId(false);
-        }
-    }
-
     QJsonObject Data;
     QJsonObject item;
     item.insert("id", cur["id"].toInt());
@@ -264,27 +199,9 @@ int QmlDevState::setCollect(const int index,const int collect)
     Data.insert("UpdateHistory", item);
     ret=sendJsonToServer("SET",Data);
 
-    if(lastId < 0 || lastId==cur["id"])
-    {
-
-    }
-    else
-    {
-        qDebug() << "removeAt "<< lastId;
-        ret=deleteHistory(lastId);
-    }
-
     return ret;
 }
 
-void QmlDevState::systemReset()
-{
-    //system("rm -rf $HOME/.config/Marssenger/*");
-
-    QJsonObject root;
-    root.insert("Reset",QJsonValue::Null);
-    sendJsonToServer(TYPE_SET,root);
-}
 
 void QmlDevState::setHistory(const QString& action,const QVariantMap &history)
 {
@@ -336,35 +253,6 @@ int QmlDevState::compareHistoryCollect(const QVariantMap& single)
     return -1;
 }
 
-
-int QmlDevState::lastHistoryId(const int collect)
-{
-    for (int i = history.size() -1;i > 0; --i)
-    {
-        QVariantMap cur=history[i].toMap();
-        qDebug() << "lastHistoryId" << cur["collect"] << "collect" << collect;
-        if(cur["collect"]==collect)
-        {
-            return cur["id"].toInt();
-        }
-    }
-    return -1;
-}
-
-int QmlDevState::getHistoryCount()
-{
-    int count=0;
-    QVariantList::iterator iter;
-    for (iter = history.begin(); iter != history.end(); ++iter)
-    {
-        QVariantMap cur=(*iter).toMap();
-        if(cur["collect"] == true)
-        {
-            ++count;
-        }
-    }
-    return history.size()-count;
-}
 
 int QmlDevState::getHistoryIndex(const int id)
 {

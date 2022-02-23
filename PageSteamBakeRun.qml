@@ -31,7 +31,6 @@ Item {
         }
     }
     Image {
-        anchors.fill: parent
         source: "/x50/main/背景.png"
     }
     Rectangle{
@@ -294,13 +293,13 @@ Item {
                 closeLoaderMain()
                 if(hintTopText.indexOf("左腔")!=-1)
                 {
-                    QmlDevState.setState("LStOvState",workStateEnum.WORKSTATE_STOP)
                     setCookOperation(leftDevice,workOperationEnum.CANCEL)
+                    QmlDevState.setState("LStOvState",workStateEnum.WORKSTATE_STOP)
                 }
                 else
                 {
-                    QmlDevState.setState("RStOvState",workStateEnum.WORKSTATE_STOP)
                     setCookOperation(rightDevice,workOperationEnum.CANCEL)
+                    QmlDevState.setState("RStOvState",workStateEnum.WORKSTATE_STOP)
                 }
             }
             onConfirm: {

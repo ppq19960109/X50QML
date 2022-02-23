@@ -56,6 +56,17 @@ void LocalClient::get_all()
     sendMessage(data);
 }
 
+unsigned char CheckSum(unsigned char *buf, int len) //和校验算法
+{
+    int i;
+    unsigned char ret = 0;
+    for (i = 0; i < len; i++)
+    {
+        ret += *(buf++);
+    }
+    return ret;
+}
+
 int LocalClient::sendMessage(QByteArray& data)
 {
     if(QLocalSocket::ConnectedState!=m_socket->state())
@@ -72,11 +83,13 @@ int LocalClient::sendMessage(QByteArray& data)
     buf.append(data.size()/256);
     buf.append(data.size()%256);
     buf.append(data);
-    buf.append((char)0);
+    unsigned char verify= CheckSum((unsigned char *)(&buf.data()[2]),data.size()+5);
+    buf.append((char)verify);
     buf.append(FRAME_TAIL);
     buf.append(FRAME_TAIL);
-    qDebug() << "sendMessage :" << buf << "size:" <<buf.size();
+    qDebug() << "sendMessage :" << buf << "size:" <<buf.size() << "seqid:"<<seqid<<"verify:"<< verify << "verify char:"<<(unsigned char)((char)verify);
     int write_len= m_socket->write(buf.data(),buf.size());
+    ++seqid;
     //    m_socket->flush();
     //    m_socket->waitForBytesWritten(2000);
     return write_len;
@@ -156,8 +169,13 @@ int LocalClient::uds_recv(const char *byte,const int len)
                 continue;
             }
             verify = data[6 + msg_len +1];
-            printf("uds_recv msg_len:%d \r\n", msg_len);
-            //            qDebug() << QByteArray(&byte[i + 6 +1],msg_len) << endl;
+            printf("uds_recv encry:%d seqid:%d msg_len:%d", encry, seqid, msg_len);;
+
+            if (CheckSum((unsigned char *)&data[i + 2], msg_len + 5) != verify)
+            {
+                printf("CheckSum error..................");
+                // continue;
+            }
             if (msg_len > 0)
             {
                 ret = uds_json_parse(&byte[i + 6 +1], msg_len);

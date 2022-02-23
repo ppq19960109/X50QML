@@ -27,10 +27,6 @@ Item {
             showLoaderFaultCenter("右灶未开启\n开启后才可定时关火",275)
     }
 
-    Image {
-        anchors.fill: parent
-        source: "/x50/main/背景.png"
-    }
 
     PageBackBar{
         id:topBar

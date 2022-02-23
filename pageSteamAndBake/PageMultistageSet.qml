@@ -27,6 +27,7 @@ Item {
         startCooking(para,list,0)
     }
 
+
     Connections { // 将目标对象信号与槽函数进行连接
         target: QmlDevState
         onStateChanged: { // 处理目标对象信号的槽函数
@@ -37,14 +38,10 @@ Item {
         }
     }
     Component.onCompleted: {
-        if(systemSettings.multistageRemind==false)
-            permitSteamStartStatus(1)
+
+        console.log("PageMultistage onCompleted",systemSettings.multistageRemind)
     }
 
-    Image {
-        anchors.fill: parent
-        source: "/x50/main/背景.png"
-    }
     PageBackBar{
         id:topBar
         width:parent.width
@@ -88,15 +85,15 @@ Item {
             id: footerRootItem
             width: parent.width
             height: 100
-
+            visible:listView.count >= 3?false:true
             // 新增按钮
             Button {
                 width: addImg.width
-                height:addImg.height
+                height:parent.height
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.right: parent.right
                 anchors.rightMargin:40
-                visible:listView.count >= 3?false:true
+
                 background: Rectangle{
                     color:"transparent"
                     Image {
@@ -136,6 +133,8 @@ Item {
             closeVisible:true
             onCancel:{
                 listView.model.remove(index)
+                if(listView.count==0)
+                    permitSteamStartStatus(0)
             }
             onConfirm:{
                 listClickIndex=index
@@ -202,7 +201,18 @@ Item {
                     listView.model.get(listClickIndex).temp=listData.temp;
                     listView.model.get(listClickIndex).time=listData.time;
                 }
+
+                if(listView.count==1)
+                    permitSteamStartStatus(1)
             }
         }
     }
+    PageMultistageRemind{
+        id:remind
+        anchors.fill: parent
+        visible: systemSettings.multistageRemind
+    }
 }
+
+
+

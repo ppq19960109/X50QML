@@ -116,7 +116,7 @@ Item {
                     else if(value==4)
                     {
                         dismissWifiInput()
-//                        showQrcodeBind("连接成功！")
+                        //                        showQrcodeBind("连接成功！")
                     }
                     wifi_scan_timer_reset()
                 }
@@ -148,20 +148,20 @@ Item {
         id:timer_wifi_scan
         repeat: true
         running: systemSettings.wifiEnable
-        interval: 500
-        triggeredOnStart: true
+        interval: 1000
+        triggeredOnStart: scan_count < 3?true:false
         onTriggered: {
-            console.log("timer_wifi_scan")
+            console.log("timer_wifi_scan",timer_wifi_scan.interval)
             if(scan_count < 3)
             {
                 ++scan_count
                 if(scan_count==1)
                 {
-                    timer_wifi_scan.interval=1000
+                    timer_wifi_scan.interval=2000
                 }
                 else if(scan_count==3)
                 {
-                    timer_wifi_scan.interval=10000
+                    timer_wifi_scan.interval=15000
                 }
                 if(wifiConnecting==false)
                 {
@@ -181,7 +181,6 @@ Item {
         }
     }
     Image {
-        anchors.fill: parent
         source: "/x50/main/背景.png"
     }
     PageBackBar{
@@ -385,6 +384,22 @@ Item {
             }
         }
     }
+    Component {
+        id: footerView
+        Item {
+            width: 40
+            height: 40
+            visible: listView.count<=1
+
+            anchors.left: parent.left
+            anchors.leftMargin: 40
+
+            PageRotationImg {
+                anchors.centerIn: parent
+                source: "/x50/wifi/icon_sx.png"
+            }
+        }
+    }
     //内容
     Rectangle{
 
@@ -406,7 +421,7 @@ Item {
             highlightRangeMode: ListView.ApplyRange
             //            snapMode: ListView.SnapToItem
             //            boundsBehavior:Flickable.StopAtBounds
-
+            footer: footerView
             // 连接信号槽
             //            Component.onCompleted: {
 
@@ -436,7 +451,6 @@ Item {
                 }
             }
             Image {
-                anchors.fill: parent
                 source: "/x50/main/背景.png"
             }
             PageBackBar{
@@ -598,10 +612,12 @@ Item {
         loader_wifiInput.item.wifi_ssid=wifiInfo.ssid
         loader_wifiInput.item.wifi_flags=wifiInfo.flags
         loader_wifiInput.item.index=index
+        timer_wifi_scan.stop()
     }
     function dismissWifiInput(){
         listView.positionViewAtBeginning()
         loader_wifiInput.sourceComponent = null
+        timer_wifi_scan.start()
     }
 
     Loader{

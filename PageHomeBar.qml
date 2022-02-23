@@ -2,6 +2,7 @@ import QtQuick 2.2
 import QtQuick.Controls 2.2
 
 ToolBar {
+
     property alias windImg:wind_icon.source
     background:Rectangle{
         color:"#000"
@@ -11,7 +12,6 @@ ToolBar {
     //wifi图标
     TabButton {
         id:wifi
-        enabled:!systemSettings.childLock
         width: wifi_icon.width+40
         height:parent.height
         anchors.left:parent.left
@@ -32,11 +32,10 @@ ToolBar {
 
     TabButton {
         id:wind
-        enabled:!systemSettings.childLock
         width: wind_icon.width+40
         height:parent.height
         anchors.left:wifi.right
-//        anchors.leftMargin: 140
+        //        anchors.leftMargin: 140
 
         background: Rectangle {
             opacity: 0
@@ -52,7 +51,6 @@ ToolBar {
 
     TabButton {
         id:closeHeat
-        enabled:!systemSettings.childLock
         width:time.width+closeHeatImg.width+20
         height:parent.height
         anchors.right:childLockBtn.left
@@ -82,61 +80,38 @@ ToolBar {
                 load_page("pageCloseHeat")
         }
     }
+
+    Component{
+        id:component_lock_screen
+        PageLockScreen{
+        }
+    }
+
+    function showLockScreen(){
+        loader_lock_screen.sourceComponent = component_lock_screen
+    }
     //童锁按钮
     TabButton{
         id:childLockBtn
-        width:tongsuoImg.width+40
-        height:parent.height
+        width:120
+        height:80
         anchors.right:parent.right
-        anchors.rightMargin: 10
+        //        anchors.rightMargin: 0
         background:Rectangle{
             color:"transparent"
         }
         Image{
             id:tongsuoImg
             anchors.centerIn: parent
-            source: systemSettings.childLock ?"images/main_menu/tongsuokai_sz.png" : "qrc:/x50/main/icon_ts_k.png"
-        }
-        Timer {
-            id: longPressTimer
-            interval: 1000
-            repeat: true
-            running: false
-
-            onTriggered: {
-                ++childLockPressCount
-                console.log("childLockPressCount:"+childLockPressCount)
-            }
+            source: systemSettings.childLock ?"qrc:/x50/main/icon_ts_g.png" : "qrc:/x50/main/icon_ts_k.png"
         }
 
         onPressedChanged: {
-            if (pressed) {
-                if(systemSettings.childLock === true)
-                {
-                    childLockPressCount = 0
-                    longPressTimer.running = true
-                }
-            }
-            else
+            if(systemSettings.childLock==false)
             {
-                if(systemSettings.childLock === true)
-                {
-                    longPressTimer.running = false
-                    if(childLockPressCount < 2){
-                        console.log("请长按童锁键取消童锁")
-                    }
-                    else
-                    {
-                        longPressTimer.running = false
-                        systemSettings.childLock=false
-                        console.log("童锁键取消")
-                    }
-                }
-                else
-                {
-                    console.log("启用童锁")
-                    systemSettings.childLock=true
-                }
+                console.log("启用童锁")
+                systemSettings.childLock=true
+                showLockScreen()
             }
         }
     }

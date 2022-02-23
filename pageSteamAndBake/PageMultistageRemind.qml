@@ -5,7 +5,6 @@ Item {
     id:root
 
     Image {
-        anchors.fill: parent
         source: "/x50/main/背景.png"
     }
     PageBackBar{

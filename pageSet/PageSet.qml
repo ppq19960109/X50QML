@@ -8,10 +8,7 @@ Item {
 
 
     }
-    Image {
-        anchors.fill: parent
-        source: "/x50/main/背景.png"
-    }
+
     PageBackBar{
         id:topBar
         width:parent.width
@@ -33,21 +30,23 @@ Item {
         color:"transparent"
 
         GridLayout{
-            width:parent.width-80
-            height: parent.height-90
+            width:parent.width-54
+            height: parent.height-64
             anchors.centerIn: parent
             rows: 2
             columns: 3
-            rowSpacing: 30
-            columnSpacing: 20
+            rowSpacing: 4
+            columnSpacing: 0
 
             Button{
-                Layout.preferredWidth: 210
-                Layout.preferredHeight:140
+                Layout.preferredWidth: 236
+                Layout.preferredHeight:166
                 Layout.alignment: Qt.AlignHCenter|Qt.AlignVCenter
-                background:PageGradient{
+                background:Image{
                     anchors.fill: parent
+                    source:"qrc:/x50/set/圆角矩形 1370.png"
                 }
+
                 Text{
                     text:"网络"
                     color:"#FFF"
@@ -60,11 +59,12 @@ Item {
                 }
             }
             Button{
-                Layout.preferredWidth: 210
-                Layout.preferredHeight:140
+                Layout.preferredWidth: 236
+                Layout.preferredHeight:166
                 Layout.alignment: Qt.AlignHCenter|Qt.AlignVCenter
-                background:PageGradient{
+                background:Image{
                     anchors.fill: parent
+                    source:"qrc:/x50/set/圆角矩形 1370.png"
                 }
                 Text{
                     text:"本机设置"
@@ -78,11 +78,12 @@ Item {
                 }
             }
             Button{
-                Layout.preferredWidth: 250
-                Layout.preferredHeight:140
+                Layout.preferredWidth: 280
+                Layout.preferredHeight:166
                 Layout.alignment: Qt.AlignHCenter|Qt.AlignVCenter
-                background:PageGradient{
+                background:Image{
                     anchors.fill: parent
+                    source:"qrc:/x50/set/圆角矩形 1370(1).png"
                 }
                 Text{
                     text:"恢复出厂设置"
@@ -96,11 +97,12 @@ Item {
                 }
             }
             Button{
-                Layout.preferredWidth: 210
-                Layout.preferredHeight:140
+                Layout.preferredWidth: 236
+                Layout.preferredHeight:166
                 Layout.alignment: Qt.AlignHCenter|Qt.AlignVCenter
-                background:PageGradient{
+                background:Image{
                     anchors.fill: parent
+                    source:"qrc:/x50/set/圆角矩形 1370.png"
                 }
                 Text{
                     text:"系统更新"
@@ -114,11 +116,12 @@ Item {
                 }
             }
             Button{
-                Layout.preferredWidth: 210
-                Layout.preferredHeight:140
+                Layout.preferredWidth: 236
+                Layout.preferredHeight:166
                 Layout.alignment: Qt.AlignHCenter|Qt.AlignVCenter
-                background:PageGradient{
+                background:Image{
                     anchors.fill: parent
+                    source:"qrc:/x50/set/圆角矩形 1370.png"
                 }
                 Text{
                     text:"关于本机"
@@ -132,11 +135,12 @@ Item {
                 }
             }
             Button{
-                Layout.preferredWidth: 250
-                Layout.preferredHeight:140
+                Layout.preferredWidth: 280
+                Layout.preferredHeight:166
                 Layout.alignment: Qt.AlignHCenter|Qt.AlignVCenter
-                background:PageGradient{
+                background:Image{
                     anchors.fill: parent
+                    source:"qrc:/x50/set/圆角矩形 1370(1).png"
                 }
                 Text{
                     text:"售后指南"

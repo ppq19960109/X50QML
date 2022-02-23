@@ -1,9 +1,24 @@
 import QtQuick 2.7
 //import QtGraphicalEffects 1.0
 
-Item{
-    width: 600
-    height:358
+
+Rectangle {
+    id:gradient
+    anchors.fill: parent
+    radius: 8
+    rotation:  0
+    border.width:1
+    border.color:"#97A3A1"
+    gradient: Gradient {
+        GradientStop { position: 0.0; color: "#373A3A" }
+        GradientStop { position: 0.51; color: "#596767" }
+        GradientStop { position: 1.0; color: "#383A3A" }
+    }
+}
+
+//Item{
+//    width: 800
+//    height: 480
     //    Rectangle {
     //        width: 600
     //        height: 600
@@ -26,20 +41,6 @@ Item{
     //            }
     //        }
     //    }
-
-        Rectangle {
-
-            anchors.fill: parent
-            radius: 8
-            rotation:  0
-            border.width:1
-            border.color:"#97A3A1"
-            gradient: Gradient {
-                GradientStop { position: 0.0; color: "#373A3A" }
-                GradientStop { position: 0.51; color: "#596767" }
-                GradientStop { position: 1.0; color: "#383A3A" }
-            }
-        }
 
 //    Rectangle {
 //        id:rect
@@ -72,4 +73,4 @@ Item{
 //        opacity: 0.4
 //        source: rect
 //    }
-}
+//}

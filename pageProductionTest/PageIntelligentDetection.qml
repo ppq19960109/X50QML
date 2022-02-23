@@ -3,7 +3,7 @@ import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
 import QtTest 1.1
 Rectangle {
-
+    property int get_quad_count: 0
     color: "#000"
     Timer{
         id:timer_wifi
@@ -14,6 +14,17 @@ Rectangle {
         onTriggered: {
             scanRWifi()
             wifiSignalText.visible=true
+        }
+    }
+
+    Timer{
+        id:timer_quad
+        repeat: false
+        running: false
+        interval: 2000
+        triggeredOnStart: false
+        onTriggered: {
+            getQuad()
         }
     }
 
@@ -64,6 +75,15 @@ Rectangle {
         }
     }
 
+    function getQuad()
+    {
+        var Data={}
+        Data.ProductKey = null
+        Data.ProductSecret = null
+        Data.DeviceName = null
+        Data.DeviceSecret = null
+        getToServer(Data)
+    }
     Connections { // 将目标对象信号与槽函数进行连接
         target: QmlDevState
 
@@ -93,9 +113,17 @@ Rectangle {
                         }
                         else
                         {
-                            quad.color="green"
-                            quadText.text="四元组正常"
-                            systemReset()
+                            if(QmlDevState.state.DeviceSecret!="")
+                            {
+                                quad.color="green"
+                                quadText.text="四元组正常"
+                                systemReset()
+                            }
+                            else
+                            {
+                                get_quad_count=0
+                                timer_quad.restart()
+                            }
                         }
                     }
                     else if(value==5)
@@ -121,6 +149,30 @@ Rectangle {
                 {
                     reset.color="green"
                     resetText.text="成功"
+                }
+            }
+            else if("DeviceSecret"==key)
+            {
+                if(quadText.visible)
+                {
+                    if(QmlDevState.state.DeviceSecret!="")
+                    {
+                        timer_quad.stop()
+                        quad.color="green"
+                        quadText.text="四元组正常"
+                        systemReset()
+                    }
+                    else
+                    {
+                        ++get_quad_count
+                        if(get_quad_count>4)
+                        {
+                            quad.color="red"
+                            quadText.text="四元组缺失"
+                        }
+                        else
+                            timer_quad.restart()
+                    }
                 }
             }
         }

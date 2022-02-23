@@ -2,14 +2,11 @@
     <qresource prefix="/">
         <file>main.qml</file>
         <file>PageHome.qml</file>
-        <file>images/main_menu/naozhong.png</file>
-        <file>images/main_menu/tongsuokai_sz.png</file>
         <file>PageHomeFirst.qml</file>
         <file>PageHomeSecond.qml</file>
         <file>PageHomeThird.qml</file>
         <file>pageSteamAndBake/PageSteamBakeBase.qml</file>
         <file>pageSteamAndBake/DataPathView.qml</file>
-        <file>pageSteamAndBake/PageSteamBakeMultistage.qml</file>
         <file>pageSteamAndBake/PageMultistageRemind.qml</file>
         <file>pageSteamAndBake/PageMultistageSet.qml</file>
         <file>PageWifi.qml</file>
@@ -116,5 +113,9 @@
         <file>x50/main/bj_mb.png</file>
         <file>PageGradient.qml</file>
         <file>PageDialogGradient.qml</file>
+        <file>x50/main/icon_ts_g.png</file>
+        <file>PageLockScreen.qml</file>
+        <file>x50/set/圆角矩形 1370(1).png</file>
+        <file>x50/set/圆角矩形 1370.png</file>
     </qresource>
 </RCC>

@@ -8,9 +8,6 @@
 #include <QtQml>
 #include "localclient.h"
 #include "qrcodeen.h"
-#define MAX_HISTORY (40)
-#define MAX_COLLECT (40)
-
 
 
 class QmlDevState : public QObject
@@ -46,16 +43,14 @@ public:
     QVariantList history;
     Q_INVOKABLE QVariantList getRecipe(const int index);
     Q_INVOKABLE QVariantList getHistory();
-    Q_INVOKABLE int insertHistory(QVariantMap single);
     Q_INVOKABLE int deleteHistory(const int id);
     Q_INVOKABLE void sortHistory();
     Q_INVOKABLE int setCollect(const int index,const int collect);
-    Q_INVOKABLE void systemReset();
+
     void setHistory(const QString& action,const QVariantMap &history);
     int coverHistory(const QJsonObject& single,QVariantMap& info);
-    int lastHistoryId(const int collect);
     int compareHistoryCollect(const QVariantMap& single);
-    int getHistoryCount();
+
     int getHistoryIndex(const int id);
 
 

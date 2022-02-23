@@ -87,7 +87,7 @@ Item {
             }
 
             onClicked: {
-                load_page("pageSteamBakeMultistage")
+                load_page("pageMultistageSet")
             }
         }
     }
