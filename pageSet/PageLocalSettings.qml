@@ -1,6 +1,7 @@
 import QtQuick 2.0
 import QtQuick.Controls 2.2
 import "../"
+import "qrc:/SendFunc.js" as SendFunc
 Rectangle {
     color:"transparent"
     Component.onCompleted: {

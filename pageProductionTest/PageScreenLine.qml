@@ -7,6 +7,7 @@ Rectangle {
     property int rowPos: 0
     property int colCount: 0
     property int colPos: 0
+    property int touchExited:0
     color: "#000"
     Component.onCompleted: {
 
@@ -51,16 +52,21 @@ Rectangle {
                 rowCanvas.lastX = mouseX//鼠标位置
                 rowCanvas.lastY = mouseY
                 rowPos=0
+                touchExited=0
             }
             onReleased: {
                 console.warn("row onReleased......")
-                if(rowPos>0)
+                if(touchExited==0 && rowPos>0)
                     ++rowCount
             }
             onPositionChanged:{
                 console.warn("row onPositionChanged....",mouse.x,mouse.y)
                 rowPos=1
                 rowCanvas.requestPaint()//重绘
+            }
+            onExited:{
+                console.warn("onExited")
+                touchExited=1
             }
         }
     }
@@ -119,16 +125,21 @@ Rectangle {
                 colCanvas.lastX = mouseX//鼠标位置
                 colCanvas.lastY = mouseY
                 colPos=0
+                touchExited=0
             }
             onReleased: {
                 console.warn("row onReleased......")
-                if(colPos>0)
+                if( touchExited==0 && colPos>0)
                     ++colCount
             }
             onPositionChanged:{
                 console.warn("row onPositionChanged....",mouse.x,mouse.y)
                 colPos=1
                 colCanvas.requestPaint()//重绘
+            }
+            onExited:{
+                console.warn("onExited")
+                touchExited=1
             }
         }
     }

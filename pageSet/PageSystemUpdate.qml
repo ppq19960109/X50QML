@@ -2,6 +2,7 @@ import QtQuick 2.2
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
 import "../"
+import "qrc:/SendFunc.js" as SendFunc
 Item {
     enabled: loader_main.status == Loader.Null
     property bool versionChecked: false
@@ -150,7 +151,7 @@ Item {
                 {
                     checkStatus.visible=true
                     versionChecked=true
-                    otaRquest(0)
+                    SendFunc.otaRquest(0)
                 }
                 else
                 {

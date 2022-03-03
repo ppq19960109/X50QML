@@ -72,7 +72,7 @@ Rectangle {
                     anchors.centerIn: parent
                 }
                 onClicked: {
-                    load_page("pageScreenLine")
+                    load_page("pageScreenTouch")
                 }
             }
             Button{
@@ -90,7 +90,7 @@ Rectangle {
                     anchors.centerIn: parent
                 }
                 onClicked: {
-                    load_page("pageScreenLine")
+                    load_page("pageScreenLight")
                 }
             }
             Button{

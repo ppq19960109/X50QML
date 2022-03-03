@@ -2,6 +2,8 @@ import QtQuick 2.2
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
 import QtTest 1.1
+
+import "qrc:/SendFunc.js" as SendFunc
 Rectangle {
     property int get_quad_count: 0
     color: "#000"
@@ -12,8 +14,7 @@ Rectangle {
         interval: 2000
         triggeredOnStart: false
         onTriggered: {
-            scanRWifi()
-            wifiSignalText.visible=true
+            SendFunc.scanRWifi()
         }
     }
 
@@ -29,7 +30,7 @@ Rectangle {
     }
 
     Component.onCompleted: {
-        scanWifi()
+        SendFunc.scanWifi()
         if(QmlDevState.state.ComSWVersion==null)
         {
             version.color="red"
@@ -37,7 +38,7 @@ Rectangle {
         }
         else
         {
-            version.color="blue"
+            version.color="green"
             timer_wifi.restart()
         }
     }
@@ -71,7 +72,7 @@ Rectangle {
         }
         if(root[i].rssi > -75)
         {
-            connectWiFi("IoT-Test","12345678",1)
+            SendFunc.connectWiFi("IoT-Test","12345678",1)
         }
     }
 
@@ -82,7 +83,7 @@ Rectangle {
         Data.ProductSecret = null
         Data.DeviceName = null
         Data.DeviceSecret = null
-        getToServer(Data)
+        SendFunc.getToServer(Data)
     }
     Connections { // 将目标对象信号与槽函数进行连接
         target: QmlDevState
@@ -90,23 +91,24 @@ Rectangle {
         onStateChanged: { // 处理目标对象信号的槽函数
             console.log("page PageIntelligentDetection:",key)
 
-            if("WifiScanR"==key)
+            if(wifiSignalText.visible==false && "WifiScanR"==key)
             {
+                wifiSignalText.visible=true
                 parseWifiList(value)
             }
-            else if(("WifiState"==key))
+            else if( wifiConnectText.visible==false && "WifiState"==key)
             {
                 if(value>1)
                 {
                     wifiConnectText.visible=true
-                    wifiConnect.color="green"
+
                     if(value==4)
                     {
                         wifiConnect.color="green"
                         wifiConnectText.text="成功"
 
                         quadText.visible=true
-                        if(QmlDevState.state.ProductKey==null || QmlDevState.state.DeviceName==null|| QmlDevState.state.ProductSecret==null|| QmlDevState.state.DeviceSecret==null)
+                        if(QmlDevState.state.ProductKey==null || QmlDevState.state.DeviceName==null|| QmlDevState.state.ProductSecret==null)
                         {
                             quad.color="red"
                             quadText.text="四元组缺失"
@@ -126,10 +128,6 @@ Rectangle {
                             }
                         }
                     }
-                    else if(value==5)
-                    {
-
-                    }
                     else
                     {
                         wifiConnect.color="red"
@@ -137,7 +135,7 @@ Rectangle {
                     }
                 }
             }
-            else if("Reset"==key)
+            else if(resetText.visible==false && "Reset"==key)
             {
                 resetText.visible=true
                 if(value==0)
@@ -151,28 +149,25 @@ Rectangle {
                     resetText.text="成功"
                 }
             }
-            else if("DeviceSecret"==key)
+            else if(quadText.visible==true && quadText.text=="" && "DeviceSecret"==key)
             {
-                if(quadText.visible)
+                if(QmlDevState.state.DeviceSecret!="")
                 {
-                    if(QmlDevState.state.DeviceSecret!="")
+                    timer_quad.stop()
+                    quad.color="green"
+                    quadText.text="四元组正常"
+                    systemReset()
+                }
+                else
+                {
+                    ++get_quad_count
+                    if(get_quad_count>4)
                     {
-                        timer_quad.stop()
-                        quad.color="green"
-                        quadText.text="四元组正常"
-                        systemReset()
+                        quad.color="red"
+                        quadText.text="四元组缺失"
                     }
                     else
-                    {
-                        ++get_quad_count
-                        if(get_quad_count>4)
-                        {
-                            quad.color="red"
-                            quadText.text="四元组缺失"
-                        }
-                        else
-                            timer_quad.restart()
-                    }
+                        timer_quad.restart()
                 }
             }
         }

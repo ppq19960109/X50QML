@@ -94,11 +94,12 @@ ToolBar {
     TabButton{
         id:childLockBtn
         width:120
-        height:80
+        height:parent.height
         anchors.right:parent.right
         //        anchors.rightMargin: 0
         background:Rectangle{
             color:"transparent"
+            //            border.color: "#fff"
         }
         Image{
             id:tongsuoImg
@@ -107,12 +108,31 @@ ToolBar {
         }
 
         onPressedChanged: {
+
+            if (pressed) {
+                longPressTimer.running = true
+            }
+            else
+            {
+                longPressTimer.running = false
+            }
+        }
+    }
+    Timer {
+        id: longPressTimer
+        interval: 300
+        repeat: false
+        running: false
+
+        onTriggered: {
+
             if(systemSettings.childLock==false)
             {
                 console.log("启用童锁")
                 systemSettings.childLock=true
                 showLockScreen()
             }
+
         }
     }
 }

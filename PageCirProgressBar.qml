@@ -126,15 +126,15 @@ Item {
                 console.log("PageCirProgressBar device",device)
                 if(workState===workStateEnum.WORKSTATE_FINISH)
                 {
-                    if(leftDevice==device)
-                    {
-                        QmlDevState.setState("LStOvState",workStateEnum.WORKSTATE_STOP)
-                    }
-                    else
-                    {
-                        QmlDevState.setState("RStOvState",workStateEnum.WORKSTATE_STOP)
-                    }
-                    setCookOperation(device,workOperationEnum.CONFIRM)
+//                    if(leftDevice==device)
+//                    {
+//                        QmlDevState.setState("LStOvState",workStateEnum.WORKSTATE_STOP)
+//                    }
+//                    else
+//                    {
+//                        QmlDevState.setState("RStOvState",workStateEnum.WORKSTATE_STOP)
+//                    }
+                    SendFunc.setCookOperation(device,workOperationEnum.CONFIRM)
                 }
             }
         }

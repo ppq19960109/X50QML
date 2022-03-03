@@ -1,10 +1,26 @@
 import QtQuick 2.2
 import QtQuick.Controls 2.2
 
+import "pageMain"
+import "WifiFunc.js" as WifiFunc
+import "qrc:/SendFunc.js" as SendFunc
 Item {
-
+    property int disableProductionTest:0
+    id:root
+    enabled: QmlDevState.state.SysPower==1
     //    anchors.fill: parent
 
+    Timer{
+        id:timer_test
+        repeat: false
+        running: true
+        interval: 60000
+        triggeredOnStart: false
+        onTriggered: {
+            console.log("timer_test onTriggered");
+            disableProductionTest=1
+        }
+    }
     Component{
         id:component_updateConfirm
         PageDialogConfirm{
@@ -17,7 +33,7 @@ Item {
             }
             onConfirm: {
                 //               closeLoaderMain()
-                otaRquest(1)
+                SendFunc.otaRquest(1)
             }
         }
     }
@@ -129,7 +145,7 @@ Item {
             if(value > 0)
             {
                 closeLoaderError()
-                permitSteamStartStatus(0)
+                SendFunc.permitSteamStartStatus(0)
             }
             else
             {
@@ -137,14 +153,19 @@ Item {
             }
         }
         onStateChanged: { // 处理目标对象信号的槽函数
-            console.log("page home onStateChanged",key)
-            if(("LStOvState"==key || "RStOvState"==key))
+            console.log("page home onStateChanged",key,value)
+            if("SysPower"==key)
+            {
+                console.log("SysPower:",QmlDevState.state.SysPower)
+                systemPower(value)
+            }
+            else if(("LStOvState"==key || "RStOvState"==key))
             {
                 console.log("LStOvState RStOvState",value,QmlDevState.state.LStOvState,QmlDevState.state.RStOvState)
+                var ret=isExistView("pageSteamBakeRun")
+                console.log(ret,typeof ret)
                 if(value > 0)
                 {
-                    var ret=isExistView("pageSteamBakeRun")
-                    console.log(ret,typeof ret)
                     if(ret===null)
                     {
                         load_page("pageSteamBakeRun")
@@ -154,7 +175,8 @@ Item {
                 {
                     if(QmlDevState.state.LStOvState===workStateEnum.WORKSTATE_STOP && QmlDevState.state.RStOvState===workStateEnum.WORKSTATE_STOP)
                     {
-                        backTopPage()
+                        if(ret!=null)
+                            backTopPage()
                     }
                 }
             }
@@ -207,22 +229,23 @@ Item {
                     default:
                         break
                     }
-                    setBuzControl(0x04)
+                    SendFunc.setBuzControl(0x04)
                 }
                 else
                 {
-                    setBuzControl(0)
+                    SendFunc.setBuzControl(0)
                 }
             }
             else if("ProductionTest"==key)
             {
-                load_page("pageTestFront")
+                if(disableProductionTest==0)
+                    load_page("pageTestFront")
             }
             else if("LStOvDoorState"==key)
             {
                 if(value==1)
                 {
-                    if(QmlDevState.state.LStOvState!==workStateEnum.WORKSTATE_STOP)
+                    if(QmlDevState.state.LStOvState!=null && QmlDevState.state.LStOvState!=workStateEnum.WORKSTATE_STOP && QmlDevState.state.LStOvState!=workStateEnum.WORKSTATE_PAUSE)
                         showLoaderFaultCenter("左腔门开启，工作暂停",275)
                 }
             }
@@ -230,7 +253,7 @@ Item {
             {
                 if(value==1)
                 {
-                    if(QmlDevState.state.RStOvState!==workStateEnum.WORKSTATE_STOP)
+                    if(QmlDevState.state.RStOvState!=null && QmlDevState.state.RStOvState!=workStateEnum.WORKSTATE_STOP && QmlDevState.state.RStOvState!=workStateEnum.WORKSTATE_PAUSE)
                         showLoaderFaultCenter("右腔门开启，工作暂停",275)
                 }
             }
@@ -243,8 +266,9 @@ Item {
                 }
                 console.log("WifiEnable",value)
             }
-            else if(("WifiState"==key))
+            else if("WifiState"==key)
             {
+                console.log("WifiState:",value)
                 wifiConnected=false
                 if(value==1)
                 {
@@ -253,14 +277,14 @@ Item {
                 else
                 {
                     wifiConnecting=false
-                    if(value==2 || value==3)
+                    if(value==2 || value==3|| value==5)
                     {
-                        deleteWifiInfo(wifiConnectInfo)
+                        WifiFunc.deleteWifiInfo(wifiConnectInfo)
                     }
                     else if(value==4)
                     {
                         wifiConnected=true
-                        addWifiInfo(wifiConnectInfo)
+                        WifiFunc.addWifiInfo(wifiConnectInfo)
                     }
                 }
                 console.log("WifiState",value,wifiConnected)
@@ -304,41 +328,32 @@ Item {
     }
     StackView.onActivated:{
         console.log("page home onActivated")
-        permitSteamStartStatus(0)
+        SendFunc.permitSteamStartStatus(0)
     }
 
-    PageHomeBar {
-        id:topBar
-        width:parent.width
-        anchors.bottom: parent.bottom
-        height:80
-        windImg:(QmlDevState.state.HoodSpeed==0 || QmlDevState.state.HoodSpeed==null)?"":"qrc:/x50/main/icon_wind_"+QmlDevState.state.HoodSpeed+".png"
-    }
     Rectangle{
-        width:parent.width
         anchors.top:parent.top
-        anchors.bottom:topBar.top
+        width:parent.width
+        height: 400
+
         color:"transparent"
 
         SwipeView {
             id: swipeview
-            currentIndex:0
+            currentIndex:1
             width:parent.width
+            height:parent.height
 
             interactive:true //是否可以滑动
-
-            anchors.top:parent.top
-            anchors.bottom: parent.bottom
-            Item {
-                PageHomeFirst{}
-            }
             Item {
                 PageHomeSecond{}
             }
             Item {
+                PageHomeFirst{}
+            }
+            Item {
                 PageHomeThird{}
             }
-
         }
         PageIndicator {
             count: swipeview.count
@@ -346,7 +361,7 @@ Item {
             anchors.bottom: parent.bottom
             anchors.bottomMargin: 15
             anchors.horizontalCenter: parent.horizontalCenter
-            interactive: true
+            //            interactive: true
             delegate: Rectangle {
                 color:"transparent"
                 implicitWidth: indicatorCir.implicitWidth+8
@@ -363,52 +378,63 @@ Item {
             }
 
         }
-        Button{
-            id:preBtn
-            width:75
-            height:110
-            anchors.left:parent.left
-            anchors.verticalCenter: parent.verticalCenter
+        //        Button{
+        //            id:preBtn
+        //            width:75
+        //            height:110
+        //            anchors.left:parent.left
+        //            anchors.verticalCenter: parent.verticalCenter
 
-            background:Rectangle{
-                color:"transparent"
-            }
-            Image{
-                anchors.centerIn: parent
-                source: "qrc:/x50/main/icon_leftgo.png"
-                opacity: swipeview.currentIndex===0?0:1
-            }
-            onClicked:{
-                console.log('preBtn',swipeview.currentIndex)
-                if(swipeview.currentIndex>0){
-                    swipeview.currentIndex-=1
-                }
-            }
-        }
+        //            background:Rectangle{
+        //                color:"transparent"
+        //            }
+        //            Image{
+        //                anchors.centerIn: parent
+        //                source: "qrc:/x50/main/icon_leftgo.png"
+        //                opacity: swipeview.currentIndex===0?0:1
+        //            }
+        //            onClicked:{
+        //                console.log('preBtn',swipeview.currentIndex)
+        //                if(swipeview.currentIndex>0){
+        //                    //                    swipeview.currentIndex-=1
+        //                    //                    swipeview.setCurrentIndex(swipeview.currentIndex-1)
+        //                    swipeview.decrementCurrentIndex()
+        //                }
+        //            }
+        //        }
 
-        Button{
-            id:nextBtn
-            width:75
-            height:110
-            anchors.right:parent.right
-            anchors.verticalCenter: parent.verticalCenter
-            background:Rectangle{
-                color:"transparent"
-            }
-            Image{
-                anchors.centerIn: parent
-                source: "qrc:/x50/main/icon_rightgo.png"
-                opacity: swipeview.currentIndex===(swipeview.count-1)?0:1
-            }
-            onClicked:{
-                console.log('nextBtn',swipeview.currentIndex)
-                if(swipeview.currentIndex < swipeview.count){
-                    swipeview.currentIndex+=1
-                }
-            }
-        }
+        //        Button{
+        //            id:nextBtn
+        //            width:75
+        //            height:110
+        //            anchors.right:parent.right
+        //            anchors.verticalCenter: parent.verticalCenter
+        //            background:Rectangle{
+        //                color:"transparent"
+        //                //                border.color: "#fff"
+        //            }
+        //            Image{
+        //                anchors.centerIn: parent
+        //                source: "qrc:/x50/main/icon_rightgo.png"
+        //                opacity: swipeview.currentIndex===(swipeview.count-1)?0:1
+        //            }
+        //            onClicked:{
+        //                console.log('nextBtn',swipeview.currentIndex)
+        //                if(swipeview.currentIndex < swipeview.count){
+        //                    //                    swipeview.currentIndex+=1
+        //                    //                    swipeview.setCurrentIndex(swipeview.currentIndex+1)
+        //                    swipeview.incrementCurrentIndex()
+        //                }
+        //            }
+        //        }
 
     }
 
+    PageHomeBar {
+        anchors.bottom: parent.bottom
+        width:parent.width
+        height:80
 
+        windImg:(QmlDevState.state.HoodSpeed==0 || QmlDevState.state.HoodSpeed==null)?"":"qrc:/x50/main/icon_wind_"+QmlDevState.state.HoodSpeed+".png"
+    }
 }

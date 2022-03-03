@@ -15,14 +15,14 @@ Rectangle {
     }
     Button{
         id:lefttop
-        width:50
-        height:50
+        width:100
+        height:100
         anchors.top: parent.top
         anchors.topMargin: 20
         anchors.left: parent.left
         anchors.leftMargin: 20
         background:Rectangle{
-            radius: 25
+            radius: parent.width/2
             color:"blue"
         }
         onClicked: {
@@ -47,14 +47,14 @@ Rectangle {
 
     Button{
         id:righttop
-        width:50
-        height:50
+        width:100
+        height:100
         anchors.top: parent.top
         anchors.topMargin: 20
         anchors.right: parent.right
         anchors.rightMargin: 20
         background:Rectangle{
-            radius: 25
+            radius: parent.width/2
             color:"blue"
         }
         onClicked: {
@@ -79,11 +79,11 @@ Rectangle {
 
     Button{
         id:center
-        width:50
-        height:50
+        width:100
+        height:100
         anchors.centerIn: parent
         background:Rectangle{
-            radius: 25
+            radius: parent.width/2
             color:"blue"
         }
         onClicked: {
@@ -108,14 +108,14 @@ Rectangle {
 
     Button{
         id:leftbottom
-        width:50
-        height:50
+        width:100
+        height:100
         anchors.bottom: parent.bottom
         anchors.bottomMargin: 20
         anchors.left: parent.left
         anchors.leftMargin: 20
         background:Rectangle{
-            radius: 25
+            radius: parent.width/2
             color:"blue"
         }
         onClicked: {
@@ -140,14 +140,14 @@ Rectangle {
 
     Button{
         id:rightbottom
-        width:50
-        height:50
+        width:100
+        height:100
         anchors.bottom: parent.bottom
         anchors.bottomMargin: 20
         anchors.right: parent.right
         anchors.rightMargin: 20
         background:Rectangle{
-            radius: 25
+            radius: parent.width/2
             color:"blue"
         }
         onClicked: {

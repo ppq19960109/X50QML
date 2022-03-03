@@ -8,7 +8,13 @@ Rectangle {
     color: "#000"
     opacity: 0.6
 
+    Image{
+        anchors.right: parent.right
+        anchors.bottom: lockBtn.top
+        source:"qrc:/x50/main/icon_ts_g_k.png"
+    }
     Button{
+        id:lockBtn
         anchors.right: parent.right
         anchors.bottom: parent.bottom
         width: img.width
@@ -32,13 +38,6 @@ Rectangle {
         //                if(childLockPressCount < 2){
         //                    console.log("请长按童锁键取消童锁")
         //                }
-        //                else
-        //                {
-        //                    longPressTimer.running = false
-        //                    systemSettings.childLock=false
-        //                    console.log("童锁键取消")
-        //                    closeLockScreen()
-        //                }
         //            }
         //        }
     }
@@ -48,8 +47,12 @@ Rectangle {
         propagateComposedEvents: true
 
         onPressed: {
-            console.warn("PageLockScreen onPressed")
+            console.warn("PageLockScreen onPressed",mouse.x,mouse.y)
             mouse.accepted = true
+            if(mouse.x<680||mouse.y<400)
+            {
+                return
+            }
 
             childLockPressCount = 0
             longPressTimer.running = true
@@ -62,13 +65,9 @@ Rectangle {
             if(childLockPressCount < 2){
                 console.log("请长按童锁键取消童锁")
             }
-            else
-            {
-                longPressTimer.running = false
-                systemSettings.childLock=false
-                console.log("童锁键取消")
-                closeLockScreen()
-            }
+        }
+        onPositionChanged:{
+            //console.warn("PageLockScreen onPositionChanged",mouse.x,mouse.y)
         }
     }
     function closeLockScreen(){
@@ -81,7 +80,17 @@ Rectangle {
         running: false
 
         onTriggered: {
-            ++childLockPressCount
+            if(childLockPressCount<3)
+            {
+                ++childLockPressCount
+                if(childLockPressCount==3)
+                {
+                    longPressTimer.running = false
+                    systemSettings.childLock=false
+                    console.log("童锁键取消")
+                    closeLockScreen()
+                }
+            }
             console.log("childLockPressCount:",childLockPressCount)
         }
     }

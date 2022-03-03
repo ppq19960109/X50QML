@@ -3,18 +3,21 @@ import QtQuick.Controls 2.2
 import Qt.labs.settings 1.0
 import QtQuick.Window 2.2
 
-import "pageSteamAndBake"
+import "pageCook"
+import "pageMain"
 import "pageSet"
 import "pageProductionTest"
+import "qrc:/SendFunc.js" as SendFunc
 Window {
     id: window
     width: 800
     height: 480
     visible: true
-    property string uiVersion:"1.0"
-    property int leftDevice:0
-    property int rightDevice:1
-    property int allDevice:2
+    property int sysPowerPressCount:0
+    readonly property string uiVersion:"1.0"
+    readonly property int leftDevice:0
+    readonly property int rightDevice:1
+    readonly property int allDevice:2
 
     property var leftWorkMode: ["未设定", "经典蒸", "高温蒸", "热风烧烤", "上下加热", "立体热风", "蒸汽烤", "空气炸", "保温烘干"]
     property var leftWorkModeNumber:[0,1,2,35,36,38,40,42,72]
@@ -46,9 +49,7 @@ Window {
         property int sleepTime: 4
 
         //运行期间临时保存设置的亮度值，在收到开机状态是把该值重新设置回去 设置-屏幕亮度
-        property int brightness: 255
-        //首次开机引导
-        property bool firstOpenGuide: true
+        property int brightness: 250
 
         property bool wifiEnable: true
 
@@ -66,7 +67,7 @@ Window {
     {
         var Data={}
         Data.reset = null
-        setToServer(Data)
+        SendFunc.setToServer(Data)
 
         //systemSettings.sleepTime=4
         updateSleepTime(4)
@@ -76,7 +77,7 @@ Window {
         if(systemSettings.wifiEnable!=true)
         {
             systemSettings.wifiEnable=true
-            enableWifi(true)
+            SendFunc.enableWifi(true)
         }
         systemSettings.childLock=false
         systemSettings.leftCookDialog=true
@@ -84,394 +85,11 @@ Window {
         systemSettings.multistageRemind=true
         systemSettings.wifiPasswdArray=[]
     }
-    function deleteWifiInfo(wifiInfo)
-    {
-        if(wifiInfo.ssid=="" ||wifiInfo.psk=="" || wifiInfo.encryp===0)
-            return
-        var wifiPasswdArray=systemSettings.wifiPasswdArray
-        if(typeof wifiPasswdArray!="object")
-        {
-            console.log("wifiPasswdArray not Object")
-            return
-        }
-        var i;
-        var len=wifiPasswdArray.length
-        for( i = 0; i < len; i++)
-        {
-            if(wifiPasswdArray[i].ssid===wifiInfo.ssid)
-            {
-                console.log("remove ssid:",i,wifiPasswdArray[i].ssid,wifiInfo.ssid)
-                wifiPasswdArray.splice(i,1)
-                break;
-            }
-        }
 
-        if(i===len)
-        {
-            return
-        }
-        systemSettings.wifiPasswdArray=wifiPasswdArray
-    }
-
-    function addWifiInfo(wifiInfo)
-    {
-        if(wifiInfo.ssid=="" ||wifiInfo.psk=="" || wifiInfo.encryp===0)
-            return
-        var wifiPasswdArray=systemSettings.wifiPasswdArray
-
-        if(typeof wifiPasswdArray!="object")
-        {
-            console.log("wifiPasswdArray not Object")
-            wifiPasswdArray=new Array
-        }
-
-        var i;
-        for(i = 0; i < wifiPasswdArray.length; i++)
-        {
-            if(wifiPasswdArray[i].ssid===wifiInfo.ssid)
-            {
-                if(wifiPasswdArray[i].psk===wifiInfo.psk && wifiPasswdArray[i].encryp===wifiInfo.encryp)
-                {
-                    return
-                }
-                console.log("change ssid:",i,wifiPasswdArray[i].ssid,wifiInfo.ssid)
-                wifiPasswdArray[i].psk=wifiInfo.psk
-                wifiPasswdArray[i].encryp=wifiInfo.encryp
-                break;
-            }
-        }
-        if(i===wifiPasswdArray.length)
-        {
-            var newWifiInfo={}
-            newWifiInfo.ssid=wifiInfo.ssid
-            newWifiInfo.psk=wifiInfo.psk
-            newWifiInfo.encryp=wifiInfo.encryp
-            console.log("add ssid:",newWifiInfo.ssid)
-            wifiPasswdArray.push(newWifiInfo)
-        }
-        systemSettings.wifiPasswdArray=wifiPasswdArray
-    }
-
-    function getWifiInfo(ssid)
-    {
-        if(ssid=="")
-            return
-        var wifiPasswdArray=systemSettings.wifiPasswdArray
-        if(typeof wifiPasswdArray!="object")
-        {
-            console.log("wifiPasswdArray not Object")
-            return
-        }
-        var i;
-        for(i = 0; i < wifiPasswdArray.length; i++)
-        {
-            if(wifiPasswdArray[i].ssid===ssid)
-            {
-                var wifiInfo={}
-                wifiInfo.ssid=wifiPasswdArray[i].ssid
-                wifiInfo.psk=wifiPasswdArray[i].psk
-                wifiInfo.encryp=wifiPasswdArray[i].encryp
-                console.log("get ssid:",wifiInfo.ssid,wifiInfo.psk,wifiInfo.encryp)
-                return wifiInfo
-            }
-        }
-        if(i===wifiPasswdArray.length)
-        {
-            return
-        }
-    }
     function updateSleepTime(time)
     {
         systemSettings.sleepTime=time
         timer_window.interval=systemSettings.sleepTime*60000
-    }
-    function otaRquest(request)
-    {
-        var Data={}
-        Data.OTARquest = request
-        setToServer(Data)
-    }
-    function permitSteamStartStatus(status)
-    {
-        var Data={}
-        Data.PermitSteamStartStatus = status
-        setToServer(Data)
-    }
-    function enableWifi(enable)
-    {
-        systemSettings.wifiEnable=enable
-        var Data={}
-        Data.WifiEnable = enable
-        setToServer(Data)
-    }
-    function scanWifi()
-    {
-        var Data={}
-        Data.WifiScan = null
-        setToServer(Data)
-    }
-    function scanRWifi()
-    {
-        var Data={}
-        Data.WifiScanR = null
-        getToServer(Data)
-    }
-
-    function connectWiFi(ssid,psk,encryp)
-    {
-        var Data={}
-
-        wifiConnectInfo.ssid = ssid
-        wifiConnectInfo.psk = psk
-        wifiConnectInfo.encryp = encryp
-
-        Data.WifiConnect=wifiConnectInfo
-        wifiConnecting=true
-        setToServer(Data)
-    }
-    function getWifiState()
-    {
-        var Data={}
-        Data.WifiState = null
-        getToServer(Data)
-    }
-    function leftWorkModeFun(n)
-    {
-        console.log("leftWorkModeFun",n)
-        var mode
-        switch(n)
-        {
-        case 1:
-            mode=leftWorkMode[1]
-            break
-        case 2:
-            mode=leftWorkMode[2]
-            break
-        case 35:
-            mode=leftWorkMode[3]
-            break
-        case 36:
-            mode=leftWorkMode[4]
-            break
-        case 38:
-            mode=leftWorkMode[5]
-            break
-        case 40:
-            mode=leftWorkMode[6]
-            break
-        case 42:
-            mode=leftWorkMode[7]
-            break
-        case 72:
-            mode=leftWorkMode[8]
-            break
-        default:
-            mode=leftWorkMode[0]
-            break
-        }
-        return mode
-    }
-    function leftWorkModeNumberFun(n)
-    {
-        console.log("leftWorkModeFun",n)
-        var mode
-        switch(n)
-        {
-        case 1:
-            mode=1
-            break
-        case 2:
-            mode=2
-            break
-        case 35:
-            mode=3
-            break
-        case 36:
-            mode=4
-            break
-        case 38:
-            mode=5
-            break
-        case 40:
-            mode=6
-            break
-        case 42:
-            mode=7
-            break
-        case 72:
-            mode=8
-            break
-        default:
-            mode=0
-            break
-        }
-        return mode
-    }
-    function getDefHistory()
-    {
-        var param = {}
-        param.dishName=""
-        param.imgUrl=""
-        param.details=""
-        param.cookSteps=""
-        param.timestamp=Math.floor(Date.now()/1000) //Date.parse(new Date())//(new Date().getTime())
-        param.collect=0
-        param.cookType=0
-        param.recipeType=0
-        param.cookPos=0
-        return param
-    }
-
-    function getDishName(root,cookPos)
-    {
-        var dishName=""
-
-        if(root[0].dishName !== undefined)
-        {
-            return root[0].dishName
-        }
-
-        for(var i = 0; i < root.length; i++)
-        {
-            console.log(root[i].mode,root[i].temp,root[i].time,leftWorkModeFun(root[i].mode))
-            if(root.length===1 && root[i].number == null)
-            {
-                if(leftDevice===cookPos)
-                    dishName=leftWorkModeFun(root[i].mode)+"-"+root[i].temp+"℃-"+root[i].time+"分钟"
-                else
-                    dishName=rightWorkMode+"-"+root[i].temp+"℃-"+root[i].time+"分钟"
-            }
-            else
-            {
-                dishName+=leftWorkModeFun(root[i].mode)
-                if(i!==root.length-1)
-                    dishName+="-"
-            }
-        }
-        return dishName
-    }
-
-    function setToServer(Data)
-    {
-        var root={}
-        root.Type="SET"
-        root.Data=Data
-        var json=JSON.stringify(root)
-        console.info("setToServer:",json)
-        QmlDevState.sendToServer(json)
-    }
-
-    function getToServer(Data)
-    {
-        var root={}
-        root.Type="GET"
-        root.Data=Data
-        var json=JSON.stringify(root)
-        console.info("getToServer:",json)
-        QmlDevState.sendToServer(json)
-    }
-    function getAllToServer()
-    {
-        var root={}
-        root.Type="GETALL"
-        root.Data=null
-        var json=JSON.stringify(root)
-        console.info("getAllToServer:",json)
-        QmlDevState.sendToServer(json)
-    }
-    function setBuzControl(operation)
-    {
-        var Data={}
-        Data.BuzControl=operation
-
-        setToServer(Data)
-    }
-    function setCookOperation(device,operation)
-    {
-        var Data={}
-        if(leftDevice===device)
-        {
-            Data.LStOvOperation=operation
-        }
-        else
-        {
-            Data.RStOvOperation=operation
-        }
-        setToServer(Data)
-    }
-
-    function setCooking(list,orderTime,cookPos)
-    {
-        console.log("setCooking")
-        var Data={}
-        Data.MultiMode=multiModeEnum.NONE
-        if(cookPos===leftDevice)
-        {
-            Data.LStOvMode=list[0].mode
-            Data.LStOvSetTimer=list[0].time
-            Data.LStOvSetTemp=list[0].temp
-            if(undefined !== orderTime && orderTime > 0)
-            {
-                Data.LStOvOrderTimer=orderTime
-            }
-            else
-            {
-                Data.LStOvOperation=workOperationEnum.START
-            }
-        }
-        else
-        {
-            Data.RStOvMode=list[0].mode
-            Data.RStOvSetTimer=list[0].time
-            Data.RStOvSetTemp=list[0].temp
-            if(undefined !== orderTime && orderTime > 0)
-            {
-                Data.RStOvOrderTimer=orderTime
-            }
-            else
-            {
-                Data.RStOvOperation=workOperationEnum.START
-            }
-        }
-        setToServer(Data)
-    }
-
-    function setMultiCooking(list,orderTime,dishName)
-    {
-        console.log("setMultiCooking")
-        var Data={}
-        var MultiStageContent=[]
-
-        for(var i = 0; i < list.length; i++)
-        {
-            var buf={}
-            buf.Mode=list[i].mode
-            buf.Temp=list[i].temp
-            buf.Timer=list[i].time
-            MultiStageContent.push(buf)
-        }
-
-        if(undefined === dishName || null === dishName)
-        {
-            Data.MultiMode=multiModeEnum.MULTISTAGE
-            Data.MultiStageContent=MultiStageContent
-        }
-        else
-        {
-            Data.MultiMode=multiModeEnum.RECIPE
-            Data.CookbookParam=MultiStageContent
-            Data.CookbookName=dishName
-        }
-
-        if(undefined !== orderTime && orderTime > 0)
-        {
-            Data.LStOvOrderTimer=orderTime
-        }
-        else
-        {
-            Data.LStOvOperation=workOperationEnum.START
-        }
-        setToServer(Data)
     }
 
     function startCooking(root,cookSteps,orderTime)
@@ -486,41 +104,41 @@ Window {
         if(cookSteps.length===1 && (undefined === cookSteps[0].number || 0 === cookSteps[0].number))
         {
 
-            setCooking(cookSteps,orderTime,root.cookPos)
-            if(leftDevice===root.cookPos)
-            {
-                QmlDevState.setState("LStOvState",1)
-                QmlDevState.setState("LStOvMode",cookSteps[0].mode)
-                QmlDevState.setState("LStOvRealTemp",cookSteps[0].temp)
-                QmlDevState.setState("LStOvSetTimerLeft",cookSteps[0].time)
-                QmlDevState.setState("LStOvOrderTimerLeft",cookSteps[0].time)
-            }
-            else
-            {
-                QmlDevState.setState("RStOvState",1)
-                QmlDevState.setState("RStOvRealTemp",cookSteps[0].temp)
-                QmlDevState.setState("RStOvSetTimerLeft",cookSteps[0].time)
-                QmlDevState.setState("RStOvOrderTimerLeft",cookSteps[0].time)
-            }
+            SendFunc.setCooking(cookSteps,orderTime,root.cookPos)
+            //            if(leftDevice===root.cookPos)
+            //            {
+            //                QmlDevState.setState("LStOvState",1)
+            //                QmlDevState.setState("LStOvMode",cookSteps[0].mode)
+            //                QmlDevState.setState("LStOvRealTemp",cookSteps[0].temp)
+            //                QmlDevState.setState("LStOvSetTimerLeft",cookSteps[0].time)
+            //                QmlDevState.setState("LStOvOrderTimerLeft",cookSteps[0].time)
+            //            }
+            //            else
+            //            {
+            //                QmlDevState.setState("RStOvState",1)
+            //                QmlDevState.setState("RStOvRealTemp",cookSteps[0].temp)
+            //                QmlDevState.setState("RStOvSetTimerLeft",cookSteps[0].time)
+            //                QmlDevState.setState("RStOvOrderTimerLeft",cookSteps[0].time)
+            //            }
 
         }
         else
         {
             if(root.imgUrl!=="")
             {
-                setMultiCooking(cookSteps,orderTime,root.dishName)
+                SendFunc.setMultiCooking(cookSteps,orderTime,root.dishName)
             }
             else
             {
-                setMultiCooking(cookSteps,orderTime)
+                SendFunc.setMultiCooking(cookSteps,orderTime)
             }
-            QmlDevState.setState("LStOvState",1)
-            QmlDevState.setState("LStOvMode",cookSteps[0].mode)
-            QmlDevState.setState("LStOvRealTemp",cookSteps[0].temp)
-            QmlDevState.setState("LStOvOrderTimerLeft",cookSteps[0].time)
+            //            QmlDevState.setState("LStOvState",1)
+            //            QmlDevState.setState("LStOvMode",cookSteps[0].mode)
+            //            QmlDevState.setState("LStOvRealTemp",cookSteps[0].temp)
+            //            QmlDevState.setState("LStOvOrderTimerLeft",cookSteps[0].time)
 
-            QmlDevState.setState("cnt",cookSteps.length)
-            QmlDevState.setState("current",2)
+            //            QmlDevState.setState("cnt",cookSteps.length)
+            //            QmlDevState.setState("current",2)
         }
     }
 
@@ -541,7 +159,7 @@ Window {
             hintHeight:292
 
             onCancel:{
-                setBuzControl(0)
+                SendFunc.setBuzControl(0)
                 closeLoaderError()
             }
         }
@@ -575,11 +193,26 @@ Window {
         loader_main.sourceComponent = component_bind
         loader_main.item.hintTopText=title
     }
+    function systemPower(power){
+        if(power)
+        {
+            Backlight.backlightSet(systemSettings.brightness)
+            timer_window.restart()
+        }
+        else
+        {
+            Backlight.backlightSet(10)
+            timer_window.stop()
+            backTopPage()
+        }
+        timer_sysPower.stop()
+    }
+
     Component.onCompleted: {
         console.warn("Window onCompleted sleepTime:",systemSettings.sleepTime)
+
         Backlight.backlightEnable()
-        Backlight.backlightSet(systemSettings.brightness)
-        timer_window.start()
+
         //        var list=Backlight.getAllFileName("x5")
         //        console.log("getAllFileName",list)
 
@@ -601,9 +234,8 @@ Window {
     }
     StackView {
         id: stackView
-        initialItem: pageHome // pageHome pageTestFront
+        initialItem: pageHome // pageHome pageTestFront pageTest
         anchors.fill: parent
-        enabled:true
     }
     Timer{
         id:timer_window
@@ -613,7 +245,7 @@ Window {
         triggeredOnStart: false
         onTriggered: {
             console.log("timer_window sleep!!!!!!!!!!!!")
-            if(QmlDevState.state.HoodSpeed == 0 &&QmlDevState.state.LStoveStatus == 0 && QmlDevState.state.RStoveStatus == 0 &&QmlDevState.state.RStOvState == 0 && QmlDevState.state.LStOvState == 0 && QmlDevState.state.OTAState == 0 && QmlDevState.state.ErrorCodeShow == 0 && QmlDevState.localConnected == 1 && isExistView("PageTestFront")==null)
+            if(sleepState==false && QmlDevState.state.SysPower>0 && QmlDevState.state.HoodSpeed == 0 &&QmlDevState.state.LStoveStatus == 0 && QmlDevState.state.RStoveStatus == 0 &&QmlDevState.state.RStOvState == 0 && QmlDevState.state.LStOvState == 0 && QmlDevState.state.OTAState == 0 && QmlDevState.state.ErrorCodeShow == 0 && QmlDevState.localConnected == 1 && isExistView("PageTestFront")==null)
             {
                 //                Backlight.backlightDisable()
                 Backlight.backlightSet(0)
@@ -622,35 +254,68 @@ Window {
         }
     }
 
-
+    Timer{
+        id:timer_sysPower
+        repeat: QmlDevState.state.SysPower==0
+        running: false
+        interval: 1000
+        triggeredOnStart: false
+        onTriggered: {
+            console.log("timer_syspower",sysPowerPressCount)
+            if(sysPowerPressCount<2)
+            {
+                ++sysPowerPressCount
+                if(sysPowerPressCount==2)
+                {
+                    if(QmlDevState.state.SysPower==0)
+                    {
+                        SendFunc.setSysPower(1)
+                    }
+                }
+            }
+        }
+    }
     MouseArea{
         anchors.fill: parent
         hoverEnabled:true
         propagateComposedEvents: true
 
         onPressed: {
-            console.warn("Window onPressed")
-            if(sleepState==true)
+            console.warn("Window onPressed",mouse.x,mouse.y)
+            if(QmlDevState.state.SysPower>0)
             {
-                sleepState=false
-                //                Backlight.backlightEnable()
-                Backlight.backlightSet(systemSettings.brightness)
+                if(sleepState==true)
+                {
+                    sleepState=false
+                    //                Backlight.backlightEnable()
+                    Backlight.backlightSet(systemSettings.brightness)
+                    mouse.accepted = true
+                }
+                else
+                {
+                    mouse.accepted = false
+                }
+                timer_window.restart()
+            }
+            else
+            {
+                sysPowerPressCount=0
+                timer_sysPower.restart()
+            }
+        }
+        onReleased: {
+            console.warn("Window onReleased")
+            if(QmlDevState.state.SysPower==0)
+            {
+                timer_sysPower.stop()
                 mouse.accepted = true
             }
             else
             {
                 mouse.accepted = false
             }
-
-            timer_window.restart()
         }
-        //                onReleased: {
-        //                    console.warn("Window onReleased................................")
-        //                    mouse.accepted = false
-        //                }
-        //                        onPositionChanged:{
-        //                        console.warn("Window onPositionChanged................................")
-        //                        }
+
     }
     Loader{
         //加载弹窗组件
@@ -674,35 +339,23 @@ Window {
     ListModel {
         id: wifiModel
 
-        //                ListElement {
-        //                    connected: 1
-        //                    ssid: "qwertyuio"
-        //                    level:2
-        //                    flags:2
-        //                }
-        //                ListElement {
-        //                    connected: 0
-        //                    ssid: "asdfghjkl定义aa"
-        //                    level:2
-        //                    flags:0
-        //                }
-        //                ListElement {
-        //                    connected: 0
-        //                    ssid: "123"
-        //                    level:2
-        //                    flags:2
-        //                }
         //        ListElement {
-        //            connected: 0
-        //            ssid: "wwsf"
+        //            connected: 1
+        //            ssid: "qwertyuio"
         //            level:2
         //            flags:2
         //        }
         //        ListElement {
         //            connected: 0
-        //            ssid: "tty-lll"
+        //            ssid: "asdfghjkl定义aa"
         //            level:2
-        //            flags:2
+        //            flags:0
+        //        }
+        //        ListElement {
+        //            connected: 0
+        //            ssid: "123"
+        //            level:2
+        //            flags:1
         //        }
 
     }
@@ -720,7 +373,7 @@ Window {
                 //                Item {Image{source: "/test/x5/上下排版/1.png" }}
                 Repeater {
                     id: repeater
-                    model: Backlight.getAllFileName("x5")//["A1首页","A2首页左滑"]
+                    model: Backlight.getAllFileName("X50Test")//["A1首页","A2首页左滑"]
 
                     Item {Image{source: "file:"+modelData }}
                 }
@@ -829,6 +482,14 @@ Window {
         id: pageScreenLCD
         PageScreenLCD {}
     }
+    Component {
+        id: pageScreenLight
+        PageScreenLight {}
+    }
+    Component {
+        id: pageScreenTouch
+        PageScreenTouch {}
+    }
     function isExistView(pageName) {
         console.log("isExistView:",pageName)
         //        return stackView.currentItem.name===PageName
@@ -867,7 +528,7 @@ Window {
             {
                 if(wifiConnecting==false)
                 {
-                    scanWifi()
+                    SendFunc.scanWifi()
                 }
             }
             stackView.push(pageWifi,StackView.Immediate)
@@ -935,7 +596,12 @@ Window {
         case "pageScreenLCD":
             stackView.push(pageScreenLCD,StackView.Immediate)
             break;
-
+        case "pageScreenLight":
+            stackView.push(pageScreenLight,StackView.Immediate)
+            break;
+        case "pageScreenTouch":
+            stackView.push(pageScreenTouch,StackView.Immediate)
+            break;
         }
 
         console.log("stackView depth:"+stackView.depth)

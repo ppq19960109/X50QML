@@ -14,6 +14,7 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     stateTypeMap.insert("ComSWVersion",LINK_VALUE_TYPE_STRING);
     stateTypeMap.insert("Reset",LINK_VALUE_TYPE_NUM);
     stateTypeMap.insert("ErrorCodeShow",LINK_VALUE_TYPE_NUM);
+    stateTypeMap.insert("SysPower",LINK_VALUE_TYPE_NUM);
 
     stateTypeMap.insert("WifiState",LINK_VALUE_TYPE_NUM);
     stateTypeMap.insert("WifiEnable",LINK_VALUE_TYPE_NUM);
@@ -87,7 +88,7 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     connect(&client, &LocalClient::sendConnected, this,&QmlDevState::setLocalConnected);
 
 #ifndef USE_RK3308
-    setState("AppBind",0);
+    setState("SysPower",1);
 
     setState("LStOvMode",0);
     setState("LStOvState",0);

@@ -2,22 +2,22 @@
     <qresource prefix="/">
         <file>main.qml</file>
         <file>PageHome.qml</file>
-        <file>PageHomeFirst.qml</file>
-        <file>PageHomeSecond.qml</file>
-        <file>PageHomeThird.qml</file>
-        <file>pageSteamAndBake/PageSteamBakeBase.qml</file>
-        <file>pageSteamAndBake/DataPathView.qml</file>
-        <file>pageSteamAndBake/PageMultistageRemind.qml</file>
-        <file>pageSteamAndBake/PageMultistageSet.qml</file>
-        <file>PageWifi.qml</file>
-        <file>PageSteamBakeRun.qml</file>
+        <file>pageMain/PageHomeFirst.qml</file>
+        <file>pageMain/PageHomeSecond.qml</file>
+        <file>pageMain/PageHomeThird.qml</file>
+        <file>pageCook/PageSteamBakeBase.qml</file>
+        <file>pageCook/DataPathView.qml</file>
+        <file>pageCook/PageMultistageRemind.qml</file>
+        <file>pageCook/PageMultistageSet.qml</file>
+        <file>pageMain/PageWifi.qml</file>
+        <file>pageCook/PageSteamBakeRun.qml</file>
         <file>PageCirProgressBar.qml</file>
         <file>PageCirWaveProgressBar.qml</file>
-        <file>PageCookDetails.qml</file>
-        <file>pageSteamAndBake/PageSteamBakeReserve.qml</file>
-        <file>PageSmartRecipes.qml</file>
-        <file>PageCookHistory.qml</file>
-        <file>PageCloseHeat.qml</file>
+        <file>pageMain/PageCookDetails.qml</file>
+        <file>pageCook/PageSteamBakeReserve.qml</file>
+        <file>pageMain/PageSmartRecipes.qml</file>
+        <file>pageMain/PageCookHistory.qml</file>
+        <file>pageMain/PageCloseHeat.qml</file>
         <file>pageSet/PageSet.qml</file>
         <file>pageSet/PageLocalSettings.qml</file>
         <file>pageSet/PageReset.qml</file>
@@ -28,11 +28,11 @@
         <file>PageBusyIndicator.qml</file>
         <file>PageDialog.qml</file>
         <file>pageSet/PageReleaseNotes.qml</file>
-        <file>pageSteamAndBake/PageMultistageDelegate.qml</file>
+        <file>pageCook/PageMultistageDelegate.qml</file>
         <file>pageSet/PageUpdateProgressBar.qml</file>
         <file>PageHomeBar.qml</file>
-        <file>PageLeftCook.qml</file>
-        <file>PageRightCook.qml</file>
+        <file>pageCook/PageLeftCook.qml</file>
+        <file>pageCook/PageRightCook.qml</file>
         <file>PageFaultPopup.qml</file>
         <file>x50/icon/icon_pop_th.png</file>
         <file>x50/icon/icon_pop_th2.png</file>
@@ -117,5 +117,11 @@
         <file>PageLockScreen.qml</file>
         <file>x50/set/圆角矩形 1370(1).png</file>
         <file>x50/set/圆角矩形 1370.png</file>
+        <file>CookFunc.js</file>
+        <file>WifiFunc.js</file>
+        <file>SendFunc.js</file>
+        <file>x50/main/icon_ts_g_k.png</file>
+        <file>pageProductionTest/PageScreenLight.qml</file>
+        <file>pageProductionTest/PageScreenTouch.qml</file>
     </qresource>
 </RCC>

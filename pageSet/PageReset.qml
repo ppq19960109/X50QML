@@ -1,7 +1,7 @@
 import QtQuick 2.0
 import QtQuick.Controls 2.2
 import "../"
-
+import "qrc:/SendFunc.js" as SendFunc
 Item {
 
     Component.onCompleted: {
@@ -101,7 +101,6 @@ Item {
                 closeLoaderMain()
                 console.log("page systemReset")
                 systemReset()
-
             }
         }
     }
