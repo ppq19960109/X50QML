@@ -34,6 +34,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 CONFIG += rk3308
+DEFINES += SYSPOWER_RK3308
 rk3308{
 DEFINES += USE_RK3308
 #LIBS += -lDeviceIo -lasound

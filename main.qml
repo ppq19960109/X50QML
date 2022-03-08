@@ -201,18 +201,18 @@ Window {
         }
         else
         {
-            Backlight.backlightSet(10)
+            Backlight.backlightSet(1)
             timer_window.stop()
             backTopPage()
         }
-        timer_sysPower.stop()
+//        timer_sysPower.stop()
     }
 
     Component.onCompleted: {
         console.warn("Window onCompleted sleepTime:",systemSettings.sleepTime)
 
         Backlight.backlightEnable()
-
+        Backlight.backlightSet(0)
         //        var list=Backlight.getAllFileName("x5")
         //        console.log("getAllFileName",list)
 
@@ -254,34 +254,34 @@ Window {
         }
     }
 
-    Timer{
-        id:timer_sysPower
-        repeat: QmlDevState.state.SysPower==0
-        running: false
-        interval: 1000
-        triggeredOnStart: false
-        onTriggered: {
-            console.log("timer_syspower",sysPowerPressCount)
-            if(sysPowerPressCount<2)
-            {
-                ++sysPowerPressCount
-                if(sysPowerPressCount==2)
-                {
-                    if(QmlDevState.state.SysPower==0)
-                    {
-                        SendFunc.setSysPower(1)
-                    }
-                }
-            }
-        }
-    }
+//    Timer{
+//        id:timer_sysPower
+//        repeat: QmlDevState.state.SysPower==0
+//        running: false
+//        interval: 1000
+//        triggeredOnStart: false
+//        onTriggered: {
+//            console.log("timer_syspower",sysPowerPressCount)
+//            if(sysPowerPressCount<2)
+//            {
+//                ++sysPowerPressCount
+//                if(sysPowerPressCount==2)
+//                {
+//                    if(QmlDevState.state.SysPower==0)
+//                    {
+//                        SendFunc.setSysPower(1)
+//                    }
+//                }
+//            }
+//        }
+//    }
     MouseArea{
         anchors.fill: parent
         hoverEnabled:true
         propagateComposedEvents: true
 
         onPressed: {
-            console.warn("Window onPressed",mouse.x,mouse.y)
+            console.warn("Window onPressed")
             if(QmlDevState.state.SysPower>0)
             {
                 if(sleepState==true)
@@ -297,24 +297,24 @@ Window {
                 }
                 timer_window.restart()
             }
-            else
-            {
-                sysPowerPressCount=0
-                timer_sysPower.restart()
-            }
+//            else
+//            {
+//                sysPowerPressCount=0
+//                timer_sysPower.restart()
+//            }
         }
-        onReleased: {
-            console.warn("Window onReleased")
-            if(QmlDevState.state.SysPower==0)
-            {
-                timer_sysPower.stop()
-                mouse.accepted = true
-            }
-            else
-            {
-                mouse.accepted = false
-            }
-        }
+//        onReleased: {
+//            console.warn("Window onReleased")
+//            if(QmlDevState.state.SysPower==0)
+//            {
+//                timer_sysPower.stop()
+//                mouse.accepted = true
+//            }
+//            else
+//            {
+//                mouse.accepted = false
+//            }
+//        }
 
     }
     Loader{

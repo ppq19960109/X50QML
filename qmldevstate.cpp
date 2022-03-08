@@ -303,7 +303,12 @@ void QmlDevState::readData(const QJsonValue &data)
 
             if(LINK_VALUE_TYPE_NUM==value_type)
             {
-                setState(key,value.toInt());
+#ifdef SYSPOWER_RK3308
+                if(key=="SysPower")
+                    setState(key,1);
+                else
+#endif
+                    setState(key,value.toInt());
                 qDebug()<<"key:"<<key<<"value:"<<value.toInt();
             }
             else if(LINK_VALUE_TYPE_STRING==value_type)
