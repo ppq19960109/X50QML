@@ -37,6 +37,7 @@ Rectangle {
 
             Image {
                 id:closeImg
+                asynchronous:true
                 anchors.centerIn: parent
                 source: "/x50/icon/icon_close.png"
             }
@@ -58,6 +59,7 @@ Rectangle {
 
         Image{
             id:qrCodeImg
+            asynchronous:true
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.horizontalCenterOffset: -qrCodeImg.width/2-20
             anchors.bottom: parent.bottom

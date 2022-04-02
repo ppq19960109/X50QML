@@ -2,18 +2,15 @@ import QtQuick 2.7
 import QtQuick.Controls 2.2
 
 Item {
-    property alias closeVisible: closeBtn.visible
     property alias hintTopText: hintTop.text
-    property alias hintTopImgSrc:hintTopImg.source
-    property alias hintCenterText: hintCenter.text
-    property alias hintBottomText: hintBottom.text
+    property alias confirmText: confirmBtnText.text
     property alias hintHeight: hint.height
     signal cancel()
+    signal confirm()
     MouseArea{
         anchors.fill: parent
     }
     anchors.fill: parent
-
     Rectangle {
         anchors.fill: parent
         color: "#000"
@@ -23,16 +20,13 @@ Item {
         id:hint
         anchors.centerIn: parent
         implicitWidth: 600
-        implicitHeight: 292
+        implicitHeight: 305
         color: "#596767"
         radius: 16
-        PageDialogGradient{
+        PageGradient{
             anchors.fill: parent
         }
         Button {
-            id:closeBtn
-            visible: true
-            enabled: visible
             width:closeImg.width+60
             height:closeImg.height+60
             anchors.top:parent.top
@@ -56,52 +50,49 @@ Item {
 
         Text{
             id:hintTop
+            width:parent.width
             visible: hintTop.text!=""
-            width:parent.width
-            color:"white"
-            font.pixelSize: 40
-            anchors.top: parent.top
-            anchors.topMargin: 65
-            anchors.horizontalCenter: parent.horizontalCenter
-            horizontalAlignment: Text.AlignHCenter
-            verticalAlignment: Text.AlignVCenter
-
-            wrapMode:Text.Wrap
-        }
-        Image{
-            id:hintTopImg
-            asynchronous:true
-            visible:hintTopImg.source!=""
-            anchors.top: parent.top
-            anchors.topMargin: 65
-            anchors.horizontalCenter: parent.horizontalCenter
-        }
-
-        Text{
-            id:hintCenter
-            visible: hintCenter.text!=""
-            width:parent.width
-            color:"white"
-            font.pixelSize: 40
-            anchors.centerIn: parent
-            horizontalAlignment: Text.AlignHCenter
-            verticalAlignment: Text.AlignVCenter
-
-            wrapMode:Text.Wrap
-        }
-        Text{
-            id:hintBottom
-            visible: hintBottom.text!=""
-            width:parent.width
             color:"white"
             font.pixelSize: 34
             anchors.top: parent.top
-            anchors.topMargin: 145
+            anchors.topMargin: 60
             anchors.horizontalCenter: parent.horizontalCenter
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
-
+            lineHeight :1.2
             wrapMode:Text.WrapAnywhere
+
+        }
+
+
+        Button {
+            id:confirmBtn
+            width:175+20
+            height:65+20
+            anchors.bottom:parent.bottom
+            anchors.bottomMargin: 45
+            anchors.horizontalCenter: parent.horizontalCenter
+
+            Text{
+                id:confirmBtnText
+                anchors.centerIn: parent
+                color:"#00E6B6"
+                font.pixelSize: 30
+
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+            }
+            background: Rectangle {
+                width:175
+                height:65
+                anchors.centerIn: parent
+                color:"transparent"
+                border.color:"#00E6B6"
+                radius: 8
+            }
+            onClicked: {
+                confirm()
+            }
         }
     }
 }

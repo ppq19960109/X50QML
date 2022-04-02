@@ -1,51 +1,47 @@
-import QtQuick 2.2
+import QtQuick 2.7
 import QtQuick.Controls 2.2
+//import QtQuick.Controls.Material 2.2
+//import QtQuick.Controls.Universal 2.2
 
 Item {
-    //    width:parent.width
-    //    height: parent.height
     anchors.fill: parent
 
     Row {
         anchors.fill: parent
-        anchors.topMargin: 50
-        anchors.bottomMargin: 50
         spacing: 10
-        anchors.leftMargin: 75
-        anchors.rightMargin: 75
+        anchors.leftMargin: 70
+        anchors.rightMargin: 70
 
         Button{
             width: 325
-            height:parent.height
-            Image {
+            height:width
+            anchors.verticalCenter: parent.verticalCenter
+            //            highlighted: true
+            //             Material.accent: Material.Green
+            //             Universal.accent: Universal.Indigo
+
+            background:Image {
                 anchors.fill: parent
-                source: "qrc:/x50/main/圆角矩形 3209.png"
+                asynchronous:true
+                source: themesImagesPath+"homefirst-button-background.png"
             }
-            background:Rectangle{
-                color:"transparent"
-                radius: 16
-            }
-            Text{
-                color:"#FFF"
-                text:qsTr("左腔")
-                font.pixelSize:50
-                anchors.top: parent.top
-                anchors.topMargin: 30
-                anchors.horizontalCenter: parent.horizontalCenter
-            }
-            Text{
-                color:"#FFF"
-                text:qsTr("蒸烤一体")
-                font.pixelSize:32
-                anchors.top: parent.top
-                anchors.topMargin: 100
-                anchors.horizontalCenter: parent.horizontalCenter
-            }
-            Image {
-                anchors.bottom: parent.bottom
-                anchors.bottomMargin: -30
-                anchors.horizontalCenter: parent.horizontalCenter
-                source: "qrc:/x50/main/烤鸡.png"
+            Item {
+                anchors.fill: parent
+                Text{
+                    color:"#FFF"
+                    text:"左腔蒸烤"
+                    font.pixelSize:50
+                    anchors.top: parent.top
+                    anchors.topMargin: 50
+                    anchors.horizontalCenter: parent.horizontalCenter
+                }
+                Image {
+                    asynchronous:true
+                    anchors.bottom: parent.bottom
+                    anchors.bottomMargin: -30
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    source: "qrc:/x50/main/烤鸡.png"
+                }
             }
             onClicked: {
                 load_page("pageSteamBakeBase",JSON.stringify({"device":leftDevice}))
@@ -53,36 +49,32 @@ Item {
         }
         Button{
             width: 325
-            height:parent.height
-            Image {
+            height:width
+            anchors.verticalCenter: parent.verticalCenter
+
+            background:Image {
+                asynchronous:true
                 anchors.fill: parent
-                source: "qrc:/x50/main/圆角矩形 3209.png"
+                source: themesImagesPath+"homefirst-button-background.png"
             }
-            background:Rectangle{
-                color:"transparent"
-                radius: 16
-            }
-            Text{
-                color:"#FFF"
-                text:qsTr("右腔")
-                font.pixelSize:50
-                anchors.top: parent.top
-                anchors.topMargin: 30
-                anchors.horizontalCenter: parent.horizontalCenter
-            }
-            Text{
-                color:"#FFF"
-                text:qsTr("便捷速蒸")
-                font.pixelSize:32
-                anchors.top: parent.top
-                anchors.topMargin: 100
-                anchors.horizontalCenter: parent.horizontalCenter
-            }
-            Image {
-                anchors.bottom: parent.bottom
-                anchors.bottomMargin: -30
-                anchors.horizontalCenter: parent.horizontalCenter
-                source: "qrc:/x50/main/icon_蒸包子.png"
+
+            Item {
+                anchors.fill: parent
+                Text{
+                    anchors.top: parent.top
+                    anchors.topMargin: 50
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    color:"#FFF"
+                    font.pixelSize:50
+                    text:qsTr("右腔速蒸")
+                }
+                Image {
+                    asynchronous:true
+                    anchors.bottom: parent.bottom
+                    anchors.bottomMargin: -30
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    source: "qrc:/x50/main/icon_蒸包子.png"
+                }
             }
             onClicked: {
                 load_page("pageSteamBakeBase",JSON.stringify({"device":rightDevice}))

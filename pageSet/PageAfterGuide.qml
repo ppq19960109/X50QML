@@ -3,9 +3,6 @@ import QtQuick.Controls 2.2
 import "../"
 Item {
 
-    Component.onCompleted: {
-
-    }
 
     PageBackBar{
         id:topBar
@@ -29,6 +26,7 @@ Item {
 
         Image{
             id:qrCodeImg
+            asynchronous:true
             anchors.top: parent.top
             anchors.topMargin: 30
             anchors.horizontalCenter: parent.horizontalCenter

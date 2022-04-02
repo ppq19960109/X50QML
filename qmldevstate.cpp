@@ -7,14 +7,24 @@
 //QmlDevState* QmlDevState::qmlDevState;
 QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
 {
-    //    stateTypeMap.insert("APPBind",LINK_VALUE_TYPE_NUM);
+    stateTypeMap.insert("Alarm",LINK_VALUE_TYPE_NUM);
     stateTypeMap.insert("SteamStart",LINK_VALUE_TYPE_NULL);
     stateTypeMap.insert("ProductionTest",LINK_VALUE_TYPE_NULL);
     stateTypeMap.insert("ElcSWVersion",LINK_VALUE_TYPE_STRING);
     stateTypeMap.insert("ComSWVersion",LINK_VALUE_TYPE_STRING);
     stateTypeMap.insert("Reset",LINK_VALUE_TYPE_NUM);
+    stateTypeMap.insert("ErrorCode",LINK_VALUE_TYPE_NUM);
     stateTypeMap.insert("ErrorCodeShow",LINK_VALUE_TYPE_NUM);
     stateTypeMap.insert("SysPower",LINK_VALUE_TYPE_NUM);
+
+    stateTypeMap.insert("ProductCategory",LINK_VALUE_TYPE_STRING);
+    stateTypeMap.insert("ProductModel",LINK_VALUE_TYPE_STRING);
+    stateTypeMap.insert("ProductKey",LINK_VALUE_TYPE_STRING);
+    stateTypeMap.insert("DeviceName",LINK_VALUE_TYPE_STRING);
+    stateTypeMap.insert("ProductSecret",LINK_VALUE_TYPE_STRING);
+    stateTypeMap.insert("DeviceSecret",LINK_VALUE_TYPE_STRING);
+    stateTypeMap.insert("QrCode",LINK_VALUE_TYPE_STRING);
+    stateTypeMap.insert("UpdateLog",LINK_VALUE_TYPE_STRING);
 
     stateTypeMap.insert("WifiState",LINK_VALUE_TYPE_NUM);
     stateTypeMap.insert("WifiEnable",LINK_VALUE_TYPE_NUM);
@@ -30,15 +40,6 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     stateTypeMap.insert("OTAState",LINK_VALUE_TYPE_NUM);
     stateTypeMap.insert("OTAProgress",LINK_VALUE_TYPE_NUM);
     stateTypeMap.insert("OTANewVersion",LINK_VALUE_TYPE_STRING);
-
-    stateTypeMap.insert("ProductCategory",LINK_VALUE_TYPE_STRING);
-    stateTypeMap.insert("ProductModel",LINK_VALUE_TYPE_STRING);
-    stateTypeMap.insert("ProductKey",LINK_VALUE_TYPE_STRING);
-    stateTypeMap.insert("DeviceName",LINK_VALUE_TYPE_STRING);
-    stateTypeMap.insert("ProductSecret",LINK_VALUE_TYPE_STRING);
-    stateTypeMap.insert("DeviceSecret",LINK_VALUE_TYPE_STRING);
-    stateTypeMap.insert("QrCode",LINK_VALUE_TYPE_STRING);
-    stateTypeMap.insert("UpdateLog",LINK_VALUE_TYPE_STRING);
 
     stateTypeMap.insert("AfterSalesPhone",LINK_VALUE_TYPE_STRING);
     stateTypeMap.insert("AfterSalesQrCode",LINK_VALUE_TYPE_STRING);
@@ -109,11 +110,12 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
 
     QVariantMap info;
     info.insert("id", 0);
+    info.insert("seqid", 3);
     info.insert("cookType", 0);
     info.insert("cookPos", 0);
     info.insert("dishName", "清蒸鱼");
     info.insert("imgUrl", "recipes/Vegetables/蒜蓉粉丝娃娃菜.png");
-    info.insert("cookSteps", "[{\"device\":0,\"mode\":35,\"temp\":100,\"time\":90}]");
+    info.insert("cookSteps", "[{\"device\":0,\"mode\":35,\"number\":1,\"temp\":100,\"time\":90}]");
     info.insert("details", "食材：\n鸡蛋2个，蛤蜊50g，盐2g，油3滴葱花30g\n步骤：\n1、鱼片加入适量鸡蛋，料酒、升降、盐，醋、糖，搅拌均匀后加一点淀粉（淀粉加水）增加粘度\n2、鱼片加入适量鸡蛋，料酒、升降、盐，醋、糖，搅拌均匀后加一点淀粉（淀粉加水）增加粘度\n3、鱼片加入适量鸡蛋，料酒、升降、盐，醋、糖，搅拌均匀后加一点淀粉（淀粉加水）增加粘度");
     info.insert("collect", 0);
     info.insert("timestamp", 0);
@@ -201,6 +203,11 @@ int QmlDevState::setCollect(const int index,const int collect)
     ret=sendJsonToServer("SET",Data);
 
     return ret;
+}
+
+void QmlDevState::startLocalConnect()
+{
+    client.startConnectTimer();
 }
 
 
@@ -298,23 +305,24 @@ void QmlDevState::readData(const QJsonValue &data)
 
         if(object.contains(it.key()))
         {
-            qDebug()<<"key:"<<key<<"value type:"<<value_type<< endl;
+            qDebug()<<"key:"<<key<<"value type:"<<value_type;
             QJsonValue value =object.value(it.key());
 
             if(LINK_VALUE_TYPE_NUM==value_type)
             {
+                qDebug()<<"key:"<<key<<"value:"<<value.toInt();
 #ifdef SYSPOWER_RK3308
                 if(key=="SysPower")
                     setState(key,1);
                 else
-#endif
+#endif    
                     setState(key,value.toInt());
-                qDebug()<<"key:"<<key<<"value:"<<value.toInt();
             }
             else if(LINK_VALUE_TYPE_STRING==value_type)
             {
-                setState(key,value.toString());
                 qDebug()<<"key:"<<key<<"value:"<<value.toString();
+                setState(key,value.toString());
+
                 if("QrCode"==key)
                 {
                     QrcodeEn::encodeImage(value.toString(),4,key+".png");

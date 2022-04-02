@@ -89,6 +89,8 @@ Item {
                 color:"transparent"
                 Image{
                     id:recipeImg
+                    cache:false
+                    asynchronous:true
                     anchors.fill: parent
                 }
 

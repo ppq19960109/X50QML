@@ -22,10 +22,10 @@ Backlight::Backlight(QObject *parent) : QObject(parent)
  */
 int Backlight::backlightEnable()
 {
-    printf("backlightEnable\n");
+    qDebug() <<"backlightEnable";
 #ifdef USE_RK3308
     int fd = -1;
-    fd = open(SYSFS_BL_DIR "/bl_power", O_WRONLY);
+    fd = open(SYSFS_BL_DIR "/bl_power", O_RDWR);
     if (fd < 0)
     {
         perror("Open Backlight bl_power Fail");
@@ -44,10 +44,10 @@ int Backlight::backlightEnable()
 */
 int Backlight::backlightDisable()
 {
-    printf("backlightDisable\n");
+    qDebug() << "backlightDisable";
 #ifdef USE_RK3308
     int fd = -1;
-    fd = open(SYSFS_BL_DIR "/bl_power", O_WRONLY);
+    fd = open(SYSFS_BL_DIR "/bl_power", O_RDWR);
     if (fd < 0)
     {
         perror("Open Backlight bl_power Fail");
@@ -66,7 +66,7 @@ int Backlight::backlightDisable()
  */
 int Backlight::backlightSet(unsigned char value)
 {
-    printf("backlightSet\n");
+    qDebug() <<"backlightSet";
 #ifdef USE_RK3308
     int fd = -1;
     char buf[8]={0};
@@ -90,7 +90,7 @@ int Backlight::backlightSet(unsigned char value)
  */
 int Backlight::backlightGet()
 {
-    printf("backlightGet\n");
+    qDebug() << "backlightGet";
     int value = 200;//200为背光驱动初始值
 #ifdef USE_RK3308
     int fd = -1;
@@ -112,7 +112,7 @@ int Backlight::backlightGet()
 QVariantList Backlight::getAllFileName(QString path)
 {
     QVariantList pathList;
-//    QDir *dir=new QDir(path);
+    //    QDir *dir=new QDir(path);
     QDir dir(path);
     QStringList filter;
     QList<QFileInfo> *fileInfo=new QList<QFileInfo>(dir.entryInfoList(filter));

@@ -1,4 +1,4 @@
-import QtQuick 2.2
+import QtQuick 2.7
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
 
@@ -44,7 +44,7 @@ Rectangle {
         MouseArea{
             id: rowarea
             anchors.fill: parent
-            hoverEnabled:true
+//            hoverEnabled:true
             propagateComposedEvents: true
 
             onPressed: {
@@ -117,23 +117,23 @@ Rectangle {
         MouseArea{
             id: colarea
             anchors.fill: parent
-            hoverEnabled:true
+//            hoverEnabled:true
             propagateComposedEvents: true
 
             onPressed: {
-                console.warn("row onPressed.....")
+                console.warn("col onPressed.....")
                 colCanvas.lastX = mouseX//鼠标位置
                 colCanvas.lastY = mouseY
                 colPos=0
                 touchExited=0
             }
             onReleased: {
-                console.warn("row onReleased......")
+                console.warn("col onReleased......")
                 if( touchExited==0 && colPos>0)
                     ++colCount
             }
             onPositionChanged:{
-                console.warn("row onPositionChanged....",mouse.x,mouse.y)
+                console.warn("col onPositionChanged....",mouse.x,mouse.y)
                 colPos=1
                 colCanvas.requestPaint()//重绘
             }

@@ -1,4 +1,4 @@
-import QtQuick 2.2
+import QtQuick 2.7
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
 import "../"
@@ -69,6 +69,8 @@ Item {
 
         Image{
             id:logo
+            cache:false
+            asynchronous:true
             anchors.top: parent.top
             anchors.topMargin: 50
             anchors.horizontalCenter: parent.horizontalCenter
@@ -92,6 +94,8 @@ Item {
                 anchors.centerIn: parent
             }
             Image {
+                cache:false
+                asynchronous:true
                 anchors.verticalCenter: curVer.verticalCenter
                 anchors.left: curVer.right
                 anchors.leftMargin: 20

@@ -1,12 +1,12 @@
-import QtQuick 2.2
+import QtQuick 2.7
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
 import QtTest 1.1
 
 import "qrc:/SendFunc.js" as SendFunc
 Rectangle {
-    property int get_quad_count: 0
-    color: "#000"
+
+    color: "transparent"
     Timer{
         id:timer_wifi
         repeat: false
@@ -15,17 +15,6 @@ Rectangle {
         triggeredOnStart: false
         onTriggered: {
             SendFunc.scanRWifi()
-        }
-    }
-
-    Timer{
-        id:timer_quad
-        repeat: false
-        running: false
-        interval: 2000
-        triggeredOnStart: false
-        onTriggered: {
-            getQuad()
         }
     }
 
@@ -49,7 +38,7 @@ Rectangle {
         //        console.log("setWifiList:" ,sanR,root.length)
         var i
         for( i = 0; i < root.length; ++i) {
-            if(root[i].ssid==="moduletest")
+            if(root[i].ssid===productionTestWIFISSID)
             {
                 if(root[i].rssi < -75)
                 {
@@ -72,19 +61,10 @@ Rectangle {
         }
         if(root[i].rssi > -75)
         {
-            SendFunc.connectWiFi("IoT-Test","12345678",1)
+            SendFunc.connectWiFi("IoT-Test",productionTestWIFIPWD,1)
         }
     }
 
-    function getQuad()
-    {
-        var Data={}
-        Data.ProductKey = null
-        Data.ProductSecret = null
-        Data.DeviceName = null
-        Data.DeviceSecret = null
-        SendFunc.getToServer(Data)
-    }
     Connections { // 将目标对象信号与槽函数进行连接
         target: QmlDevState
 
@@ -108,24 +88,16 @@ Rectangle {
                         wifiConnectText.text="成功"
 
                         quadText.visible=true
-                        if(QmlDevState.state.ProductKey==null || QmlDevState.state.DeviceName==null|| QmlDevState.state.ProductSecret==null)
+                        if(QmlDevState.state.ProductKey=="" || QmlDevState.state.DeviceName==""|| QmlDevState.state.ProductSecret==""|| QmlDevState.state.DeviceSecret=="")
                         {
                             quad.color="red"
                             quadText.text="四元组缺失"
                         }
                         else
                         {
-                            if(QmlDevState.state.DeviceSecret!="")
-                            {
-                                quad.color="green"
-                                quadText.text="四元组正常"
-                                systemReset()
-                            }
-                            else
-                            {
-                                get_quad_count=0
-                                timer_quad.restart()
-                            }
+                            quad.color="green"
+                            quadText.text="四元组正常"
+                            systemReset()
                         }
                     }
                     else
@@ -147,27 +119,6 @@ Rectangle {
                 {
                     reset.color="green"
                     resetText.text="成功"
-                }
-            }
-            else if(quadText.visible==true && quadText.text=="" && "DeviceSecret"==key)
-            {
-                if(QmlDevState.state.DeviceSecret!="")
-                {
-                    timer_quad.stop()
-                    quad.color="green"
-                    quadText.text="四元组正常"
-                    systemReset()
-                }
-                else
-                {
-                    ++get_quad_count
-                    if(get_quad_count>4)
-                    {
-                        quad.color="red"
-                        quadText.text="四元组缺失"
-                    }
-                    else
-                        timer_quad.restart()
                 }
             }
         }

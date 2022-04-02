@@ -1,5 +1,9 @@
 #include "localclient.h"
-
+#define TYPE "Type"
+#define TYPE_SET "SET"
+#define TYPE_GET "GET"
+#define TYPE_GETALL "GETALL"
+#define TYPE_EVENT "EVENT"
 
 LocalClient::LocalClient(QObject *parent) : QObject(parent)
 {
@@ -16,14 +20,19 @@ LocalClient::LocalClient(QObject *parent) : QObject(parent)
 
     timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, &LocalClient::connectToServer);
-#ifdef USE_RK3308
-    timer->start(2000);
-#endif
 }
 
 LocalClient::~LocalClient()
 {
     delete m_socket;
+}
+
+void LocalClient::startConnectTimer()
+{
+#ifdef USE_RK3308
+    if(!timer->isActive())
+        timer->start(2000);
+#endif
 }
 int LocalClient::seqid=0;
 

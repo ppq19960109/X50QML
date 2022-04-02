@@ -115,15 +115,14 @@ Item {
                     color:"transparent"
                     Image{
                         id:recipeImg
-                        clip:true
+                        asynchronous:true
                         anchors.fill: parent
                         anchors.margins: 0
                         //                            fillMode:Image.PreserveAspectFit
                         source: "file:"+modelData.imgUrl
-                        smooth: true
-                        visible: true
                     }
                     Image{
+                        asynchronous:true
                         width: recipeBtn.width+1
                         anchors.bottom: recipeBtn.bottom
                         anchors.horizontalCenter: recipeBtn.horizontalCenter
@@ -156,7 +155,7 @@ Item {
                         anchors.horizontalCenter: parent.horizontalCenter
                         anchors.top: parent.top
                         anchors.topMargin: 8
-                        clip:true
+//                        clip:true
                         background: Rectangle{
                             //                            width:parent.width+2
                             //                            height:parent.height+2
@@ -165,7 +164,6 @@ Item {
                             border.width: 4
                             border.color: recipeListView.currentIndex===index?cookModeColor[modelData.cookType]:"transparent"
                         }
-
 
                         //                        Rectangle{
                         //                            id: mask

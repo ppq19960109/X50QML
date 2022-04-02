@@ -12,6 +12,7 @@ Item {
     Connections { // 将目标对象信号与槽函数进行连接
         target: QmlDevState
         onStateChanged: { // 处理目标对象信号的槽函数
+            console.log("PageSteamBakeReserve onStateChanged",key)
             if("SteamStart"==key)
             {
                 steamStart()
@@ -75,6 +76,7 @@ Item {
             anchors.topMargin:rowPathView.height/3*2+50
         }
         Image {
+            asynchronous:true
             anchors.centerIn: parent
             source: "qrc:/x50/steam/黑色块.png"
         }

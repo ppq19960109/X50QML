@@ -9,15 +9,23 @@
 #include "qmldevstate.h"
 #include "localclient.h"
 #include "backlight.h"
+#include <QtQuickControls2>
+//#include <QMetaObject>
 
 int main(int argc, char *argv[])
 {
-
     qputenv("QT_IM_MODULE", QByteArray("qtvirtualkeyboard"));
+//    qDebug() << "availableStyles: " << QQuickStyle::availableStyles();
+    //        QQuickStyle::setStyle("Imagine");
 
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 
     QGuiApplication app(argc, argv);
+
+    Backlight* backlight =new Backlight(&app);
+    backlight->backlightEnable();
+
+    QmlDevState* qmlDevState =new QmlDevState(&app);
 
     //    qmlRegisterType<QmlWifi>("QmlWifi", 1, 0, "QmlWifi");
 
@@ -32,6 +40,7 @@ int main(int argc, char *argv[])
     qDebug()<<"fontfamilies: "<<fontFamilies;
 
     qDebug()<<"FontsLocation"<<QStandardPaths::standardLocations(QStandardPaths::FontsLocation);
+
     QFont font;
     font.setFamily("Source Han Sans CN");//设置全局字体
     app.setFont(font);
@@ -48,17 +57,20 @@ int main(int argc, char *argv[])
 
     QQmlApplicationEngine engine;
 
-    QmlDevState* qmlDevState =new QmlDevState(&app);
     engine.rootContext()->setContextProperty("QmlDevState", qmlDevState);
-    Backlight* backlight =new Backlight(&app);
     engine.rootContext()->setContextProperty("Backlight", backlight);
 
     const QUrl url(QStringLiteral("qrc:/main.qml"));
+//    QQmlComponent component(&engine, url);
+//    QObject *object = component.create();
+//    QMetaObject::invokeMethod(object, "myQmlFunction");
+
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
                      &app, [url](QObject *obj, const QUrl &objUrl) {
         if (!obj && url == objUrl)
             QCoreApplication::exit(-1);
     }, Qt::QueuedConnection);
+
     engine.load(url);
 
     return app.exec();

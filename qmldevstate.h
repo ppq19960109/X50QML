@@ -46,6 +46,7 @@ public:
     Q_INVOKABLE int deleteHistory(const int id);
     Q_INVOKABLE void sortHistory();
     Q_INVOKABLE int setCollect(const int index,const int collect);
+    Q_INVOKABLE void startLocalConnect();
 
     void setHistory(const QString& action,const QVariantMap &history);
     int coverHistory(const QJsonObject& single,QVariantMap& info);

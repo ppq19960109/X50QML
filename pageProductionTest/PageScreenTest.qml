@@ -1,19 +1,23 @@
-import QtQuick 2.2
+import QtQuick 2.7
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
 
 Rectangle {
+    id:root
     property string name: "PageTestFront"
     color: "#000"
     Component.onCompleted: {
 
-
     }
-
+    function clickedfunc(status)
+    {
+        console.log("clickedfunc:"+status);
+        systemSettings.productionTestAging=status
+    }
     Rectangle{
         id:topBar
         width:parent.width
-        height:80
+        height:60
         anchors.top: parent.top
         color:"transparent"
         Text {
@@ -33,8 +37,8 @@ Rectangle {
 
         GridLayout{
             width:parent.width
-            height: parent.height
-            anchors.centerIn: parent
+            height: parent.height-80
+            anchors.top: parent.top
             rows: 2
             columns: 3
             rowSpacing: 0
@@ -130,10 +134,29 @@ Rectangle {
                     load_page("pageScreenClick")
                 }
             }
+            Button{
+                Layout.preferredWidth: 200
+                Layout.preferredHeight:100
+                Layout.alignment: Qt.AlignHCenter|Qt.AlignVCenter
+                background:Rectangle{
+                    radius: 16
+                    color:"blue"
+                }
+                Text{
+                    text:"老化测试"
+                    color:systemSettings.productionTestAging==0?"#FFF":aging_status==1?"lime":"red"
+                    font.pixelSize: 35
+                    anchors.centerIn: parent
+                }
+
+                onClicked: {
+                    load_page("pageAgingTest",{containerqml:root})
+                }
+            }
         }
         Button{
             width:100+40
-            height:50+40
+            height:50+30
             anchors.right: parent.right
             anchors.bottom: parent.bottom
             background:Rectangle{
@@ -150,7 +173,7 @@ Rectangle {
                 anchors.centerIn: parent
             }
             onClicked: {
-                 backPrePage()
+                backPrePage()
             }
         }
     }

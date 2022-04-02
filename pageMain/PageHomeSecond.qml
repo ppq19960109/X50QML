@@ -1,14 +1,11 @@
-import QtQuick 2.2
+import QtQuick 2.7
 import QtQuick.Controls 2.2
-import QtQuick.Layouts 1.1
+import QtQuick.Layouts 1.3
 
 Item {
-    width:parent.width
-    height: parent.height
-    //        anchors.fill: parent
+    anchors.fill: parent
     RowLayout {
         anchors.fill: parent
-        anchors.topMargin: 40
 
         anchors.leftMargin: 60
         anchors.rightMargin: 60
@@ -16,14 +13,11 @@ Item {
         spacing: 0
         Button{
             Layout.preferredWidth: 225
-            Layout.preferredHeight:parent.height
-            Layout.alignment: Qt.AlignHCenter
+            Layout.preferredHeight:325
+            Layout.alignment: Qt.AlignHCenter|Qt.AlignVCenter
 
-            background:Rectangle{
-                radius: 10
-                color:"transparent"
-            }
-            Image {
+            background:Image {
+                asynchronous:true
                 source: "qrc:/x50/main/智慧菜谱.png"
             }
             Text{
@@ -36,19 +30,17 @@ Item {
             }
 
             onClicked: {
-                 load_page("pageSmartRecipes")
+                load_page("pageSmartRecipes")
             }
         }
 
         Button{
             Layout.preferredWidth: 225
-            Layout.preferredHeight:parent.height
-            Layout.alignment: Qt.AlignHCenter
-            background:Rectangle{
-                radius: 10
-                color:"transparent"
-            }
-            Image {
+            Layout.preferredHeight:325
+            Layout.alignment: Qt.AlignHCenter|Qt.AlignVCenter
+
+            background:Image {
+                asynchronous:true
                 source: "qrc:/x50/main/烹饪历史.png"
             }
             Text{
@@ -67,14 +59,11 @@ Item {
 
         Button{
             Layout.preferredWidth: 225
-            Layout.preferredHeight:parent.height
-            Layout.alignment: Qt.AlignHCenter
+            Layout.preferredHeight:325
+            Layout.alignment: Qt.AlignHCenter|Qt.AlignVCenter
 
-            background:Rectangle{
-                radius: 10
-                color:"transparent"
-            }
-            Image {
+            background:Image {
+                asynchronous:true
                 source: "qrc:/x50/main/多段烹饪.png"
             }
             Text{

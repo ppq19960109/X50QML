@@ -1,4 +1,4 @@
-import QtQuick 2.2
+import QtQuick 2.7
 import QtQuick.Controls 2.2
 import "../"
 import "qrc:/CookFunc.js" as CookFunc
@@ -15,16 +15,20 @@ Item {
 
     property var root
     property var para
-    property var leftWorkBigImg: ["qrc:/x50/steam/icon_便捷蒸.png", "qrc:/x50/steam/icon_立体热风.png", "qrc:/x50/steam/icon_高温蒸.png", "qrc:/x50/steam/icon_热风烧烤.png", "qrc:/x50/steam/icon_上下加热.png", "qrc:/x50/steam/icon_立体热风.png", "qrc:/x50/steam/icon_蒸汽烤.png", "qrc:/x50/steam/icon_空气炸.png", "qrc:/x50/steam/icon_保暖烘干.png"]
-    property var leftWorkSmallImg: ["", "qrc:/x50/steam/icon_立体热风缩小.png", "qrc:/x50/steam/icon_高温蒸缩小.png", "qrc:/x50/steam/icon_热风烧烤缩小.png", "qrc:/x50/steam/icon_上下加热缩小.png", "qrc:/x50/steam/icon_立体热风缩小.png", "qrc:/x50/steam/icon_蒸汽烤缩小.png", "qrc:/x50/steam/icon_空气炸缩小.png", "qrc:/x50/steam/icon_保暖烘干缩小.png"]
+    readonly property var leftWorkBigImg: ["qrc:/x50/steam/icon_便捷蒸.png", "qrc:/x50/steam/icon_立体热风.png", "qrc:/x50/steam/icon_高温蒸.png", "qrc:/x50/steam/icon_热风烧烤.png", "qrc:/x50/steam/icon_上下加热.png", "qrc:/x50/steam/icon_立体热风.png", "qrc:/x50/steam/icon_蒸汽烤.png", "qrc:/x50/steam/icon_空气炸.png", "qrc:/x50/steam/icon_保暖烘干.png"]
+    readonly property var leftWorkSmallImg: ["", "qrc:/x50/steam/icon_立体热风缩小.png", "qrc:/x50/steam/icon_高温蒸缩小.png", "qrc:/x50/steam/icon_热风烧烤缩小.png", "qrc:/x50/steam/icon_上下加热缩小.png", "qrc:/x50/steam/icon_立体热风缩小.png", "qrc:/x50/steam/icon_蒸汽烤缩小.png", "qrc:/x50/steam/icon_空气炸缩小.png", "qrc:/x50/steam/icon_保暖烘干缩小.png"]
 
     function steamStart()
     {
-        console.log("PageSteamBakeBase",modePathView.model.get(modePathView.currentIndex).modelData,tempPathView.model[tempPathView.currentIndex],timePathView.model[timePathView.currentIndex])
+        console.log("PageSteamBakeBase",modePathView.currentIndex,modePathView.model.get(modePathView.currentIndex).modelData,tempPathView.model[tempPathView.currentIndex],timePathView.model[timePathView.currentIndex])
         var list = []
         var steps={}
         steps.device=root.device
-        steps.mode=leftWorkModeNumber[modePathView.currentIndex+1]
+        if(root.device==leftDevice)
+            steps.mode=leftWorkModeNumber[modePathView.model.get(modePathView.currentIndex).modelData]
+        else
+            steps.mode= 100
+
         steps.temp=parseInt(tempPathView.model[tempPathView.currentIndex])
         steps.time=parseInt(timePathView.model[timePathView.currentIndex])
         list.push(steps)
@@ -33,7 +37,7 @@ Item {
         para.cookPos=root.device
         para.dishName=CookFunc.getDishName(list,para.cookPos)
         para.cookSteps=JSON.stringify(list)
-        console.log("para:",JSON.stringify(para))
+        console.log("para:",JSON.stringify(para),systemSettings.leftCookDialog,systemSettings.rightCookDialog,root.device)
 
         if(root.device===leftDevice)
         {
@@ -55,14 +59,24 @@ Item {
     }
 
     Connections { // 将目标对象信号与槽函数进行连接
+        id:connections
         target: QmlDevState
         onStateChanged: { // 处理目标对象信号的槽函数
+            console.log("PageSteamBakeBase onStateChanged",key)
             if("SteamStart"==key)
             {
                 console.log("PageSteamBakeBase onStateChanged",value)
                 steamStart()
             }
         }
+    }
+    StackView.onActivated:{
+        console.log("PageSteamBakeBase onActivated")
+        connections.enabled=true
+    }
+    StackView.onDeactivated:{
+        console.log("PageSteamBakeBase onDeactivated")
+        connections.enabled=false
     }
     Component.onCompleted: {
         console.log("PageSteamBakeBase onCompleted")
@@ -170,7 +184,8 @@ Item {
         loader_main.sourceComponent = component_steam2
     }
     Image {
-        source: "/x50/main/背景.png"
+        asynchronous:true
+        source:themesImagesPath+"applicationwindow-background.png"
     }
 
     //    PageGradient{
@@ -207,7 +222,7 @@ Item {
             if(multiMode>0)
             {
                 var param = {};
-                param.mode=leftWorkModeNumber[modePathView.currentIndex+1]
+                param.mode=leftWorkModeNumber[modePathView.model.get(modePathView.currentIndex).modelData]
                 param.temp=parseInt(tempPathView.model[tempPathView.currentIndex])
                 param.time=parseInt(timePathView.model[timePathView.currentIndex])
                 showListData(param);
@@ -217,7 +232,10 @@ Item {
             {
                 var list = []
                 var steps={}
-                steps.mode=leftWorkModeNumber[modePathView.currentIndex+1]
+                if(root.device==leftDevice)
+                    steps.mode=leftWorkModeNumber[modePathView.model.get(modePathView.currentIndex).modelData]
+                else
+                    steps.mode= 100
                 steps.temp=parseInt(tempPathView.model[tempPathView.currentIndex])
                 steps.time=parseInt(timePathView.model[timePathView.currentIndex])
                 list.push(steps)
@@ -250,6 +268,7 @@ Item {
             anchors.topMargin:rowPathView.height/3*2+50
         }
         Image {
+            asynchronous:true
             anchors.centerIn: parent
             source: "qrc:/x50/steam/黑色块.png"
         }

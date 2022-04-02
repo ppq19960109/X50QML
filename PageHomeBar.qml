@@ -1,10 +1,12 @@
-import QtQuick 2.2
+import QtQuick 2.7
 import QtQuick.Controls 2.2
 
 ToolBar {
 
     property alias windImg:wind_icon.source
+    property alias bgOpacity:bg.opacity
     background:Rectangle{
+        id:bg
         color:"#000"
         opacity: 0.15
     }
@@ -22,6 +24,7 @@ ToolBar {
         }
         Image{
             id:wifi_icon
+            asynchronous:true
             anchors.centerIn: parent
             source: wifiConnected ? "qrc:/x50/main/icon_wife_nor.png":"qrc:/x50/main/icon_wife_w.png"
         }
@@ -42,6 +45,7 @@ ToolBar {
         }
         Image{
             id:wind_icon
+            asynchronous:true
             anchors.centerIn: parent
         }
         onClicked: {
@@ -61,6 +65,7 @@ ToolBar {
         }
         Image{
             id:closeHeatImg
+            asynchronous:true
             anchors.right: time.left
             anchors.rightMargin: 20
             anchors.verticalCenter: parent.verticalCenter
@@ -90,6 +95,11 @@ ToolBar {
     function showLockScreen(){
         loader_lock_screen.sourceComponent = component_lock_screen
     }
+    function closeLockScreen(){
+        loader_lock_screen.sourceComponent = undefined
+    }
+    //---------------------------------------------------------------
+
     //童锁按钮
     TabButton{
         id:childLockBtn
@@ -103,6 +113,7 @@ ToolBar {
         }
         Image{
             id:tongsuoImg
+            asynchronous:true
             anchors.centerIn: parent
             source: systemSettings.childLock ?"qrc:/x50/main/icon_ts_g.png" : "qrc:/x50/main/icon_ts_k.png"
         }

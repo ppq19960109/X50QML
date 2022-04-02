@@ -13,7 +13,9 @@ Item {
         console.log("PageLeftCook onDestruction")
     }
     Image {
-        source: "/x50/main/背景.png"
+        cache:false
+        asynchronous:true
+        source: themesImagesPath+"applicationwindow-background.png"
     }
     PageBackBar{
         id:topBar
@@ -54,6 +56,8 @@ Item {
             }
 
             Image {
+                cache:false
+                asynchronous:true
                 anchors.bottom: parent.bottom
                 anchors.bottomMargin: 50
                 anchors.horizontalCenter: parent.horizontalCenter

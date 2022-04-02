@@ -38,6 +38,7 @@ Item {
 //            opacity: PathView.isCurrentItem ? 1 : 0.5
 
             Image {
+                asynchronous:true
                 anchors.right: text.left
                 anchors.rightMargin: 10
                 anchors.verticalCenter: text.verticalCenter

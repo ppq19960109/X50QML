@@ -48,8 +48,6 @@
         <file>x50/wifi/yousuowifi 7.png</file>
         <file>x50/wifi/icon_sx.png</file>
         <file>PageRotationImg.qml</file>
-        <file>x50/main/icon_leftgo.png</file>
-        <file>x50/main/icon_rightgo.png</file>
         <file>x50/main/icon_ts_k.png</file>
         <file>x50/main/icon_wife_nor.png</file>
         <file>x50/main/icon_wife_w.png</file>
@@ -57,7 +55,6 @@
         <file>x50/main/定时关火.png</file>
         <file>x50/main/智慧菜谱.png</file>
         <file>x50/main/烹饪历史.png</file>
-        <file>x50/main/背景.png</file>
         <file>x50/main/设置.png</file>
         <file>x50/main/icon_wind_1.png</file>
         <file>x50/main/icon_wind_3.png</file>
@@ -96,7 +93,6 @@
         <file>x50/set/logo.png</file>
         <file>PageDialogQrcode.qml</file>
         <file>x50/main/icon_蒸包子.png</file>
-        <file>x50/main/圆角矩形 3209.png</file>
         <file>x50/main/烤鸡.png</file>
         <file>x50/main/iocn_kuang_w.png</file>
         <file>x50/main/iocn_kuang_x.png</file>
@@ -123,5 +119,10 @@
         <file>x50/main/icon_ts_g_k.png</file>
         <file>pageProductionTest/PageScreenLight.qml</file>
         <file>pageProductionTest/PageScreenTouch.qml</file>
+        <file>pageProductionTest/PageGetQuad.qml</file>
+        <file>PagePopup.qml</file>
+        <file>x50/icon/形状 2824.png</file>
+        <file>pageMain/PageThemes.qml</file>
+        <file>pageProductionTest/PageAgingTest.qml</file>
     </qresource>
 </RCC>

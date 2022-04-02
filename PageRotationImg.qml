@@ -1,15 +1,15 @@
-import QtQuick 2.2
+import QtQuick 2.7
 import QtQuick.Controls 2.2
 
 Image {
     id: busyImg
-
+    asynchronous:true
     RotationAnimator {
         target: busyImg
         running: busyImg.visible
         from: 0
         to: 360
         loops: Animation.Infinite
-        duration: 5000
+        duration: 9000
     }
 }

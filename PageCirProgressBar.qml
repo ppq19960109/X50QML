@@ -139,6 +139,7 @@ Item {
             }
         }
         Image {
+            asynchronous:true
             visible: workState === workStateEnum.WORKSTATE_STOP
             anchors.top:parent.top
             anchors.topMargin:70

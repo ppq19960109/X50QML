@@ -3,9 +3,10 @@ import QtQuick.Controls 2.2
 import "../"
 Item {
     id:root
-
     Image {
-        source: "/x50/main/背景.png"
+        cache:false
+        asynchronous:true
+        source:themesImagesPath+"applicationwindow-background.png"
     }
     PageBackBar{
         id:topBar
@@ -66,10 +67,8 @@ Item {
         }
         PageCheckBox {
             id:checkBoxRemind
-            width:200
-            height:30
             anchors.bottom:nextBtn.top
-            anchors.bottomMargin: 40
+            anchors.bottomMargin: 30
             anchors.horizontalCenter: parent.horizontalCenter
             checked: false
         }

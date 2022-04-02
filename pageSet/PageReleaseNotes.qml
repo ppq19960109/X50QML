@@ -1,13 +1,12 @@
-import QtQuick 2.2
+import QtQuick 2.7
 import QtQuick.Controls 2.2
 import "../"
 Item {
-    Component.onCompleted: {
 
-
-    }
     Image {
-        source: "/x50/main/背景.png"
+        asynchronous:true
+        cache:false
+        source: themesImagesPath+"applicationwindow-background.png"
     }
     PageBackBar{
         id:topBar

@@ -41,7 +41,6 @@ Item {
         }
     }
     Component.onCompleted: {
-
         console.log("PageMultistage onCompleted",systemSettings.multistageRemind)
     }
 
@@ -70,7 +69,7 @@ Item {
                 steps.number=i+1
                 list.push(steps)
             }
-            var para =getDefHistory()
+            var para =CookFunc.getDefHistory()
             para.cookPos=leftDevice
             para.dishName=CookFunc.getDishName(list,para.cookPos)
             para.cookSteps=JSON.stringify(list)
@@ -85,25 +84,21 @@ Item {
     Component {
         id: footerView
         Item{
-            id: footerRootItem
             width: parent.width
             height: 100
             visible:listView.count >= 3?false:true
             // 新增按钮
             Button {
-                width: addImg.width
-                height:parent.height
+                width: parent.height
+                height:width
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.right: parent.right
                 anchors.rightMargin:40
 
-                background: Rectangle{
-                    color:"transparent"
-                    Image {
-                        id:addImg
-                        anchors.centerIn: parent
-                        source: "qrc:/x50/icon/icon_add.png"
-                    }
+                background: Image {
+                    asynchronous:true
+                    anchors.centerIn: parent
+                    source: "qrc:/x50/icon/icon_add.png"
                 }
                 onClicked:{
                     listClickIndex=listView.count
@@ -182,11 +177,12 @@ Item {
 
     }
     function dismissTanchang(){
-        loader_tanchuang.sourceComponent = null
+        loader_tanchuang.sourceComponent = undefined
     }
     Loader{
         //加载弹窗组件
         id:loader_tanchuang
+        asynchronous: true
         anchors.fill: parent
         Connections {
             target: loader_tanchuang.item

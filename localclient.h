@@ -14,12 +14,6 @@
 #define FRAME_HEADER (0xAA)
 #define FRAME_TAIL (0xBB)
 
-#define TYPE "Type"
-#define TYPE_SET "SET"
-#define TYPE_GET "GET"
-#define TYPE_GETALL "GETALL"
-#define TYPE_EVENT "EVENT"
-
 #define DATA "Data"
 
 class LocalClient : public QObject
@@ -30,6 +24,7 @@ public:
     ~LocalClient();
     int timeoutCount;
     static int seqid;
+    void startConnectTimer();
     void connectToServer();
     int sendMessage(QByteArray& data);
     int readMessage();

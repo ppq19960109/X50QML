@@ -9,6 +9,7 @@ Rectangle {
     opacity: 0.6
 
     Image{
+        asynchronous:true
         anchors.right: parent.right
         anchors.bottom: lockBtn.top
         source:"qrc:/x50/main/icon_ts_g_k.png"
@@ -25,6 +26,7 @@ Rectangle {
         }
         Image{
             id:img
+            asynchronous:true
             source:"qrc:/x50/main/icon_ts_g.png"
         }
         //        onPressedChanged: {
@@ -70,9 +72,7 @@ Rectangle {
             //console.warn("PageLockScreen onPositionChanged",mouse.x,mouse.y)
         }
     }
-    function closeLockScreen(){
-        loader_lock_screen.sourceComponent = null
-    }
+
     Timer {
         id: longPressTimer
         interval: 1000

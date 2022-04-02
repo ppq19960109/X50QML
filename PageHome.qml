@@ -1,4 +1,4 @@
-import QtQuick 2.2
+import QtQuick 2.7
 import QtQuick.Controls 2.2
 
 import "pageMain"
@@ -6,6 +6,7 @@ import "WifiFunc.js" as WifiFunc
 import "qrc:/SendFunc.js" as SendFunc
 Item {
     property int disableProductionTest:0
+    property int disableGetQuad:0
     id:root
     enabled: QmlDevState.state.SysPower==1
     //    anchors.fill: parent
@@ -21,6 +22,38 @@ Item {
             disableProductionTest=1
         }
     }
+    Component{
+        id:component_alarm
+        PagePopup{
+            hintTopText:"点击机头图标\n或点击下方按钮关闭闹钟"
+            hintHeight:306
+            confirmText:"关闭闹钟"
+            onCancel: {
+                closeAlarm()
+            }
+            onConfirm: {
+                closeAlarm()
+                SendFunc.setAlarm(0)
+            }
+            Image {
+                asynchronous:true
+                anchors.top: parent.top
+                anchors.topMargin: 87+65
+                anchors.right: parent.right
+                anchors.rightMargin:100+160
+                source: "qrc:/x50/icon/形状 2824.png"
+            }
+        }
+    }
+    function showAlarm(){
+        if(loader_main.status == Loader.Null || loader_main.status == Loader.Error)
+            loader_main.sourceComponent = component_alarm
+    }
+    function closeAlarm(){
+        if(loader_main.sourceComponent === component_alarm)
+            loader_main.sourceComponent = undefined
+    }
+
     Component{
         id:component_updateConfirm
         PageDialogConfirm{
@@ -51,10 +84,12 @@ Item {
                 anchors.fill: parent
             }
             Image {
+                asynchronous:true
                 anchors.fill: parent
-                source: "/x50/main/背景.png"
+                source: themesImagesPath+"applicationwindow-background.png"
             }
             Image {
+                asynchronous:true
                 anchors.top: parent.top
                 anchors.topMargin: 155
                 anchors.horizontalCenter: parent.horizontalCenter
@@ -144,7 +179,7 @@ Item {
             console.log("page home onLocalConnectedChanged",value)
             if(value > 0)
             {
-                closeLoaderError()
+                closeLoaderFault()
                 SendFunc.permitSteamStartStatus(0)
             }
             else
@@ -178,6 +213,16 @@ Item {
                         if(ret!=null)
                             backTopPage()
                     }
+                }
+            }
+            else if("ErrorCode"==key)
+            {
+                console.log("ErrorCode:",value)
+
+                if(value==0)
+                {
+                    SendFunc.setBuzControl(0)
+                    closeLoaderFault()
                 }
             }
             else if("ErrorCodeShow"==key)
@@ -234,12 +279,20 @@ Item {
                 else
                 {
                     SendFunc.setBuzControl(0)
+                    closeLoaderFault()
                 }
             }
             else if("ProductionTest"==key)
             {
                 if(disableProductionTest==0)
                     load_page("pageTestFront")
+            }
+            else if("Alarm"==key)
+            {
+                if(value > 0)
+                    showAlarm()
+                else
+                    closeAlarm()
             }
             else if("LStOvDoorState"==key)
             {
@@ -288,6 +341,16 @@ Item {
                     }
                 }
                 console.log("WifiState",value,wifiConnected)
+                if(disableGetQuad==0)
+                {
+                    disableGetQuad=1
+                    if(QmlDevState.state.DeviceSecret=="")
+                    {
+                        disableGetQuad=2
+                        SendFunc.scanWifi()
+                        timer_scanwifi.restart()
+                    }
+                }
             }
             else if("OTAState"==key)
             {
@@ -316,14 +379,87 @@ Item {
 
                 }
             }
+            else if(disableGetQuad==1 && "DeviceSecret"==key)
+            {
+                if(value==""||value==null)
+                {
+                    disableGetQuad=2
+                    SendFunc.scanWifi()
+                    timer_scanwifi.restart()
+                }
+                else
+                {
+                    disableGetQuad=3
+                }
+            }
+            else if(disableGetQuad==2 && QmlDevState.state.DeviceSecret=="" && "WifiScanR"==key)
+            {
+                disableGetQuad=3
+                parseWifiList(value)
+            }
         }
     }
+    Component{
+        id:component_burn_wifi
+        Item {
+            Rectangle{
+                width: 300
+                height: 150
+                color: "#000"
+                anchors.bottom: parent.bottom
+                anchors.right: parent.right
+                Text {
+                    anchors.centerIn: parent
+                    font.pixelSize: 40
+                    color: "#FFF"
+                    text: qsTr("烧录WIFI不存在")
+                }
+            }
+            MouseArea{
+                anchors.fill: parent
+                onPressed: {
+                    closeLoaderMain()
+                }
+            }
+        }
+    }
+    function showBurnWifi(){
+        loader_main.sourceComponent = component_burn_wifi
+    }
 
+    function parseWifiList(sanR)
+    {
+        var root=JSON.parse(sanR)
+        var i
+        for( i = 0; i < root.length; ++i) {
+            if(root[i].ssid===productionTestWIFISSID)
+            {
+                break
+            }
+        }
+        if(i == root.length)
+        {
+            showBurnWifi()
+            return
+        }
+        load_page("pageGetQuad")
+    }
+    Timer{
+        id:timer_scanwifi
+        repeat: false
+        running: false
+        interval: 2500
+        triggeredOnStart: false
+        onTriggered: {
+            SendFunc.scanRWifi()
+        }
+    }
     Component.onCompleted: {
         console.log("page home onCompleted")
 
+        QmlDevState.startLocalConnect()
         //        showLoaderFaultImg("/x50/icon/icon_pop_th.png","记得及时清理油盒\n保持清洁哦")
-        //        showLoaderFaultCenter("左腔门开启，工作暂停",275)
+        //                showLoaderFaultCenter("左腔门开启，工作暂停",275)
         //                showLoaderFaultCenter("右灶未开启\n开启后才可定时关火",275)
     }
     StackView.onActivated:{
@@ -354,6 +490,15 @@ Item {
             Item {
                 PageHomeThird{}
             }
+            Component.onCompleted:{
+                //                contentItem.highlightFollowsCurrentItem=true
+
+                //                contentItem.highlightRangeMode=istView.StrictlyEnforceRange
+                //                contentItem.highlightResizeDuration= 0
+                //                contentItem.highlightResizeVelocity=-1
+                contentItem.highlightMoveDuration = 0       //将移动时间设为0
+                contentItem.highlightMoveVelocity=-1
+            }
         }
         PageIndicator {
             count: swipeview.count
@@ -378,55 +523,51 @@ Item {
             }
 
         }
-        //        Button{
-        //            id:preBtn
-        //            width:75
-        //            height:110
-        //            anchors.left:parent.left
-        //            anchors.verticalCenter: parent.verticalCenter
+        Button{
+            id:preBtn
+            width:70
+            height:80
+            anchors.left:parent.left
 
-        //            background:Rectangle{
-        //                color:"transparent"
-        //            }
-        //            Image{
-        //                anchors.centerIn: parent
-        //                source: "qrc:/x50/main/icon_leftgo.png"
-        //                opacity: swipeview.currentIndex===0?0:1
-        //            }
-        //            onClicked:{
-        //                console.log('preBtn',swipeview.currentIndex)
-        //                if(swipeview.currentIndex>0){
-        //                    //                    swipeview.currentIndex-=1
-        //                    //                    swipeview.setCurrentIndex(swipeview.currentIndex-1)
-        //                    swipeview.decrementCurrentIndex()
-        //                }
-        //            }
-        //        }
+            anchors.verticalCenter: parent.verticalCenter
+            visible: swipeview.currentIndex===0?false:true
+            background:Image{
+                asynchronous:true
+                anchors.centerIn: parent
+                source: themesImagesPath+"previouspage-background.png"
+            }
+            onClicked:{
+                console.log('preBtn',swipeview.currentIndex)
+                if(swipeview.currentIndex>0){
+                    //                    swipeview.currentIndex-=1
+                    //                    swipeview.setCurrentIndex(swipeview.currentIndex-1)
+                    swipeview.decrementCurrentIndex()
+                }
+            }
+        }
 
-        //        Button{
-        //            id:nextBtn
-        //            width:75
-        //            height:110
-        //            anchors.right:parent.right
-        //            anchors.verticalCenter: parent.verticalCenter
-        //            background:Rectangle{
-        //                color:"transparent"
-        //                //                border.color: "#fff"
-        //            }
-        //            Image{
-        //                anchors.centerIn: parent
-        //                source: "qrc:/x50/main/icon_rightgo.png"
-        //                opacity: swipeview.currentIndex===(swipeview.count-1)?0:1
-        //            }
-        //            onClicked:{
-        //                console.log('nextBtn',swipeview.currentIndex)
-        //                if(swipeview.currentIndex < swipeview.count){
-        //                    //                    swipeview.currentIndex+=1
-        //                    //                    swipeview.setCurrentIndex(swipeview.currentIndex+1)
-        //                    swipeview.incrementCurrentIndex()
-        //                }
-        //            }
-        //        }
+        Button{
+            id:nextBtn
+            width:70
+            height:80
+            anchors.right:parent.right
+
+            anchors.verticalCenter: parent.verticalCenter
+            visible: swipeview.currentIndex===(swipeview.count-1)?false:true
+            background:Image{
+                asynchronous:true
+                anchors.centerIn: parent
+                source: themesImagesPath+"nextpage-background.png"
+            }
+            onClicked:{
+                console.log('nextBtn',swipeview.currentIndex)
+                if(swipeview.currentIndex < swipeview.count){
+                    //                    swipeview.currentIndex+=1
+                    //                    swipeview.setCurrentIndex(swipeview.currentIndex+1)
+                    swipeview.incrementCurrentIndex()
+                }
+            }
+        }
 
     }
 
@@ -434,7 +575,6 @@ Item {
         anchors.bottom: parent.bottom
         width:parent.width
         height:80
-
-        windImg:(QmlDevState.state.HoodSpeed==0 || QmlDevState.state.HoodSpeed==null)?"":"qrc:/x50/main/icon_wind_"+QmlDevState.state.HoodSpeed+".png"
+        windImg:(QmlDevState.state.HoodSpeed==null || QmlDevState.state.HoodSpeed==0)?"":"qrc:/x50/main/icon_wind_"+QmlDevState.state.HoodSpeed+".png"
     }
 }

@@ -1,50 +1,85 @@
-import QtQuick 2.2
+import QtQuick 2.7
 import QtQuick.Controls 2.2
 import Qt.labs.settings 1.0
-import QtQuick.Window 2.2
+//import QtQuick.Window 2.2
 
 import "pageCook"
 import "pageMain"
 import "pageSet"
 import "pageProductionTest"
 import "qrc:/SendFunc.js" as SendFunc
-Window {
+
+ApplicationWindow {
     id: window
     width: 800
     height: 480
-    visible: true
+//    visible: true
     property int sysPowerPressCount:0
     readonly property string uiVersion:"1.0"
+    readonly property string productionTestWIFISSID:"moduletest"
+    readonly property string productionTestWIFIPWD:"12345678"
     readonly property int leftDevice:0
     readonly property int rightDevice:1
     readonly property int allDevice:2
 
-    property var leftWorkMode: ["未设定", "经典蒸", "高温蒸", "热风烧烤", "上下加热", "立体热风", "蒸汽烤", "空气炸", "保温烘干"]
-    property var leftWorkModeNumber:[0,1,2,35,36,38,40,42,72]
-    property string rightWorkMode:"便捷蒸"
+    readonly property var leftWorkMode: ["未设定", "经典蒸", "高温蒸", "热风烧烤", "上下加热", "立体热风", "蒸汽烤", "空气炸", "保温烘干"]
+    readonly property var leftWorkModeNumber:[0,1,2,35,36,38,40,42,72]
+    readonly property string rightWorkMode:"便捷蒸"
 
-    property var leftModel:[{"modelData":1,"temp":100,"time":30,"minTemp":40,"maxTemp":100},{"modelData":2,"temp":120,"time":20,"minTemp":101,"maxTemp":120},{"modelData":3,"temp":200,"time":60,"minTemp":50,"maxTemp":230}
+    readonly property var leftModel:[{"modelData":1,"temp":100,"time":30,"minTemp":40,"maxTemp":100},{"modelData":2,"temp":120,"time":20,"minTemp":101,"maxTemp":120},{"modelData":3,"temp":200,"time":60,"minTemp":50,"maxTemp":230}
         ,{"modelData":4,"temp":180,"time":120,"minTemp":50,"maxTemp":230},{"modelData":5,"temp":180,"time":120,"minTemp":50,"maxTemp":230},{"modelData":6,"temp":150,"time":60,"minTemp":50,"maxTemp":200}
         ,{"modelData":7,"temp":220,"time":15,"minTemp":200,"maxTemp":230},{"modelData":8,"temp":60,"time":30,"minTemp":50,"maxTemp":120}]
-    property var rightModel:{"modelData":0,"temp":100,"time":30,"minTemp":40,"maxTemp":100}
+    readonly property var rightModel:{"modelData":0,"temp":100,"time":30,"minTemp":40,"maxTemp":100}
 
-    property var workStateEnum:{"WORKSTATE_STOP":0,"WORKSTATE_RESERVE":1,"WORKSTATE_PREHEAT":2,"WORKSTATE_RUN":3,"WORKSTATE_FINISH":4,"WORKSTATE_PAUSE":5}
-    property var workStateArray:["停止","预约中","预热中","运行中","烹饪完成","暂停"]
+    readonly property var workStateEnum:{"WORKSTATE_STOP":0,"WORKSTATE_RESERVE":1,"WORKSTATE_PREHEAT":2,"WORKSTATE_RUN":3,"WORKSTATE_FINISH":4,"WORKSTATE_PAUSE":5}
+    readonly property var workStateArray:["停止","预约中","预热中","运行中","烹饪完成","暂停"]
 
-    property var workOperationEnum:{"START":0,"PAUSE":1,"CANCEL":2,"CONFIRM":3,"RUN_NOW":4}
+    readonly property var workOperationEnum:{"START":0,"PAUSE":1,"CANCEL":2,"CONFIRM":3,"RUN_NOW":4}
 
-    property var timingStateEnum:{"STOP":0,"RUN":1,"PAUSE":2,"CONFIRM":3}
-    property var timingOperationEnum:{"START":1,"CANCEL":2}
+    readonly property var timingStateEnum:{"STOP":0,"RUN":1,"PAUSE":2,"CONFIRM":3}
+    readonly property var timingOperationEnum:{"START":1,"CANCEL":2}
     property bool wifiConnecting: false
     property bool wifiConnected:false
     property bool sleepState: false
     property var wifiConnectInfo:{"ssid":"","psk":"","encryp":0}
-    property var multiModeEnum:{"NONE":0,"RECIPE":1,"MULTISTAGE":2}
+    //    property var multiModeEnum:{"NONE":0,"RECIPE":1,"MULTISTAGE":2}
 
+    property string themesImagesPath:"file:themes/default/"
+
+
+    /*
+    readonly  property ListModel systemthemes:ListModel {
+
+        ListElement {
+            name: qsTr("默认")
+            titleBackground: "#c62f2f"
+            background: "#f6f6f6"
+            textColor: "#5c5c5c"
+            imagesPath:"file:themes/default/"
+        }
+        ListElement {
+            name: qsTr("淑女粉")
+            titleBackground: "#191b1f"
+            background: "#222225"
+            textColor: "#adafb2"
+            imagesPath:"file:themes/light/"
+        }
+    }
+
+    function themeChange(current)
+    {
+        var themes=systemthemes.get(current)
+        themesImagesPath=themes.imagesPath
+    }
+*/
     Settings {
         id: systemSettings
         category: "system"
-
+        //        property int currentTheme: 0
+        //        onCurrentThemeChanged: {
+        //            console.log("onCurrentThemeChanged",systemSettings.currentTheme)
+        //            themeChange(systemSettings.currentTheme)
+        //        }
         //设置-休眠时间(范围:1-5,单位:分钟 )
         property int sleepTime: 4
 
@@ -60,7 +95,14 @@ Window {
         property bool rightCookDialog:true
         property bool multistageRemind:true
         property bool multistageDialog:true
-        property var wifiPasswdArray
+        property var wifiPasswdArray:[]
+
+        property int productionTestAging:0
+
+        onSleepTimeChanged: {
+            console.log("onSleepTimeChanged")
+            timer_window.interval=systemSettings.sleepTime*60000
+        }
     }
 
     function systemReset()
@@ -69,9 +111,8 @@ Window {
         Data.reset = null
         SendFunc.setToServer(Data)
 
-        //systemSettings.sleepTime=4
-        updateSleepTime(4)
-        systemSettings.brightness=255
+        systemSettings.sleepTime=4
+        systemSettings.brightness=250
         Backlight.backlightSet(systemSettings.brightness)
         systemSettings.firstOpenGuide=true
         if(systemSettings.wifiEnable!=true)
@@ -84,70 +125,136 @@ Window {
         systemSettings.rightCookDialog=true
         systemSettings.multistageRemind=true
         systemSettings.wifiPasswdArray=[]
+        systemSettings.productionTestAging=0
     }
 
-    function updateSleepTime(time)
-    {
-        systemSettings.sleepTime=time
-        timer_window.interval=systemSettings.sleepTime*60000
-    }
-
-    function startCooking(root,cookSteps,orderTime)
-    {
-        var page=isExistView("pageSteamBakeRun")
-        if(page!==null)
-            backPage(page)
-        else
-            backTopPage()
-
-        console.log("startCooking:",JSON.stringify(root),JSON.stringify(cookSteps))
-        if(cookSteps.length===1 && (undefined === cookSteps[0].number || 0 === cookSteps[0].number))
+    function systemPower(power){
+        if(power)
         {
-
-            SendFunc.setCooking(cookSteps,orderTime,root.cookPos)
-            //            if(leftDevice===root.cookPos)
-            //            {
-            //                QmlDevState.setState("LStOvState",1)
-            //                QmlDevState.setState("LStOvMode",cookSteps[0].mode)
-            //                QmlDevState.setState("LStOvRealTemp",cookSteps[0].temp)
-            //                QmlDevState.setState("LStOvSetTimerLeft",cookSteps[0].time)
-            //                QmlDevState.setState("LStOvOrderTimerLeft",cookSteps[0].time)
-            //            }
-            //            else
-            //            {
-            //                QmlDevState.setState("RStOvState",1)
-            //                QmlDevState.setState("RStOvRealTemp",cookSteps[0].temp)
-            //                QmlDevState.setState("RStOvSetTimerLeft",cookSteps[0].time)
-            //                QmlDevState.setState("RStOvOrderTimerLeft",cookSteps[0].time)
-            //            }
-
+            Backlight.backlightSet(systemSettings.brightness)
+            timer_window.restart()
         }
         else
         {
-            if(root.imgUrl!=="")
+            Backlight.backlightSet(1)
+            timer_window.stop()
+            backTopPage()
+        }
+        if(window.visible===false)
+            window.visible=true
+        //        timer_sysPower.stop()
+    }
+
+    Component.onCompleted: {
+        console.warn("Window onCompleted: ",component_fault.url)
+
+        //        if(systemSettings.currentTheme===0)
+        //            themeChange(systemSettings.currentTheme)
+
+
+        //        Backlight.backlightEnable()
+        //        Backlight.backlightSet(systemSettings.brightness)
+        load_page("pageHome")
+        if(systemSettings.wifiPasswdArray!=null)
+        {
+            var i
+            console.log("systemSettings.wifiPasswdArray",systemSettings.wifiPasswdArray.length)
+            for( i = 0; i < systemSettings.wifiPasswdArray.length; i++)
             {
-                SendFunc.setMultiCooking(cookSteps,orderTime,root.dishName)
+                console.log("ssid:",systemSettings.wifiPasswdArray[i].ssid)
+                console.log("psk:",systemSettings.wifiPasswdArray[i].psk)
+                console.log("encryp:",systemSettings.wifiPasswdArray[i].encryp)
+            }
+        }
+        systemSettings.childLock=false
+
+    }
+    background:Image {
+        //        smooth: false
+        asynchronous:true
+        source:themesImagesPath+"applicationwindow-background.png"
+    }
+
+    Timer{
+        id:timer_window
+        repeat: false
+        running: true
+        interval: systemSettings.sleepTime*60000//
+        triggeredOnStart: false
+        onTriggered: {
+            console.log("timer_window sleep...")
+            if(sleepState==false && QmlDevState.state.SysPower>0 && QmlDevState.state.HoodSpeed == 0 &&QmlDevState.state.LStoveStatus == 0 && QmlDevState.state.RStoveStatus == 0 &&QmlDevState.state.RStOvState == 0 && QmlDevState.state.LStOvState == 0 && QmlDevState.state.OTAState == 0 && QmlDevState.state.ErrorCodeShow == 0 && QmlDevState.localConnected == 1 && isExistView("PageTestFront")==null)
+            {
+                //                Backlight.backlightDisable()
+                sleepState=true
+                Backlight.backlightSet(0)
             }
             else
             {
-                SendFunc.setMultiCooking(cookSteps,orderTime)
+                timer_window.restart()
             }
-            //            QmlDevState.setState("LStOvState",1)
-            //            QmlDevState.setState("LStOvMode",cookSteps[0].mode)
-            //            QmlDevState.setState("LStOvRealTemp",cookSteps[0].temp)
-            //            QmlDevState.setState("LStOvOrderTimerLeft",cookSteps[0].time)
-
-            //            QmlDevState.setState("cnt",cookSteps.length)
-            //            QmlDevState.setState("current",2)
         }
     }
 
-    function closeLoaderMain(){
-        loader_main.sourceComponent = null
+    //    Timer{
+    //        id:timer_sysPower
+    //        repeat: QmlDevState.state.SysPower==0
+    //        running: false
+    //        interval: 1000
+    //        triggeredOnStart: false
+    //        onTriggered: {
+    //            console.log("timer_syspower",sysPowerPressCount)
+    //            if(sysPowerPressCount<2)
+    //            {
+    //                ++sysPowerPressCount
+    //                if(sysPowerPressCount==2)
+    //                {
+    //                    if(QmlDevState.state.SysPower==0)
+    //                    {
+    //                        SendFunc.setSysPower(1)
+    //                    }
+    //                }
+    //            }
+    //        }
+    //    }
+
+    StackView {
+        id: stackView
+        //        initialItem: pageTestFront // pageHome pageTestFront pageTest pageGetQuad
+        anchors.fill: parent
     }
 
-    function closeLoaderError(){
-        loader_error.sourceComponent = null
+    //---------------------------------------------------------------
+    Loader{
+        //加载弹窗组件
+        id:loader_main
+        //        asynchronous: true
+        anchors.fill: parent
+        sourceComponent:null
+    }
+    function closeLoaderMain(){
+        loader_main.sourceComponent = undefined
+    }
+
+    Component{
+        id:component_bind
+        PageDialogQrcode{
+            onCancel: {
+                closeLoaderMain()
+            }
+        }
+    }
+    function showQrcodeBind(title){
+        loader_main.sourceComponent = component_bind
+        loader_main.item.hintTopText=title
+    }
+    //---------------------------------------------------------------
+    Loader{
+        //加载弹窗组件
+        id:loader_error
+        //        asynchronous: true
+        anchors.fill: parent
+        sourceComponent:null
     }
     Component{
         id:component_fault
@@ -159,8 +266,7 @@ Window {
             hintHeight:292
 
             onCancel:{
-                SendFunc.setBuzControl(0)
-                closeLoaderError()
+                closeLoaderFault()
             }
         }
     }
@@ -181,113 +287,32 @@ Window {
         loader_error.item.hintTopImgSrc=imageUrl
         loader_error.item.hintBottomText=hintBottomText
     }
-    Component{
-        id:component_bind
-        PageDialogQrcode{
-            onCancel: {
-                closeLoaderMain()
-            }
-        }
-    }
-    function showQrcodeBind(title){
-        loader_main.sourceComponent = component_bind
-        loader_main.item.hintTopText=title
-    }
-    function systemPower(power){
-        if(power)
-        {
-            Backlight.backlightSet(systemSettings.brightness)
-            timer_window.restart()
-        }
-        else
-        {
-            Backlight.backlightSet(1)
-            timer_window.stop()
-            backTopPage()
-        }
-//        timer_sysPower.stop()
+    function closeLoaderFault(){
+        if(loader_error.sourceComponent === component_fault)
+            loader_error.sourceComponent = undefined
     }
 
-    Component.onCompleted: {
-        console.warn("Window onCompleted sleepTime:",systemSettings.sleepTime)
-
-        Backlight.backlightEnable()
-        Backlight.backlightSet(0)
-        //        var list=Backlight.getAllFileName("x5")
-        //        console.log("getAllFileName",list)
-
-        if(systemSettings.wifiPasswdArray!=null)
-        {
-            var i
-            console.log("systemSettings.wifiPasswdArray",systemSettings.wifiPasswdArray.length)
-            for( i = 0; i < systemSettings.wifiPasswdArray.length; i++)
-            {
-                console.log("ssid:",systemSettings.wifiPasswdArray[i].ssid)
-                console.log("psk:",systemSettings.wifiPasswdArray[i].psk)
-                console.log("encryp:",systemSettings.wifiPasswdArray[i].encryp)
-            }
-        }
-        systemSettings.childLock=false
-    }
-    Image {
-        source: "/x50/main/背景.png"
-    }
-    StackView {
-        id: stackView
-        initialItem: pageHome // pageHome pageTestFront pageTest
+    //---------------------------------------------------------------
+    Loader{
+        //加载弹窗组件
+        id:loader_lock_screen
+        asynchronous: true
         anchors.fill: parent
-    }
-    Timer{
-        id:timer_window
-        repeat: false
-        running: false
-        interval: systemSettings.sleepTime*60000
-        triggeredOnStart: false
-        onTriggered: {
-            console.log("timer_window sleep!!!!!!!!!!!!")
-            if(sleepState==false && QmlDevState.state.SysPower>0 && QmlDevState.state.HoodSpeed == 0 &&QmlDevState.state.LStoveStatus == 0 && QmlDevState.state.RStoveStatus == 0 &&QmlDevState.state.RStOvState == 0 && QmlDevState.state.LStOvState == 0 && QmlDevState.state.OTAState == 0 && QmlDevState.state.ErrorCodeShow == 0 && QmlDevState.localConnected == 1 && isExistView("PageTestFront")==null)
-            {
-                //                Backlight.backlightDisable()
-                Backlight.backlightSet(0)
-                sleepState=true
-            }
-        }
+        sourceComponent:null
     }
 
-//    Timer{
-//        id:timer_sysPower
-//        repeat: QmlDevState.state.SysPower==0
-//        running: false
-//        interval: 1000
-//        triggeredOnStart: false
-//        onTriggered: {
-//            console.log("timer_syspower",sysPowerPressCount)
-//            if(sysPowerPressCount<2)
-//            {
-//                ++sysPowerPressCount
-//                if(sysPowerPressCount==2)
-//                {
-//                    if(QmlDevState.state.SysPower==0)
-//                    {
-//                        SendFunc.setSysPower(1)
-//                    }
-//                }
-//            }
-//        }
-//    }
     MouseArea{
         anchors.fill: parent
         hoverEnabled:true
         propagateComposedEvents: true
 
         onPressed: {
-            console.warn("Window onPressed")
+            console.log("Window onPressed")
             if(QmlDevState.state.SysPower>0)
             {
                 if(sleepState==true)
                 {
                     sleepState=false
-                    //                Backlight.backlightEnable()
                     Backlight.backlightSet(systemSettings.brightness)
                     mouse.accepted = true
                 }
@@ -297,48 +322,29 @@ Window {
                 }
                 timer_window.restart()
             }
-//            else
-//            {
-//                sysPowerPressCount=0
-//                timer_sysPower.restart()
-//            }
+            else
+            {
+                mouse.accepted = true //
+                //                sysPowerPressCount=0
+                //                timer_sysPower.restart()
+            }
         }
-//        onReleased: {
-//            console.warn("Window onReleased")
-//            if(QmlDevState.state.SysPower==0)
-//            {
-//                timer_sysPower.stop()
-//                mouse.accepted = true
-//            }
-//            else
-//            {
-//                mouse.accepted = false
-//            }
-//        }
+        //        onReleased: {
+        //            console.warn("Window onReleased")
+        //            if(QmlDevState.state.SysPower==0)
+        //            {
+        //                timer_sysPower.stop()
+        //                mouse.accepted = true
+        //            }
+        //            else
+        //            {
+        //                mouse.accepted = false
+        //            }
+        //        }
 
-    }
-    Loader{
-        //加载弹窗组件
-        id:loader_main
-        anchors.fill: parent
-        sourceComponent:null
-    }
-
-    Loader{
-        //加载弹窗组件
-        id:loader_error
-        anchors.fill: parent
-        sourceComponent:null
-    }
-    Loader{
-        //加载弹窗组件
-        id:loader_lock_screen
-        anchors.fill: parent
-        sourceComponent:null
     }
     ListModel {
         id: wifiModel
-
         //        ListElement {
         //            connected: 1
         //            ssid: "qwertyuio"
@@ -347,43 +353,35 @@ Window {
         //        }
         //        ListElement {
         //            connected: 0
-        //            ssid: "asdfghjkl定义aa"
-        //            level:2
-        //            flags:0
-        //        }
-        //        ListElement {
-        //            connected: 0
         //            ssid: "123"
         //            level:2
         //            flags:1
         //        }
-
     }
-    Component {
-        id: pageTest
-        Item {
-            SwipeView {
-                id: swipeview
-                anchors.fill: parent
-                currentIndex:0
+    //    Component {
+    //        id: pageTest
+    //        Item {
+    //            SwipeView {
+    //                id: swipeview
+    //                anchors.fill: parent
+    //                currentIndex:0
 
-                interactive:true //是否可以滑动
-                //                Item {Image{source: "file:x5/方案一/1.png" }}
-                //                Item {Image{source: Qt.resolvedUrl("/test/images/x5/方案一/2.png")}}
-                //                Item {Image{source: "/test/x5/上下排版/1.png" }}
-                Repeater {
-                    id: repeater
-                    model: Backlight.getAllFileName("X50Test")//["A1首页","A2首页左滑"]
+    //                interactive:true //是否可以滑动
+    //                //                Item {Image{source: "file:x5/方案一/1.png" }}
+    //                //                Item {Image{source: Qt.resolvedUrl("/test/images/x5/方案一/2.png")}}
+    //                //                Item {Image{source: "/test/x5/上下排版/1.png" }}
+    //                Repeater {
+    //                    id: repeater
+    //                    model: Backlight.getAllFileName("X50Test")
+    //                    Item {
+    //                        Image{asynchronous:true
+    //                            source: "file:"+modelData }
+    //                    }
+    //                }
+    //            }
+    //        }
+    //    }
 
-                    Item {Image{source: "file:"+modelData }}
-                }
-            }
-            Component.onCompleted: {
-                console.log("pageTest onCompleted")
-
-            }
-        }
-    }
     Component {
         id: pageGradient
         PageGradient {}
@@ -392,7 +390,6 @@ Window {
         id: pageHome
         PageHome {}
     }
-
     Component {
         id: pageWifi
         PageWifi {}
@@ -405,7 +402,6 @@ Window {
         id: pageSteamBakeBase
         PageSteamBakeBase {}
     }
-
     Component {
         id: pageMultistageSet
         PageMultistageSet {}
@@ -490,6 +486,18 @@ Window {
         id: pageScreenTouch
         PageScreenTouch {}
     }
+    Component {
+        id: pageAgingTest
+        PageAgingTest {}
+    }
+    Component {
+        id: pageGetQuad
+        PageGetQuad {}
+    }
+    Component {
+        id: pageThemes
+        PageThemes {}
+    }
     function isExistView(pageName) {
         console.log("isExistView:",pageName)
         //        return stackView.currentItem.name===PageName
@@ -521,7 +529,7 @@ Window {
 
         switch (page) {
         case "pageHome":
-            stackView.pop(null,StackView.Immediate)
+            stackView.push(pageHome,StackView.Immediate)
             break;
         case "pageWifi":
             if(systemSettings.wifiEnable)
@@ -602,13 +610,71 @@ Window {
         case "pageScreenTouch":
             stackView.push(pageScreenTouch,StackView.Immediate)
             break;
+        case "pageAgingTest":
+            stackView.push(pageAgingTest,args,StackView.Immediate)
+            break;
+        case "pageGetQuad":
+            stackView.push(pageGetQuad,StackView.Immediate)
+            break;
+        case "pageThemes":
+            stackView.push(pageThemes,StackView.Immediate)
+            break;
         }
 
         console.log("stackView depth:"+stackView.depth)
     }
     //获取当前时间方法
-    function getCurtime()
+    //    function getCurtime()
+    //    {
+    //        return Qt.formatDateTime(new Date(),"hh:mm")
+    //    }
+
+    function startCooking(root,cookSteps,orderTime)
     {
-        return Qt.formatDateTime(new Date(),"hh:mm")
+        var page=isExistView("pageSteamBakeRun")
+        if(page!==null)
+            backPage(page)
+        else
+            backTopPage()
+
+        console.log("startCooking:",JSON.stringify(root),JSON.stringify(cookSteps))
+        if(cookSteps.length===1 && (undefined === cookSteps[0].number || 0 === cookSteps[0].number))
+        {
+            SendFunc.setCooking(cookSteps,orderTime,root.cookPos)
+            //            if(leftDevice===root.cookPos)
+            //            {
+            //                QmlDevState.setState("LStOvState",1)
+            //                QmlDevState.setState("LStOvMode",cookSteps[0].mode)
+            //                QmlDevState.setState("LStOvRealTemp",cookSteps[0].temp)
+            //                QmlDevState.setState("LStOvSetTimerLeft",cookSteps[0].time)
+            //                QmlDevState.setState("LStOvOrderTimerLeft",cookSteps[0].time)
+            //            }
+            //            else
+            //            {
+            //                QmlDevState.setState("RStOvState",1)
+            //                QmlDevState.setState("RStOvRealTemp",cookSteps[0].temp)
+            //                QmlDevState.setState("RStOvSetTimerLeft",cookSteps[0].time)
+            //                QmlDevState.setState("RStOvOrderTimerLeft",cookSteps[0].time)
+            //            }
+        }
+        else
+        {
+            if(root.imgUrl!=="")
+            {
+                SendFunc.setMultiCooking(cookSteps,orderTime,root.dishName,root.seqid)
+            }
+            else
+            {
+                SendFunc.setMultiCooking(cookSteps,orderTime)
+            }
+            //            QmlDevState.setState("LStOvState",1)
+            //            QmlDevState.setState("LStOvMode",cookSteps[0].mode)
+            //            QmlDevState.setState("LStOvRealTemp",cookSteps[0].temp)
+            //            QmlDevState.setState("LStOvOrderTimerLeft",cookSteps[0].time)
+
+            //            QmlDevState.setState("cnt",cookSteps.length)
+            //            QmlDevState.setState("current",2)
+        }
     }
+
 }

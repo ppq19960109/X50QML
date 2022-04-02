@@ -1,8 +1,8 @@
-import QtQuick 2.2
+import QtQuick 2.7
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
 import QtQuick.VirtualKeyboard 2.2
-import QtQuick.VirtualKeyboard.Settings 2.2
+//import QtQuick.VirtualKeyboard.Settings 2.2
 
 import "qrc:/WifiFunc.js" as WifiFunc
 import "qrc:/SendFunc.js" as SendFunc
@@ -183,9 +183,7 @@ Item {
             }
         }
     }
-    Image {
-        source: "/x50/main/背景.png"
-    }
+
     PageBackBar{
         id:topBar
         width:parent.width
@@ -243,6 +241,7 @@ Item {
 
                     Image{
                         id:indicatorImg
+                        asynchronous:true
                         anchors.centerIn: parent
                         source: wifi_switch.checked ?"/x50/wifi/kai.png":"/x50/wifi/guan.png"
                     }
@@ -300,6 +299,7 @@ Item {
                     source: "/x50/wifi/icon_sx.png"
                 }
                 Image{
+                    asynchronous:true
                     visible: connected==1
                     anchors.centerIn: parent
                     source: "/x50/wifi/icon_selected.png"
@@ -324,6 +324,7 @@ Item {
             }
             Image {
                 id: wifi_level
+                asynchronous:true
                 anchors.right: parent.right
                 anchors.rightMargin:  53
                 anchors.bottom: parent.bottom
@@ -342,6 +343,7 @@ Item {
                     return res
                 }
                 Image{
+                    asynchronous:true
                     anchors.fill: parent
                     anchors.centerIn: parent
                     visible: flags > 0
@@ -450,7 +452,8 @@ Item {
                 }
             }
             Image {
-                source: "/x50/main/背景.png"
+                asynchronous:true
+                source: themesImagesPath+"applicationwindow-background.png"
             }
             PageBackBar{
                 id:topBar
@@ -614,13 +617,14 @@ Item {
     }
     function dismissWifiInput(){
         listView.positionViewAtBeginning()
-        loader_wifiInput.sourceComponent = null
+        loader_wifiInput.sourceComponent = undefined
         timer_wifi_scan.start()
     }
 
     Loader{
         //加载弹窗组件
         id:loader_wifiInput
+//        asynchronous: true
         anchors.fill: parent
         //        focus: true
         //        onLoaded: {

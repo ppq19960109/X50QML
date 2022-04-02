@@ -1,4 +1,4 @@
-import QtQuick 2.2
+import QtQuick 2.7
 import QtQuick.Controls 2.2
 
 ToolBar {
@@ -24,6 +24,7 @@ ToolBar {
         anchors.left:parent.left
         anchors.verticalCenter: parent.verticalCenter
         Image{
+            asynchronous:true
             anchors.centerIn: parent
             source: "qrc:/x50/icon/icon_wife_nor.png"
         }

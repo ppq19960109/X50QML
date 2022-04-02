@@ -39,6 +39,7 @@ Rectangle {
 
             Image {
                 id:closeImg
+                asynchronous:true
                 anchors.centerIn: parent
                 source: "/x50/icon/icon_close.png"
             }

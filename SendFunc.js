@@ -1,4 +1,5 @@
 //.pragma library
+var multiModeEnum={"NONE":0,"RECIPE":1,"MULTISTAGE":2}
 
 function setToServer(Data)
 {
@@ -80,6 +81,13 @@ function getWifiState()
     getToServer(Data)
 }
 
+function setAlarm(operation)
+{
+    var Data={}
+    Data.Alarm=operation
+
+    setToServer(Data)
+}
 function setBuzControl(operation)
 {
     var Data={}
@@ -87,7 +95,6 @@ function setBuzControl(operation)
 
     setToServer(Data)
 }
-
 function setSysPower(operation)
 {
     var Data={}
@@ -119,13 +126,10 @@ function setCooking(list,orderTime,cookPos)
         Data.LStOvMode=list[0].mode
         Data.LStOvSetTimer=list[0].time
         Data.LStOvSetTemp=list[0].temp
+        Data.LStOvOperation=workOperationEnum.START
         if(undefined !== orderTime && orderTime > 0)
         {
             Data.LStOvOrderTimer=orderTime
-        }
-        else
-        {
-            Data.LStOvOperation=workOperationEnum.START
         }
     }
     else
@@ -133,19 +137,16 @@ function setCooking(list,orderTime,cookPos)
         Data.RStOvMode=list[0].mode
         Data.RStOvSetTimer=list[0].time
         Data.RStOvSetTemp=list[0].temp
+        Data.RStOvOperation=workOperationEnum.START
         if(undefined !== orderTime && orderTime > 0)
         {
             Data.RStOvOrderTimer=orderTime
-        }
-        else
-        {
-            Data.RStOvOperation=workOperationEnum.START
         }
     }
     setToServer(Data)
 }
 
-function setMultiCooking(list,orderTime,dishName)
+function setMultiCooking(list,orderTime,dishName,cookbookID)
 {
     console.log("setMultiCooking")
     var Data={}
@@ -164,21 +165,20 @@ function setMultiCooking(list,orderTime,dishName)
     {
         Data.MultiMode=multiModeEnum.MULTISTAGE
         Data.MultiStageContent=MultiStageContent
+//        Data.CookbookID=0
     }
     else
     {
         Data.MultiMode=multiModeEnum.RECIPE
         Data.CookbookParam=MultiStageContent
         Data.CookbookName=dishName
+        Data.CookbookID=cookbookID
     }
-
+    Data.LStOvOperation=workOperationEnum.START
     if(undefined !== orderTime && orderTime > 0)
     {
         Data.LStOvOrderTimer=orderTime
     }
-    else
-    {
-        Data.LStOvOperation=workOperationEnum.START
-    }
+
     setToServer(Data)
 }

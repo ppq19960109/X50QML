@@ -6,7 +6,7 @@ Rectangle {
     color:"transparent"
     Component.onCompleted: {
         console.log("PageLocalSettings light",Backlight.backlightGet())
-//        lightSlider.value=Backlight.backlightGet()
+        //        lightSlider.value=Backlight.backlightGet()
     }
 
     PageBackBar{
@@ -44,6 +44,8 @@ Rectangle {
             }
             Image{
                 id:startImg
+                asynchronous:true
+                cache:false
                 source: "qrc:/x50/set/icon_light_small.png"
                 anchors.left: parent.left
                 anchors.verticalCenter: parent.verticalCenter
@@ -63,11 +65,13 @@ Rectangle {
                 onValueSlider: {
                     console.log("lightSlider:",value)
                     Backlight.backlightSet(value)
-                    systemSettings.brightness=Backlight.backlightGet()
+                    systemSettings.brightness=value
                 }
             }
             Image{
                 id:endImg
+                asynchronous:true
+                cache:false
                 source: "qrc:/x50/set/icon_light_big.png"
                 anchors.right: parent.right
                 anchors.verticalCenter: parent.verticalCenter
@@ -108,7 +112,7 @@ Rectangle {
                 displayText:value+"分钟"
                 onValueSlider: {
                     console.log("dormantSlider:",value)
-                    updateSleepTime(value)
+                    systemSettings.sleepTime=value
                 }
             }
             Text{

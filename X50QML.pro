@@ -1,6 +1,6 @@
-QT += quick
+QT += quick quickcontrols2
 
-CONFIG += c++11
+CONFIG += c++11 qtquickcompiler
 
 # The following define makes your compiler emit warnings if you use
 # any Qt feature that has been marked deprecated (the exact warnings
@@ -34,9 +34,10 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 CONFIG += rk3308
-DEFINES += SYSPOWER_RK3308
+#DEFINES += SYSPOWER_RK3308
 rk3308{
 DEFINES += USE_RK3308
+#LIBS += -lqrencode
 #LIBS += -lDeviceIo -lasound
 INCLUDEPATH += libqrencode/include
 LIBS += libqrencode/lib/libqrencode.a

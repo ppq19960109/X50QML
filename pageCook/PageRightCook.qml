@@ -9,7 +9,9 @@ Item {
 
     }
     Image {
-        source: "/x50/main/背景.png"
+        cache:false
+        asynchronous:true
+        source: themesImagesPath+"applicationwindow-background.png"
     }
     PageBackBar{
         id:topBar

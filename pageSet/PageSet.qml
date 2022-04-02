@@ -43,6 +43,7 @@ Item {
                 Layout.preferredHeight:166
                 Layout.alignment: Qt.AlignHCenter|Qt.AlignVCenter
                 background:Image{
+                    asynchronous:true
                     anchors.fill: parent
                     source:"qrc:/x50/set/圆角矩形 1370.png"
                 }
@@ -63,6 +64,7 @@ Item {
                 Layout.preferredHeight:166
                 Layout.alignment: Qt.AlignHCenter|Qt.AlignVCenter
                 background:Image{
+                    asynchronous:true
                     anchors.fill: parent
                     source:"qrc:/x50/set/圆角矩形 1370.png"
                 }
@@ -82,6 +84,7 @@ Item {
                 Layout.preferredHeight:166
                 Layout.alignment: Qt.AlignHCenter|Qt.AlignVCenter
                 background:Image{
+                    asynchronous:true
                     anchors.fill: parent
                     source:"qrc:/x50/set/圆角矩形 1370(1).png"
                 }
@@ -101,6 +104,7 @@ Item {
                 Layout.preferredHeight:166
                 Layout.alignment: Qt.AlignHCenter|Qt.AlignVCenter
                 background:Image{
+                    asynchronous:true
                     anchors.fill: parent
                     source:"qrc:/x50/set/圆角矩形 1370.png"
                 }
@@ -120,6 +124,7 @@ Item {
                 Layout.preferredHeight:166
                 Layout.alignment: Qt.AlignHCenter|Qt.AlignVCenter
                 background:Image{
+                    asynchronous:true
                     anchors.fill: parent
                     source:"qrc:/x50/set/圆角矩形 1370.png"
                 }
@@ -139,6 +144,7 @@ Item {
                 Layout.preferredHeight:166
                 Layout.alignment: Qt.AlignHCenter|Qt.AlignVCenter
                 background:Image{
+                    asynchronous:true
                     anchors.fill: parent
                     source:"qrc:/x50/set/圆角矩形 1370(1).png"
                 }

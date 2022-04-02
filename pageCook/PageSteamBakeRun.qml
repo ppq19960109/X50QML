@@ -34,7 +34,8 @@ Item {
         }
     }
     Image {
-        source: "/x50/main/背景.png"
+        asynchronous:true
+        source: themesImagesPath+"applicationwindow-background.png"
     }
     Rectangle{
         width:parent.width/2
@@ -90,10 +91,8 @@ Item {
             anchors.leftMargin: 5
             anchors.bottom: leftProgressBar.bottom
             anchors.bottomMargin: -10
-            background:Rectangle{
-                color:"transparent"
-            }
-            Image {
+            background:Image {
+                asynchronous:true
                 anchors.centerIn:parent
                 source: "qrc:/x50/steam/icon_close.png"
             }
@@ -112,10 +111,8 @@ Item {
             anchors.rightMargin: 5
             anchors.bottom: leftProgressBar.bottom
             anchors.bottomMargin: -10
-            background:Rectangle{
-                color:"transparent"
-            }
-            Image {
+            background:Image {
+                asynchronous:true
                 anchors.centerIn:parent
                 source: QmlDevState.state.LStOvState===workStateEnum.WORKSTATE_PAUSE?"qrc:/x50/steam/icon_start.png":"qrc:/x50/steam/icon_close(1).png"
             }
@@ -134,7 +131,7 @@ Item {
         }
         PageIndicator {
             id:leftIndicator
-            visible: true
+            visible: QmlDevState.state.MultiMode > 0
             count: QmlDevState.state.cnt
             currentIndex: QmlDevState.state.current-1
             anchors.top: leftProgressBar.bottom
@@ -210,10 +207,8 @@ Item {
             anchors.leftMargin: 5
             anchors.bottom: rightProgressBar.bottom
             anchors.bottomMargin: -10
-            background:Rectangle{
-                color:"transparent"
-            }
-            Image {
+            background:Image {
+                asynchronous:true
                 anchors.centerIn:parent
                 source: "qrc:/x50/steam/icon_close.png"
             }
@@ -232,10 +227,8 @@ Item {
             anchors.rightMargin: 5
             anchors.bottom: rightProgressBar.bottom
             anchors.bottomMargin: -10
-            background:Rectangle{
-                color:"transparent"
-            }
-            Image {
+            background:Image {
+                asynchronous:true
                 anchors.centerIn:parent
                 source: QmlDevState.state.RStOvState===workStateEnum.WORKSTATE_PAUSE?"qrc:/x50/steam/icon_start.png":"qrc:/x50/steam/icon_close(1).png"
             }

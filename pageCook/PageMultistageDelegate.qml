@@ -1,4 +1,4 @@
-import QtQuick 2.2
+import QtQuick 2.7
 import QtQuick.Controls 2.2
 import "../"
 Item {
@@ -32,6 +32,8 @@ Item {
             color:"transparent"
             Image {
                 id:delImg
+                cache:false
+                asynchronous:true
                 anchors.centerIn: parent
                 source: "qrc:/x50/icon/icon_delete.png"
             }

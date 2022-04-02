@@ -1,27 +1,21 @@
-import QtQuick 2.2
+import QtQuick 2.7
 import QtQuick.Controls 2.2
-import QtQuick.Layouts 1.1
+import QtQuick.Layouts 1.3
 
 Item {
-    width:parent.width
-    height: parent.height
-    //        anchors.fill: parent
+    anchors.fill: parent
     Row {
         anchors.fill: parent
-        anchors.topMargin: 40
         anchors.leftMargin: 60
-
+        anchors.topMargin: 40
         spacing: 0
 
         Button{
             width: 225
-            height:parent.height
+            height:325
 
-            background:Rectangle{
-                radius: 10
-                color:"transparent"
-            }
-            Image {
+            background:Image {
+                asynchronous:true
                 source: "qrc:/x50/main/定时关火.png"
             }
             Text{
@@ -40,27 +34,45 @@ Item {
 
         Button{
             width: 225
-            height:parent.height
-            background:Rectangle{
-                radius: 10
-                color:"transparent"
-            }
-            Image {
+            height:325
+            background:Image {
+                asynchronous:true
                 source: "qrc:/x50/main/设置.png"
             }
             Text{
-                text:"设置"
-                color:"#FFF"
-                font.pixelSize: 40
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.top: parent.top
                 anchors.topMargin: 55
+                color:"#FFF"
+                font.pixelSize: 40
+                text:qsTr("设置")
             }
 
             onClicked: {
                 load_page("pageSet")
             }
         }
+
+        //        Button{
+        //            width: 225
+        //            height:325
+        //            background:Image {
+        //        asynchronous:true
+        //                source: "qrc:/x50/main/设置.png"
+        //            }
+        //            Text{
+        //                text:"主题"
+        //                color:"#FFF"
+        //                font.pixelSize: 40
+        //                anchors.horizontalCenter: parent.horizontalCenter
+        //                anchors.top: parent.top
+        //                anchors.topMargin: 55
+        //            }
+
+        //            onClicked: {
+        //                load_page("pageThemes")
+        //            }
+        //        }
 
     }
 }
