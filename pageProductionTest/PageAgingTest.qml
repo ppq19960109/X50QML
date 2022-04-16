@@ -1,12 +1,14 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.2
 
-Rectangle {
+Item {
     property int time_count: 0
-    property variant containerqml: null
+    property var containerqml: null
     property int aging_status:0
-    color: "#000"
 
+    Component.onCompleted: {
+
+    }
     Timer{
         id:timer_aging
         repeat: true
@@ -68,8 +70,8 @@ Rectangle {
         text: qsTr("累计测试时间:")
     }
     Button{
-        width:100+40
-        height:50+30
+        width:100+50
+        height:50+50
         anchors.right: parent.right
         anchors.bottom: parent.bottom
         background:Rectangle{
@@ -77,11 +79,11 @@ Rectangle {
             height:50
             anchors.centerIn: parent
             radius: 8
-            color:"green"
+            color:themesTextColor2
         }
         Text{
             text:"退出"
-            color:"#fff"
+            color:"#FFF"
             font.pixelSize: 40
             anchors.centerIn: parent
         }
@@ -100,7 +102,5 @@ Rectangle {
             }
         }
     }
-    Component.onCompleted: {
 
-    }
 }

@@ -1,51 +1,47 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.2
 
-Rectangle {
+Item {
     property alias hintTopText: hintTop.text
     property alias hintBottomText: hintBottom.text
     property alias cancelText: cancelBtnText.text
     property alias confirmText: confirmBtnText.text
+    property alias hintWidth: hint.width
     property alias hintHeight: hint.height
+    property alias closeBtnVisible: closeBtn.visible
     signal cancel()
     signal confirm()
     MouseArea{
         anchors.fill: parent
     }
     anchors.fill: parent
-    color: "transparent"
-    Rectangle {
-        anchors.fill: parent
-        color: "#000"
-        opacity: 0.6
-    }
+
     Rectangle {
         id:hint
         anchors.centerIn: parent
         implicitWidth: 680
         implicitHeight: 360
-        color: "#596767"
+        color: themesPopupWindowColor
         radius: 16
-        PageGradient{
-            anchors.fill: parent
-        }
+        //        PageGradient{
+        //            anchors.fill: parent
+        //        }
         Button {
+            id:closeBtn
             width:closeImg.width+60
             height:closeImg.height+60
             anchors.top:parent.top
-//            anchors.topMargin: 33
+            //            anchors.topMargin: 33
             anchors.right:parent.right
-//            anchors.rightMargin: 33
+            //            anchors.rightMargin: 33
 
             Image {
                 id:closeImg
                 asynchronous:true
                 anchors.centerIn: parent
-                source: "/x50/icon/icon_close.png"
+                source: themesImagesPath+"icon-window-close.png"
             }
-            background: Rectangle {
-                color:"transparent"
-            }
+            background: Item {}
             onClicked: {
                 cancel()
             }
@@ -55,7 +51,7 @@ Rectangle {
             id:hintTop
             width:parent.width
             visible: hintTop.text!=""
-            color:"white"
+            color:"#FFF"
             font.pixelSize: 40
             anchors.top: parent.top
             anchors.topMargin: 50
@@ -70,7 +66,7 @@ Rectangle {
             id:hintBottom
             visible: hintBottom.text!=""
             width:parent.width
-            color:"white"
+            color:"#FFF"
             font.pixelSize: 35
             anchors.top: parent.top
             anchors.topMargin: 130
@@ -82,28 +78,28 @@ Rectangle {
         }
         Button {
             id:cancelBtn
-            width: 175+20
-            height: 65+20
+            width: 176+10
+            height: 64+10
             anchors.bottom:parent.bottom
             anchors.bottomMargin: 40
             anchors.left: parent.left
-            anchors.leftMargin: 130
+            anchors.leftMargin: 105
             Text{
                 id:cancelBtnText
                 anchors.centerIn: parent
-                color:"white"
+                color:themesTextColor2
                 font.pixelSize: 30
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
                 text:"取消"
             }
             background: Rectangle {
-                width:175
-                height:65
+                width:176
+                height:64
                 anchors.centerIn: parent
                 color:"transparent"
-                border.color:"#FFF"
-                radius: 8
+                border.color:themesTextColor2
+                radius: 32
             }
             onClicked: {
                 cancel()
@@ -112,29 +108,28 @@ Rectangle {
 
         Button {
             id:confirmBtn
-            width:175+20
-            height:65+20
+            width:176+10
+            height:64+10
             anchors.bottom:parent.bottom
             anchors.bottomMargin: 40
             anchors.right: parent.right
-            anchors.rightMargin: 130
+            anchors.rightMargin: 105
 
             Text{
                 id:confirmBtnText
                 anchors.centerIn: parent
-                color:"#00E6B6"
+                color:"#000"
                 font.pixelSize: 30
 
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
             }
             background: Rectangle {
-                width:175
-                height:65
+                width:176
+                height:64
                 anchors.centerIn: parent
-                color:"transparent"
-                border.color:"#00E6B6"
-                radius: 8
+                color:themesTextColor2
+                radius: 32
             }
             onClicked: {
                 confirm()

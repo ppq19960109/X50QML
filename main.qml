@@ -13,7 +13,7 @@ ApplicationWindow {
     id: window
     width: 800
     height: 480
-//    visible: true
+    visible: true
     property int sysPowerPressCount:0
     readonly property string uiVersion:"1.0"
     readonly property string productionTestWIFISSID:"moduletest"
@@ -45,8 +45,10 @@ ApplicationWindow {
     //    property var multiModeEnum:{"NONE":0,"RECIPE":1,"MULTISTAGE":2}
 
     property string themesImagesPath:"file:themes/default/"
-
-
+    readonly property string themesWindowBackgroundColor:"#1A1A1A"
+    readonly property string themesPopupWindowColor:"#333333"
+    readonly property string themesTextColor:"#E68855"
+    readonly property string themesTextColor2:"#A2A2A2"
     /*
     readonly  property ListModel systemthemes:ListModel {
 
@@ -114,7 +116,6 @@ ApplicationWindow {
         systemSettings.sleepTime=4
         systemSettings.brightness=250
         Backlight.backlightSet(systemSettings.brightness)
-        systemSettings.firstOpenGuide=true
         if(systemSettings.wifiEnable!=true)
         {
             systemSettings.wifiEnable=true
@@ -136,7 +137,7 @@ ApplicationWindow {
         }
         else
         {
-            Backlight.backlightSet(1)
+            Backlight.backlightSet(0)
             timer_window.stop()
             backTopPage()
         }
@@ -146,7 +147,7 @@ ApplicationWindow {
     }
 
     Component.onCompleted: {
-        console.warn("Window onCompleted: ",component_fault.url)
+        console.warn("Window onCompleted: ",Qt.fontFamilies())
 
         //        if(systemSettings.currentTheme===0)
         //            themeChange(systemSettings.currentTheme)
@@ -169,10 +170,8 @@ ApplicationWindow {
         systemSettings.childLock=false
 
     }
-    background:Image {
-        //        smooth: false
-        asynchronous:true
-        source:themesImagesPath+"applicationwindow-background.png"
+    background:Rectangle {
+        color: themesWindowBackgroundColor
     }
 
     Timer{
@@ -220,7 +219,7 @@ ApplicationWindow {
 
     StackView {
         id: stackView
-        //        initialItem: pageTestFront // pageHome pageTestFront pageTest pageGetQuad
+//                initialItem: pageTestFront // pageHome pageTestFront pageTest pageGetQuad
         anchors.fill: parent
     }
 
@@ -328,6 +327,7 @@ ApplicationWindow {
                 //                sysPowerPressCount=0
                 //                timer_sysPower.restart()
             }
+//            mouse.accepted=false
         }
         //        onReleased: {
         //            console.warn("Window onReleased")
@@ -345,18 +345,18 @@ ApplicationWindow {
     }
     ListModel {
         id: wifiModel
-        //        ListElement {
-        //            connected: 1
-        //            ssid: "qwertyuio"
-        //            level:2
-        //            flags:2
-        //        }
-        //        ListElement {
-        //            connected: 0
-        //            ssid: "123"
-        //            level:2
-        //            flags:1
-        //        }
+//                ListElement {
+//                    connected: 1
+//                    ssid: "qwertyuio"
+//                    level:2
+//                    flags:2
+//                }
+//                ListElement {
+//                    connected: 0
+//                    ssid: "123"
+//                    level:2
+//                    flags:1
+//                }
     }
     //    Component {
     //        id: pageTest
@@ -382,10 +382,10 @@ ApplicationWindow {
     //        }
     //    }
 
-    Component {
-        id: pageGradient
-        PageGradient {}
-    }
+//    Component {
+//        id: pageGradient
+//        PageGradient {}
+//    }
     Component {
         id: pageHome
         PageHome {}
@@ -494,10 +494,10 @@ ApplicationWindow {
         id: pageGetQuad
         PageGetQuad {}
     }
-    Component {
-        id: pageThemes
-        PageThemes {}
-    }
+//    Component {
+//        id: pageThemes
+//        PageThemes {}
+//    }
     function isExistView(pageName) {
         console.log("isExistView:",pageName)
         //        return stackView.currentItem.name===PageName
@@ -608,7 +608,7 @@ ApplicationWindow {
             stackView.push(pageScreenLight,StackView.Immediate)
             break;
         case "pageScreenTouch":
-            stackView.push(pageScreenTouch,StackView.Immediate)
+            stackView.push(pageScreenTouch,args,StackView.Immediate)
             break;
         case "pageAgingTest":
             stackView.push(pageAgingTest,args,StackView.Immediate)
@@ -616,9 +616,9 @@ ApplicationWindow {
         case "pageGetQuad":
             stackView.push(pageGetQuad,StackView.Immediate)
             break;
-        case "pageThemes":
-            stackView.push(pageThemes,StackView.Immediate)
-            break;
+//        case "pageThemes":
+//            stackView.push(pageThemes,StackView.Immediate)
+//            break;
         }
 
         console.log("stackView depth:"+stackView.depth)
@@ -631,30 +631,28 @@ ApplicationWindow {
 
     function startCooking(root,cookSteps,orderTime)
     {
-        var page=isExistView("pageSteamBakeRun")
-        if(page!==null)
-            backPage(page)
-        else
-            backTopPage()
-
         console.log("startCooking:",JSON.stringify(root),JSON.stringify(cookSteps))
         if(cookSteps.length===1 && (undefined === cookSteps[0].number || 0 === cookSteps[0].number))
         {
             SendFunc.setCooking(cookSteps,orderTime,root.cookPos)
             //            if(leftDevice===root.cookPos)
             //            {
-            //                QmlDevState.setState("LStOvState",1)
+            //                QmlDevState.setState("LStOvState",2)
             //                QmlDevState.setState("LStOvMode",cookSteps[0].mode)
             //                QmlDevState.setState("LStOvRealTemp",cookSteps[0].temp)
+            //                QmlDevState.setState("LStOvSetTimer",cookSteps[0].time)
             //                QmlDevState.setState("LStOvSetTimerLeft",cookSteps[0].time)
-            //                QmlDevState.setState("LStOvOrderTimerLeft",cookSteps[0].time)
+            //                QmlDevState.setState("LStOvOrderTimer",cookSteps[0].time)
+            //                QmlDevState.setState("LStOvOrderTimerLeft",cookSteps[0].time/2)
             //            }
             //            else
             //            {
-            //                QmlDevState.setState("RStOvState",1)
+            //                QmlDevState.setState("RStOvState",3)
             //                QmlDevState.setState("RStOvRealTemp",cookSteps[0].temp)
             //                QmlDevState.setState("RStOvSetTimerLeft",cookSteps[0].time)
-            //                QmlDevState.setState("RStOvOrderTimerLeft",cookSteps[0].time)
+            //                QmlDevState.setState("RStOvSetTimer",cookSteps[0].time)
+            //                QmlDevState.setState("RStOvOrderTimer",cookSteps[0].time)
+            //                QmlDevState.setState("RStOvOrderTimerLeft",cookSteps[0].time/2)
             //            }
         }
         else
@@ -675,6 +673,11 @@ ApplicationWindow {
             //            QmlDevState.setState("cnt",cookSteps.length)
             //            QmlDevState.setState("current",2)
         }
+        var page=isExistView("pageSteamBakeRun")
+        if(page!==null)
+            backPage(page)
+//        else
+//            backTopPage()
     }
 
 }

@@ -178,7 +178,7 @@ int LocalClient::uds_recv(const char *byte,const int len)
                 continue;
             }
             verify = data[6 + msg_len +1];
-            printf("uds_recv encry:%d seqid:%d msg_len:%d", encry, seqid, msg_len);;
+            printf("uds_recv encry:%d seqid:%d msg_len:%d", encry, seqid, msg_len);
 
             if (CheckSum((unsigned char *)&data[i + 2], msg_len + 5) != verify)
             {

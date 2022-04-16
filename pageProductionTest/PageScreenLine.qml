@@ -2,13 +2,12 @@ import QtQuick 2.7
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
 
-Rectangle {
+Item {
     property int rowCount: 0
     property int rowPos: 0
     property int colCount: 0
     property int colPos: 0
     property int touchExited:0
-    color: "#000"
     Component.onCompleted: {
 
 
@@ -19,7 +18,7 @@ Rectangle {
         width:parent.width
         height:100
         anchors.verticalCenter: parent.verticalCenter
-        color:"aqua"
+        color:"blue"
         Canvas{
             property real lastX
             property real lastY
@@ -42,21 +41,27 @@ Rectangle {
             }
         }
         MouseArea{
+            property real pressedX
             id: rowarea
             anchors.fill: parent
-//            hoverEnabled:true
+            //            hoverEnabled:true
             propagateComposedEvents: true
 
             onPressed: {
                 console.warn("row onPressed.....")
+                row.z=1
+                col.z=0
                 rowCanvas.lastX = mouseX//鼠标位置
                 rowCanvas.lastY = mouseY
+                pressedX=mouse.x
                 rowPos=0
                 touchExited=0
             }
             onReleased: {
-                console.warn("row onReleased......")
-                if(touchExited==0 && rowPos>0)
+                console.warn("row onReleased......",pressedX,mouse.x)
+                rowCanvas.context.reset()
+//                rowCanvas.requestPaint()
+                if(touchExited==0 && rowPos>0 && Math.abs(mouse.x-pressedX)>600)
                     ++rowCount
             }
             onPositionChanged:{
@@ -91,7 +96,7 @@ Rectangle {
         width:100
         height:parent.height
         anchors.horizontalCenter: parent.horizontalCenter
-        color:"aqua"
+        color:"blue"
 
         Canvas{
             property real lastX
@@ -115,21 +120,27 @@ Rectangle {
             }
         }
         MouseArea{
+            property real pressedY
             id: colarea
             anchors.fill: parent
-//            hoverEnabled:true
+            //            hoverEnabled:true
             propagateComposedEvents: true
 
             onPressed: {
                 console.warn("col onPressed.....")
+                row.z=0
+                col.z=1
                 colCanvas.lastX = mouseX//鼠标位置
                 colCanvas.lastY = mouseY
+                pressedY=mouse.y
                 colPos=0
                 touchExited=0
             }
             onReleased: {
-                console.warn("col onReleased......")
-                if( touchExited==0 && colPos>0)
+                console.warn("col onReleased......",pressedY,mouse.y)
+                colCanvas.context.reset()
+//                colCanvas.requestPaint()
+                if( touchExited==0 && colPos>0&& Math.abs(mouse.y-pressedY)>400)
                     ++colCount
             }
             onPositionChanged:{
@@ -161,8 +172,8 @@ Rectangle {
     }
 
     Button{
-        width:100+40
-        height:50+40
+        width:100+50
+        height:50+50
         anchors.right: parent.right
         anchors.bottom: parent.bottom
         background:Rectangle{
@@ -170,7 +181,7 @@ Rectangle {
             height:50
             anchors.centerIn: parent
             radius: 8
-            color:"green"
+            color:themesTextColor2
         }
         Text{
             text:"退出"

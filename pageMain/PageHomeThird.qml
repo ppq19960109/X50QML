@@ -5,18 +5,18 @@ import QtQuick.Layouts 1.3
 Item {
     anchors.fill: parent
     Row {
-        anchors.fill: parent
-        anchors.leftMargin: 60
-        anchors.topMargin: 40
-        spacing: 0
+        width: parent.width-140
+        anchors.centerIn: parent
+
+        spacing: 30
 
         Button{
-            width: 225
-            height:325
+            width: 196
+            height:300
 
             background:Image {
                 asynchronous:true
-                source: "qrc:/x50/main/定时关火.png"
+                source: themesImagesPath+"homethird-button1-background.png"
             }
             Text{
                 text:"定时关火"
@@ -24,7 +24,7 @@ Item {
                 font.pixelSize: 40
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.top: parent.top
-                anchors.topMargin: 55
+                anchors.topMargin: 45
             }
 
             onClicked: {
@@ -33,16 +33,16 @@ Item {
         }
 
         Button{
-            width: 225
-            height:325
+            width: 196
+            height:300
             background:Image {
                 asynchronous:true
-                source: "qrc:/x50/main/设置.png"
+                source: themesImagesPath+"homethird-button2-background.png"
             }
             Text{
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.top: parent.top
-                anchors.topMargin: 55
+                anchors.topMargin: 45
                 color:"#FFF"
                 font.pixelSize: 40
                 text:qsTr("设置")
@@ -52,27 +52,6 @@ Item {
                 load_page("pageSet")
             }
         }
-
-        //        Button{
-        //            width: 225
-        //            height:325
-        //            background:Image {
-        //        asynchronous:true
-        //                source: "qrc:/x50/main/设置.png"
-        //            }
-        //            Text{
-        //                text:"主题"
-        //                color:"#FFF"
-        //                font.pixelSize: 40
-        //                anchors.horizontalCenter: parent.horizontalCenter
-        //                anchors.top: parent.top
-        //                anchors.topMargin: 55
-        //            }
-
-        //            onClicked: {
-        //                load_page("pageThemes")
-        //            }
-        //        }
 
     }
 }

@@ -15,20 +15,15 @@ Item {
     anchors.fill: parent
 
     Rectangle {
-        anchors.fill: parent
-        color: "#000"
-        opacity: 0.6
-    }
-    Rectangle {
         id:hint
         anchors.centerIn: parent
         implicitWidth: 600
         implicitHeight: 292
-        color: "#596767"
+        color: themesPopupWindowColor
         radius: 16
-        PageDialogGradient{
-            anchors.fill: parent
-        }
+//        PageDialogGradient{
+//            anchors.fill: parent
+//        }
         Button {
             id:closeBtn
             visible: true
@@ -44,11 +39,9 @@ Item {
                 id:closeImg
                 asynchronous:true
                 anchors.centerIn: parent
-                source: "/x50/icon/icon_close.png"
+                source: themesImagesPath+"icon-window-close.png"
             }
-            background: Rectangle {
-                color:"transparent"
-            }
+            background: Item {}
             onClicked: {
                 cancel()
             }

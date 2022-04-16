@@ -1,18 +1,14 @@
 import QtQuick 2.9
 import QtQuick.Controls 2.2
 import "../"
-Item {
+Rectangle {
     id:root
-    Image {
-        cache:false
-        asynchronous:true
-        source:themesImagesPath+"applicationwindow-background.png"
-    }
+    color: themesWindowBackgroundColor
+
     PageBackBar{
         id:topBar
         width:parent.width
         anchors.bottom:parent.bottom
-        height:80
         name:qsTr("多段烹饪说明")
         leftBtnText:""
         rightBtnText:""
@@ -27,14 +23,12 @@ Item {
         }
     }
     //内容
-    Rectangle{
+    Item{
         id:wrapper
-        width:parent.width
         anchors.bottom:topBar.top
         anchors.top: parent.top
-        color:"transparent"
 
-        Rectangle {
+        Item {
             id: content
             width: parent.width - 120
             anchors.top:parent.top
@@ -44,7 +38,7 @@ Item {
             //            anchors.leftMargin: 30
             //            anchors.rightMargin: 30
             anchors.horizontalCenter: parent.horizontalCenter
-            color:"transparent"
+
             Flickable {
                 id: flick
                 anchors.fill: parent
@@ -74,24 +68,23 @@ Item {
         }
         Button{
             id:nextBtn
-            width: 175
-            height: 65
+            width: 176
+            height: 64
             anchors.bottom:parent.bottom
             anchors.bottomMargin: 40
             anchors.horizontalCenter: parent.horizontalCenter
             background:Rectangle{
-                color:"transparent"
-                border.color:"#00E6B6"
-                radius: 8
+                color:themesTextColor2
+                radius: 32
             }
 
             Text{
                 text:"下一步"
-                color:"#00E6B6"
+                color:"#000"
                 font.pixelSize: 30
                 anchors.centerIn:parent
-                horizontalAlignment:Text.AlignHCenter
-                verticalAlignment:Text.AlignVCenter
+//                horizontalAlignment:Text.AlignHCenter
+//                verticalAlignment:Text.AlignVCenter
             }
             onClicked: {
                 if(checkBoxRemind.checked)

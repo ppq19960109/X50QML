@@ -1,4 +1,4 @@
-import QtQuick 2.0
+import QtQuick 2.7
 import QtQuick.Controls 2.2
 import "../"
 import "qrc:/SendFunc.js" as SendFunc
@@ -16,7 +16,6 @@ Item {
 
             if("Reset"==key)
             {
-
                 if(value==0)
                 {
 
@@ -32,9 +31,7 @@ Item {
 
     PageBackBar{
         id:topBar
-        width:parent.width
         anchors.bottom:parent.bottom
-        height:80
         name:qsTr("恢复出厂设置")
         leftBtnText:qsTr("")
         rightBtnText:qsTr("")
@@ -44,11 +41,10 @@ Item {
     }
 
     //内容
-    Rectangle{
+    Item{
         width:parent.width
         anchors.bottom:topBar.top
         anchors.top: parent.top
-        color:"transparent"
 
         Text{
             width: parent.width
@@ -65,19 +61,18 @@ Item {
         }
 
         Button{
-            width: 175
-            height: 65
+            width: 176
+            height: 64
             anchors.bottom: parent.bottom
             anchors.bottomMargin: 70
             anchors.horizontalCenter: parent.horizontalCenter
             background:Rectangle{
-                color:"transparent"
-                border.color:"#00E6B6"
-                radius: 8
+                color:themesTextColor2
+                radius: 32
             }
             Text{
                 text:"重置设备"
-                color:"#00E6B6"
+                color:"#000"
                 font.pixelSize: 30
                 anchors.centerIn: parent
             }
@@ -98,9 +93,8 @@ Item {
                 closeLoaderMain()
             }
             onConfirm: {
-                closeLoaderMain()
-                console.log("page systemReset")
                 systemReset()
+                closeLoaderMain()    
             }
         }
     }

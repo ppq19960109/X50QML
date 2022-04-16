@@ -1,27 +1,18 @@
-import QtQuick 2.0
+import QtQuick 2.7
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
 
 import "../"
-Item {
-
+Rectangle {
+    color: themesWindowBackgroundColor
     Component.onCompleted: {
-
-
     }
     Component.onDestruction: {
         console.log("PageLeftCook onDestruction")
     }
-    Image {
-        cache:false
-        asynchronous:true
-        source: themesImagesPath+"applicationwindow-background.png"
-    }
     PageBackBar{
         id:topBar
-        width:parent.width
         anchors.bottom:parent.bottom
-        height:80
         name:qsTr("")
         leftBtnText:qsTr("")
         rightBtnText:qsTr("")
@@ -30,11 +21,10 @@ Item {
         }
     }
     //内容
-    Rectangle{
+    Item{
         width:parent.width
         anchors.bottom:topBar.top
         anchors.top: parent.top
-        color:"transparent"
 
         Button{
             width: 300
@@ -43,25 +33,27 @@ Item {
             anchors.left: parent.left
             anchors.leftMargin: 80
 
-            background:PageGradient{
-                anchors.fill: parent
+            background:Image{
+                asynchronous:true
+                cache:false
+                source: "qrc:/x50/steam/left-cook-background2.png"
             }
             Text{
                 color:"#FFF"
                 text:qsTr("左腔蒸烤")
-                font.pixelSize:35
+                font.pixelSize:50
                 anchors.top: parent.top
-                anchors.topMargin: 30
+                anchors.topMargin: 196
                 anchors.horizontalCenter: parent.horizontalCenter
             }
 
             Image {
                 cache:false
                 asynchronous:true
-                anchors.bottom: parent.bottom
-                anchors.bottomMargin: 50
+                anchors.top: parent.top
+                anchors.topMargin: 70
                 anchors.horizontalCenter: parent.horizontalCenter
-                source: "qrc:/x50/main/烤鸡.png"
+                source: themesImagesPath+"icon-cookadd.png"
             }
             onClicked: {
                 closeLoaderMain()
@@ -85,8 +77,10 @@ Item {
                 Layout.preferredHeight:100
                 Layout.maximumHeight:100
                 Layout.alignment: Qt.AlignHCenter|Qt.AlignVCenter
-                background:PageGradient{
-                    anchors.fill: parent
+                background:Image{
+                    asynchronous:true
+                    cache:false
+                    source: "qrc:/x50/steam/left-cook-background1.png"
                 }
                 Text{
                     text:"智慧菜谱"
@@ -104,8 +98,10 @@ Item {
                 Layout.preferredWidth: 300
                 Layout.preferredHeight:100
                 Layout.alignment: Qt.AlignHCenter|Qt.AlignVCenter
-                background:PageGradient{
-                    anchors.fill: parent
+                background:Image{
+                    asynchronous:true
+                    cache:false
+                    source: "qrc:/x50/steam/left-cook-background1.png"
                 }
                 Text{
                     text:"烹饪历史"
@@ -123,8 +119,10 @@ Item {
                 Layout.preferredWidth: 300
                 Layout.preferredHeight:100
                 Layout.alignment: Qt.AlignHCenter|Qt.AlignVCenter
-                background:PageGradient{
-                    anchors.fill: parent
+                background:Image{
+                    asynchronous:true
+                    cache:false
+                    source: "qrc:/x50/steam/left-cook-background1.png"
                 }
                 Text{
                     text:"多段烹饪"

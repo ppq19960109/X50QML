@@ -2,54 +2,56 @@ import QtQuick 2.7
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
 
-Rectangle {
+Item {
     id:root
-    property string name: "PageTestFront"
-    color: "#000"
+    property int productionTestAging:0
+    property int productionTestTouch:0
     Component.onCompleted: {
 
     }
     function clickedfunc(status)
     {
         console.log("clickedfunc:"+status);
-        systemSettings.productionTestAging=status
+        productionTestAging=status
     }
-    Rectangle{
+    function clickedTouchFunc(status)
+    {
+        console.log("productionTestTouch:"+status);
+        productionTestTouch=status
+    }
+    Item{
         id:topBar
         width:parent.width
-        height:60
+        height:80
         anchors.top: parent.top
-        color:"transparent"
         Text {
             anchors.centerIn: parent
-            color:"green"
+            color:themesTextColor
             font.pixelSize: 40
             font.bold : true
             text: qsTr("屏幕检测")
         }
     }
-    Rectangle{
-        id:bottomBar
+    Item{
         width:parent.width
         anchors.top: topBar.bottom
         anchors.bottom: parent.bottom
-        color:"transparent"
 
         GridLayout{
             width:parent.width
-            height: parent.height-80
+            height: parent.height-100
             anchors.top: parent.top
             rows: 2
             columns: 3
-            rowSpacing: 0
-            columnSpacing: 20
+            rowSpacing: 10
+            columnSpacing: 10
             Button{
                 Layout.preferredWidth: 200
                 Layout.preferredHeight:100
                 Layout.alignment: Qt.AlignHCenter|Qt.AlignVCenter
                 background:Rectangle{
                     radius: 16
-                    color:"blue"
+                    color:themesTextColor2
                 }
                 Text{
                     text:"LCD"
@@ -67,16 +69,16 @@ Rectangle {
                 Layout.alignment: Qt.AlignHCenter|Qt.AlignVCenter
                 background:Rectangle{
                     radius: 16
-                    color:"blue"
+                    color:themesTextColor2
                 }
                 Text{
                     text:"触摸"
-                    color:"#FFF"
+                    color:productionTestTouch==0?"#FFF":productionTestTouch==1?"green":"red"
                     font.pixelSize: 35
                     anchors.centerIn: parent
                 }
                 onClicked: {
-                    load_page("pageScreenTouch")
+                    load_page("pageScreenTouch",{containerqml:root})
                 }
             }
             Button{
@@ -85,7 +87,7 @@ Rectangle {
                 Layout.alignment: Qt.AlignHCenter|Qt.AlignVCenter
                 background:Rectangle{
                     radius: 16
-                    color:"blue"
+                    color:themesTextColor2
                 }
                 Text{
                     text:"背光"
@@ -103,7 +105,7 @@ Rectangle {
                 Layout.alignment: Qt.AlignHCenter|Qt.AlignVCenter
                 background:Rectangle{
                     radius: 16
-                    color:"blue"
+                    color:themesTextColor2
                 }
                 Text{
                     text:"划线耐久"
@@ -121,7 +123,7 @@ Rectangle {
                 Layout.alignment: Qt.AlignHCenter|Qt.AlignVCenter
                 background:Rectangle{
                     radius: 16
-                    color:"blue"
+                    color:themesTextColor2
                 }
                 Text{
                     text:"点击耐久"
@@ -140,11 +142,11 @@ Rectangle {
                 Layout.alignment: Qt.AlignHCenter|Qt.AlignVCenter
                 background:Rectangle{
                     radius: 16
-                    color:"blue"
+                    color:themesTextColor2
                 }
                 Text{
                     text:"老化测试"
-                    color:systemSettings.productionTestAging==0?"#FFF":aging_status==1?"lime":"red"
+                    color:productionTestAging==0?"#FFF":productionTestAging==1?"green":"red"
                     font.pixelSize: 35
                     anchors.centerIn: parent
                 }
@@ -155,8 +157,8 @@ Rectangle {
             }
         }
         Button{
-            width:100+40
-            height:50+30
+            width:100+50
+            height:50+50
             anchors.right: parent.right
             anchors.bottom: parent.bottom
             background:Rectangle{
@@ -164,7 +166,7 @@ Rectangle {
                 height:50
                 anchors.centerIn: parent
                 radius: 8
-                color:"green"
+                color:themesTextColor2
             }
             Text{
                 text:"退出"

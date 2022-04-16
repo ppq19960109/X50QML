@@ -8,9 +8,7 @@ import QtQuick.Controls 2.2
 //        anchors.fill: parent
         implicitWidth: 40
         implicitHeight: 40
-        background:Rectangle{
-            color:"transparent"
-        }
+        background:Item{}
         contentItem: Item {
             anchors.centerIn: parent
             implicitWidth: parent.width

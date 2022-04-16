@@ -17,13 +17,12 @@ CheckBox {
         verticalAlignment: Text.AlignVCenter
         leftPadding: control.indicator.width + control.spacing
     }
-    indicator: Rectangle {
-        implicitWidth: 60
-        implicitHeight: 60
+    indicator: Item {
+        implicitWidth: 50
+        implicitHeight: implicitWidth
         x: control.leftPadding
         y: parent.height / 2 - height / 2
         //                radius: 3
-        color:"transparent"
         //                border.color: control.down ? "#17a81a" : "#21be2b"
 
         //                Rectangle {
@@ -36,11 +35,11 @@ CheckBox {
         //                    visible: control.checked
         //                }
         Image {
-            width: 40
+            width: 30
             height: width
             asynchronous:true
             anchors.centerIn: parent
-            source: control.checked ?"qrc:/x50/main/iocn_kuang_x.png":"qrc:/x50/main/iocn_kuang_w.png"
+            source: themesImagesPath+(control.checked ?"iocn_checked.png":"iocn_uncheck.png")
             //                    visible: control.checked
         }
     }

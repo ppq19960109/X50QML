@@ -1,4 +1,4 @@
-import QtQuick 2.0
+import QtQuick 2.7
 import QtQuick.Controls 2.2
 import "../"
 Item {
@@ -12,9 +12,7 @@ Item {
     }
     PageBackBar{
         id:topBar
-        width:parent.width
         anchors.bottom:parent.bottom
-        height:80
         name:qsTr("关于本机")
         leftBtnText:qsTr("")
         rightBtnText:qsTr("")
@@ -43,7 +41,7 @@ Item {
         id: infoDelegate
         Item{
             width: parent.width
-            height: 70
+            height: 80
             Text{
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.left: parent.left
@@ -65,11 +63,10 @@ Item {
         }
     }
     //内容
-    Rectangle{
+    Item{
         width:parent.width
         anchors.bottom:topBar.top
         anchors.top: parent.top
-        color:"transparent"
         Item{
             width:parent.width-80
             height: parent.height-80
@@ -77,7 +74,7 @@ Item {
             ListView {
                 id: listView
                 width: parent.width
-                height: listView.model.count*70
+                height: listView.model.count*80
                 anchors.top: parent.top
                 anchors.horizontalCenter: parent.horizontalCenter
                 interactive: false
@@ -87,16 +84,14 @@ Item {
             }
             Button{
                 width: parent.width
-                height: 70
+                height: 80
                 anchors.top: listView.bottom
 
                 PageDivider{
                     anchors.horizontalCenter: parent.horizontalCenter
                     anchors.bottom: parent.bottom
                 }
-                background:Rectangle{
-                    color:"transparent"
-                }
+                background:Item{}
                 Text{
                     text:"绑定官方APP"
                     color:"#fff"
@@ -106,17 +101,17 @@ Item {
                     horizontalAlignment:Text.AlignHCenter
                     verticalAlignment:Text.AlignVCenter
                 }
-//                Text{
-//                    text:" 已绑定火粉俱乐部"
-//                    visible: QmlDevState.state.APPBind==1
-//                    color:"#fff"
-//                    font.pixelSize: 30
-//                    anchors.verticalCenter: parent.verticalCenter
-//                    anchors.right: qrcodeImg.left
-//                    anchors.rightMargin: 20
-//                    horizontalAlignment:Text.AlignHCenter
-//                    verticalAlignment:Text.AlignVCenter
-//                }
+                //                Text{
+                //                    text:" 已绑定火粉俱乐部"
+                //                    visible: QmlDevState.state.APPBind==1
+                //                    color:"#fff"
+                //                    font.pixelSize: 30
+                //                    anchors.verticalCenter: parent.verticalCenter
+                //                    anchors.right: qrcodeImg.left
+                //                    anchors.rightMargin: 20
+                //                    horizontalAlignment:Text.AlignHCenter
+                //                    verticalAlignment:Text.AlignVCenter
+                //                }
                 Image {
                     id:qrcodeImg
                     asynchronous:true
@@ -125,9 +120,10 @@ Item {
                     anchors.right: parent.right
                     source: "qrc:/x50/set/gengduo.png"
                 }
+
                 onClicked: {
-//                    console.log("AppBind",QmlDevState.state.APPBind)
-//                    if(QmlDevState.state.APPBind==0)
+                    console.log("BindTokenState",QmlDevState.state.BindTokenState)
+                    if(QmlDevState.state.WifiState==4 && QmlDevState.state.BindTokenState > 0)
                         showQrcodeBind("此二维码可以")
                 }
             }

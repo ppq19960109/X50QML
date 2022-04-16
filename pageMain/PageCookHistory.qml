@@ -5,7 +5,7 @@ import "../"
 Item {
     property bool edit: false
     property int cookPos: allDevice
-    property int historyCurrentIndex:0
+//    property int historyCurrentIndex:0
     //    property alias historyModel:recipeListView.model
     Component.onCompleted: {
         console.log("state",state,typeof state)
@@ -54,6 +54,7 @@ Item {
                 if(value.id==historyModel.get(i).id)
                 {
                     historyModel.remove(i,1)
+                    console.warn("PageCookHistory DeleteHistory",value.id,i)
                     break
                 }
             }
@@ -80,9 +81,7 @@ Item {
 
     PageBackBar{
         id:topBar
-        width:parent.width
         anchors.bottom:parent.bottom
-        height:80
         name:qsTr("烹饪历史")
         leftBtnText:edit?qsTr("完成"):qsTr("管理")
         leftBtnOpacity:noHistory.visible==true?0.6:1
@@ -101,11 +100,10 @@ Item {
         }
     }
     //内容
-    Rectangle{
+    Item{
         width:parent.width
         anchors.bottom:topBar.top
         anchors.top: parent.top
-        color:"transparent"
 
         Text{
             id:noHistory
@@ -128,14 +126,13 @@ Item {
             anchors.bottomMargin: 20
             anchors.top: parent.top
             anchors.topMargin: 20
-            highlightRangeMode: ListView.StrictlyEnforceRange
-            //            boundsBehavior:Flickable.StopAtBounds
+//            highlightRangeMode: ListView.ApplyRange//StrictlyEnforceRange ApplyRange
+//                        boundsBehavior:Flickable.StopAtBounds
             clip: true
             currentIndex:0
-            delegate: Rectangle{
+            delegate: Item{
                 width:parent.width
                 height:100
-                color:"transparent"
                 PageDivider{
                     anchors.horizontalCenter: parent.horizontalCenter
                     anchors.bottom:parent.bottom
@@ -150,24 +147,22 @@ Item {
                     font.pixelSize: 40
                     horizontalAlignment:Text.AlignHCenter
                     verticalAlignment:Text.AlignVCenter
-                    color:recipeListView.currentIndex===index?"#00E6B6":"#FFF"
+                    color:recipeListView.currentIndex===index?themesTextColor:"#FFF"
                 }
                 Button {
                     height:parent.height
                     anchors.left:number.right
                     anchors.right:collection.left
-                    background: Rectangle{
-                        color:"transparent"
-                    }
+                    background: Item{}
                     Text{
-                        width : parent.width;
+                        width : parent.width
                         anchors.centerIn: parent
                         text: dishName
                         font.pixelSize: 40
 
                         //                        horizontalAlignment:Text.AlignHCenter
-                        verticalAlignment:Text.AlignHCenter
-                        color:recipeListView.currentIndex===index?"#00E6B6":"#fff"
+//                        verticalAlignment:Text.AlignHCenter
+                        color:recipeListView.currentIndex===index?themesTextColor:"#fff"
                     }
                     onClicked: {
                         recipeListView.currentIndex=index
@@ -178,10 +173,7 @@ Item {
                     width:200
                     height:parent.height
                     anchors.right: parent.right
-                    background: Rectangle{
-                        color:"transparent"
-                    }
-                    Image{
+                    background: Image{
                         visible: edit
                         cache:false
                         asynchronous:true
@@ -196,18 +188,20 @@ Item {
 
                         horizontalAlignment:Text.AlignHCenter
                         verticalAlignment:Text.AlignHCenter
-                        color:recipeListView.currentIndex===index?"#00E6B6":collect===0?"#FFF":"#FFB613"
+                        color:recipeListView.currentIndex===index?themesTextColor:collect===0?"#FFF":"#E5B9A1"
                     }
                     onClicked: {
+                        console.log("onClicked",id,collect)
+                        recipeListView.currentIndex=index
                         if(edit)
                         {
                             QmlDevState.deleteHistory(id)
-                            historyCurrentIndex=recipeListView.currentIndex-1
+//                            historyCurrentIndex=recipeListView.currentIndex-1
                         }
                         else
                         {
                             QmlDevState.setCollect(index,!collect)
-                            historyCurrentIndex=recipeListView.currentIndex
+//                            historyCurrentIndex=recipeListView.currentIndex
                         }
                     }
                 }

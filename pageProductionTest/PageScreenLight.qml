@@ -1,12 +1,11 @@
-import QtQuick 2.0
+import QtQuick 2.7
 import QtQuick.Controls 2.2
 import "qrc:/pageSet"
 Item{
-    Rectangle{
+    Item{
         width:parent.width-100
         height: parent.height
         anchors.centerIn: parent
-        color:"transparent"
 
         Image{
             id:startImg
@@ -28,7 +27,6 @@ Item{
             value: Backlight.backlightGet()
 
             onValueSlider: {
-
                 Backlight.backlightSet(value)
             }
         }
@@ -39,28 +37,28 @@ Item{
             anchors.right: parent.right
             anchors.verticalCenter: parent.verticalCenter
         }
-        Button{
-            width:100+40
-            height:50+40
-            anchors.right: parent.right
-            anchors.bottom: parent.bottom
-            background:Rectangle{
-                width:100
-                height:50
-                anchors.centerIn: parent
-                radius: 8
-                color:"green"
-            }
-            Text{
-                text:"退出"
-                color:"#fff"
-                font.pixelSize: 40
-                anchors.centerIn: parent
-            }
-            onClicked: {
-                Backlight.backlightSet(systemSettings.brightness)
-                backPrePage()
-            }
+    }
+    Button{
+        width:100+50
+        height:50+50
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        background:Rectangle{
+            width:100
+            height:50
+            anchors.centerIn: parent
+            radius: 8
+            color:themesTextColor2
+        }
+        Text{
+            text:"退出"
+            color:"#fff"
+            font.pixelSize: 40
+            anchors.centerIn: parent
+        }
+        onClicked: {
+            Backlight.backlightSet(systemSettings.brightness)
+            backPrePage()
         }
     }
 }

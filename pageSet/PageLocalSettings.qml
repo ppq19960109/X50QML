@@ -1,9 +1,9 @@
-import QtQuick 2.0
+import QtQuick 2.7
 import QtQuick.Controls 2.2
 import "../"
 import "qrc:/SendFunc.js" as SendFunc
-Rectangle {
-    color:"transparent"
+Item {
+
     Component.onCompleted: {
         console.log("PageLocalSettings light",Backlight.backlightGet())
         //        lightSlider.value=Backlight.backlightGet()
@@ -11,9 +11,7 @@ Rectangle {
 
     PageBackBar{
         id:topBar
-        width:parent.width
         anchors.bottom:parent.bottom
-        height:80
         name:qsTr("本机设置")
         leftBtnText:qsTr("")
         rightBtnText:qsTr("")
@@ -22,19 +20,16 @@ Rectangle {
         }
     }
     //内容
-    Rectangle{
+    Item{
         width:parent.width-100
         anchors.bottom:topBar.top
         anchors.top: parent.top
         anchors.horizontalCenter: parent.horizontalCenter
-        color:"transparent"
 
-        Rectangle{
+        Item{
             width:parent.width
             height: parent.height/2
             anchors.top: parent.top
-
-            color:"transparent"
             Text{
                 anchors.bottom: startImg.top
                 anchors.left: parent.left
@@ -79,11 +74,10 @@ Rectangle {
 
         }
 
-        Rectangle{
+        Item{
             width:parent.width
             height: parent.height/2
             anchors.bottom: parent.bottom
-            color:"transparent"
             Text{
                 anchors.bottom: startText.top
                 anchors.left: parent.left

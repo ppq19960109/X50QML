@@ -15,7 +15,12 @@
 int main(int argc, char *argv[])
 {
     qputenv("QT_IM_MODULE", QByteArray("qtvirtualkeyboard"));
-//    qDebug() << "availableStyles: " << QQuickStyle::availableStyles();
+    qputenv("QT_VIRTUALKEYBOARD_STYLE", "light");
+
+    QLocale::setDefault(QLocale::English);//QLocale::English
+    QLocale locale;
+    qDebug()<< "locale:"<<locale.language();
+    //    qDebug() << "availableStyles: " << QQuickStyle::availableStyles();
     //        QQuickStyle::setStyle("Imagine");
 
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
@@ -42,17 +47,17 @@ int main(int argc, char *argv[])
     qDebug()<<"FontsLocation"<<QStandardPaths::standardLocations(QStandardPaths::FontsLocation);
 
     QFont font;
-    font.setFamily("Source Han Sans CN");//设置全局字体
+    font.setFamily("SimHei");//设置全局字体 "Source Han Sans CN" SimHei
     app.setFont(font);
     //中文支持
 
     QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF-8"));
 
-    //    QFontDatabase fdb;
-    //    QStringList fontList = fdb.families();
-    //    for(int i = 0; i < fontList.size(); i++){
-    //        qDebug() << "font name" << i << ": " << fontList.at(i);
-    //    }
+        QFontDatabase fdb;
+        QStringList fontList = fdb.families();
+        for(int i = 0; i < fontList.size(); i++){
+            qDebug() << "font name" << i << ": " << fontList.at(i);
+        }
 
 
     QQmlApplicationEngine engine;
@@ -61,9 +66,9 @@ int main(int argc, char *argv[])
     engine.rootContext()->setContextProperty("Backlight", backlight);
 
     const QUrl url(QStringLiteral("qrc:/main.qml"));
-//    QQmlComponent component(&engine, url);
-//    QObject *object = component.create();
-//    QMetaObject::invokeMethod(object, "myQmlFunction");
+    //    QQmlComponent component(&engine, url);
+    //    QObject *object = component.create();
+    //    QMetaObject::invokeMethod(object, "myQmlFunction");
 
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
                      &app, [url](QObject *obj, const QUrl &objUrl) {

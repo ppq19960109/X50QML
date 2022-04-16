@@ -2,13 +2,13 @@ import QtQuick 2.7
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
 
-Rectangle {
+Item {
     property int centerCount: 0
     property int lefttopCount: 0
     property int  righttopCount: 0
     property int  leftbottomCount: 0
     property int  rightbottomCount: 0
-    color: "#000"
+
     Component.onCompleted: {
 
 
@@ -174,8 +174,8 @@ Rectangle {
 
 
     Button{
-        width:100+40
-        height:50+40
+        width:100+50
+        height:50+50
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.bottom: parent.bottom
         background:Rectangle{
@@ -183,7 +183,7 @@ Rectangle {
             height:50
             anchors.centerIn: parent
             radius: 8
-            color:"green"
+            color:themesTextColor2
         }
         Text{
             text:"退出"

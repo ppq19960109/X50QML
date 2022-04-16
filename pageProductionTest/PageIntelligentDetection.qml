@@ -71,12 +71,12 @@ Rectangle {
         onStateChanged: { // 处理目标对象信号的槽函数
             console.log("page PageIntelligentDetection:",key)
 
-            if(wifiSignalText.visible==false && "WifiScanR"==key)
+            if("WifiScanR"==key && wifiSignalText.visible==false)
             {
                 wifiSignalText.visible=true
                 parseWifiList(value)
             }
-            else if( wifiConnectText.visible==false && "WifiState"==key)
+            else if("WifiState"==key && wifiConnectText.visible==false)
             {
                 if(value>1)
                 {
@@ -107,7 +107,7 @@ Rectangle {
                     }
                 }
             }
-            else if(resetText.visible==false && "Reset"==key)
+            else if("Reset"==key && resetText.visible==false)
             {
                 resetText.visible=true
                 if(value==0)
@@ -123,30 +123,27 @@ Rectangle {
             }
         }
     }
-    Rectangle{
+    Item{
         id:topBar
         width:parent.width
-        height:80
+        height:70
         anchors.top: parent.top
-        color:"transparent"
         Text {
             anchors.centerIn: parent
-            color:"green"
+            color:themesTextColor
             font.pixelSize: 40
             font.bold : true
             text: qsTr("智能模块检测")
         }
     }
-    Rectangle{
+    Item{
         id:bottomBar
         width:parent.width
         anchors.top: topBar.bottom
         anchors.bottom: parent.bottom
-        color:"transparent"
-
         GridLayout{
             width:parent.width -100
-            height: parent.height -40
+            height: parent.height -80
             anchors.left: parent.left
             anchors.leftMargin: 20
             rows: 5
@@ -158,17 +155,15 @@ Rectangle {
                 Layout.preferredWidth: 220
                 Layout.preferredHeight:60
                 Layout.alignment: Qt.AlignVCenter
-
                 text:"通讯及版本检测:"
                 color:"#FFF"
                 font.pixelSize: 30
             }
             Rectangle{
                 id:version
-                Layout.preferredWidth: 450
-                Layout.preferredHeight:100
+                Layout.preferredWidth: 400
+                Layout.preferredHeight:60
                 Layout.alignment: Qt.AlignVCenter
-
                 radius: 8
                 color:"transparent"
 
@@ -196,7 +191,6 @@ Rectangle {
                 Layout.preferredWidth: 400
                 Layout.preferredHeight:60
                 Layout.alignment: Qt.AlignVCenter
-
                 radius: 8
                 color:"transparent"
 
@@ -225,10 +219,8 @@ Rectangle {
                 Layout.preferredWidth: 400
                 Layout.preferredHeight:60
                 Layout.alignment: Qt.AlignVCenter
-
                 radius: 8
                 color:"transparent"
-
                 Text{
                     visible: false
                     id:wifiConnectText
@@ -250,11 +242,9 @@ Rectangle {
             }
             Rectangle{
                 id:quad
-
                 Layout.preferredWidth: 400
                 Layout.preferredHeight:60
                 Layout.alignment: Qt.AlignVCenter
-
                 radius: 8
                 color:"transparent"
 
@@ -267,7 +257,6 @@ Rectangle {
                     anchors.centerIn: parent
                 }
             }
-
             Text{
                 Layout.preferredWidth: 220
                 Layout.preferredHeight:60
@@ -279,14 +268,11 @@ Rectangle {
             }
             Rectangle{
                 id:reset
-
-                Layout.preferredWidth: 300
+                Layout.preferredWidth: 400
                 Layout.preferredHeight:60
                 Layout.alignment: Qt.AlignVCenter
-
                 radius: 8
                 color:"transparent"
-
                 Text{
                     visible: false
                     id:resetText
@@ -298,8 +284,8 @@ Rectangle {
             }
         }
         Button{
-            width:100+40
-            height:50+40
+            width:100+30
+            height:50+30
             anchors.right: parent.right
             anchors.bottom: parent.bottom
             background:Rectangle{
@@ -307,7 +293,7 @@ Rectangle {
                 height:50
                 anchors.centerIn: parent
                 radius: 8
-                color:"green"
+                color:themesTextColor2
             }
             Text{
                 text:"退出"

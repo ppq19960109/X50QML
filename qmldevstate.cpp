@@ -7,82 +7,85 @@
 //QmlDevState* QmlDevState::qmlDevState;
 QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
 {
-    stateTypeMap.insert("Alarm",LINK_VALUE_TYPE_NUM);
-    stateTypeMap.insert("SteamStart",LINK_VALUE_TYPE_NULL);
-    stateTypeMap.insert("ProductionTest",LINK_VALUE_TYPE_NULL);
-    stateTypeMap.insert("ElcSWVersion",LINK_VALUE_TYPE_STRING);
-    stateTypeMap.insert("ComSWVersion",LINK_VALUE_TYPE_STRING);
-    stateTypeMap.insert("Reset",LINK_VALUE_TYPE_NUM);
-    stateTypeMap.insert("ErrorCode",LINK_VALUE_TYPE_NUM);
-    stateTypeMap.insert("ErrorCodeShow",LINK_VALUE_TYPE_NUM);
-    stateTypeMap.insert("SysPower",LINK_VALUE_TYPE_NUM);
+    stateType.append(QPair<QString,int>("Reset",LINK_VALUE_TYPE_NUM));
+    stateType.append(QPair<QString,int>("Alarm",LINK_VALUE_TYPE_NUM));
+    stateType.append(QPair<QString,int>("SteamStart",LINK_VALUE_TYPE_NULL));
+    stateType.append(QPair<QString,int>("ProductionTest",LINK_VALUE_TYPE_NULL));
 
-    stateTypeMap.insert("ProductCategory",LINK_VALUE_TYPE_STRING);
-    stateTypeMap.insert("ProductModel",LINK_VALUE_TYPE_STRING);
-    stateTypeMap.insert("ProductKey",LINK_VALUE_TYPE_STRING);
-    stateTypeMap.insert("DeviceName",LINK_VALUE_TYPE_STRING);
-    stateTypeMap.insert("ProductSecret",LINK_VALUE_TYPE_STRING);
-    stateTypeMap.insert("DeviceSecret",LINK_VALUE_TYPE_STRING);
-    stateTypeMap.insert("QrCode",LINK_VALUE_TYPE_STRING);
-    stateTypeMap.insert("UpdateLog",LINK_VALUE_TYPE_STRING);
+    stateType.append(QPair<QString,int>("ElcSWVersion",LINK_VALUE_TYPE_STRING));
+    stateType.append(QPair<QString,int>("ComSWVersion",LINK_VALUE_TYPE_STRING));
+    stateType.append(QPair<QString,int>("SysPower",LINK_VALUE_TYPE_NUM));
+    stateType.append(QPair<QString,int>("ErrorCode",LINK_VALUE_TYPE_NUM));
+    stateType.append(QPair<QString,int>("ErrorCodeShow",LINK_VALUE_TYPE_NUM));
 
-    stateTypeMap.insert("WifiState",LINK_VALUE_TYPE_NUM);
-    stateTypeMap.insert("WifiEnable",LINK_VALUE_TYPE_NUM);
-    stateTypeMap.insert("WifiScanR",LINK_VALUE_TYPE_STRING);
-    stateTypeMap.insert("WifiCurConnected",LINK_VALUE_TYPE_STRUCT);
+    stateType.append(QPair<QString,int>("WifiState",LINK_VALUE_TYPE_NUM));
+    stateType.append(QPair<QString,int>("WifiEnable",LINK_VALUE_TYPE_NUM));
+    stateType.append(QPair<QString,int>("WifiScanR",LINK_VALUE_TYPE_STRING));
+    stateType.append(QPair<QString,int>("WifiCurConnected",LINK_VALUE_TYPE_STRUCT));
 
-    stateTypeMap.insert("CookRecipe",LINK_VALUE_TYPE_STRUCT);
-    stateTypeMap.insert("CookHistory",LINK_VALUE_TYPE_STRUCT);
-    stateTypeMap.insert("InsertHistory",LINK_VALUE_TYPE_STRUCT);
-    stateTypeMap.insert("DeleteHistory",LINK_VALUE_TYPE_STRUCT);
-    stateTypeMap.insert("UpdateHistory",LINK_VALUE_TYPE_STRUCT);
+    stateType.append(QPair<QString,int>("CookRecipe",LINK_VALUE_TYPE_STRUCT));
+    stateType.append(QPair<QString,int>("CookHistory",LINK_VALUE_TYPE_STRUCT));
+    stateType.append(QPair<QString,int>("InsertHistory",LINK_VALUE_TYPE_STRUCT));
+    stateType.append(QPair<QString,int>("DeleteHistory",LINK_VALUE_TYPE_STRUCT));
+    stateType.append(QPair<QString,int>("UpdateHistory",LINK_VALUE_TYPE_STRUCT));
 
-    stateTypeMap.insert("OTAState",LINK_VALUE_TYPE_NUM);
-    stateTypeMap.insert("OTAProgress",LINK_VALUE_TYPE_NUM);
-    stateTypeMap.insert("OTANewVersion",LINK_VALUE_TYPE_STRING);
+    stateType.append(QPair<QString,int>("OTAState",LINK_VALUE_TYPE_NUM));
+    stateType.append(QPair<QString,int>("OTAProgress",LINK_VALUE_TYPE_NUM));
+    stateType.append(QPair<QString,int>("OTANewVersion",LINK_VALUE_TYPE_STRING));
 
-    stateTypeMap.insert("AfterSalesPhone",LINK_VALUE_TYPE_STRING);
-    stateTypeMap.insert("AfterSalesQrCode",LINK_VALUE_TYPE_STRING);
+    stateType.append(QPair<QString,int>("AfterSalesPhone",LINK_VALUE_TYPE_STRING));
+    stateType.append(QPair<QString,int>("AfterSalesQrCode",LINK_VALUE_TYPE_STRING));
 
-    stateTypeMap.insert("LStOvMode",LINK_VALUE_TYPE_NUM);
-    stateTypeMap.insert("LStOvState",LINK_VALUE_TYPE_NUM);
-    stateTypeMap.insert("LStOvOperation",LINK_VALUE_TYPE_NUM);
-    stateTypeMap.insert("LStOvSetTimer",LINK_VALUE_TYPE_NUM);
-    stateTypeMap.insert("LStOvSetTimerLeft",LINK_VALUE_TYPE_NUM);
-    stateTypeMap.insert("LStOvSetTemp",LINK_VALUE_TYPE_NUM);
-    stateTypeMap.insert("LStOvRealTemp",LINK_VALUE_TYPE_NUM);
-    stateTypeMap.insert("LStOvOrderTimer",LINK_VALUE_TYPE_NUM);
-    stateTypeMap.insert("LStOvOrderTimerLeft",LINK_VALUE_TYPE_NUM);
-    stateTypeMap.insert("LStOvDoorState",LINK_VALUE_TYPE_NUM);
+    stateType.append(QPair<QString,int>("LStOvMode",LINK_VALUE_TYPE_NUM));
+    stateType.append(QPair<QString,int>("LStOvOperation",LINK_VALUE_TYPE_NUM));
+    stateType.append(QPair<QString,int>("LStOvSetTimer",LINK_VALUE_TYPE_NUM));
+    stateType.append(QPair<QString,int>("LStOvSetTimerLeft",LINK_VALUE_TYPE_NUM));
+    stateType.append(QPair<QString,int>("LStOvSetTemp",LINK_VALUE_TYPE_NUM));
+    stateType.append(QPair<QString,int>("LStOvRealTemp",LINK_VALUE_TYPE_NUM));
+    stateType.append(QPair<QString,int>("LStOvOrderTimer",LINK_VALUE_TYPE_NUM));
+    stateType.append(QPair<QString,int>("LStOvOrderTimerLeft",LINK_VALUE_TYPE_NUM));
+    stateType.append(QPair<QString,int>("LStOvDoorState",LINK_VALUE_TYPE_NUM));
+    stateType.append(QPair<QString,int>("LStOvState",LINK_VALUE_TYPE_NUM));
 
-    stateTypeMap.insert("RStOvState",LINK_VALUE_TYPE_NUM);
-    stateTypeMap.insert("RStOvOperation",LINK_VALUE_TYPE_NUM);
-    stateTypeMap.insert("RStOvSetTimer",LINK_VALUE_TYPE_NUM);
-    stateTypeMap.insert("RStOvSetTimerLeft",LINK_VALUE_TYPE_NUM);
-    stateTypeMap.insert("RStOvSetTemp",LINK_VALUE_TYPE_NUM);
-    stateTypeMap.insert("RStOvRealTemp",LINK_VALUE_TYPE_NUM);
-    stateTypeMap.insert("RStOvOrderTimer",LINK_VALUE_TYPE_NUM);
-    stateTypeMap.insert("RStOvOrderTimerLeft",LINK_VALUE_TYPE_NUM);
-    stateTypeMap.insert("RStOvDoorState",LINK_VALUE_TYPE_NUM);
+    stateType.append(QPair<QString,int>("RStOvMode",LINK_VALUE_TYPE_NUM));
+    stateType.append(QPair<QString,int>("RStOvOperation",LINK_VALUE_TYPE_NUM));
+    stateType.append(QPair<QString,int>("RStOvSetTimer",LINK_VALUE_TYPE_NUM));
+    stateType.append(QPair<QString,int>("RStOvSetTimerLeft",LINK_VALUE_TYPE_NUM));
+    stateType.append(QPair<QString,int>("RStOvSetTemp",LINK_VALUE_TYPE_NUM));
+    stateType.append(QPair<QString,int>("RStOvRealTemp",LINK_VALUE_TYPE_NUM));
+    stateType.append(QPair<QString,int>("RStOvOrderTimer",LINK_VALUE_TYPE_NUM));
+    stateType.append(QPair<QString,int>("RStOvOrderTimerLeft",LINK_VALUE_TYPE_NUM));
+    stateType.append(QPair<QString,int>("RStOvDoorState",LINK_VALUE_TYPE_NUM));
+    stateType.append(QPair<QString,int>("RStOvState",LINK_VALUE_TYPE_NUM));
 
-    stateTypeMap.insert("MultiMode",LINK_VALUE_TYPE_NUM);
-    stateTypeMap.insert("MultiStageState",LINK_VALUE_TYPE_STRUCT);
-    stateTypeMap.insert("CookbookName",LINK_VALUE_TYPE_STRING);
+    stateType.append(QPair<QString,int>("MultiMode",LINK_VALUE_TYPE_NUM));
+    stateType.append(QPair<QString,int>("MultiStageState",LINK_VALUE_TYPE_STRUCT));
+    stateType.append(QPair<QString,int>("CookbookName",LINK_VALUE_TYPE_STRING));
 
-    stateTypeMap.insert("LStoveStatus",LINK_VALUE_TYPE_NUM);
-    stateTypeMap.insert("RStoveStatus",LINK_VALUE_TYPE_NUM);
-    stateTypeMap.insert("RStoveTimingState",LINK_VALUE_TYPE_NUM);
-    stateTypeMap.insert("RStoveTimingOpera",LINK_VALUE_TYPE_NUM);
-    stateTypeMap.insert("RStoveTimingSet",LINK_VALUE_TYPE_NUM);
-    stateTypeMap.insert("RStoveTimingLeft",LINK_VALUE_TYPE_NUM);
+    stateType.append(QPair<QString,int>("LStoveStatus",LINK_VALUE_TYPE_NUM));
+    stateType.append(QPair<QString,int>("RStoveStatus",LINK_VALUE_TYPE_NUM));
+    stateType.append(QPair<QString,int>("RStoveTimingOpera",LINK_VALUE_TYPE_NUM));
+    stateType.append(QPair<QString,int>("RStoveTimingSet",LINK_VALUE_TYPE_NUM));
+    stateType.append(QPair<QString,int>("RStoveTimingLeft",LINK_VALUE_TYPE_NUM));
+    stateType.append(QPair<QString,int>("RStoveTimingState",LINK_VALUE_TYPE_NUM));
 
-    stateTypeMap.insert("HoodStoveLink",LINK_VALUE_TYPE_NUM);
-    stateTypeMap.insert("HoodLightLink",LINK_VALUE_TYPE_NUM);
-    stateTypeMap.insert("HoodOffTimer",LINK_VALUE_TYPE_NUM);
-    stateTypeMap.insert("HoodOffLeftTime",LINK_VALUE_TYPE_NUM);
-    stateTypeMap.insert("SteamOffTime",LINK_VALUE_TYPE_NUM);
-    stateTypeMap.insert("SteamOffLeftTime",LINK_VALUE_TYPE_NUM);
-    stateTypeMap.insert("HoodSpeed",LINK_VALUE_TYPE_NUM);
+    stateType.append(QPair<QString,int>("HoodStoveLink",LINK_VALUE_TYPE_NUM));
+    stateType.append(QPair<QString,int>("HoodLightLink",LINK_VALUE_TYPE_NUM));
+    stateType.append(QPair<QString,int>("HoodOffTimer",LINK_VALUE_TYPE_NUM));
+    stateType.append(QPair<QString,int>("HoodOffLeftTime",LINK_VALUE_TYPE_NUM));
+    stateType.append(QPair<QString,int>("SteamOffTime",LINK_VALUE_TYPE_NUM));
+    stateType.append(QPair<QString,int>("SteamOffLeftTime",LINK_VALUE_TYPE_NUM));
+    stateType.append(QPair<QString,int>("HoodSpeed",LINK_VALUE_TYPE_NUM));
+
+    stateType.append(QPair<QString,int>("ProductCategory",LINK_VALUE_TYPE_STRING));
+    stateType.append(QPair<QString,int>("ProductModel",LINK_VALUE_TYPE_STRING));
+    stateType.append(QPair<QString,int>("ProductKey",LINK_VALUE_TYPE_STRING));
+    stateType.append(QPair<QString,int>("DeviceName",LINK_VALUE_TYPE_STRING));
+    stateType.append(QPair<QString,int>("ProductSecret",LINK_VALUE_TYPE_STRING));
+    stateType.append(QPair<QString,int>("DeviceSecret",LINK_VALUE_TYPE_STRING));
+    stateType.append(QPair<QString,int>("QrCode",LINK_VALUE_TYPE_STRING));
+    stateType.append(QPair<QString,int>("UpdateLog",LINK_VALUE_TYPE_STRING));
+    stateType.append(QPair<QString,int>("BindTokenState",LINK_VALUE_TYPE_NUM));
 
     localConnected=0;
     connect(&client, SIGNAL(sendData(const QJsonValue&)), this,SLOT(readData(const QJsonValue&)));
@@ -91,8 +94,12 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
 #ifndef USE_RK3308
     setState("SysPower",1);
 
+    setState("RStoveStatus",1);
+    setState("RStoveTimingLeft",50);
+
     setState("LStOvMode",0);
     setState("LStOvState",0);
+    setState("LStOvSetTimer",0);
     setState("LStOvSetTimerLeft",0);
     setState("LStOvRealTemp",0);
     setState("LStOvOrderTimerLeft",0);
@@ -111,7 +118,7 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     QVariantMap info;
     info.insert("id", 0);
     info.insert("seqid", 3);
-    info.insert("cookType", 0);
+    info.insert("recipeid", 0);
     info.insert("cookPos", 0);
     info.insert("dishName", "清蒸鱼");
     info.insert("imgUrl", "recipes/Vegetables/蒜蓉粉丝娃娃菜.png");
@@ -121,18 +128,18 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     info.insert("timestamp", 0);
 
     recipe[0].append(info);
-    info["cookType"]=1;
+    info["recipeid"]=1;
     info["dishName"]="桂花蜂蜜烤南瓜";
     recipe[0].append(info);
-    info["cookType"]=2;
+    info["recipeid"]=2;
     info["dishName"]="腊肉蒸芋艿";
     recipe[0].append(info);
-    info["cookType"]=1;
+    info["recipeid"]=1;
 
     info["dishName"]="蒜香茄子";
     recipe[0].append(info);
 
-    info["cookType"]=0;
+    info["recipeid"]=0;
     info["dishName"]="蒜蓉粉丝娃娃菜";
     recipe[1].append(info);
 
@@ -226,7 +233,7 @@ int QmlDevState::coverHistory(const QJsonObject &object, QVariantMap &info)
     QJsonValue details =object.value("details");
     QJsonValue collect =object.value("collect");
     QJsonValue timestamp =object.value("timestamp");
-    QJsonValue cookType =object.value("cookType");
+    QJsonValue recipeid =object.value("recipeid");
     QJsonValue recipeType =object.value("recipeType");
     QJsonValue cookPos =object.value("cookPos");
 
@@ -238,7 +245,7 @@ int QmlDevState::coverHistory(const QJsonObject &object, QVariantMap &info)
     info.insert("details",details.toString());
     info.insert("collect",collect.toInt());
     info.insert("timestamp",timestamp.toInt());
-    info.insert("cookType",cookType.toInt());
+    info.insert("recipeid",recipeid.toInt());
     info.insert("recipeType",recipeType.toInt());
     info.insert("cookPos",cookPos.toInt());
     return 0;
@@ -297,20 +304,19 @@ void QmlDevState::readData(const QJsonValue &data)
 
     QString key;
     enum LINK_VALUE_TYPE value_type;
-    QVariantMap::iterator it;
-    for(it=stateTypeMap.begin(); it!=stateTypeMap.end(); it++){
+    QVector<QPair<QString,int>>::iterator it;
+    for(it=stateType.begin(); it!=stateType.end(); it++){
 
-        key=it.key();
-        value_type=(enum LINK_VALUE_TYPE)it.value().toInt();
-
-        if(object.contains(it.key()))
+        key=it->first;
+        value_type=(enum LINK_VALUE_TYPE)it->second;
+//        qDebug()<<"readData key:"<<key<<"value type:"<<value_type;
+        if(object.contains(key))
         {
-            qDebug()<<"key:"<<key<<"value type:"<<value_type;
-            QJsonValue value =object.value(it.key());
+            QJsonValue value =object.value(key);
 
             if(LINK_VALUE_TYPE_NUM==value_type)
             {
-                qDebug()<<"key:"<<key<<"value:"<<value.toInt();
+                //                qDebug()<<"key:"<<key<<"value:"<<value.toInt();
 #ifdef SYSPOWER_RK3308
                 if(key=="SysPower")
                     setState(key,1);
@@ -320,7 +326,7 @@ void QmlDevState::readData(const QJsonValue &data)
             }
             else if(LINK_VALUE_TYPE_STRING==value_type)
             {
-                qDebug()<<"key:"<<key<<"value:"<<value.toString();
+                //                qDebug()<<"key:"<<key<<"value:"<<value.toString();
                 setState(key,value.toString());
 
                 if("QrCode"==key)
@@ -404,14 +410,15 @@ void QmlDevState::readData(const QJsonValue &data)
                     {
                         int id=array.at(i).toInt();
                         int index=getHistoryIndex(id);
-                        cur=history[index].toMap();
-                        if(index>=0)
+                        qDebug()<<"DeleteHistory index:"<<index;
+                        if(index<0)
                         {
-                            history.removeAt(index);
                             break;
                         }
+                        cur=history[index].toMap();
+                        history.removeAt(index);
+                        setHistory(key,cur);
                     }
-                    setHistory(key,cur);
                 }
                 else if(key=="UpdateHistory")
                 {
@@ -474,6 +481,10 @@ void QmlDevState::setState(const QString& name,const QVariant& value)
 {
     //    if(stateMap.contains(name))
     //    {
+
+    qDebug()<<"setState name:"<<name << "new value:" << value;
+//    if(stateMap.contains(name))
+//        qDebug()<< "old value:" << stateMap[name];
     stateMap[name]=value;
     emit stateChanged(name,value);
     //    }

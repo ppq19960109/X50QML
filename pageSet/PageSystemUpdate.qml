@@ -49,9 +49,7 @@ Item {
 
     PageBackBar{
         id:topBar
-        width:parent.width
         anchors.bottom:parent.bottom
-        height:80
         name:qsTr("系统更新")
         leftBtnText:qsTr("")
         rightBtnText:qsTr("")
@@ -61,11 +59,10 @@ Item {
     }
 
     //内容
-    Rectangle{
+    Item{
         width:parent.width
         anchors.bottom:topBar.top
         anchors.top: parent.top
-        color:"transparent"
 
         Image{
             id:logo
@@ -78,14 +75,12 @@ Item {
         }
         Button{
             id:version
-            width: 300
+            width: 440
             height: 50
             anchors.top: logo.bottom
-            anchors.topMargin: 20
+            anchors.topMargin: 30
             anchors.horizontalCenter: parent.horizontalCenter
-            background:Rectangle{
-                color:"transparent"
-            }
+            background:Item{}
             Text{
                 id:curVer
                 text:"当前版本 "+QmlDevState.state.ComSWVersion
@@ -96,16 +91,15 @@ Item {
             Image {
                 cache:false
                 asynchronous:true
-                anchors.verticalCenter: curVer.verticalCenter
-                anchors.left: curVer.right
-                anchors.leftMargin: 20
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.right: parent.right
                 source: "qrc:/x50/set/gengduo.png"
             }
             onClicked: {
                 load_page("pageReleaseNotes")
             }
         }
-        Rectangle{
+        Item{
             id:checkStatus
             width: 180
             height: 50
@@ -113,7 +107,6 @@ Item {
             anchors.topMargin: 10
             anchors.horizontalCenter: parent.horizontalCenter
             visible: false
-            color:"transparent"
             Text{
                 id:checkText
                 text:versionChecked ?"正在检查...":"已经是最新版本"
@@ -134,19 +127,18 @@ Item {
         }
 
         Button{
-            width: 175
-            height: 65
+            width: 176
+            height: 64
             anchors.bottom: parent.bottom
             anchors.bottomMargin: 40
             anchors.horizontalCenter: parent.horizontalCenter
             background:Rectangle{
-                color:"transparent"
-                border.color:"#00E6B6"
-                radius: 8
+                color:themesTextColor2
+                radius: 32
             }
             Text{
                 text:"检查更新"
-                color:"#00E6B6"
+                color:"#000"
                 font.pixelSize: 30
                 anchors.centerIn: parent
             }

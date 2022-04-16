@@ -1,7 +1,7 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.2
 //import QtGraphicalEffects 1.0
-
+import "qrc:/CookFunc.js" as CookFunc
 import "../"
 Item {
     //定义全局分类菜谱
@@ -19,9 +19,7 @@ Item {
 
     PageBackBar{
         id:topBar
-        width:parent.width
         anchors.bottom:parent.bottom
-        height:80
         name:qsTr("智慧菜谱")
         leftBtnText:qsTr("")
         rightBtnText:qsTr("详情")
@@ -35,18 +33,15 @@ Item {
         }
     }
     //内容
-    Rectangle{
+    Item{
         width:parent.width
         anchors.top:parent.top
         anchors.bottom: topBar.top
-        color:"transparent"
-        Rectangle{
+        Item{
             id:leftContent
             width:150
             height:parent.height
-            color:"transparent"
-            //            color:"#000"
-            //            opacity: 0.15
+
             ListView{
                 id:menuList
                 model:menuId
@@ -61,19 +56,15 @@ Item {
 
                     Button {
                         width:parent.width
-                        height:parent.height-1
+                        height:parent.height-2
                         anchors.top: parent.top
-                        background: Rectangle{
-                            anchors.fill: parent
-                            color:"#000"
-                            opacity: menuList.currentIndex===index?0.3:0.15
-                        }
+                        background: Item{}
 
                         Text{
                             text: modelData
                             font.pixelSize: 40
                             anchors.centerIn: parent
-                            color:menuList.currentIndex===index?"#00E6B6":"#FFF"
+                            color:menuList.currentIndex===index?themesTextColor:themesTextColor2
 
                         }
                         onClicked: {
@@ -85,16 +76,21 @@ Item {
                             }
                         }
                     }
+                    Rectangle{
+                        anchors.bottom: parent.bottom
+                        width:parent.width
+                        height: 2
+                        color:"#fff"
+                        opacity: 0.1
+                    }
                 }
             }
         }
 
-        Rectangle{
-
+        Item{
             height:parent.height
             anchors.left: leftContent.right
             anchors.right: parent.right
-            color:"transparent"
             ListView{
                 id: recipeListView
                 model:listModel
@@ -107,43 +103,39 @@ Item {
                 boundsBehavior:Flickable.StopAtBounds
                 clip: true
                 currentIndex:0
-                delegate: Rectangle{
+                delegate: Item{
+                    readonly property int cookType:CookFunc.getCookType(modelData.cookSteps)
                     width:260
                     height:370
                     anchors.top: parent.top
                     anchors.topMargin: 25
-                    color:"transparent"
+
                     Image{
                         id:recipeImg
                         asynchronous:true
                         anchors.fill: parent
                         anchors.margins: 0
+                        sourceSize.width: 260
+                        sourceSize.height: 370
                         //                            fillMode:Image.PreserveAspectFit
                         source: "file:"+modelData.imgUrl
                     }
                     Image{
                         asynchronous:true
-                        width: recipeBtn.width+1
+                        width: recipeBtn.width
                         anchors.bottom: recipeBtn.bottom
                         anchors.horizontalCenter: recipeBtn.horizontalCenter
-                        source: "qrc:/x50/main/bj_mb.png"
-                        Rectangle{
-                            id:recipeName
-                            width:parent.width
-                            //                            height: 60
-                            //                            anchors.bottom: parent.bottom
-                            anchors.verticalCenter: parent.verticalCenter
-                            color:"transparent"
-                            Text{
-                                width:parent.width-20
-                                text: modelData.dishName
-                                font.pixelSize: 35
-                                anchors.centerIn: parent
-                                color:"#fff"
-                                horizontalAlignment:Text.AlignHCenter
-                                verticalAlignment:Text.AlignVCenter
-                                elide:Text.ElideRight
-                            }
+                        source: themesImagesPath+"recipename-background.png"
+
+                        Text{
+                            width:parent.width-20
+                            text: modelData.dishName
+                            font.pixelSize: 35
+                            anchors.centerIn: parent
+                            color:"#fff"
+                            horizontalAlignment:Text.AlignHCenter
+                            verticalAlignment:Text.AlignVCenter
+                            elide:Text.ElideRight
                         }
                     }
                     Button {
@@ -155,14 +147,11 @@ Item {
                         anchors.horizontalCenter: parent.horizontalCenter
                         anchors.top: parent.top
                         anchors.topMargin: 8
-//                        clip:true
+                        //                        clip:true
                         background: Rectangle{
-                            //                            width:parent.width+2
-                            //                            height:parent.height+2
                             color:"transparent"
-                            radius: 16
-                            border.width: 4
-                            border.color: recipeListView.currentIndex===index?cookModeColor[modelData.cookType]:"transparent"
+                            border.width: 3
+                            border.color: recipeListView.currentIndex===index?cookModeColor[cookType]:"transparent"
                         }
 
                         //                        Rectangle{
@@ -186,12 +175,12 @@ Item {
                             anchors.top:parent.top
                             anchors.left: parent.left
 
-                            color:cookModeColor[modelData.cookType]
+                            color:cookModeColor[cookType]
                             radius: 16
                             Text{
                                 width : parent.width;
                                 anchors.centerIn: parent
-                                text: cookMode[modelData.cookType]
+                                text: cookMode[cookType]
                                 font.pixelSize: 30
 
                                 horizontalAlignment:Text.AlignHCenter
@@ -202,15 +191,21 @@ Item {
                             Rectangle{
                                 width:16
                                 height: 16
-                                color:cookModeColor[modelData.cookType]
+                                color:cookModeColor[cookType]
                                 anchors.left: parent.left
-                                anchors.bottom: parent.bottom
-
+                                anchors.top: parent.top
                             }
                             Rectangle{
                                 width:16
                                 height: 16
-                                color:cookModeColor[modelData.cookType]
+                                color:cookModeColor[cookType]
+                                anchors.left: parent.left
+                                anchors.bottom: parent.bottom
+                            }
+                            Rectangle{
+                                width:16
+                                height: 16
+                                color:cookModeColor[cookType]
                                 anchors.right: parent.right
                                 anchors.top: parent.top
                             }

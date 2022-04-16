@@ -1,4 +1,4 @@
-import QtQuick 2.0
+import QtQuick 2.7
 import QtQuick.Controls 2.2
 
 import "qrc:/pageCook"
@@ -9,6 +9,24 @@ Item {
     property var root
     property var cookSteps
     property int cookPos:0
+
+    Connections { // 将目标对象信号与槽函数进行连接
+        id:connections
+        enabled:false
+        target: QmlDevState
+        onStateChanged: { // 处理目标对象信号的槽函数
+            if("SteamStart"==key)
+            {
+                startCooking(root,cookSteps,0)
+            }
+        }
+    }
+    StackView.onActivated:{
+        connections.enabled=true
+    }
+    StackView.onDeactivated:{
+        connections.enabled=false
+    }
     function getCookTime(cookSteps)
     {
         var cookTime=0;
@@ -47,9 +65,7 @@ Item {
 
     PageBackBar{
         id:topBar
-        width:parent.width
         anchors.bottom:parent.bottom
-        height:80
         name:"详情"
         leftBtnText:qsTr("启动")
         rightBtnText:qsTr("预约")
@@ -67,48 +83,40 @@ Item {
     }
 
     //内容
-    Rectangle{
+    Item{
         id:recipe
         visible:false
         enabled: visible
         width:parent.width
         anchors.bottom:topBar.top
         anchors.top: parent.top
-        color:"transparent"
 
-        Rectangle{
+        Item{
             id:leftContent
             width:260
             height:parent.height
-            color:"transparent"
-            Rectangle{
+            Image{
+                id:recipeImg
                 width:260
                 height:370
+                sourceSize.width: 260
+                sourceSize.height: 370
                 anchors.centerIn: parent
-
-                color:"transparent"
-                Image{
-                    id:recipeImg
-                    cache:false
-                    asynchronous:true
-                    anchors.fill: parent
-                }
-
+                cache:false
+                asynchronous:true
             }
         }
 
-        Rectangle{
-
+        Item{
             //            height:parent.height
             anchors.top:parent.top
-            anchors.topMargin: 30
+            anchors.topMargin: 10
             anchors.bottom:parent.bottom
             anchors.bottomMargin: 20
             anchors.left: leftContent.right
 
             anchors.right: parent.right
-            anchors.rightMargin: 40
-            color:"transparent"
+            anchors.rightMargin: 30
             Text{
                 id:dishName
                 anchors.top:parent.top
@@ -119,64 +127,30 @@ Item {
             Text{
                 id:cookTime
                 anchors.top:dishName.bottom
-                anchors.topMargin: 10
+//                anchors.topMargin: 5
                 anchors.left: parent.left
                 font.pixelSize: 40
                 color:"#fff"
             }
-            Flickable {
-                id: flick
+
+            PageScrollBarText{
+                id: details
                 width: parent.width
-                //                height: parent.height
                 anchors.top: cookTime.bottom
-                anchors.topMargin: 20
+                anchors.topMargin: 10
                 anchors.bottom: parent.bottom
-
-                contentWidth: details.width
-                contentHeight: details.height
-                clip: true
-                Text {
-                    id: details
-                    width: flick.width
-                    //                    height: flick.height
-                    font.pixelSize: 30
-                    lineHeight: 1.3
-                    color:"#fff"
-                    //                                        clip :true
-                    wrapMode: Text.WordWrap
-                    //                    elide: Text.ElideRight
-                }
-
-                ScrollBar.vertical: ScrollBar {
-                    parent: flick.parent
-                    anchors.top: flick.top
-                    anchors.left: flick.right
-                    anchors.leftMargin: 20
-                    anchors.bottom: flick.bottom
-                    background:Rectangle{
-                        implicitWidth: 4
-                        color:"#000"
-                        radius: width / 2
-                    }
-                    contentItem: Rectangle {
-                        implicitWidth: 4
-                        implicitHeight: 100
-                        radius: width / 2
-                        color: "#00E6B6"
-                    }
-                }
+                scrollBarLeftMargin:10
             }
         }
     }
 
-    Rectangle{
+    Item{
         id:noRecipe
         visible:false
         enabled: visible
         width:parent.width
         anchors.bottom:topBar.top
         anchors.top: parent.top
-        color:"transparent"
 
         Component {
             id: multiDelegate

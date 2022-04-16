@@ -1,7 +1,7 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.2
 
-Rectangle {
+Item {
     property alias hintTopText: hintTop.text
     property alias confirmText: confirmBtnText.text
     property alias checkboxVisible: control.visible
@@ -19,27 +19,21 @@ Rectangle {
 //        }
     }
     Component.onCompleted: {
-        console.log("PageDialog",closeImg.width)
-    }
 
-    anchors.fill: parent
-    color: "transparent"
-    Rectangle {
-        anchors.fill: parent
-        color: "#000"
-        opacity: 0.6
     }
+    anchors.fill: parent
+
     Rectangle {
         id:hint
         anchors.centerIn: parent
         implicitWidth: 600
         implicitHeight: 358
-        color: "#596767"
+        color: themesPopupWindowColor
 //         border.color: "#fff"
         radius: 16
-        PageDialogGradient{
-            anchors.fill: parent
-        }
+//        PageDialogGradient{
+//            anchors.fill: parent
+//        }
         Button {
             width:closeImg.width+60
             height:closeImg.height+60
@@ -52,11 +46,9 @@ Rectangle {
                 id:closeImg
                 asynchronous:true
                 anchors.centerIn: parent
-                source: "/x50/icon/icon_close.png"
+                source: themesImagesPath+"icon-window-close.png"
             }
-            background: Rectangle {
-                color:"transparent"
-            }
+            background: Item {}
             onClicked: {
                 cancel()
             }
@@ -86,15 +78,15 @@ Rectangle {
         }
         Button {
             id:confirmBtn
-            width:195
-            height:85
+            width:176+10
+            height:64+10
             anchors.bottom:parent.bottom
             anchors.bottomMargin: 30
             anchors.horizontalCenter: parent.horizontalCenter
 
             Text{
                 id:confirmBtnText
-                color:"#00E6B6"
+                color:"#000"
                 font.pixelSize: 30
 
                 anchors.centerIn: parent
@@ -102,12 +94,11 @@ Rectangle {
                 verticalAlignment: Text.AlignVCenter
             }
             background: Rectangle {
-                width:175
-                height:65
+                width:176
+                height:64
                 anchors.centerIn: parent
-                color:"transparent"
-                border.color:"#00E6B6"
-                radius: 8
+                color:themesTextColor2
+                radius: 32
             }
             onClicked: {
                 confirm()

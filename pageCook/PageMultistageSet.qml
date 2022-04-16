@@ -1,4 +1,4 @@
-import QtQuick 2.0
+import QtQuick 2.7
 import QtQuick.Controls 2.2
 
 import "qrc:/CookFunc.js" as CookFunc
@@ -32,6 +32,8 @@ Item {
 
 
     Connections { // 将目标对象信号与槽函数进行连接
+        id:connections
+        enabled:false
         target: QmlDevState
         onStateChanged: { // 处理目标对象信号的槽函数
             if("SteamStart"==key)
@@ -40,15 +42,19 @@ Item {
             }
         }
     }
+    StackView.onActivated:{
+        connections.enabled=true
+    }
+    StackView.onDeactivated:{
+        connections.enabled=false
+    }
     Component.onCompleted: {
         console.log("PageMultistage onCompleted",systemSettings.multistageRemind)
     }
 
     PageBackBar{
         id:topBar
-        width:parent.width
         anchors.bottom:parent.bottom
-        height:80
         name:qsTr("多段烹饪（最多可添加三段烹饪）")
         leftBtnText:qsTr("启动")
         rightBtnText:qsTr("预约")
@@ -89,11 +95,11 @@ Item {
             visible:listView.count >= 3?false:true
             // 新增按钮
             Button {
-                width: parent.height
-                height:width
+                width: 160
+                height:parent.height
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.right: parent.right
-                anchors.rightMargin:40
+//                anchors.rightMargin:40
 
                 background: Image {
                     asynchronous:true
@@ -139,11 +145,10 @@ Item {
         }
     }
     //内容
-    Rectangle{
+    Item{
         width:parent.width
         height:parent.height-topBar.height
         anchors.bottom:topBar.top
-        color:"transparent"
 
         ListView {
             id: listView

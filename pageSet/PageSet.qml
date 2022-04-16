@@ -1,4 +1,4 @@
-import QtQuick 2.0
+import QtQuick 2.7
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
 import "../"
@@ -11,9 +11,7 @@ Item {
 
     PageBackBar{
         id:topBar
-        width:parent.width
         anchors.bottom:parent.bottom
-        height:80
         name:qsTr("设置")
         leftBtnText:qsTr("")
         rightBtnText:qsTr("")
@@ -23,31 +21,28 @@ Item {
     }
 
     //内容
-    Rectangle{
+    Item{
         width:parent.width
         anchors.bottom:topBar.top
         anchors.top: parent.top
-        color:"transparent"
 
         GridLayout{
-            width:parent.width-54
-            height: parent.height-64
+
             anchors.centerIn: parent
             rows: 2
             columns: 3
-            rowSpacing: 4
-            columnSpacing: 0
+            rowSpacing: 30
+            columnSpacing: 20
 
             Button{
-                Layout.preferredWidth: 236
-                Layout.preferredHeight:166
+                Layout.preferredWidth: 212
+                Layout.preferredHeight:142
                 Layout.alignment: Qt.AlignHCenter|Qt.AlignVCenter
                 background:Image{
                     asynchronous:true
                     anchors.fill: parent
-                    source:"qrc:/x50/set/圆角矩形 1370.png"
+                    source:themesImagesPath+"statusset-button1-background.png"
                 }
-
                 Text{
                     text:"网络"
                     color:"#FFF"
@@ -60,13 +55,13 @@ Item {
                 }
             }
             Button{
-                Layout.preferredWidth: 236
-                Layout.preferredHeight:166
+                Layout.preferredWidth: 212
+                Layout.preferredHeight:142
                 Layout.alignment: Qt.AlignHCenter|Qt.AlignVCenter
                 background:Image{
                     asynchronous:true
                     anchors.fill: parent
-                    source:"qrc:/x50/set/圆角矩形 1370.png"
+                    source:themesImagesPath+"statusset-button1-background.png"
                 }
                 Text{
                     text:"本机设置"
@@ -80,13 +75,13 @@ Item {
                 }
             }
             Button{
-                Layout.preferredWidth: 280
-                Layout.preferredHeight:166
+                Layout.preferredWidth: 256
+                Layout.preferredHeight:142
                 Layout.alignment: Qt.AlignHCenter|Qt.AlignVCenter
                 background:Image{
                     asynchronous:true
                     anchors.fill: parent
-                    source:"qrc:/x50/set/圆角矩形 1370(1).png"
+                    source:themesImagesPath+"statusset-button2-background.png"
                 }
                 Text{
                     text:"恢复出厂设置"
@@ -100,13 +95,13 @@ Item {
                 }
             }
             Button{
-                Layout.preferredWidth: 236
-                Layout.preferredHeight:166
+                Layout.preferredWidth: 212
+                Layout.preferredHeight:142
                 Layout.alignment: Qt.AlignHCenter|Qt.AlignVCenter
                 background:Image{
                     asynchronous:true
                     anchors.fill: parent
-                    source:"qrc:/x50/set/圆角矩形 1370.png"
+                    source:themesImagesPath+"statusset-button1-background.png"
                 }
                 Text{
                     text:"系统更新"
@@ -120,13 +115,13 @@ Item {
                 }
             }
             Button{
-                Layout.preferredWidth: 236
-                Layout.preferredHeight:166
+                Layout.preferredWidth: 212
+                Layout.preferredHeight:142
                 Layout.alignment: Qt.AlignHCenter|Qt.AlignVCenter
                 background:Image{
                     asynchronous:true
                     anchors.fill: parent
-                    source:"qrc:/x50/set/圆角矩形 1370.png"
+                    source:themesImagesPath+"statusset-button1-background.png"
                 }
                 Text{
                     text:"关于本机"
@@ -140,13 +135,13 @@ Item {
                 }
             }
             Button{
-                Layout.preferredWidth: 280
-                Layout.preferredHeight:166
+                Layout.preferredWidth: 256
+                Layout.preferredHeight:142
                 Layout.alignment: Qt.AlignHCenter|Qt.AlignVCenter
                 background:Image{
                     asynchronous:true
                     anchors.fill: parent
-                    source:"qrc:/x50/set/圆角矩形 1370(1).png"
+                    source:themesImagesPath+"statusset-button2-background.png"
                 }
                 Text{
                     text:"售后指南"

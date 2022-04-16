@@ -1,4 +1,4 @@
-import QtQuick 2.0
+import QtQuick 2.7
 import QtQuick.Controls 2.2
 
 Rectangle {
@@ -21,9 +21,7 @@ Rectangle {
         width: img.width
         height: img.height
 
-        background:Rectangle{
-            color:"transparent"
-        }
+        background:Item {}
         Image{
             id:img
             asynchronous:true

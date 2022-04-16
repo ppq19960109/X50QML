@@ -11,21 +11,17 @@ Item {
         anchors.fill: parent
     }
     anchors.fill: parent
-    Rectangle {
-        anchors.fill: parent
-        color: "#000"
-        opacity: 0.6
-    }
+
     Rectangle {
         id:hint
         anchors.centerIn: parent
         implicitWidth: 600
         implicitHeight: 305
-        color: "#596767"
+        color: themesPopupWindowColor
         radius: 16
-        PageGradient{
-            anchors.fill: parent
-        }
+//        PageGradient{
+//            anchors.fill: parent
+//        }
         Button {
             width:closeImg.width+60
             height:closeImg.height+60
@@ -40,9 +36,7 @@ Item {
                 anchors.centerIn: parent
                 source: "/x50/icon/icon_close.png"
             }
-            background: Rectangle {
-                color:"transparent"
-            }
+            background: Item {}
             onClicked: {
                 cancel()
             }
@@ -67,8 +61,8 @@ Item {
 
         Button {
             id:confirmBtn
-            width:175+20
-            height:65+20
+            width:176+10
+            height:64+10
             anchors.bottom:parent.bottom
             anchors.bottomMargin: 45
             anchors.horizontalCenter: parent.horizontalCenter
@@ -76,19 +70,18 @@ Item {
             Text{
                 id:confirmBtnText
                 anchors.centerIn: parent
-                color:"#00E6B6"
+                color:"#000"
                 font.pixelSize: 30
 
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
             }
             background: Rectangle {
-                width:175
-                height:65
+                width:176
+                height:64
                 anchors.centerIn: parent
-                color:"transparent"
-                border.color:"#00E6B6"
-                radius: 8
+                color:themesTextColor2
+                radius: 32
             }
             onClicked: {
                 confirm()

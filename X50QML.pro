@@ -20,7 +20,8 @@ SOURCES += \
         qmldevstate.cpp \
         qrcodeen.cpp
 
-RESOURCES += qml.qrc
+RESOURCES += qml.qrc \
+    light/light_style.qrc
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH =
@@ -33,17 +34,24 @@ qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
-CONFIG += rk3308
-#DEFINES += SYSPOWER_RK3308
-rk3308{
-DEFINES += USE_RK3308
-#LIBS += -lqrencode
-#LIBS += -lDeviceIo -lasound
-INCLUDEPATH += libqrencode/include
-LIBS += libqrencode/lib/libqrencode.a
+contains(QT_ARCH, arm){
+    message("arm")
+    DEFINES += USE_RK3308
+    #DEFINES += SYSPOWER_RK3308
+    #LIBS += -lqrencode
+    #LIBS += -lDeviceIo -lasound
+    INCLUDEPATH += libqrencode/include
+    LIBS += libqrencode/lib/libqrencode.a
 }else{
-
+    message("x86_64")
 }
+
+#win32{
+#message("win32")
+#}
+#unix{
+#message("unix")
+#}
 
 HEADERS += \
     backlight.h \

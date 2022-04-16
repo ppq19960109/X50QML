@@ -7,18 +7,18 @@ Item {
     RowLayout {
         anchors.fill: parent
 
-        anchors.leftMargin: 60
-        anchors.rightMargin: 60
+        anchors.leftMargin: 70
+        anchors.rightMargin: 70
 
         spacing: 0
         Button{
-            Layout.preferredWidth: 225
-            Layout.preferredHeight:325
+            Layout.preferredWidth: 196
+            Layout.preferredHeight:300
             Layout.alignment: Qt.AlignHCenter|Qt.AlignVCenter
 
             background:Image {
                 asynchronous:true
-                source: "qrc:/x50/main/智慧菜谱.png"
+                source: themesImagesPath+"homesecond-button1-background.png"
             }
             Text{
                 text:"智能菜谱"
@@ -26,7 +26,7 @@ Item {
                 font.pixelSize: 40
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.top: parent.top
-                anchors.topMargin: 55
+                anchors.topMargin: 45
             }
 
             onClicked: {
@@ -35,13 +35,13 @@ Item {
         }
 
         Button{
-            Layout.preferredWidth: 225
-            Layout.preferredHeight:325
+            Layout.preferredWidth: 196
+            Layout.preferredHeight:300
             Layout.alignment: Qt.AlignHCenter|Qt.AlignVCenter
 
             background:Image {
                 asynchronous:true
-                source: "qrc:/x50/main/烹饪历史.png"
+                source: themesImagesPath+"homesecond-button2-background.png"
             }
             Text{
                 text:"烹饪历史"
@@ -49,7 +49,7 @@ Item {
                 font.pixelSize: 40
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.top: parent.top
-                anchors.topMargin: 55
+                anchors.topMargin: 45
             }
 
             onClicked: {
@@ -58,13 +58,13 @@ Item {
         }
 
         Button{
-            Layout.preferredWidth: 225
-            Layout.preferredHeight:325
+            Layout.preferredWidth: 196
+            Layout.preferredHeight:300
             Layout.alignment: Qt.AlignHCenter|Qt.AlignVCenter
 
             background:Image {
                 asynchronous:true
-                source: "qrc:/x50/main/多段烹饪.png"
+                source: themesImagesPath+"homesecond-button3-background.png"
             }
             Text{
                 text:"多段烹饪"
@@ -72,7 +72,7 @@ Item {
                 font.pixelSize: 40
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.top: parent.top
-                anchors.topMargin: 55
+                anchors.topMargin: 45
             }
 
             onClicked: {

@@ -2,56 +2,50 @@ import QtQuick 2.7
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
 
-Rectangle {
+Item {
     property string name: "PageTestFront"
-    color: "#000"
     Component.onCompleted: {
-
 
     }
 
-    Rectangle{
+    Item{
         id:topBar
         width:parent.width
         height:80
         anchors.top: parent.top
-        color:"transparent"
         Text {
             anchors.centerIn: parent
-            color:"green"
+            color:themesTextColor
             font.pixelSize: 40
             font.bold : true
-            text: qsTr("产测模式首页")
+            text: qsTr("整机产测模式")
         }
     }
-    Rectangle{
-        id:bottomBar
+    Item{
         width:parent.width
         anchors.top: topBar.bottom
         anchors.bottom: parent.bottom
-        color:"transparent"
 
         GridLayout{
             width:parent.width
-            height: parent.height
-            anchors.centerIn: parent
+            height: parent.height-100
             rows: 1
             columns: 2
             rowSpacing: 0
-            columnSpacing: 20
+            columnSpacing: 0
 
             Button{
-                Layout.preferredWidth: 300
-                Layout.preferredHeight:100
+                Layout.preferredWidth: 250
+                Layout.preferredHeight:250
                 Layout.alignment: Qt.AlignHCenter|Qt.AlignVCenter
                 background:Rectangle{
                     radius: 16
-                    color:"blue"
+                    color:themesTextColor2
                 }
                 Text{
                     text:"屏幕检测"
                     color:"#FFF"
-                    font.pixelSize: 35
+                    font.pixelSize: 40
                     anchors.centerIn: parent
                 }
                 onClicked: {
@@ -59,17 +53,17 @@ Rectangle {
                 }
             }
             Button{
-                Layout.preferredWidth: 300
-                Layout.preferredHeight:100
+                Layout.preferredWidth: 250
+                Layout.preferredHeight:250
                 Layout.alignment: Qt.AlignHCenter|Qt.AlignVCenter
                 background:Rectangle{
                     radius: 16
-                    color:"blue"
+                    color:themesTextColor2
                 }
                 Text{
                     text:"智能模块检测"
                     color:"#FFF"
-                    font.pixelSize: 35
+                    font.pixelSize: 40
                     anchors.centerIn: parent
                 }
 
@@ -79,8 +73,8 @@ Rectangle {
             }
         }
         Button{
-            width:100+40
-            height:50+40
+            width:100+50
+            height:50+50
             anchors.right: parent.right
             anchors.bottom: parent.bottom
             background:Rectangle{
@@ -88,11 +82,11 @@ Rectangle {
                 height:50
                 anchors.centerIn: parent
                 radius: 8
-                color:"green"
+                color:themesTextColor2
             }
             Text{
                 text:"退出"
-                color:"#fff"
+                color:"#FFF"
                 font.pixelSize: 40
                 anchors.centerIn: parent
             }

@@ -5,6 +5,7 @@ Item {
     property alias model:pathView.model
     property int delegateIndex:0
     property alias currentIndex:pathView.currentIndex
+    property alias moving:pathView.moving
     signal valueChanged(var index,var valueName)
     id:root
     //        anchors.fill: parent
@@ -13,7 +14,7 @@ Item {
         id: rectDelegate
         Item  {
             property int textFont:PathView.isCurrentItem ? 45 : 35
-            property var textColor:PathView.isCurrentItem ?"#00E6B6":'white'
+            property var textColor:PathView.isCurrentItem ?themesTextColor:themesTextColor2
             width:parent.width
             height:parent.height/parent.pathItemCount
 //            opacity: PathView.isCurrentItem ? 1 : 0.5
@@ -31,7 +32,7 @@ Item {
         id: modeDelegate
         Item  {
             property int textFont:PathView.isCurrentItem ? 45 : 35
-            property var textColor:PathView.isCurrentItem ?"#00E6B6":'white'
+            property var textColor:PathView.isCurrentItem ?themesTextColor:themesTextColor2
             property var imgUrl:PathView.isCurrentItem ?leftWorkBigImg[modelData]:leftWorkSmallImg[modelData]
             width:parent.width
             height:parent.height/parent.pathItemCount

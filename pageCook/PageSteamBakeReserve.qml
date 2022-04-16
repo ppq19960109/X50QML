@@ -1,4 +1,4 @@
-import QtQuick 2.0
+import QtQuick 2.7
 import QtQuick.Controls 2.2
 import "../"
 Item {
@@ -10,6 +10,8 @@ Item {
     }
 
     Connections { // 将目标对象信号与槽函数进行连接
+        id:connections
+        enabled:false
         target: QmlDevState
         onStateChanged: { // 处理目标对象信号的槽函数
             console.log("PageSteamBakeReserve onStateChanged",key)
@@ -18,6 +20,12 @@ Item {
                 steamStart()
             }
         }
+    }
+    StackView.onActivated:{
+        connections.enabled=true
+    }
+    StackView.onDeactivated:{
+        connections.enabled=false
     }
     Component.onCompleted: {
         var i
@@ -40,9 +48,7 @@ Item {
 
     PageBackBar{
         id:topBar
-        width:parent.width
         anchors.bottom:parent.bottom
-        height:80
         name:"预约  <font size='-1'>("+root.dishName+")</font>"
         leftBtnText:qsTr("")
         rightBtnText:qsTr("启动")
@@ -59,11 +65,10 @@ Item {
     }
 
     //内容
-    Rectangle{
+    Item{
         width:parent.width
         anchors.bottom:topBar.top
         anchors.top: parent.top
-        color:"transparent"
 
         PageDivider{
             anchors.horizontalCenter: parent.horizontalCenter
@@ -75,11 +80,7 @@ Item {
             anchors.top:parent.top
             anchors.topMargin:rowPathView.height/3*2+50
         }
-        Image {
-            asynchronous:true
-            anchors.centerIn: parent
-            source: "qrc:/x50/steam/黑色块.png"
-        }
+
         ListModel {
             id:modeListModel
         }
@@ -96,6 +97,12 @@ Item {
                 height:parent.height
 
                 currentIndex:0
+                Image {
+                    visible: hourPathView.moving
+                    asynchronous:true
+                    anchors.centerIn: parent
+                    source: "qrc:/x50/steam/temp-time-change-background.png"
+                }
                 onValueChanged: {
 
                 }
@@ -104,7 +111,12 @@ Item {
                 id:minutePathView
                 width: parent.width/3
                 height:parent.height
-
+                Image {
+                    visible: minutePathView.moving
+                    asynchronous:true
+                    anchors.centerIn: parent
+                    source: "qrc:/x50/steam/temp-time-change-background.png"
+                }
                 Component.onCompleted:{
 
                 }

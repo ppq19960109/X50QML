@@ -1,23 +1,16 @@
-import QtQuick 2.0
+import QtQuick 2.7
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
 
 import "../"
-Item {
-
+Rectangle {
+    color:themesWindowBackgroundColor
     Component.onCompleted: {
 
     }
-    Image {
-        cache:false
-        asynchronous:true
-        source: themesImagesPath+"applicationwindow-background.png"
-    }
     PageBackBar{
         id:topBar
-        width:parent.width
         anchors.bottom:parent.bottom
-        height:80
         name:qsTr("")
         leftBtnText:qsTr("")
         rightBtnText:qsTr("")
@@ -27,11 +20,10 @@ Item {
     }
 
     //内容
-    Rectangle{
+    Item{
         width:parent.width
         anchors.bottom:topBar.top
         anchors.top: parent.top
-        color:"transparent"
 
         GridLayout{
             width:parent.width-160
@@ -46,8 +38,10 @@ Item {
                 Layout.preferredWidth: 300
                 Layout.preferredHeight:160
                 Layout.alignment: Qt.AlignHCenter|Qt.AlignVCenter
-                background:PageGradient{
-                    anchors.fill: parent
+                background:Image{
+                    asynchronous:true
+                    cache:false
+                    source: "qrc:/x50/steam/right-cook-background.png"
                 }
                 Text{
                     text:"右腔速蒸"
@@ -66,8 +60,10 @@ Item {
                 Layout.preferredHeight:160
                 Layout.alignment: Qt.AlignHCenter|Qt.AlignVCenter
 
-                background:PageGradient{
-                    anchors.fill: parent
+                background:Image{
+                    asynchronous:true
+                    cache:false
+                    source: "qrc:/x50/steam/right-cook-background.png"
                 }
                 Text{
                     text:"烹饪历史"

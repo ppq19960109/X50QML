@@ -5,9 +5,7 @@ import "../"
 Item {
     PageBackBar{
         id:topBar
-        width:parent.width
         anchors.bottom:parent.bottom
-        height:80
         name:qsTr("主题")
         leftBtnText:qsTr("")
         rightBtnText:qsTr("")
@@ -21,11 +19,10 @@ Item {
     }
 
     //内容
-    Rectangle{
+    Item{
         width:parent.width
         anchors.top:parent.top
         anchors.bottom: topBar.top
-        color:"transparent"
 
         ListView{
             id:themesList

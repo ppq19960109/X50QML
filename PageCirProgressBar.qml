@@ -1,9 +1,10 @@
-import QtQuick 2.0
+import QtQuick 2.7
 import QtQuick.Controls 2.2
-
+import "qrc:/SendFunc.js" as SendFunc
 Item {
     property int device
-    property real percent
+    property real percent:-1
+    property int roate:0
 
     property int workState
     property var workColor
@@ -16,42 +17,97 @@ Item {
 
     function updatePaint()
     {
-        console.log("updatePaint:",mode.text)
+//        console.log("updatePaint:",device,mode.text,percent,roate)
         canvas.requestPaint()
+    }
+    onWorkStateChanged: {
+//        if(workState === workStateEnum.WORKSTATE_STOP||workState === workStateEnum.WORKSTATE_FINISH||workState === workStateEnum.WORKSTATE_PREHEAT)
+//        {
+//            percent=-1
+//        }
+        updatePaint()
+    }
+    onPercentChanged: {
+        if(workState === workStateEnum.WORKSTATE_RESERVE||workState === workStateEnum.WORKSTATE_RUN||workState === workStateEnum.WORKSTATE_PAUSE)
+        {
+            updatePaint()
+        }
     }
 
     Canvas{
-        property int lineWidth:2
-        property real r: canvas.width/2//-lineWidth
+        property int lineWidth:30
+        property real r: canvas.width/2-lineWidth
         id: canvas
         width: canvasDiameter
         height: width
         anchors.centerIn: parent
         onPaint: {
+            var gr
             var ctx = getContext("2d")
             ctx.save()
             ctx.clearRect(0, 0, canvas.width, canvas.height)
             ctx.translate(canvas.width/2,canvas.height/2)
-            ctx.lineWidth = 0
+            //            ctx.lineWidth = 0
+            if(workState !== workStateEnum.WORKSTATE_PREHEAT)
+            {
+                //显示外圈
+                ctx.beginPath()
+                ctx.lineWidth = lineWidth
+                ctx.strokeStyle = "#333333"
+                //            ctx.fillStyle = '#596767'
+                ctx.arc(0, 0, r, 0, 2*Math.PI)
+                ctx.closePath()
+                ctx.stroke()
+                //            ctx.fill()
+            }
+            if(workState === workStateEnum.WORKSTATE_PREHEAT||workState === workStateEnum.WORKSTATE_RESERVE||workState === workStateEnum.WORKSTATE_RUN||workState === workStateEnum.WORKSTATE_PAUSE)
+            {
+                gr = ctx.createConicalGradient(0, 0, 0.5*Math.PI)
+                ctx.lineCap="round"
+                ctx.lineWidth = lineWidth
+                ctx.beginPath()
+                if(workState === workStateEnum.WORKSTATE_PREHEAT)
+                {
+                    ctx.rotate(roate*Math.PI/180);
+                    if(device==leftDevice)
+                    {
+                        gr.addColorStop(0, "#00A0420F");
+                        gr.addColorStop(1, "#FFE68855");
+                    }
+                    else
+                    {
+                        gr.addColorStop(0, "#00DE932F");
+                        gr.addColorStop(1, "#FFDE932F");
+                    }
 
-            //显示外圈
-            ctx.beginPath()
-            ctx.lineWidth = lineWidth
-            ctx.strokeStyle = workColor
-//            ctx.fillStyle = '#596767'
-            ctx.arc(0, 0, r, 0, 2*Math.PI)
-            ctx.closePath()
-            ctx.stroke()
-//            ctx.fill()
-
-            //                var rad=(2*percent/100-0.5)*Math.PI
-            //                ctx.lineCap="round"
-            //                ctx.lineWidth = lineWidth
-            //                ctx.beginPath()
-            //                ctx.strokeStyle = 'blue'
-            //                ctx.arc(0, 0, r, rad, 1.5*Math.PI)
-            //                ctx.stroke()
-
+                    ctx.strokeStyle =gr
+                    ctx.arc(0, 0, r, (-0.5+0.04)*Math.PI, (1.5-0.04)*Math.PI)
+                    ctx.stroke()
+                }
+                else
+                {
+                    if(device==leftDevice)
+                    {
+                        gr.addColorStop(0, "#A0420F")
+                        gr.addColorStop(1, "#E68855")
+                    }
+                    else
+                    {
+                        gr.addColorStop(0, "#DE932F");
+                        //                        gr.addColorStop(1, "#DE932F");
+                    }
+                    ctx.strokeStyle =gr
+                    if(percent==0)
+                    {
+                        ctx.arc(0, 0, r, -0.5*Math.PI, 1.5*Math.PI)
+                    }
+                    else
+                    {
+                        ctx.arc(0, 0, r, (1.92*percent/100-0.5+0.04)*Math.PI, (1.5-0.04)*Math.PI)
+                    }
+                }
+                ctx.stroke()
+            }
             //            console.log("radian:",rad,"r:",r,"Angle",360*percent/100)
             //                var x = Math.cos(rad)*r
             //                var y = Math.sin(rad)*r
@@ -71,69 +127,80 @@ Item {
             ctx.restore()
         }
     }
-    Rectangle{
+    Item{
         //        width:canvas.width
         //        height: canvas.height
-        color:"transparent"
-//        border.color: "#fff"
         anchors.fill: parent
 
         Text{
             id:state
-            color:"white"
+            color:(workState === workStateEnum.WORKSTATE_PREHEAT ||workState === workStateEnum.WORKSTATE_FINISH) ?workColor:"#D7D7D7"
             visible: workState !== workStateEnum.WORKSTATE_STOP
-            font.pixelSize:(workState === workStateEnum.WORKSTATE_PREHEAT ||workState === workStateEnum.WORKSTATE_FINISH) ? 50:32
+            font.pixelSize:(workState === workStateEnum.WORKSTATE_PREHEAT ||workState === workStateEnum.WORKSTATE_FINISH) ? 45:32
             anchors.top:parent.top
-            anchors.topMargin: (workState === workStateEnum.WORKSTATE_PREHEAT ||workState === workStateEnum.WORKSTATE_FINISH) ? 100:45
+            anchors.topMargin: (workState === workStateEnum.WORKSTATE_PREHEAT ||workState === workStateEnum.WORKSTATE_FINISH) ? 118:80
             anchors.horizontalCenter: parent.horizontalCenter
-//            horizontalAlignment :Text.AlignHCenter
-//            verticalAlignment :Text.AlignHCenter
+            //            horizontalAlignment :Text.AlignHCenter
+            //            verticalAlignment :Text.AlignHCenter
             text: workStateArray[workState]
         }
-        Text{
-            id:time
+        Item
+        {
             visible: !(workState === workStateEnum.WORKSTATE_PREHEAT ||workState === workStateEnum.WORKSTATE_FINISH||workState === workStateEnum.WORKSTATE_STOP)
-            color:workColor
-            font.pixelSize: 50
-            font.bold: true
             anchors.top:parent.top
-            anchors.topMargin:100
+            anchors.topMargin:120
             anchors.horizontalCenter: parent.horizontalCenter
-//            horizontalAlignment :Text.AlignHCenter
-//            verticalAlignment :Text.AlignHCenter
+
+            Text{
+                id:time
+                anchors.top:parent.top
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.horizontalCenterOffset: -20
+                color:workColor
+                font.pixelSize: 70
+                font.bold: true
+            }
+            Text{
+                anchors.left: time.right
+                anchors.leftMargin: 5
+                anchors.bottom: time.bottom
+                anchors.bottomMargin: 5
+                color:"#D7D7D7"
+                font.pixelSize: 26
+                text: qsTr("分钟")
+            }
         }
         Button{
             visible: workState === workStateEnum.WORKSTATE_FINISH
-            width:160
-            height: 55
-            anchors.bottom: parent.bottom
-            anchors.bottomMargin: 80
+            width:105
+            height: 50
+            anchors.top: parent.top
+            anchors.topMargin: 185
             anchors.horizontalCenter: parent.horizontalCenter
             background:Rectangle{
-                color:"transparent"
-                border.color: "white"
+                color:"#484848"
+                radius: 8
             }
             Text{
                 color:"white"
-                font.pixelSize: 25
-                anchors.verticalCenter:  parent.verticalCenter
-                anchors.horizontalCenter: parent.horizontalCenter
-                horizontalAlignment :Text.AlignHCenter
-                verticalAlignment :Text.AlignHCenter
+                font.pixelSize: 28
+                anchors.centerIn: parent
+                //                horizontalAlignment :Text.AlignHCenter
+                //                verticalAlignment :Text.AlignHCenter
                 text: qsTr("返回")
             }
             onClicked:{
                 console.log("PageCirProgressBar device",device)
                 if(workState===workStateEnum.WORKSTATE_FINISH)
                 {
-//                    if(leftDevice==device)
-//                    {
-//                        QmlDevState.setState("LStOvState",workStateEnum.WORKSTATE_STOP)
-//                    }
-//                    else
-//                    {
-//                        QmlDevState.setState("RStOvState",workStateEnum.WORKSTATE_STOP)
-//                    }
+                    //                    if(leftDevice==device)
+                    //                    {
+                    //                        QmlDevState.setState("LStOvState",workStateEnum.WORKSTATE_STOP)
+                    //                    }
+                    //                    else
+                    //                    {
+                    //                        QmlDevState.setState("RStOvState",workStateEnum.WORKSTATE_STOP)
+                    //                    }
                     SendFunc.setCookOperation(device,workOperationEnum.CONFIRM)
                 }
             }
@@ -142,33 +209,30 @@ Item {
             asynchronous:true
             visible: workState === workStateEnum.WORKSTATE_STOP
             anchors.top:parent.top
-            anchors.topMargin:70
+            anchors.topMargin:90
             anchors.horizontalCenter: parent.horizontalCenter
-            source: "qrc:/x50/steam/icon_yqpr.png"
+            source: themesImagesPath+"icon-cookadd.png"
         }
         Text{
             id:mode
-            width:220
             visible: workState !== workStateEnum.WORKSTATE_FINISH
-            color:"white"
-            font.pixelSize: workState === workStateEnum.WORKSTATE_STOP?35:30
-            anchors.bottom:parent.bottom
-            anchors.bottomMargin: workState === workStateEnum.WORKSTATE_STOP?75:85
+            color:themesTextColor2
+            font.pixelSize: 26
+            anchors.top:parent.top
+            anchors.topMargin: workState === workStateEnum.WORKSTATE_STOP?200:196
             anchors.horizontalCenter: parent.horizontalCenter
-            horizontalAlignment :Text.AlignHCenter
-            verticalAlignment :Text.AlignHCenter
             elide : Text.ElideRight
         }
         Text{
             id:temp
             visible: !(workState === workStateEnum.WORKSTATE_FINISH||workState === workStateEnum.WORKSTATE_STOP)
-            color:"white"
-            font.pixelSize: 30
-            anchors.bottom: parent.bottom
-            anchors.bottomMargin: 45
+            anchors.top: parent.top
+            anchors.topMargin: 229
             anchors.horizontalCenter: parent.horizontalCenter
-            horizontalAlignment :Text.AlignHCenter
-            verticalAlignment :Text.AlignHCenter
+            color:themesTextColor2
+            font.pixelSize: 26
+            //            horizontalAlignment :Text.AlignHCenter
+            //            verticalAlignment :Text.AlignHCenter
         }
 
     }

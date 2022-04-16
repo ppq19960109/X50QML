@@ -71,7 +71,15 @@ function leftWorkModeNumberFun(n)
     }
     return mode
 }
-
+function getCookType(cookSteps)
+{
+    var root=JSON.parse(cookSteps)
+    if(root.length>1)
+        return 2
+    if(root[0].mode==1||root[0].mode==2)
+        return 0
+    return 1;
+}
 function getDefHistory()
 {
     var param = {}
@@ -81,7 +89,7 @@ function getDefHistory()
     param.cookSteps=""
     param.timestamp=Math.floor(Date.now()/1000) //Date.parse(new Date())//(new Date().getTime())
     param.collect=0
-    param.cookType=0
+    param.recipeid=0
     param.recipeType=0
     param.cookPos=0
     return param

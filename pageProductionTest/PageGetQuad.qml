@@ -57,7 +57,7 @@ Rectangle {
             }
             else if(quadText.visible==true && quad.color=="#00000000" && "DeviceSecret"==key)
             {
-                if(QmlDevState.state.DeviceSecret!="")
+                if(value!="")
                 {
                     timer_quad.stop()
                     quad.color="green"
@@ -77,12 +77,11 @@ Rectangle {
             }
         }
     }
-    Rectangle{
+    Item{
         id:topBar
         width:parent.width
         height:80
         anchors.top: parent.top
-        color:"transparent"
         Text {
             anchors.centerIn: parent
             color:"green"
@@ -91,12 +90,11 @@ Rectangle {
             text: qsTr("四元组烧录")
         }
     }
-    Rectangle{
+    Item{
         id:bottomBar
         width:parent.width
         anchors.top: topBar.bottom
         anchors.bottom: parent.bottom
-        color:"transparent"
 
         GridLayout{
             width:parent.width -100

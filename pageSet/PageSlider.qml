@@ -1,4 +1,4 @@
-import QtQuick 2.0
+import QtQuick 2.7
 import QtQuick.Controls 2.2
 Item {
 
@@ -24,21 +24,21 @@ Item {
             width: control.availableWidth
             height: implicitHeight
             radius: 2
-            color: "#FFF"
-            opacity: 0.35
+            color: themesTextColor2
+//            opacity: 0.35
 
             Rectangle {
                 width: control.visualPosition * parent.width
                 height: parent.height
-                color: "#00E6B6"
+                color: themesTextColor
                 radius: 2
             }
         }
 
-        handle: Rectangle {
+        handle: Item {
             x: control.leftPadding + control.visualPosition * (control.availableWidth - width)
             y: control.topPadding + control.availableHeight / 2 - height / 2
-            color:"transparent"
+
             implicitWidth: 30
             implicitHeight: 90
             //                    border.color: "#fff"

@@ -2,24 +2,15 @@ import QtQuick 2.7
 import QtQuick.Controls 2.2
 
 Button {
-    property int step: 0
-    background:Rectangle{
-        id:bg
-        color:"red"
+    property int step: 1
+    background:Image{
+        asynchronous: true
+        cache:false
+        source:"qrc:/x50/test/image"+step+".png"
     }
     onClicked: {
-        console.log("color:",bg.color)
-        if(step==0)
-        {
-            step=1
-            bg.color="green"
-        }
-        else if(step==1)
-        {
-            step=2
-            bg.color="blue"
-        }
-        else if(step==2)
+
+        if(++step>10)
         {
             backPrePage()
         }

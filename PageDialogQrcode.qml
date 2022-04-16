@@ -1,49 +1,42 @@
-import QtQuick 2.0
+import QtQuick 2.7
 import QtQuick.Controls 2.2
-Rectangle {
+Item {
     property alias hintTopText: hintTop.text
     signal cancel()
     MouseArea{
         anchors.fill: parent
-        hoverEnabled:true
-        propagateComposedEvents: true
-        onPressed: {
-            mouse.accepted = true
-        }
+        //        hoverEnabled:true
+        //        propagateComposedEvents: true
+        //        onPressed: {
+        //            mouse.accepted = true
+        //        }
     }
     anchors.fill: parent
-    color: "transparent"
-    Rectangle {
-        anchors.fill: parent
-        color: "#000"
-        opacity: 0.6
-    }
+
     Rectangle {
         width:640
         height: 400
         anchors.centerIn: parent
-        color: "#596767"
+        color: themesPopupWindowColor
         radius: 16
-        PageDialogGradient{
-            anchors.fill: parent
-        }
+        //        PageDialogGradient{
+        //            anchors.fill: parent
+        //        }
         Button {
             width:closeImg.width+60
             height:closeImg.height+60
             anchors.top:parent.top
-//            anchors.topMargin: 33
+            //            anchors.topMargin: 33
             anchors.right:parent.right
-//            anchors.rightMargin: 33
+            //            anchors.rightMargin: 33
 
             Image {
                 id:closeImg
                 asynchronous:true
                 anchors.centerIn: parent
-                source: "/x50/icon/icon_close.png"
+                source: themesImagesPath+"icon-window-close.png"
             }
-            background: Rectangle {
-                color:"transparent"
-            }
+            background: Item {}
             onClicked: {
                 cancel()
             }
@@ -51,7 +44,7 @@ Rectangle {
         Text{
             id:hintTop
             anchors.top: parent.top
-            anchors.topMargin: 40
+            anchors.topMargin: 50
             anchors.horizontalCenter: parent.horizontalCenter
             color:"white"
             font.pixelSize: 40
@@ -59,11 +52,13 @@ Rectangle {
 
         Image{
             id:qrCodeImg
+            width: 200
+            height: 200
             asynchronous:true
             anchors.horizontalCenter: parent.horizontalCenter
-            anchors.horizontalCenterOffset: -qrCodeImg.width/2-20
-            anchors.bottom: parent.bottom
-            anchors.bottomMargin: 30
+            anchors.horizontalCenterOffset: -qrCodeImg.width/2-50
+            anchors.top: hintTop.bottom
+            anchors.topMargin: 40
             source: "file:QrCode.png"
         }
 
@@ -75,7 +70,7 @@ Rectangle {
             color:"white"
             font.pixelSize: 35
             //                font.letterSpacing : 5
-//            font.bold :true
+            //            font.bold :true
             lineHeight: 1.5
 
             wrapMode:Text.WordWrap

@@ -28,8 +28,7 @@ Item {
         anchors.rightMargin: 40
         visible:true
 
-        background: Rectangle{
-            color:"transparent"
+        background: Item{
             Image {
                 id:delImg
                 cache:false
@@ -47,9 +46,7 @@ Item {
         anchors.left: parent.left
         anchors.right: close.left
 
-        background: Rectangle{
-            color:"transparent"
-        }
+        background: Item {}
 
         Text {
             id: indexText
