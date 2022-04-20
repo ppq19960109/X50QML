@@ -134,7 +134,6 @@ Item {
                 width:parent.width
                 height:100
                 PageDivider{
-                    anchors.horizontalCenter: parent.horizontalCenter
                     anchors.bottom:parent.bottom
                 }
                 Text{

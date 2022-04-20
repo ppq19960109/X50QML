@@ -1,18 +1,22 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.2
 
-Rectangle {
+Item {
     property int childLockPressCount:0
 
     anchors.fill: parent
-    color: "#000"
-    opacity: 0.6
 
+    Rectangle {
+        anchors.fill: parent
+        color: "#000"
+        opacity: 0.3
+    }
     Image{
         asynchronous:true
         anchors.right: parent.right
+        anchors.rightMargin: 40
         anchors.bottom: lockBtn.top
-        source:"qrc:/x50/main/icon_ts_g_k.png"
+        source:themesImagesPath+"icon-lockscreen-hint.png"
     }
     Button{
         id:lockBtn
@@ -25,7 +29,7 @@ Rectangle {
         Image{
             id:img
             asynchronous:true
-            source:"qrc:/x50/main/icon_ts_g.png"
+            source:themesImagesPath+"icon_childlockscreen_close.png"
         }
         //        onPressedChanged: {
         //            if (pressed) {
@@ -49,7 +53,7 @@ Rectangle {
         onPressed: {
             console.warn("PageLockScreen onPressed",mouse.x,mouse.y)
             mouse.accepted = true
-            if(mouse.x<680||mouse.y<400)
+            if(mouse.x<660||mouse.y<400)
             {
                 return
             }
@@ -73,7 +77,7 @@ Rectangle {
 
     Timer {
         id: longPressTimer
-        interval: 1000
+        interval: 800
         repeat: true
         running: false
 

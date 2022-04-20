@@ -251,12 +251,10 @@ Rectangle {
         anchors.top: parent.top
 
         PageDivider{
-            anchors.horizontalCenter: parent.horizontalCenter
             anchors.top:parent.top
             anchors.topMargin:rowPathView.height/3+50
         }
         PageDivider{
-            anchors.horizontalCenter: parent.horizontalCenter
             anchors.top:parent.top
             anchors.topMargin:rowPathView.height/3*2+50
         }
@@ -267,14 +265,14 @@ Rectangle {
 
         Row {
             id:rowPathView
-            width: parent.width-80
-            height:parent.height-100
+            width: parent.width-60
+            height:parent.height-70
             anchors.centerIn: parent
-            spacing: 10
+            spacing: 0
 
             DataPathView {
                 id:modePathView
-                width: parent.width/3
+                width: 292
                 height:parent.height
                 model:modeListModel
                 delegateIndex:1
@@ -338,7 +336,7 @@ Rectangle {
             }
             DataPathView {
                 id:tempPathView
-                width: parent.width/3
+                width: 226
                 height:parent.height
                 delegateIndex:0
                 Image {
@@ -354,7 +352,7 @@ Rectangle {
             }
             DataPathView {
                 id:timePathView
-                width: parent.width/3
+                width: 226
                 height:parent.height
                 delegateIndex:0
                 Image {

@@ -7,13 +7,13 @@ Item {
     RowLayout {
         anchors.fill: parent
 
-        anchors.leftMargin: 70
-        anchors.rightMargin: 70
+        anchors.leftMargin: 60
+        anchors.rightMargin: 60
 
-        spacing: 0
+        spacing: 20
         Button{
-            Layout.preferredWidth: 196
-            Layout.preferredHeight:300
+            Layout.preferredWidth: 210
+            Layout.preferredHeight:312
             Layout.alignment: Qt.AlignHCenter|Qt.AlignVCenter
 
             background:Image {
@@ -35,8 +35,8 @@ Item {
         }
 
         Button{
-            Layout.preferredWidth: 196
-            Layout.preferredHeight:300
+            Layout.preferredWidth: 210
+            Layout.preferredHeight:312
             Layout.alignment: Qt.AlignHCenter|Qt.AlignVCenter
 
             background:Image {
@@ -58,8 +58,8 @@ Item {
         }
 
         Button{
-            Layout.preferredWidth: 196
-            Layout.preferredHeight:300
+            Layout.preferredWidth: 210
+            Layout.preferredHeight:312
             Layout.alignment: Qt.AlignHCenter|Qt.AlignVCenter
 
             background:Image {

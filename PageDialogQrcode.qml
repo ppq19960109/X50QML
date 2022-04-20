@@ -49,16 +49,17 @@ Item {
             color:"white"
             font.pixelSize: 40
         }
-
         Image{
             id:qrCodeImg
-            width: 200
-            height: 200
-            asynchronous:true
             anchors.horizontalCenter: parent.horizontalCenter
-            anchors.horizontalCenterOffset: -qrCodeImg.width/2-50
+            anchors.horizontalCenterOffset: -120
             anchors.top: hintTop.bottom
             anchors.topMargin: 40
+            width: 218
+            height: 218
+            sourceSize.width: 218
+            sourceSize.height: 218
+            asynchronous:true
             source: "file:QrCode.png"
         }
 

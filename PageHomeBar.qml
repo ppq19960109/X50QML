@@ -3,7 +3,6 @@ import QtQuick.Controls 2.2
 import "qrc:/SendFunc.js" as SendFunc
 
 Item {
-    property alias windImg:wind_icon.source
     implicitWidth: parent.width
     implicitHeight:80
 
@@ -31,7 +30,7 @@ Item {
                 id:wifi_icon
                 asynchronous:true
                 anchors.centerIn: parent
-                source: wifiConnected ? "qrc:/x50/main/icon_wife_nor.png":"qrc:/x50/main/icon_wife_w.png"
+                source: themesImagesPath+(wifiConnected ? "icon_wifi_connected.png":"icon_wifi_disconnect.png")
             }
             onClicked: {
                 load_page("pageWifi")
@@ -40,7 +39,7 @@ Item {
 
         TabButton {
             id:wind
-            width: wind_icon.width+40
+            width: wind_icon.width
             height:parent.height
             anchors.centerIn: parent
             //        anchors.leftMargin: 140
@@ -49,8 +48,10 @@ Item {
             }
             Image{
                 id:wind_icon
+                visible: QmlDevState.state.HoodSpeed!=null && QmlDevState.state.HoodSpeed!=0
                 asynchronous:true
                 anchors.centerIn: parent
+                source: themesImagesPath+"icon_wind_"+QmlDevState.state.HoodSpeed+".png"
             }
             onClicked: {
 
@@ -63,7 +64,7 @@ Item {
             width:time.width+closeHeatImg.width+20
             height:parent.height
             anchors.right:childLockBtn.left
-            anchors.rightMargin: 20
+            anchors.rightMargin: 10
 
             background: Item {
             }
@@ -71,16 +72,16 @@ Item {
                 id:closeHeatImg
                 asynchronous:true
                 anchors.right: time.left
-                anchors.rightMargin: 20
+                anchors.rightMargin: 15
                 anchors.verticalCenter: parent.verticalCenter
-                source: "qrc:/x50/main/icon_time.png"
+                source: themesImagesPath+"icon_heat.png"
             }
             Text{
                 id:time
                 anchors.verticalCenter: parent.verticalCenter
-                color:"#fff"
+                color:themesTextColor2
                 text:"0"+Math.floor(QmlDevState.state.RStoveTimingLeft/60)+":"+Math.floor(QmlDevState.state.RStoveTimingLeft%60/10)+(QmlDevState.state.RStoveTimingLeft%60%10)//qsTr("01:12")
-                font.pixelSize:35
+                font.pixelSize:34
                 anchors.right: parent.right
             }
             onClicked: {
@@ -132,10 +133,10 @@ Item {
             background:Item{
             }
             Image{
-                id:tongsuoImg
+                visible: !systemSettings.childLock
                 asynchronous:true
                 anchors.centerIn: parent
-                source: systemSettings.childLock ?"qrc:/x50/main/icon_ts_g.png" : "qrc:/x50/main/icon_ts_k.png"
+                source: themesImagesPath+ "icon_childlock_open.png"
             }
 
             onPressedChanged: {

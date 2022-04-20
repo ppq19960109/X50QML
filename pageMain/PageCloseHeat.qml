@@ -33,7 +33,7 @@ Item {
     PageBackBar{
         id:topBar
         anchors.bottom:parent.bottom
-        name:"定时关火  <font size='-1'>(右灶开启后才可定时关火)</font>"
+        name:"定时关火  <font size='30px'>(右灶开启后才可定时关火)</font>"
         leftBtnText:qsTr("")
         rightBtnText:qsTr("启动")
         onClose:{
@@ -55,8 +55,8 @@ Item {
                 Data.RStoveTimingSet = hourPathView.currentIndex*60+minutePathView.currentIndex
                 SendFunc.setToServer(Data)
 
-//                QmlDevState.setState("RStoveTimingLeft",hourPathView.currentIndex*60+minutePathView.currentIndex)
-//                QmlDevState.setState("RStoveTimingState",timingStateEnum.RUN)
+                //                QmlDevState.setState("RStoveTimingLeft",hourPathView.currentIndex*60+minutePathView.currentIndex)
+                //                QmlDevState.setState("RStoveTimingState",timingStateEnum.RUN)
                 backPrePage()
             }
         }
@@ -69,30 +69,27 @@ Item {
         anchors.top: parent.top
 
         PageDivider{
-            anchors.horizontalCenter: parent.horizontalCenter
             anchors.top:parent.top
             anchors.topMargin:rowPathView.height/3+50
         }
         PageDivider{
-            anchors.horizontalCenter: parent.horizontalCenter
             anchors.top:parent.top
             anchors.topMargin:rowPathView.height/3*2+50
         }
 
         Row {
             id:rowPathView
-            width: parent.width-80
-            height:parent.height-100
+            width: parent.width-140
+            height:parent.height-80
             anchors.top:parent.top
             anchors.bottom: parent.bottom
             anchors.centerIn: parent
-            spacing: 10
+            spacing: 20
 
             DataPathView {
                 id:hourPathView
-                width: parent.width/3
+                width: 226
                 height:parent.height
-
                 currentIndex:0
                 Image {
                     visible: hourPathView.moving
@@ -107,8 +104,9 @@ Item {
             }
             DataPathView {
                 id:minutePathView
-                width: parent.width/3
+                width: 226
                 height:parent.height
+                //                currentIndex:1
                 Image {
                     visible: minutePathView.moving
                     asynchronous:true
@@ -118,12 +116,14 @@ Item {
                 Component.onCompleted:{
                     if(QmlDevState.state.RStoveTimingState===1)
                         currentIndex=QmlDevState.state.RStoveTimingLeft%60
+                    else
+                        currentIndex=1
                 }
             }
             Text{
-                //                width:120
-                color:"white"
-                font.pixelSize: 40
+                width:180
+                color:themesTextColor2
+                font.pixelSize: 35
                 anchors.verticalCenter: parent.verticalCenter
                 text:qsTr("后定时关火")
             }

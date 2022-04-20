@@ -55,7 +55,7 @@ Item {
     PageBackBar{
         id:topBar
         anchors.bottom:parent.bottom
-        name:qsTr("多段烹饪（最多可添加三段烹饪）")
+        name:qsTr("多段烹饪 <font size='30px'>(最多可添加三段烹饪)</font>")
         leftBtnText:qsTr("启动")
         rightBtnText:qsTr("预约")
         onLeftClick:{
@@ -104,7 +104,7 @@ Item {
                 background: Image {
                     asynchronous:true
                     anchors.centerIn: parent
-                    source: "qrc:/x50/icon/icon_add.png"
+                    source: themesImagesPath+"icon_cook_add.png"
                 }
                 onClicked:{
                     listClickIndex=listView.count
@@ -112,7 +112,6 @@ Item {
                 }
             }
             PageDivider{
-                anchors.horizontalCenter: parent.horizontalCenter
                 anchors.bottom: parent.bottom
             }
         }

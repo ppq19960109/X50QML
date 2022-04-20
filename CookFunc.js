@@ -84,8 +84,6 @@ function getDefHistory()
 {
     var param = {}
     param.dishName=""
-    param.imgUrl=""
-    param.details=""
     param.cookSteps=""
     param.timestamp=Math.floor(Date.now()/1000) //Date.parse(new Date())//(new Date().getTime())
     param.collect=0

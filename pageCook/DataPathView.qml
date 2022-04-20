@@ -60,10 +60,10 @@ Item {
         id:pathView
         anchors.fill: parent
 
-        currentIndex:0
+//        currentIndex:0
         pathItemCount:3
         interactive: true
-        focus: true;
+        focus: true
         preferredHighlightBegin: 0.5;
         preferredHighlightEnd: 0.5;
         highlightRangeMode: PathView.StrictlyEnforceRange;

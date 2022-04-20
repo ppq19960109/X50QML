@@ -57,7 +57,6 @@ Item {
                 font.pixelSize: 35
             }
             PageDivider{
-                anchors.horizontalCenter: parent.horizontalCenter
                 anchors.bottom: parent.bottom
             }
         }
@@ -88,7 +87,6 @@ Item {
                 anchors.top: listView.bottom
 
                 PageDivider{
-                    anchors.horizontalCenter: parent.horizontalCenter
                     anchors.bottom: parent.bottom
                 }
                 background:Item{}

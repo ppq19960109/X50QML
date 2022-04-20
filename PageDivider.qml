@@ -1,9 +1,9 @@
 import QtQuick 2.7
 
 Rectangle{
-
-    width: 720
+    anchors.horizontalCenter: parent.horizontalCenter
+    width: 750
     height: 1
-    color:"#FFF"
-    opacity: 0.2
+    color:"#E7E7E7"
+    opacity: 0.15
 }

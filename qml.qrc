@@ -48,12 +48,6 @@
         <file>x50/wifi/yousuowifi 7.png</file>
         <file>x50/wifi/icon_sx.png</file>
         <file>PageRotationImg.qml</file>
-        <file>x50/main/icon_ts_k.png</file>
-        <file>x50/main/icon_wife_nor.png</file>
-        <file>x50/main/icon_wife_w.png</file>
-        <file>x50/main/icon_wind_1.png</file>
-        <file>x50/main/icon_wind_3.png</file>
-        <file>x50/main/icon_wind_2.png</file>
         <file>x50/steam/icon_上下加热.png</file>
         <file>x50/steam/icon_上下加热缩小.png</file>
         <file>x50/steam/icon_保暖烘干.png</file>
@@ -71,8 +65,6 @@
         <file>x50/steam/icon_便捷蒸.png</file>
         <file>PageBackBar.qml</file>
         <file>PageCheckBox.qml</file>
-        <file>x50/icon/icon_add.png</file>
-        <file>x50/icon/icon_delete.png</file>
         <file>PageDialogConfirm.qml</file>
         <file>x50/set/huadonganniu.png</file>
         <file>x50/set/icon_light_big.png</file>
@@ -88,7 +80,6 @@
         <file>pageProductionTest/PageScreenLine.qml</file>
         <file>pageProductionTest/PageScreenClick.qml</file>
         <file>pageProductionTest/PageScreenLCD.qml</file>
-        <file>x50/main/icon_time.png</file>
         <file>PageGradient.qml</file>
         <file>PageDialogGradient.qml</file>
         <file>x50/main/icon_ts_g.png</file>

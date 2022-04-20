@@ -35,7 +35,7 @@ Item {
     }
 
     Canvas{
-        property int lineWidth:30
+        property int lineWidth:28
         property real r: canvas.width/2-lineWidth
         id: canvas
         width: canvasDiameter
@@ -71,13 +71,13 @@ Item {
                     ctx.rotate(roate*Math.PI/180);
                     if(device==leftDevice)
                     {
-                        gr.addColorStop(0, "#00A0420F");
-                        gr.addColorStop(1, "#FFE68855");
+                        gr.addColorStop(1, "#00EF832B");
+                        gr.addColorStop(0, "#FFEF832B");
                     }
                     else
                     {
-                        gr.addColorStop(0, "#00DE932F");
-                        gr.addColorStop(1, "#FFDE932F");
+                        gr.addColorStop(1, "#00DE932F");
+                        gr.addColorStop(0, "#FFDE932F");
                     }
 
                     ctx.strokeStyle =gr
@@ -138,7 +138,7 @@ Item {
             visible: workState !== workStateEnum.WORKSTATE_STOP
             font.pixelSize:(workState === workStateEnum.WORKSTATE_PREHEAT ||workState === workStateEnum.WORKSTATE_FINISH) ? 45:32
             anchors.top:parent.top
-            anchors.topMargin: (workState === workStateEnum.WORKSTATE_PREHEAT ||workState === workStateEnum.WORKSTATE_FINISH) ? 118:80
+            anchors.topMargin: (workState === workStateEnum.WORKSTATE_PREHEAT ||workState === workStateEnum.WORKSTATE_FINISH) ? 116:75
             anchors.horizontalCenter: parent.horizontalCenter
             //            horizontalAlignment :Text.AlignHCenter
             //            verticalAlignment :Text.AlignHCenter
@@ -217,9 +217,9 @@ Item {
             id:mode
             visible: workState !== workStateEnum.WORKSTATE_FINISH
             color:themesTextColor2
-            font.pixelSize: 26
+            font.pixelSize: workState === workStateEnum.WORKSTATE_STOP?32:30
             anchors.top:parent.top
-            anchors.topMargin: workState === workStateEnum.WORKSTATE_STOP?200:196
+            anchors.topMargin: workState === workStateEnum.WORKSTATE_STOP?200:190
             anchors.horizontalCenter: parent.horizontalCenter
             elide : Text.ElideRight
         }
@@ -227,7 +227,7 @@ Item {
             id:temp
             visible: !(workState === workStateEnum.WORKSTATE_FINISH||workState === workStateEnum.WORKSTATE_STOP)
             anchors.top: parent.top
-            anchors.topMargin: 229
+            anchors.topMargin: 230
             anchors.horizontalCenter: parent.horizontalCenter
             color:themesTextColor2
             font.pixelSize: 26

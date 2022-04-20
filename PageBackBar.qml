@@ -42,15 +42,16 @@ Item {
 
         Text{
             id:name
-            //        width:80
+//            width:180
+            height: 40
             anchors.left:backBtn.right
             anchors.verticalCenter: parent.verticalCenter
             color:themesTextColor2
             font.pixelSize: 35
             //        textFormat: Text.AutoText
-            //        horizontalAlignment:Text.AlignHCenter
-            verticalAlignment:Text.AlignVCenter
-
+            textFormat: Text.RichText
+//            horizontalAlignment:Text.AlignHCenter
+//            verticalAlignment:Text.AlignVCenter
         }
         Text{
             id:centerText

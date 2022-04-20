@@ -34,7 +34,6 @@ public:
         LINK_VALUE_TYPE_NULL,
     };
 
-
     void setLocalConnected(const int connected);
     int getLocalConnected() const;
 
@@ -42,30 +41,34 @@ public:
     QVariantMap getState() const;
     //    static QmlDevState *qmlAttachedProperties(QObject *);
     QVariantList recipe[6];
-    QVariantList history;
     Q_INVOKABLE QVariantList getRecipe(const int index);
+
+    QVariantList history;
     Q_INVOKABLE QVariantList getHistory();
     Q_INVOKABLE int deleteHistory(const int id);
     Q_INVOKABLE void sortHistory();
     Q_INVOKABLE int setCollect(const int index,const int collect);
     Q_INVOKABLE void startLocalConnect();
-
     void setHistory(const QString& action,const QVariantMap &history);
     int coverHistory(const QJsonObject& single,QVariantMap& info);
     int compareHistoryCollect(const QVariantMap& single);
-
     int getHistoryIndex(const int id);
-
 
     LocalClient client;
     Q_INVOKABLE int sendToServer(const QString &data);
     Q_INVOKABLE int sendJsonToServer(const QString &type,const QJsonObject &json);
+
+    Q_INVOKABLE QVariantList getRecipeDetails(const int recipeid);
 private:
 
     int localConnected;
     QVariantMap stateMap;
+
 //    QVariantMap stateTypeMap;
     QVector<QPair<QString,int>> stateType;
+
+    QMap<int,QVariantList> recipeMap;
+    void readRecipeDetails();
 signals:
     void localConnectedChanged(const int value);
     void stateChanged(const QString& key,const QVariant& value);

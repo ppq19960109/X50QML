@@ -7,6 +7,8 @@
 //QmlDevState* QmlDevState::qmlDevState;
 QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
 {
+    readRecipeDetails();
+
     stateType.append(QPair<QString,int>("Reset",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("Alarm",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("SteamStart",LINK_VALUE_TYPE_NULL));
@@ -118,20 +120,19 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     QVariantMap info;
     info.insert("id", 0);
     info.insert("seqid", 3);
-    info.insert("recipeid", 0);
+    info.insert("recipeid", 426);
     info.insert("cookPos", 0);
     info.insert("dishName", "清蒸鱼");
-    info.insert("imgUrl", "recipes/Vegetables/蒜蓉粉丝娃娃菜.png");
     info.insert("cookSteps", "[{\"device\":0,\"mode\":35,\"number\":1,\"temp\":100,\"time\":90}]");
-    info.insert("details", "食材：\n鸡蛋2个，蛤蜊50g，盐2g，油3滴葱花30g\n步骤：\n1、鱼片加入适量鸡蛋，料酒、升降、盐，醋、糖，搅拌均匀后加一点淀粉（淀粉加水）增加粘度\n2、鱼片加入适量鸡蛋，料酒、升降、盐，醋、糖，搅拌均匀后加一点淀粉（淀粉加水）增加粘度\n3、鱼片加入适量鸡蛋，料酒、升降、盐，醋、糖，搅拌均匀后加一点淀粉（淀粉加水）增加粘度");
     info.insert("collect", 0);
     info.insert("timestamp", 0);
+    info.insert("recipeType", 1);
 
     recipe[0].append(info);
-    info["recipeid"]=1;
+    info["recipeid"]=427;
     info["dishName"]="桂花蜂蜜烤南瓜";
     recipe[0].append(info);
-    info["recipeid"]=2;
+    info["recipeid"]=118;
     info["dishName"]="腊肉蒸芋艿";
     recipe[0].append(info);
     info["recipeid"]=1;
@@ -139,11 +140,10 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     info["dishName"]="蒜香茄子";
     recipe[0].append(info);
 
-    info["recipeid"]=0;
+    info["recipeid"]=427;
     info["dishName"]="蒜蓉粉丝娃娃菜";
     recipe[1].append(info);
 
-    info.insert("imgUrl", "");
     history.append(info);
     info["dishName"]="烤豆腐";
     history.append(info);
@@ -228,9 +228,7 @@ int QmlDevState::coverHistory(const QJsonObject &object, QVariantMap &info)
     QJsonValue id =object.value("id");
     QJsonValue seqid =object.value("seqid");
     QJsonValue dishName =object.value("dishName");
-    QJsonValue imgUrl =object.value("imgUrl");
     QJsonValue cookSteps =object.value("cookSteps");
-    QJsonValue details =object.value("details");
     QJsonValue collect =object.value("collect");
     QJsonValue timestamp =object.value("timestamp");
     QJsonValue recipeid =object.value("recipeid");
@@ -240,9 +238,7 @@ int QmlDevState::coverHistory(const QJsonObject &object, QVariantMap &info)
     info.insert("id",id.toInt());
     info.insert("seqid",seqid.toInt());
     info.insert("dishName",dishName.toString());
-    info.insert("imgUrl",imgUrl.toString());
     info.insert("cookSteps",cookSteps.toString());
-    info.insert("details",details.toString());
     info.insert("collect",collect.toInt());
     info.insert("timestamp",timestamp.toInt());
     info.insert("recipeid",recipeid.toInt());
@@ -260,7 +256,7 @@ int QmlDevState::compareHistoryCollect(const QVariantMap& single)
             continue;
         qDebug() << "compareHistoryCollect" << cur["id"];
 
-        if(cur["dishName"]==single["dishName"]&&cur["imgUrl"]==single["imgUrl"]&&cur["details"]==single["details"]&&cur["cookSteps"]==single["cookSteps"])
+        if(cur["dishName"]==single["dishName"]&&cur["recipeid"]==single["recipeid"]&&cur["cookSteps"]==single["cookSteps"])
         {
             return cur["id"].toInt();
         }
@@ -280,6 +276,45 @@ int QmlDevState::getHistoryIndex(const int id)
         }
     }
     return -1;
+}
+
+QVariantList QmlDevState::getRecipeDetails(const int recipeid)
+{
+    return recipeMap[recipeid];
+}
+
+void QmlDevState::readRecipeDetails()
+{
+    QFile file("RecipesDetails.json");
+    if(!file.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+        return;
+    }
+    QByteArray allArray = file.readAll();
+    file.close();
+
+    QJsonParseError error;
+    QJsonDocument doucment = QJsonDocument::fromJson(allArray,&error);
+    if(error.error!=QJsonParseError::NoError)
+    {
+        qDebug() << "QJsonDocument fromJson:"<< error.error<< ","<<error.errorString();
+        return;
+    }
+    QJsonObject object = doucment.object();
+    QJsonArray recipes = object.value("recipes").toArray();
+    qDebug()<<"recipes:"<<recipes.size();
+    for(int i=0;i<recipes.size();++i)
+    {
+        QJsonObject obj=recipes.at(i).toObject();
+        QJsonValue imgUrl =obj.value("imgUrl");
+        QJsonValue details =obj.value("details");
+        QJsonValue recipeid =obj.value("recipeid");
+        QVariantList list;
+        list.append(imgUrl.toString());
+        list.append(details.toString());
+        recipeMap.insert(recipeid.toInt(),list);
+    }
+    //    qDebug()<<"recipeMap:"<<recipeMap;
 }
 
 int QmlDevState::sendToServer(const QString& data)
@@ -309,7 +344,7 @@ void QmlDevState::readData(const QJsonValue &data)
 
         key=it->first;
         value_type=(enum LINK_VALUE_TYPE)it->second;
-//        qDebug()<<"readData key:"<<key<<"value type:"<<value_type;
+        //        qDebug()<<"readData key:"<<key<<"value type:"<<value_type;
         if(object.contains(key))
         {
             QJsonValue value =object.value(key);
@@ -331,11 +366,11 @@ void QmlDevState::readData(const QJsonValue &data)
 
                 if("QrCode"==key)
                 {
-                    QrcodeEn::encodeImage(value.toString(),4,key+".png");
+                    QrcodeEn::encodeImage(value.toString(),6,key+".png");
                 }
                 else if("AfterSalesQrCode"==key)
                 {
-                    QrcodeEn::encodeImage(value.toString(),4,key+".png");
+                    QrcodeEn::encodeImage(value.toString(),6,key+".png");
                 }
             }
             else if(LINK_VALUE_TYPE_STRUCT==value_type)
@@ -483,8 +518,8 @@ void QmlDevState::setState(const QString& name,const QVariant& value)
     //    {
 
     qDebug()<<"setState name:"<<name << "new value:" << value;
-//    if(stateMap.contains(name))
-//        qDebug()<< "old value:" << stateMap[name];
+    //    if(stateMap.contains(name))
+    //        qDebug()<< "old value:" << stateMap[name];
     stateMap[name]=value;
     emit stateChanged(name,value);
     //    }

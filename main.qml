@@ -21,7 +21,7 @@ ApplicationWindow {
     readonly property int leftDevice:0
     readonly property int rightDevice:1
     readonly property int allDevice:2
-
+    readonly property var  cookModeImg: ["icon-steamed.png","icon-bake.png","icon-multistage.png"]
     readonly property var leftWorkMode: ["未设定", "经典蒸", "高温蒸", "热风烧烤", "上下加热", "立体热风", "蒸汽烤", "空气炸", "保温烘干"]
     readonly property var leftWorkModeNumber:[0,1,2,35,36,38,40,42,72]
     readonly property string rightWorkMode:"便捷蒸"
@@ -168,7 +168,10 @@ ApplicationWindow {
             }
         }
         systemSettings.childLock=false
-
+        if(systemSettings.brightness<40 || systemSettings.brightness>255)
+        {
+            systemSettings.brightness=250
+        }
     }
     background:Rectangle {
         color: themesWindowBackgroundColor
@@ -219,7 +222,7 @@ ApplicationWindow {
 
     StackView {
         id: stackView
-//                initialItem: pageTestFront // pageHome pageTestFront pageTest pageGetQuad
+        //                initialItem: pageTestFront // pageHome pageTestFront pageTest pageGetQuad
         anchors.fill: parent
     }
 
@@ -327,7 +330,7 @@ ApplicationWindow {
                 //                sysPowerPressCount=0
                 //                timer_sysPower.restart()
             }
-//            mouse.accepted=false
+            //            mouse.accepted=false
         }
         //        onReleased: {
         //            console.warn("Window onReleased")
@@ -345,18 +348,24 @@ ApplicationWindow {
     }
     ListModel {
         id: wifiModel
-//                ListElement {
-//                    connected: 1
-//                    ssid: "qwertyuio"
-//                    level:2
-//                    flags:2
-//                }
-//                ListElement {
-//                    connected: 0
-//                    ssid: "123"
-//                    level:2
-//                    flags:1
-//                }
+//                        ListElement {
+//                            connected: 1
+//                            ssid: "qwertyuio"
+//                            level:2
+//                            flags:2
+//                        }
+//                        ListElement {
+//                            connected: 0
+//                            ssid: "123"
+//                            level:2
+//                            flags:1
+//                        }
+//                        ListElement {
+//                            connected: 0
+//                            ssid: "456"
+//                            level:2
+//                            flags:0
+//                        }
     }
     //    Component {
     //        id: pageTest
@@ -382,10 +391,10 @@ ApplicationWindow {
     //        }
     //    }
 
-//    Component {
-//        id: pageGradient
-//        PageGradient {}
-//    }
+    //    Component {
+    //        id: pageGradient
+    //        PageGradient {}
+    //    }
     Component {
         id: pageHome
         PageHome {}
@@ -494,10 +503,10 @@ ApplicationWindow {
         id: pageGetQuad
         PageGetQuad {}
     }
-//    Component {
-//        id: pageThemes
-//        PageThemes {}
-//    }
+    //    Component {
+    //        id: pageThemes
+    //        PageThemes {}
+    //    }
     function isExistView(pageName) {
         console.log("isExistView:",pageName)
         //        return stackView.currentItem.name===PageName
@@ -616,9 +625,9 @@ ApplicationWindow {
         case "pageGetQuad":
             stackView.push(pageGetQuad,StackView.Immediate)
             break;
-//        case "pageThemes":
-//            stackView.push(pageThemes,StackView.Immediate)
-//            break;
+            //        case "pageThemes":
+            //            stackView.push(pageThemes,StackView.Immediate)
+            //            break;
         }
 
         console.log("stackView depth:"+stackView.depth)
@@ -635,31 +644,31 @@ ApplicationWindow {
         if(cookSteps.length===1 && (undefined === cookSteps[0].number || 0 === cookSteps[0].number))
         {
             SendFunc.setCooking(cookSteps,orderTime,root.cookPos)
-            //            if(leftDevice===root.cookPos)
-            //            {
-            //                QmlDevState.setState("LStOvState",2)
-            //                QmlDevState.setState("LStOvMode",cookSteps[0].mode)
-            //                QmlDevState.setState("LStOvRealTemp",cookSteps[0].temp)
-            //                QmlDevState.setState("LStOvSetTimer",cookSteps[0].time)
-            //                QmlDevState.setState("LStOvSetTimerLeft",cookSteps[0].time)
-            //                QmlDevState.setState("LStOvOrderTimer",cookSteps[0].time)
-            //                QmlDevState.setState("LStOvOrderTimerLeft",cookSteps[0].time/2)
-            //            }
-            //            else
-            //            {
-            //                QmlDevState.setState("RStOvState",3)
-            //                QmlDevState.setState("RStOvRealTemp",cookSteps[0].temp)
-            //                QmlDevState.setState("RStOvSetTimerLeft",cookSteps[0].time)
-            //                QmlDevState.setState("RStOvSetTimer",cookSteps[0].time)
-            //                QmlDevState.setState("RStOvOrderTimer",cookSteps[0].time)
-            //                QmlDevState.setState("RStOvOrderTimerLeft",cookSteps[0].time/2)
-            //            }
+//                        if(leftDevice===root.cookPos)
+//                        {
+//                            QmlDevState.setState("LStOvState",2)
+//                            QmlDevState.setState("LStOvMode",cookSteps[0].mode)
+//                            QmlDevState.setState("LStOvRealTemp",cookSteps[0].temp)
+//                            QmlDevState.setState("LStOvSetTimer",cookSteps[0].time)
+//                            QmlDevState.setState("LStOvSetTimerLeft",cookSteps[0].time)
+//                            QmlDevState.setState("LStOvOrderTimer",cookSteps[0].time)
+//                            QmlDevState.setState("LStOvOrderTimerLeft",cookSteps[0].time/2)
+//                        }
+//                        else
+//                        {
+//                            QmlDevState.setState("RStOvState",1)
+//                            QmlDevState.setState("RStOvRealTemp",cookSteps[0].temp)
+//                            QmlDevState.setState("RStOvSetTimerLeft",cookSteps[0].time)
+//                            QmlDevState.setState("RStOvSetTimer",cookSteps[0].time)
+//                            QmlDevState.setState("RStOvOrderTimer",cookSteps[0].time)
+//                            QmlDevState.setState("RStOvOrderTimerLeft",cookSteps[0].time/2)
+//                        }
         }
         else
         {
-            if(root.imgUrl!=="")
+            if(root.recipeType>0)
             {
-                SendFunc.setMultiCooking(cookSteps,orderTime,root.dishName,root.seqid)
+                SendFunc.setMultiCooking(cookSteps,orderTime,root.dishName,root.recipeid)
             }
             else
             {
@@ -676,8 +685,8 @@ ApplicationWindow {
         var page=isExistView("pageSteamBakeRun")
         if(page!==null)
             backPage(page)
-//        else
-//            backTopPage()
+        //        else
+        //            backTopPage()
     }
 
 }

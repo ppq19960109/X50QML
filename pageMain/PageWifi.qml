@@ -143,7 +143,7 @@ Item {
         //        console.info("VirtualKeyboardSettings",VirtualKeyboardSettings.availableLocales)
 
         listView.positionViewAtBeginning()
-        console.log("PageWifi onCompleted WifiState:",QmlDevState.state.WifiState,systemSettings.wifiEnable,scan_count)
+        console.log("PageWifi onCompleted WifiState:",QmlDevState.state.WifiState,systemSettings.wifiEnable)
     }
 
     Timer{
@@ -166,7 +166,7 @@ Item {
                 {
                     timer_wifi_scan.interval=15000
                 }
-                if(wifiConnecting==false && loader_wifiInput.sourceComponent === null)
+                if(wifiConnecting==false)
                 {
                     getCurWifi()
                     SendFunc.scanRWifi()
@@ -174,7 +174,7 @@ Item {
             }
             else
             {
-                if(wifiConnecting==false && loader_wifiInput.sourceComponent === null)
+                if(wifiConnecting==false)
                 {
                     SendFunc.scanWifi()
                     getCurWifi()
@@ -209,7 +209,6 @@ Item {
 
             PageDivider{
                 id:divider
-                anchors.horizontalCenter: parent.horizontalCenter
                 anchors.top: parent.top
                 anchors.topMargin: 120
             }
@@ -311,14 +310,13 @@ Item {
                 elide: Text.ElideRight
                 anchors.left: indicator.right
                 anchors.leftMargin: 20
-//                anchors.bottom: parent.bottom
-//                anchors.bottomMargin: 15
+                //                anchors.bottom: parent.bottom
+                //                anchors.bottomMargin: 15
                 anchors.verticalCenter: parent.verticalCenter
-//                horizontalAlignment:Text.AlignHCenter
-//                verticalAlignment:Text.AlignVCenter
+                //                horizontalAlignment:Text.AlignHCenter
+                //                verticalAlignment:Text.AlignVCenter
             }
             PageDivider{
-                anchors.horizontalCenter: parent.horizontalCenter
                 anchors.bottom: parent.bottom
             }
             Image {
@@ -353,9 +351,11 @@ Item {
             MouseArea{
                 anchors.fill: parent
                 onClicked: {
-                    console.log("WiFi name:" + wifi_name.text)
+                    console.log("WiFi name:" + wifi_name.text,wifiConnecting)
                     if(connected==false)
                     {
+                        if(wifiConnecting==true)
+                            return
                         if(flags==0)
                         {
                             console.log("open connect:" , ssid,flags)
@@ -458,8 +458,6 @@ Item {
                 leftBtnText:qsTr("")
                 rightBtnText:qsTr("")
                 onClose:{
-                    wifiConnecting=false
-                    SendFunc.scanRWifi()
                     dismissWifiInput()
                 }
             }
@@ -472,7 +470,6 @@ Item {
                 anchors.top: parent.top
 
                 PageDivider{
-                    anchors.horizontalCenter: parent.horizontalCenter
                     anchors.bottom: parent.bottom
                 }
 
@@ -525,6 +522,9 @@ Item {
                         if(permit_connect)
                         {
                             SendFunc.connectWiFi(wifi_ssid,textField.text,wifi_flags)
+                            wifiModel.setProperty(0,"connected",0)
+                            wifiModel.setProperty(index,"connected",2)
+                            wifiModel.move(index,0,1)
                         }
                     }
                 }
@@ -575,7 +575,6 @@ Item {
                 height: parent.height
                 anchors.bottom: parent.bottom
 
-
                 //这种集成方式下点击隐藏键盘的按钮是没有效果的，
                 //只会改变active，因此我们自己处理一下
                 onActiveChanged: {
@@ -583,34 +582,33 @@ Item {
                 }
             }
             Component.onCompleted: {
-
                 textField.forceActiveFocus()
             }
         }
     }
     function showWifiInput(index,wifiInfo){
-        loader_wifiInput.sourceComponent = component_wifiInput
-        console.log("showWifiInput:" , wifiInfo.ssid,wifiInfo.flags)
-        loader_wifiInput.item.wifi_ssid=wifiInfo.ssid
-        loader_wifiInput.item.wifi_flags=wifiInfo.flags
-        loader_wifiInput.item.index=index
+        loader_main.sourceComponent = component_wifiInput
+        loader_main.item.wifi_ssid=wifiInfo.ssid
+        loader_main.item.wifi_flags=wifiInfo.flags
+        loader_main.item.index=index
         timer_wifi_scan.stop()
+        console.log("showWifiInput:" , wifiInfo.ssid,wifiInfo.flags)
     }
     function dismissWifiInput(){
-        listView.positionViewAtBeginning()
-        loader_wifiInput.sourceComponent = undefined
+        loader_main.sourceComponent = undefined
         timer_wifi_scan.start()
+        listView.positionViewAtBeginning()
     }
 
-    Loader{
-        //加载弹窗组件
-        id:loader_wifiInput
-        //        asynchronous: true
-        anchors.fill: parent
-        //        focus: true
-        //        onLoaded: {
-        //            loader_wifiInput.forceActiveFocus()
-        //        }
-    }
+    //    Loader{
+    //        //加载弹窗组件
+    //        id:loader_wifiInput
+    //        //        asynchronous: true
+    //        anchors.fill: parent
+    //        //        focus: true
+    //        //        onLoaded: {
+    //        //            loader_wifiInput.forceActiveFocus()
+    //        //        }
+    //    }
 
 }

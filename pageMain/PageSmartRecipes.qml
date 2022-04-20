@@ -5,9 +5,8 @@ import "qrc:/CookFunc.js" as CookFunc
 import "../"
 Item {
     //定义全局分类菜谱
-    property var  menuId: ['蔬菜','肉类','水产','面点','烘培','其他']
-    property var  cookMode: ["蒸","烤","多段"]
-    property var  cookModeColor: ["#19A582","#EC7A00","#298FD1"]
+    readonly property var  menuId: ['蔬菜','肉类','水产','面点','烘培','其他']
+    readonly property var  cookModeColor: ["#19A582","#EC7A00","#298FD1"]
 
     Component.onCompleted: {
         getRecipe(menuList.currentIndex)
@@ -105,20 +104,20 @@ Item {
                 currentIndex:0
                 delegate: Item{
                     readonly property int cookType:CookFunc.getCookType(modelData.cookSteps)
-                    width:260
-                    height:370
-                    anchors.top: parent.top
-                    anchors.topMargin: 25
+                    readonly property var recipeDetail:QmlDevState.getRecipeDetails(modelData.recipeid)
+                    width:250
+                    height:330
+                    anchors.verticalCenter: parent.verticalCenter
 
                     Image{
                         id:recipeImg
+                        anchors.right: parent.right
                         asynchronous:true
-                        anchors.fill: parent
-                        anchors.margins: 0
-                        sourceSize.width: 260
-                        sourceSize.height: 370
+                        //                        anchors.margins: 0
+                        sourceSize.width: 220
+                        sourceSize.height: 330
                         //                            fillMode:Image.PreserveAspectFit
-                        source: "file:"+modelData.imgUrl
+                        source: recipeDetail.length!=0?("file:"+recipeDetail[0]):""
                     }
                     Image{
                         asynchronous:true
@@ -130,7 +129,7 @@ Item {
                         Text{
                             width:parent.width-20
                             text: modelData.dishName
-                            font.pixelSize: 35
+                            font.pixelSize: 34
                             anchors.centerIn: parent
                             color:"#fff"
                             horizontalAlignment:Text.AlignHCenter
@@ -138,19 +137,26 @@ Item {
                             elide:Text.ElideRight
                         }
                     }
+                    Image{
+                        asynchronous:true
+                        anchors.top: recipeBtn.top
+                        anchors.left: recipeBtn.left
+                        sourceSize.width: 88
+                        sourceSize.height: 48
+                        source: themesImagesPath+cookModeImg[cookType]
+                    }
                     Button {
                         id:recipeBtn
-                        width:222
-                        height:332
-                        //                        anchors.verticalCenter: parent.verticalCenter
-                        //                        anchors.right: parent.right
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        anchors.top: parent.top
-                        anchors.topMargin: 8
+                        width:220
+                        height:330
+                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.horizontalCenter: recipeImg.horizontalCenter
+
                         //                        clip:true
                         background: Rectangle{
                             color:"transparent"
-                            border.width: 3
+                            radius: 4
+                            border.width: 4
                             border.color: recipeListView.currentIndex===index?cookModeColor[cookType]:"transparent"
                         }
 
@@ -168,48 +174,6 @@ Item {
                         //                            maskSource: mask
                         //                            visible: true
                         //                        }
-
-                        Rectangle{
-                            width:88
-                            height: 48
-                            anchors.top:parent.top
-                            anchors.left: parent.left
-
-                            color:cookModeColor[cookType]
-                            radius: 16
-                            Text{
-                                width : parent.width;
-                                anchors.centerIn: parent
-                                text: cookMode[cookType]
-                                font.pixelSize: 30
-
-                                horizontalAlignment:Text.AlignHCenter
-                                verticalAlignment:Text.AlignVCenter
-                                wrapMode:Text.WordWrap
-                                color:"#fff"
-                            }
-                            Rectangle{
-                                width:16
-                                height: 16
-                                color:cookModeColor[cookType]
-                                anchors.left: parent.left
-                                anchors.top: parent.top
-                            }
-                            Rectangle{
-                                width:16
-                                height: 16
-                                color:cookModeColor[cookType]
-                                anchors.left: parent.left
-                                anchors.bottom: parent.bottom
-                            }
-                            Rectangle{
-                                width:16
-                                height: 16
-                                color:cookModeColor[cookType]
-                                anchors.right: parent.right
-                                anchors.top: parent.top
-                            }
-                        }
 
 
                         onClicked: {

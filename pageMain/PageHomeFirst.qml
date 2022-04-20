@@ -11,8 +11,8 @@ Item {
         spacing: 40
 
         Button{
-            width: 300
-            height:width
+            width: 324
+            height:312
             anchors.verticalCenter: parent.verticalCenter
             //            highlighted: true
             //             Material.accent: Material.Green
@@ -37,8 +37,8 @@ Item {
             }
         }
         Button{
-            width: 300
-            height:width
+            width: 324
+            height:312
             anchors.verticalCenter: parent.verticalCenter
 
             background:Image {
@@ -47,13 +47,13 @@ Item {
                 source: themesImagesPath+"homefirst-button2-background.png"
             }
 
-                Image {
-                    asynchronous:true
-                    anchors.top: parent.top
-                    anchors.topMargin: 42
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    source: themesImagesPath+"homefirst-button2-image.png"
-                }
+            Image {
+                asynchronous:true
+                anchors.top: parent.top
+                anchors.topMargin: 31
+                anchors.horizontalCenter: parent.horizontalCenter
+                source: themesImagesPath+"homefirst-button2-image.png"
+            }
 
             onClicked: {
                 load_page("pageSteamBakeBase",JSON.stringify({"device":rightDevice}))

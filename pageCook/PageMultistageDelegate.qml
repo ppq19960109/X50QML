@@ -16,27 +16,21 @@ Item {
     implicitHeight: 100
 
     PageDivider{
-        anchors.horizontalCenter: parent.horizontalCenter
         anchors.bottom: parent.bottom
     }
     Button {
         id:close
-        width:delImg.width
+        width:160
         height:parent.height
         anchors.verticalCenter: parent.verticalCenter
         anchors.right: parent.right
-        anchors.rightMargin: 40
-        visible:true
 
-        background: Item{
-            Image {
-                id:delImg
+        background: Image {
                 cache:false
                 asynchronous:true
                 anchors.centerIn: parent
-                source: "qrc:/x50/icon/icon_delete.png"
+                source: themesImagesPath+"icon_cook_delete.png"
             }
-        }
         onClicked: {
             cancel()
         }

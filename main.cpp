@@ -53,11 +53,11 @@ int main(int argc, char *argv[])
 
     QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF-8"));
 
-        QFontDatabase fdb;
-        QStringList fontList = fdb.families();
-        for(int i = 0; i < fontList.size(); i++){
-            qDebug() << "font name" << i << ": " << fontList.at(i);
-        }
+    //        QFontDatabase fdb;
+    //        QStringList fontList = fdb.families();
+    //        for(int i = 0; i < fontList.size(); i++){
+    //            qDebug() << "font name" << i << ": " << fontList.at(i);
+    //        }
 
 
     QQmlApplicationEngine engine;

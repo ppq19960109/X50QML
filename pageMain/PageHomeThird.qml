@@ -5,14 +5,14 @@ import QtQuick.Layouts 1.3
 Item {
     anchors.fill: parent
     Row {
-        width: parent.width-140
+        width: parent.width-120
         anchors.centerIn: parent
 
-        spacing: 30
+        spacing: 20
 
         Button{
-            width: 196
-            height:300
+            width: 210
+            height:312
 
             background:Image {
                 asynchronous:true
@@ -33,8 +33,8 @@ Item {
         }
 
         Button{
-            width: 196
-            height:300
+            width: 210
+            height:312
             background:Image {
                 asynchronous:true
                 source: themesImagesPath+"homethird-button2-background.png"

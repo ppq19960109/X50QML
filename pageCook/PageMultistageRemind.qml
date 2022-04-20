@@ -25,6 +25,7 @@ Rectangle {
     //内容
     Item{
         id:wrapper
+        width: parent.width
         anchors.bottom:topBar.top
         anchors.top: parent.top
 
@@ -34,7 +35,7 @@ Rectangle {
             anchors.top:parent.top
             anchors.topMargin:50
             anchors.bottom: checkBoxRemind.top
-            anchors.bottomMargin: 30
+            anchors.bottomMargin: 36
             //            anchors.leftMargin: 30
             //            anchors.rightMargin: 30
             anchors.horizontalCenter: parent.horizontalCenter
@@ -50,8 +51,8 @@ Rectangle {
                     width: flick.width
                     height: flick.height
                     text:"在设置中，您可以将该次烹饪，拆分为1至3段，并分别设置每段参数，以实现用多段温度、时长来烹饪食物。"
-                    font.pixelSize: 35
-                    lineHeight: 1.4
+                    font.pixelSize: 36
+                    lineHeight: 1.3
                     color:"#FFF"
                     //                    clip :true
                     wrapMode: Text.WordWrap
@@ -62,18 +63,21 @@ Rectangle {
         PageCheckBox {
             id:checkBoxRemind
             anchors.bottom:nextBtn.top
-            anchors.bottomMargin: 30
+            anchors.bottomMargin: 15
             anchors.horizontalCenter: parent.horizontalCenter
             checked: false
         }
         Button{
             id:nextBtn
-            width: 176
-            height: 64
+            width: 176+15
+            height: 64+15
             anchors.bottom:parent.bottom
-            anchors.bottomMargin: 40
+            anchors.bottomMargin: 20
             anchors.horizontalCenter: parent.horizontalCenter
             background:Rectangle{
+                width:176
+                height:64
+                anchors.centerIn: parent
                 color:themesTextColor2
                 radius: 32
             }

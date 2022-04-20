@@ -335,7 +335,7 @@ Item {
             }
             else if("WifiState"==key)
             {
-                console.log("WifiState:",value)
+                console.log("...WifiState:",value)
                 wifiConnected=false
                 if(value==1)
                 {
@@ -354,7 +354,7 @@ Item {
                         WifiFunc.addWifiInfo(wifiConnectInfo)
                     }
                 }
-                console.log("WifiState",value,wifiConnected)
+                console.log("WifiState",value,wifiConnected,wifiConnecting)
             }
             else if("ProductionTest"==key)
             {
@@ -487,7 +487,6 @@ Item {
     StackView.onActivated:{
         console.log("page home onActivated")
         SendFunc.permitSteamStartStatus(0)
-
     }
 
     Item{
@@ -536,7 +535,7 @@ Item {
         }
         Button{
             id:preBtn
-            width:70
+            width:60
             height:80
             anchors.left:parent.left
 
@@ -559,7 +558,7 @@ Item {
 
         Button{
             id:nextBtn
-            width:70
+            width:60
             height:80
             anchors.right:parent.right
 
@@ -584,6 +583,5 @@ Item {
 
     PageHomeBar {
         anchors.bottom: parent.bottom
-        windImg:(QmlDevState.state.HoodSpeed==null || QmlDevState.state.HoodSpeed==0)?"":"qrc:/x50/main/icon_wind_"+QmlDevState.state.HoodSpeed+".png"
     }
 }

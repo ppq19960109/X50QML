@@ -61,12 +61,15 @@ Item {
         }
 
         Button{
-            width: 176
-            height: 64
+            width: 176+15
+            height: 64+15
             anchors.bottom: parent.bottom
             anchors.bottomMargin: 70
             anchors.horizontalCenter: parent.horizontalCenter
             background:Rectangle{
+                width:176
+                height:64
+                anchors.centerIn: parent
                 color:themesTextColor2
                 radius: 32
             }

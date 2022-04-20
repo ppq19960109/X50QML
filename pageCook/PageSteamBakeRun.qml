@@ -307,7 +307,6 @@ Rectangle {
     PageHomeBar {
         id:statusBar
         anchors.bottom: parent.bottom
-        windImg:QmlDevState.state.HoodSpeed===0?"":"qrc:/x50/main/icon_wind_"+QmlDevState.state.HoodSpeed+".png"
     }
     Component{
         id:component_cancelRun

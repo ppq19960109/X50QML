@@ -127,18 +127,22 @@ Item {
         }
 
         Button{
-            width: 176
-            height: 64
+            width: 176+15
+            height: 64+15
             anchors.bottom: parent.bottom
             anchors.bottomMargin: 40
             anchors.horizontalCenter: parent.horizontalCenter
             background:Rectangle{
-                color:themesTextColor2
+                width:176
+                height:64
+                anchors.centerIn: parent
+                color:versionChecked==true?"transparent":themesTextColor2
+                border.color: themesTextColor2
                 radius: 32
             }
             Text{
                 text:"检查更新"
-                color:"#000"
+                color:versionChecked==true?themesTextColor2:"#000"
                 font.pixelSize: 30
                 anchors.centerIn: parent
             }

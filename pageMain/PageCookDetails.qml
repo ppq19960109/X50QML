@@ -43,15 +43,19 @@ Item {
 
         cookSteps=JSON.parse(root.cookSteps)
 
-        if(root.imgUrl!=="")
+        if(root.recipeType>0)
         {
-            recipe.visible=true
-            recipeImg.source="file:"+root.imgUrl
-            dishName.text="菜名："+root.dishName
-            details.text=root.details
-            cookTime.text="烹饪用时："+getCookTime(cookSteps)+"分钟"
+            var recipeDetail=QmlDevState.getRecipeDetails(root.recipeid)
+            if(recipeDetail.length!=0)
+            {
+                recipeImg.source="file:"+recipeDetail[0]
+                details.text=recipeDetail[1]
+            }
 
-            cookSteps[0].dishName=root.dishName
+            recipe.visible=true
+            dishName.text="菜名："+root.dishName
+            cookTime.text="烹饪用时："+getCookTime(cookSteps)+"分钟"
+//            cookSteps[0].dishName=root.dishName
         }
         else
         {
@@ -93,24 +97,30 @@ Item {
 
         Item{
             id:leftContent
-            width:260
+            width:220+60
             height:parent.height
             Image{
                 id:recipeImg
-                width:260
-                height:370
-                sourceSize.width: 260
-                sourceSize.height: 370
+                sourceSize.width: 220
+                sourceSize.height: 330
                 anchors.centerIn: parent
                 cache:false
                 asynchronous:true
+            }
+            Image{
+                asynchronous:true
+                anchors.top: recipeImg.top
+                anchors.left: recipeImg.left
+                sourceSize.width: 88
+                sourceSize.height: 48
+                source: themesImagesPath+cookModeImg[CookFunc.getCookType(root.cookSteps)]
             }
         }
 
         Item{
             //            height:parent.height
             anchors.top:parent.top
-            anchors.topMargin: 10
+            anchors.topMargin: 20
             anchors.bottom:parent.bottom
             anchors.bottomMargin: 20
             anchors.left: leftContent.right
@@ -127,7 +137,7 @@ Item {
             Text{
                 id:cookTime
                 anchors.top:dishName.bottom
-//                anchors.topMargin: 5
+                //                anchors.topMargin: 5
                 anchors.left: parent.left
                 font.pixelSize: 40
                 color:"#fff"

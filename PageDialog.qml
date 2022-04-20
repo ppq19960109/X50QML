@@ -78,8 +78,8 @@ Item {
         }
         Button {
             id:confirmBtn
-            width:176+10
-            height:64+10
+            width:176+15
+            height:64+15
             anchors.bottom:parent.bottom
             anchors.bottomMargin: 30
             anchors.horizontalCenter: parent.horizontalCenter

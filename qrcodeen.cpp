@@ -15,13 +15,13 @@ QImage QrcodeEn::encodeImage(const QString& qrTxt, int bulk,const QString& saveN
     if ( qr != nullptr )
     {
         int allBulk = (qr->width) * bulk;
-        ret = QImage(allBulk, allBulk, QImage::Format_MonoLSB);
+        ret = QImage(allBulk+20, allBulk+20, QImage::Format_MonoLSB);
         QPainter painter(&ret);
         QColor fg("black");
         QColor bg("white");
         painter.setBrush(bg);
         painter.setPen(Qt::NoPen);
-        painter.drawRect(0, 0, allBulk, allBulk);
+        painter.drawRect(0, 0, allBulk+20, allBulk+20);
 
         painter.setBrush(fg);
         for( int y=0; y<qr->width; y++ )
@@ -30,7 +30,7 @@ QImage QrcodeEn::encodeImage(const QString& qrTxt, int bulk,const QString& saveN
             {
                 if ( qr->data[y*qr->width+x] & 1 )
                 {
-                    QRectF r(x*bulk, y*bulk, bulk, bulk);
+                    QRectF r(x*bulk+10, y*bulk+10, bulk, bulk);
                     painter.drawRects(&r, 1);
                 }
             }
