@@ -63,6 +63,7 @@ Rectangle {
                     timer_quad.stop()
                     quad.color="green"
                     quadText.text="四元组烧录成功"
+                    SendFunc.getAllToServer()
                 }
                 else
                 {

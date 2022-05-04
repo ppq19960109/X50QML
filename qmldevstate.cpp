@@ -486,7 +486,7 @@ void QmlDevState::readData(const QJsonValue &data)
             }
             else if(LINK_VALUE_TYPE_NULL==value_type)
             {
-                setState(key,0);
+                setState(key,-1);
             }
         }
         else

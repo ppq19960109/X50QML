@@ -148,7 +148,7 @@ Rectangle {
         }
         Button{
             visible: leftProgressBar.workState !== workStateEnum.WORKSTATE_STOP && leftProgressBar.workState !== workStateEnum.WORKSTATE_FINISH
-            width:95
+            width:90
             height: width
             anchors.left: leftProgressBar.left
             anchors.leftMargin: 5
@@ -169,7 +169,7 @@ Rectangle {
         }
         Button{
             visible: leftProgressBar.workState !== workStateEnum.WORKSTATE_STOP && leftProgressBar.workState !== workStateEnum.WORKSTATE_FINISH
-            width:95
+            width:90
             height: width
             anchors.right: leftProgressBar.right
             anchors.rightMargin: 5
@@ -278,7 +278,7 @@ Rectangle {
         }
         Button{
             visible: rightProgressBar.workState !== workStateEnum.WORKSTATE_STOP && rightProgressBar.workState !== workStateEnum.WORKSTATE_FINISH
-            width:95
+            width:90
             height: width
             anchors.left: rightProgressBar.left
             anchors.leftMargin: 5
@@ -299,7 +299,7 @@ Rectangle {
         }
         Button{
             visible: rightProgressBar.workState !== workStateEnum.WORKSTATE_STOP  && rightProgressBar.workState !== workStateEnum.WORKSTATE_FINISH
-            width:95
+            width:90
             height: width
             anchors.right: rightProgressBar.right
             anchors.rightMargin: 5
@@ -372,17 +372,15 @@ Rectangle {
             hintHeight:280
             closeBtnVisible:false
             onCancel: {
-                closeLoaderMain()
                 if(hintTopText.indexOf("左腔")!=-1)
                 {
                     SendFunc.setCookOperation(leftDevice,workOperationEnum.CANCEL)
-                    //                    QmlDevState.setState("LStOvState",workStateEnum.WORKSTATE_STOP)
                 }
                 else
                 {
                     SendFunc.setCookOperation(rightDevice,workOperationEnum.CANCEL)
-                    //                    QmlDevState.setState("RStOvState",workStateEnum.WORKSTATE_STOP)
                 }
+                closeLoaderMain()
             }
             onConfirm: {
                 closeLoaderMain()

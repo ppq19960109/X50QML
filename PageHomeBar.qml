@@ -98,8 +98,7 @@ Item {
             anchors.right:childLockBtn.left
             anchors.rightMargin: 10
 
-            background: Item {
-            }
+            background: Item {}
             Image{
                 id:closeHeatImg
                 visible: QmlDevState.state.RStoveStatus

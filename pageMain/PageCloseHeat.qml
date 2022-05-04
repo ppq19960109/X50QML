@@ -151,7 +151,7 @@ Item {
                     permitStart()
                 }
                 Component.onCompleted:{
-                    if(QmlDevState.state.RStoveTimingState===1)
+                    if(QmlDevState.state.RStoveTimingState===timingStateEnum.RUN)
                         currentIndex=Math.floor(QmlDevState.state.RStoveTimingLeft/60)
                 }
             }
@@ -172,13 +172,12 @@ Item {
                     permitStart()
                 }
                 Component.onCompleted:{
-                    if(QmlDevState.state.RStoveTimingState===1)
+                    if(QmlDevState.state.RStoveTimingState===timingStateEnum.RUN)
                         currentIndex=QmlDevState.state.RStoveTimingLeft%60
                 }
             }
             Text{
                 width:200
-
                 color:themesTextColor2
                 font.pixelSize: 35
                 anchors.verticalCenter: parent.verticalCenter

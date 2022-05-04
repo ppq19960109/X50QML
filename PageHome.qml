@@ -34,8 +34,8 @@ Item {
                 closeAlarm()
             }
             onConfirm: {
-                closeAlarm()
                 SendFunc.setAlarm(0)
+                closeAlarm()
             }
             Image {
                 asynchronous:true
@@ -57,6 +57,33 @@ Item {
             loader_main.sourceComponent = undefined
     }
 
+    Component{
+        id:component_hoodOff
+        PagePopup{
+            hintTopText:""
+            hintHeight:306
+            confirmText:""
+            onCancel: {
+                closeHoodOff()
+            }
+            onConfirm: {
+                SendFunc.closeHoodOff()
+                closeHoodOff()
+            }
+        }
+    }
+    function showHoodOff(hintTopText,confirmText){
+        if(loader_main.status == Loader.Null || loader_main.status == Loader.Error)
+        {
+            loader_main.sourceComponent = component_hoodOff
+            loader_main.item.hintTopText=hintTopText
+            loader_main.item.confirmText=confirmText
+        }
+    }
+    function closeHoodOff(){
+        if(loader_main.sourceComponent === component_hoodOff)
+            loader_main.sourceComponent = undefined
+    }
     Component{
         id:component_updateConfirm
         PageDialogConfirm{
@@ -138,20 +165,6 @@ Item {
                     }
                 }
             }
-
-            //            Slider {
-            //                id: slider
-            //                anchors.bottom: parent.bottom
-            //                anchors.bottomMargin: 20
-            //                anchors.horizontalCenter: parent.horizontalCenter
-            //                stepSize: 2
-            //                to: 100
-            //                value: 0
-            //                onValueChanged: {
-            //                    console.log("slider:",value)
-            //                    updateBar.value=value
-            //                }
-            //            }
         }
     }
     function showUpdate(){
@@ -209,7 +222,7 @@ Item {
                 console.log(ret,typeof ret)
                 if(value > 0)
                 {
-                    if(ret===null)
+                    if(ret==null)
                     {
                         load_page("pageSteamBakeRun")
                     }
@@ -246,7 +259,7 @@ Item {
                 console.log(ret,typeof ret)
                 if(value > 0)
                 {
-                    if(ret===null)
+                    if(ret==null)
                     {
                         load_page("pageSteamBakeRun")
                     }
@@ -421,7 +434,6 @@ Item {
                 showUpdateProgress(value);
                 if(value==100)
                 {
-
                 }
             }
             else if( "DeviceSecret"==key && productionTestFlag==1)

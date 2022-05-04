@@ -16,9 +16,8 @@ ApplicationWindow {
     height: 480
 //    visible: true
     property int sysPower:-1
-    //    property int sysPowerPressCount:0
     property int permitStartStatus:0
-    readonly property string uiVersion:"1.0"
+    readonly property string uiVersion:"1.1"
     readonly property string productionTestWIFISSID:"moduletest"
     readonly property string productionTestWIFIPWD:"58185818"
     readonly property int leftDevice:0
@@ -52,53 +51,21 @@ ApplicationWindow {
     readonly property string themesPopupWindowColor:"#333333"
     readonly property string themesTextColor:"#E68855"
     readonly property string themesTextColor2:"#A2A2A2"
-    /*
-    readonly  property ListModel systemthemes:ListModel {
 
-        ListElement {
-            name: qsTr("默认")
-            titleBackground: "#c62f2f"
-            background: "#f6f6f6"
-            textColor: "#5c5c5c"
-            imagesPath:"file:themes/default/"
-        }
-        ListElement {
-            name: qsTr("淑女粉")
-            titleBackground: "#191b1f"
-            background: "#222225"
-            textColor: "#adafb2"
-            imagesPath:"file:themes/light/"
-        }
-    }
-
-    function themeChange(current)
-    {
-        var themes=systemthemes.get(current)
-        themesImagesPath=themes.imagesPath
-    }
-*/
     Settings {
         id: systemSettings
         category: "system"
         property bool firstStartup: true
-        //        property int currentTheme: 0
-        //        onCurrentThemeChanged: {
-        //            console.log("onCurrentThemeChanged",systemSettings.currentTheme)
-        //            themeChange(systemSettings.currentTheme)
-        //        }
         //设置-休眠时间(范围:1-5,单位:分钟 )
         property int sleepTime: 3
 
         //运行期间临时保存设置的亮度值，在收到开机状态是把该值重新设置回去 设置-屏幕亮度
         property int brightness: 250
-
         property bool wifiEnable: false
 
         //判断儿童锁(true表示锁定，false表示未锁定)
         property bool childLock:false
-
         property var cookDialog:[1,1,1,1,1,1]
-
         property bool multistageRemind:true
         property var wifiPasswdArray:[]
 
@@ -134,9 +101,7 @@ ApplicationWindow {
         systemSettings.wifiEnable=true
 
         systemSettings.childLock=false
-
         systemSettings.cookDialog=[1,1,1,1,1,1]
-
         systemSettings.multistageRemind=true
         systemSettings.wifiPasswdArray=[]
     }
@@ -145,7 +110,6 @@ ApplicationWindow {
         console.log("systemPower",power)
         if(sysPower==power)
             return
-
         if(power)
         {
             Backlight.backlightSet(systemSettings.brightness)
@@ -159,24 +123,16 @@ ApplicationWindow {
         }
         if(window.visible===false)
             window.visible=true
-        //        timer_sysPower.stop()
         sysPower=power
     }
 
     Component.onCompleted: {
         console.warn("Window onCompleted: ",Qt.fontFamilies())
-        //        if(systemSettings.currentTheme===0)
-        //            themeChange(systemSettings.currentTheme)
-
-
-        //        Backlight.backlightEnable()
-        //        Backlight.backlightSet(systemSettings.brightness)
         load_page("pageHome")
         if(systemSettings.wifiPasswdArray!=null)
         {
-            var i
             console.log("systemSettings.wifiPasswdArray",systemSettings.wifiPasswdArray.length)
-            for( i = 0; i < systemSettings.wifiPasswdArray.length; i++)
+            for(var i = 0; i < systemSettings.wifiPasswdArray.length; i++)
             {
                 console.log("ssid:",systemSettings.wifiPasswdArray[i].ssid)
                 console.log("psk:",systemSettings.wifiPasswdArray[i].psk)
@@ -220,27 +176,6 @@ ApplicationWindow {
         //        console.log("onSleepTimerRestart")
         timer_window.restart()
     }
-    //    Timer{
-    //        id:timer_sysPower
-    //        repeat: QmlDevState.state.SysPower==0
-    //        running: false
-    //        interval: 1000
-    //        triggeredOnStart: false
-    //        onTriggered: {
-    //            console.log("timer_syspower",sysPowerPressCount)
-    //            if(sysPowerPressCount<2)
-    //            {
-    //                ++sysPowerPressCount
-    //                if(sysPowerPressCount==2)
-    //                {
-    //                    if(QmlDevState.state.SysPower==0)
-    //                    {
-    //                        SendFunc.setSysPower(1)
-    //                    }
-    //                }
-    //            }
-    //        }
-    //    }
 
     StackView {
         id: stackView
@@ -349,7 +284,6 @@ ApplicationWindow {
         propagateComposedEvents: true
 
         onPressed: {
-            //            console.log("Window onPressed",wifiConnecting)
             //            console.log("Window onPressed:",sysPower,QmlDevState.state.HoodSpeed,QmlDevState.state.RStOvState,QmlDevState.state.LStOvState,QmlDevState.state.ErrorCodeShow,QmlDevState.localConnected)
             if(sysPower > 0)
             {
@@ -366,23 +300,9 @@ ApplicationWindow {
             else
             {
                 mouse.accepted = true
-                //                sysPowerPressCount=0
-                //                timer_sysPower.restart()
             }
             //            mouse.accepted=false
         }
-        //        onReleased: {
-        //            console.warn("Window onReleased")
-        //            if(QmlDevState.state.SysPower==0)
-        //            {
-        //                timer_sysPower.stop()
-        //                mouse.accepted = true
-        //            }
-        //            else
-        //            {
-        //                mouse.accepted = false
-        //            }
-        //        }
 
     }
     ListModel {
@@ -542,13 +462,9 @@ ApplicationWindow {
         id: pageGetQuad
         PageGetQuad {}
     }
-    //    Component {
-    //        id: pageThemes
-    //        PageThemes {}
-    //    }
+
     function isExistView(pageName) {
         console.log("isExistView:",pageName)
-        //        return stackView.currentItem.name===PageName
         return stackView.find(function(item,index){
             return item.name === pageName
         })
@@ -664,9 +580,6 @@ ApplicationWindow {
         case "pageGetQuad":
             stackView.push(pageGetQuad,StackView.Immediate)
             break;
-            //        case "pageThemes":
-            //            stackView.push(pageThemes,StackView.Immediate)
-            //            break;
         }
 
         console.log("stackView depth:"+stackView.depth)

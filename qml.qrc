@@ -92,7 +92,6 @@
         <file>pageProductionTest/PageScreenTouch.qml</file>
         <file>pageProductionTest/PageGetQuad.qml</file>
         <file>PagePopup.qml</file>
-        <file>pageMain/PageThemes.qml</file>
         <file>pageProductionTest/PageAgingTest.qml</file>
         <file>x50/steam/right-cook-background.png</file>
         <file>x50/steam/left-cook-background2.png</file>
