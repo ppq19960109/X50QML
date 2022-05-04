@@ -20,7 +20,8 @@ Rectangle {
     }
 
     Component.onCompleted: {
-        SendFunc.connectWiFi("IoT-Test","12345678",1)
+
+        SendFunc.connectWiFi(productionTestWIFISSID,productionTestWIFIPWD,1)
     }
 
 

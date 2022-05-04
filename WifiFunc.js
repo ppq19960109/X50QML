@@ -1,4 +1,47 @@
 
+function signalLevel(rssi)
+{
+    if (rssi <= -100)
+    {
+        return 0
+    }
+    else if (rssi < -75)
+    {
+        return 1
+    }
+    else if (rssi < -55)
+    {
+        return 2
+    }
+    else
+    {
+        return 3
+    }
+}
+
+function encrypType(flags)
+{
+    if (flags.indexOf("WPA") !== -1)
+    {
+        return 1
+    }
+    else if (flags.indexOf("WEP") !== -1)
+    {
+        return 2
+    }
+    else
+    {
+        return 0
+    }
+}
+
+function getCurWifi()
+{
+    var Data={}
+    Data.WifiCurConnected = null
+    SendFunc.getToServer(Data)
+}
+
 function deleteWifiInfo(wifiInfo)
 {
     if(wifiInfo.ssid=="" ||wifiInfo.psk=="" || wifiInfo.encryp===0)

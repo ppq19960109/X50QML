@@ -6,6 +6,35 @@ Item {
     implicitWidth: parent.width
     implicitHeight:80
 
+    Component{
+        id:component_closeHeat
+        PageDialogConfirm{
+            hintTopText:"右灶定时已开启"
+            hintBottomText:""
+            cancelText:"取消定时"
+            confirmText:"重新定时"
+            hintWidth:600
+            hintHeight:280
+            closeBtnVisible:false
+            onCancel: {
+                var Data={}
+                Data.RStoveTimingOpera = timingOperationEnum.CANCEL
+                SendFunc.setToServer(Data)
+                //                QmlDevState.setState("RStoveTimingState",timingStateEnum.STOP)
+                closeLoaderMain()
+            }
+            onConfirm: {
+                closeLoaderMain()
+                load_page("pageCloseHeat")
+            }
+        }
+    }
+    function showCloseHeat()
+    {
+        if(QmlDevState.state.RStoveTimingState==timingStateEnum.RUN)
+            loader_main.sourceComponent = component_closeHeat
+    }
+
     ToolBar {
         width: parent.width
         implicitHeight:80
@@ -13,6 +42,7 @@ Item {
         anchors.top: parent.top
         background:Image {
             asynchronous:true
+            smooth:false
             source: themesImagesPath+"homebar-background.png"
         }
 
@@ -29,6 +59,7 @@ Item {
             Image{
                 id:wifi_icon
                 asynchronous:true
+                smooth:false
                 anchors.centerIn: parent
                 source: themesImagesPath+(wifiConnected ? "icon_wifi_connected.png":"icon_wifi_disconnect.png")
             }
@@ -50,6 +81,7 @@ Item {
                 id:wind_icon
                 visible: QmlDevState.state.HoodSpeed!=null && QmlDevState.state.HoodSpeed!=0
                 asynchronous:true
+                smooth:false
                 anchors.centerIn: parent
                 source: themesImagesPath+"icon_wind_"+QmlDevState.state.HoodSpeed+".png"
             }
@@ -60,7 +92,7 @@ Item {
 
         TabButton {
             id:closeHeat
-            visible: QmlDevState.state.RStoveTimingState==timingStateEnum.RUN
+
             width:time.width+closeHeatImg.width+20
             height:parent.height
             anchors.right:childLockBtn.left
@@ -70,7 +102,9 @@ Item {
             }
             Image{
                 id:closeHeatImg
+                visible: QmlDevState.state.RStoveStatus
                 asynchronous:true
+                smooth:false
                 anchors.right: time.left
                 anchors.rightMargin: 15
                 anchors.verticalCenter: parent.verticalCenter
@@ -78,6 +112,7 @@ Item {
             }
             Text{
                 id:time
+                visible: QmlDevState.state.RStoveTimingState==timingStateEnum.RUN
                 anchors.verticalCenter: parent.verticalCenter
                 color:themesTextColor2
                 text:"0"+Math.floor(QmlDevState.state.RStoveTimingLeft/60)+":"+Math.floor(QmlDevState.state.RStoveTimingLeft%60/10)+(QmlDevState.state.RStoveTimingLeft%60%10)//qsTr("01:12")
@@ -88,33 +123,7 @@ Item {
                 showCloseHeat()
             }
         }
-        Component{
-            id:component_closeHeat
-            PageDialogConfirm{
-                hintTopText:"右灶定时已开启"
-                hintBottomText:""
-                cancelText:"取消定时"
-                confirmText:"重新定时"
-                hintWidth:600
-                hintHeight:280
-                closeBtnVisible:false
-                onCancel: {
 
-                    var Data={}
-                    Data.RStoveTimingOpera = timingOperationEnum.STOP
-                    SendFunc.setToServer(Data)
-                    //                QmlDevState.setState("RStoveTimingState",timingStateEnum.STOP)
-                    closeLoaderMain()
-                }
-                onConfirm: {
-                    closeLoaderMain()
-                    load_page("pageCloseHeat")
-                }
-            }
-        }
-        function showCloseHeat(device,state){
-            loader_main.sourceComponent = component_closeHeat
-        }
         Component{
             id:component_lock_screen
             PageLockScreen{
@@ -135,6 +144,7 @@ Item {
             Image{
                 visible: !systemSettings.childLock
                 asynchronous:true
+                smooth:false
                 anchors.centerIn: parent
                 source: themesImagesPath+ "icon_childlock_open.png"
             }

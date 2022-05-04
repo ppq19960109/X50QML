@@ -35,6 +35,7 @@ Rectangle {
 
             background:Image{
                 asynchronous:true
+                smooth:false
                 cache:false
                 source: "qrc:/x50/steam/left-cook-background2.png"
             }
@@ -50,6 +51,7 @@ Rectangle {
             Image {
                 cache:false
                 asynchronous:true
+                smooth:false
                 anchors.top: parent.top
                 anchors.topMargin: 70
                 anchors.horizontalCenter: parent.horizontalCenter
@@ -79,6 +81,7 @@ Rectangle {
                 Layout.alignment: Qt.AlignHCenter|Qt.AlignVCenter
                 background:Image{
                     asynchronous:true
+                    smooth:false
                     cache:false
                     source: "qrc:/x50/steam/left-cook-background1.png"
                 }
@@ -100,6 +103,7 @@ Rectangle {
                 Layout.alignment: Qt.AlignHCenter|Qt.AlignVCenter
                 background:Image{
                     asynchronous:true
+                    smooth:false
                     cache:false
                     source: "qrc:/x50/steam/left-cook-background1.png"
                 }
@@ -121,6 +125,7 @@ Rectangle {
                 Layout.alignment: Qt.AlignHCenter|Qt.AlignVCenter
                 background:Image{
                     asynchronous:true
+                    smooth:false
                     cache:false
                     source: "qrc:/x50/steam/left-cook-background1.png"
                 }
@@ -133,7 +138,7 @@ Rectangle {
 
                 onClicked: {
                     closeLoaderMain()
-                    load_page("pageSteamBakeMultistage")
+                    load_page("pageMultistageSet")
                 }
             }
 

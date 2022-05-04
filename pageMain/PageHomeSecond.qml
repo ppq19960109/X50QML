@@ -18,10 +18,11 @@ Item {
 
             background:Image {
                 asynchronous:true
+                smooth:false
                 source: themesImagesPath+"homesecond-button1-background.png"
             }
             Text{
-                text:"智能菜谱"
+                text:"智慧菜谱"
                 color:"#fff"
                 font.pixelSize: 40
                 anchors.horizontalCenter: parent.horizontalCenter
@@ -41,6 +42,7 @@ Item {
 
             background:Image {
                 asynchronous:true
+                smooth:false
                 source: themesImagesPath+"homesecond-button2-background.png"
             }
             Text{
@@ -64,6 +66,7 @@ Item {
 
             background:Image {
                 asynchronous:true
+                smooth:false
                 source: themesImagesPath+"homesecond-button3-background.png"
             }
             Text{

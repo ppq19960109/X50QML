@@ -13,6 +13,7 @@ Item {
     }
     Image{
         asynchronous:true
+        smooth:false
         anchors.right: parent.right
         anchors.rightMargin: 40
         anchors.bottom: lockBtn.top
@@ -29,6 +30,7 @@ Item {
         Image{
             id:img
             asynchronous:true
+            smooth:false
             source:themesImagesPath+"icon_childlockscreen_close.png"
         }
         //        onPressedChanged: {

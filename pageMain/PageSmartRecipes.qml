@@ -2,14 +2,45 @@ import QtQuick 2.7
 import QtQuick.Controls 2.2
 //import QtGraphicalEffects 1.0
 import "qrc:/CookFunc.js" as CookFunc
+import "qrc:/SendFunc.js" as SendFunc
 import "../"
 Item {
     //定义全局分类菜谱
     readonly property var  menuId: ['蔬菜','肉类','水产','面点','烘培','其他']
     readonly property var  cookModeColor: ["#19A582","#EC7A00","#298FD1"]
 
+    Connections { // 将目标对象信号与槽函数进行连接
+        id:connections
+        enabled:false
+        target: QmlDevState
+        onStateChanged: { // 处理目标对象信号的槽函数
+            if("SteamStart"==key)
+            {
+                var root=recipeListView.model[recipeListView.currentIndex]
+//                console.log("SteamStart:",JSON.stringify(root))
+                var cookSteps=JSON.parse(root.cookSteps)
+                if(systemSettings.cookDialog[5]>0)
+                {
+                    if(CookFunc.isSteam(cookSteps))
+                        showLoaderSteam1(358,"请将食物放入左腔\n将水箱加满水","开始烹饪",root,5)
+                    else
+                        showLoaderSteam1(306,"请将食物放入左腔","开始烹饪",root,5)
+                    return
+                }
+                startCooking(root,cookSteps)
+            }
+        }
+    }
+    StackView.onActivated:{
+        connections.enabled=true
+    }
+    StackView.onDeactivated:{
+        connections.enabled=false
+    }
+
     Component.onCompleted: {
         getRecipe(menuList.currentIndex)
+        SendFunc.permitSteamStartStatus(1)
     }
     function getRecipe(index)
     {
@@ -113,7 +144,10 @@ Item {
                         id:recipeImg
                         anchors.right: parent.right
                         asynchronous:true
+                        smooth:false
                         //                        anchors.margins: 0
+                        width: 220
+                        height: 330
                         sourceSize.width: 220
                         sourceSize.height: 330
                         //                            fillMode:Image.PreserveAspectFit
@@ -121,6 +155,7 @@ Item {
                     }
                     Image{
                         asynchronous:true
+                        smooth:false
                         width: recipeBtn.width
                         anchors.bottom: recipeBtn.bottom
                         anchors.horizontalCenter: recipeBtn.horizontalCenter
@@ -139,6 +174,7 @@ Item {
                     }
                     Image{
                         asynchronous:true
+                        smooth:false
                         anchors.top: recipeBtn.top
                         anchors.left: recipeBtn.left
                         sourceSize.width: 88

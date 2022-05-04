@@ -38,6 +38,7 @@ function otaRquest(request)
 }
 function permitSteamStartStatus(status)
 {
+    permitStartStatus=status
     var Data={}
     Data.PermitSteamStartStatus = status
     setToServer(Data)
@@ -123,10 +124,14 @@ function setCooking(list,orderTime,cookPos)
     Data.MultiMode=multiModeEnum.NONE
     if(cookPos===leftDevice)
     {
-        Data.LStOvMode=list[0].mode
-        Data.LStOvSetTimer=list[0].time
-        Data.LStOvSetTemp=list[0].temp
+        if(list!=null)
+        {
+            Data.LStOvMode=list[0].mode
+            Data.LStOvSetTimer=list[0].time
+            Data.LStOvSetTemp=list[0].temp
+        }
         Data.LStOvOperation=workOperationEnum.START
+
         if(undefined !== orderTime && orderTime > 0)
         {
             Data.LStOvOrderTimer=orderTime
@@ -134,10 +139,14 @@ function setCooking(list,orderTime,cookPos)
     }
     else
     {
-        Data.RStOvMode=list[0].mode
-        Data.RStOvSetTimer=list[0].time
-        Data.RStOvSetTemp=list[0].temp
+        if(list!=null)
+        {
+            Data.RStOvMode=list[0].mode
+            Data.RStOvSetTimer=list[0].time
+            Data.RStOvSetTemp=list[0].temp
+        }
         Data.RStOvOperation=workOperationEnum.START
+
         if(undefined !== orderTime && orderTime > 0)
         {
             Data.RStOvOrderTimer=orderTime
@@ -165,7 +174,7 @@ function setMultiCooking(list,orderTime,dishName,cookbookID)
     {
         Data.MultiMode=multiModeEnum.MULTISTAGE
         Data.MultiStageContent=MultiStageContent
-//        Data.CookbookID=0
+        //        Data.CookbookID=0
     }
     else
     {

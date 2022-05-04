@@ -113,6 +113,7 @@ Item {
                 Image {
                     id:qrcodeImg
                     asynchronous:true
+                    smooth:false
                     cache:false
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.right: parent.right
@@ -120,8 +121,6 @@ Item {
                 }
 
                 onClicked: {
-                    console.log("BindTokenState",QmlDevState.state.BindTokenState)
-                    if(QmlDevState.state.WifiState==4 && QmlDevState.state.BindTokenState > 0)
                         showQrcodeBind("此二维码可以")
                 }
             }

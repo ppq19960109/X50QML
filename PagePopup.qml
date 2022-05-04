@@ -33,6 +33,7 @@ Item {
             Image {
                 id:closeImg
                 asynchronous:true
+                smooth:false
                 anchors.centerIn: parent
                 source: "/x50/icon/icon_close.png"
             }

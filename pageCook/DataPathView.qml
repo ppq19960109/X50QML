@@ -40,6 +40,7 @@ Item {
 
             Image {
                 asynchronous:true
+                smooth:false
                 anchors.right: text.left
                 anchors.rightMargin: 10
                 anchors.verticalCenter: text.verticalCenter
@@ -49,7 +50,7 @@ Item {
                 id:text
                 anchors.verticalCenter:  parent.verticalCenter
                 anchors.horizontalCenter: parent.horizontalCenter
-                anchors.horizontalCenterOffset: 20
+//                anchors.horizontalCenterOffset: 20
                 color:textColor
                 font.pixelSize: textFont
                 text: modelData==0?rightWorkMode:leftWorkMode[modelData]

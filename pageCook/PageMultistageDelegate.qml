@@ -28,6 +28,7 @@ Item {
         background: Image {
                 cache:false
                 asynchronous:true
+                smooth:false
                 anchors.centerIn: parent
                 source: themesImagesPath+"icon_cook_delete.png"
             }

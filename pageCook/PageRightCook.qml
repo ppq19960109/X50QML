@@ -40,6 +40,7 @@ Rectangle {
                 Layout.alignment: Qt.AlignHCenter|Qt.AlignVCenter
                 background:Image{
                     asynchronous:true
+                    smooth:false
                     cache:false
                     source: "qrc:/x50/steam/right-cook-background.png"
                 }
@@ -62,6 +63,7 @@ Rectangle {
 
                 background:Image{
                     asynchronous:true
+                    smooth:false
                     cache:false
                     source: "qrc:/x50/steam/right-cook-background.png"
                 }

@@ -20,6 +20,7 @@ Item {
 
         background:Image {
             asynchronous:true
+            smooth:false
             source: themesImagesPath+"homebar-background.png"
         }
         //back图标
@@ -32,6 +33,7 @@ Item {
 
             background: Image{
                 asynchronous:true
+                smooth:false
                 anchors.centerIn: parent
                 source: themesImagesPath+"back-button-background.png"
             }

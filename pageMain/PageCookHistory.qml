@@ -1,12 +1,32 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.2
 
+import "qrc:/SendFunc.js" as SendFunc
 import "../"
 Item {
     property bool edit: false
     property int cookPos: allDevice
-//    property int historyCurrentIndex:0
+    //    property int historyCurrentIndex:0
     //    property alias historyModel:recipeListView.model
+
+    Connections { // 将目标对象信号与槽函数进行连接
+        id:connections
+        enabled:false
+        target: QmlDevState
+        onStateChanged: { // 处理目标对象信号的槽函数
+            if("SteamStart"==key)
+            {
+                var root=recipeListView.model.get(recipeListView.currentIndex)
+                startCooking(root,JSON.parse(root.cookSteps))
+            }
+        }
+    }
+    StackView.onActivated:{
+        connections.enabled=true
+    }
+    StackView.onDeactivated:{
+        connections.enabled=false
+    }
     Component.onCompleted: {
         console.log("state",state,typeof state)
         var root=JSON.parse(state)
@@ -14,6 +34,7 @@ Item {
 
         QmlDevState.sortHistory()
         getHistory(cookPos)
+        SendFunc.permitSteamStartStatus(1)
     }
     ListModel {
         id:historyModel
@@ -126,8 +147,8 @@ Item {
             anchors.bottomMargin: 20
             anchors.top: parent.top
             anchors.topMargin: 20
-//            highlightRangeMode: ListView.ApplyRange//StrictlyEnforceRange ApplyRange
-//                        boundsBehavior:Flickable.StopAtBounds
+            //            highlightRangeMode: ListView.ApplyRange//StrictlyEnforceRange ApplyRange
+            //                        boundsBehavior:Flickable.StopAtBounds
             clip: true
             currentIndex:0
             delegate: Item{
@@ -160,7 +181,7 @@ Item {
                         font.pixelSize: 40
 
                         //                        horizontalAlignment:Text.AlignHCenter
-//                        verticalAlignment:Text.AlignHCenter
+                        //                        verticalAlignment:Text.AlignHCenter
                         color:recipeListView.currentIndex===index?themesTextColor:"#fff"
                     }
                     onClicked: {
@@ -177,7 +198,7 @@ Item {
                         cache:false
                         asynchronous:true
                         anchors.centerIn: parent
-                        source: "qrc:/x50/icon/icon_delete.png"
+                        source: themesImagesPath+"icon_cook_delete.png"
                     }
                     Text{
                         anchors.centerIn: parent
@@ -195,12 +216,12 @@ Item {
                         if(edit)
                         {
                             QmlDevState.deleteHistory(id)
-//                            historyCurrentIndex=recipeListView.currentIndex-1
+                            //                            historyCurrentIndex=recipeListView.currentIndex-1
                         }
                         else
                         {
                             QmlDevState.setCollect(index,!collect)
-//                            historyCurrentIndex=recipeListView.currentIndex
+                            //                            historyCurrentIndex=recipeListView.currentIndex
                         }
                     }
                 }

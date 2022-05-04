@@ -16,6 +16,7 @@ Rectangle {
 
     property var root
     property var para
+
     readonly property var leftWorkBigImg: ["qrc:/x50/steam/icon_便捷蒸.png", "qrc:/x50/steam/icon_经典蒸.png", "qrc:/x50/steam/icon_高温蒸.png", "qrc:/x50/steam/icon_热风烧烤.png", "qrc:/x50/steam/icon_上下加热.png", "qrc:/x50/steam/icon_立体热风.png", "qrc:/x50/steam/icon_蒸汽烤.png", "qrc:/x50/steam/icon_空气炸.png", "qrc:/x50/steam/icon_保暖烘干.png"]
     readonly property var leftWorkSmallImg: ["", "qrc:/x50/steam/icon_经典蒸缩小.png", "qrc:/x50/steam/icon_高温蒸缩小.png", "qrc:/x50/steam/icon_热风烧烤缩小.png", "qrc:/x50/steam/icon_上下加热缩小.png", "qrc:/x50/steam/icon_立体热风缩小.png", "qrc:/x50/steam/icon_蒸汽烤缩小.png", "qrc:/x50/steam/icon_空气炸缩小.png", "qrc:/x50/steam/icon_保暖烘干缩小.png"]
 
@@ -40,23 +41,26 @@ Rectangle {
         para.cookSteps=JSON.stringify(list)
         console.log("para:",JSON.stringify(para),systemSettings.leftCookDialog,systemSettings.rightCookDialog,root.device)
 
-        if(root.device===leftDevice)
+        if(para.cookPos===leftDevice)
         {
-            if(systemSettings.leftCookDialog==true)
+            if(systemSettings.cookDialog[0]>0)
             {
-                showLoaderSteam1()
+                if(CookFunc.isSteam(list))
+                    showLoaderSteam1(358,"请将食物放入左腔\n将水箱加满水","开始烹饪",para,0)
+                else
+                    showLoaderSteam1(306,"请将食物放入左腔","开始烹饪",para,0)
                 return
             }
         }
         else
         {
-            if(systemSettings.rightCookDialog==true)
+            if(systemSettings.cookDialog[1]>0)
             {
-                showLoaderSteam1()
+                showLoaderSteam1(358,"请将食物放入右腔\n将水箱加满水","开始烹饪",para,1)
                 return
             }
         }
-        startCooking(para,list,0)
+        startCooking(para,list)
     }
 
     Connections { // 将目标对象信号与槽函数进行连接
@@ -83,7 +87,10 @@ Rectangle {
         var i;
 
         var timeArray = new Array
-        for(i=1; i< 180; ++i) {
+        for(i=1; i<= 120; ++i) {
+            timeArray.push(i+"分钟")
+        }
+        for(i=125; i<= 180; i+=5) {
             timeArray.push(i+"分钟")
         }
         timePathView.model=timeArray
@@ -104,84 +111,16 @@ Rectangle {
                 modeListModel.append(rightModel)
             }
             SendFunc.permitSteamStartStatus(1)
+            if(root.reserve!=null)
+                topBar.rightBtnText=""
         }
         else
         {
-            if(multiMode>0)
-            {
-                for (i=0; i< leftModel.length; ++i) {
-                    modeListModel.append(leftModel[i])
-                }
+            for (i=0; i< leftModel.length; ++i) {
+                modeListModel.append(leftModel[i])
             }
         }
 
-    }
-    Component{
-        id:component_steam1
-        PageDialog{
-            id:steamDialog1
-            hintHeight: 358
-            hintTopText:"请将食物放入"+(root.device===leftDevice?"左腔":"右腔")+"\n将水箱加满水"
-            confirmText:"开始烹饪"
-            checkboxVisible:true
-            onCancel:{
-                console.info("component_steam1 onCancel")
-                closeLoaderMain()
-            }
-            onConfirm:{
-                console.info("component_steam1 onConfirm")
-
-                if(steamDialog1.checkboxState)
-                {
-                    if(root.device===leftDevice)
-                    {
-                        systemSettings.leftCookDialog=false
-                    }
-                    else
-                    {
-                        systemSettings.rightCookDialog=false
-                    }
-                }
-                showLoaderSteam2()
-            }
-        }
-    }
-    Component{
-        id:component_steam2
-        PageDialog{
-            id:steamDialog2
-            hintHeight: 306
-            hintTopText:"请将食物放入"+(root.device===leftDevice?"左腔":"右腔")
-            confirmText:"开始烹饪"
-            checkboxVisible:true
-            onCancel:{
-                console.info("component_steam2 onCancel")
-                closeLoaderMain()
-            }
-            onConfirm:{
-                console.info("component_steam2 onConfirm",root.device)
-
-                if(steamDialog2.checkboxState)
-                {
-                    if(root.device===leftDevice)
-                    {
-                        systemSettings.leftCookDialog=false
-                    }
-                    else
-                    {
-                        systemSettings.rightCookDialog=false
-                    }
-                }
-                closeLoaderMain()
-                startCooking(para,JSON.parse(para.cookSteps),0)
-            }
-        }
-    }
-    function showLoaderSteam1(){
-        loader_main.sourceComponent = component_steam1
-    }
-    function showLoaderSteam2(){
-        loader_main.sourceComponent = component_steam2
     }
 
     //    PageGradient{
@@ -194,7 +133,7 @@ Rectangle {
         id:topBar
         anchors.bottom:parent.bottom
         name:""
-        leftBtnText:qsTr("启动")
+        //        leftBtnText:qsTr("启动")
         rightBtnText:qsTr("预约")
         onClose:{
 
@@ -204,7 +143,6 @@ Rectangle {
             }
             else
             {
-                SendFunc.permitSteamStartStatus(0)
                 backPrePage()
             }
         }
@@ -252,11 +190,11 @@ Rectangle {
 
         PageDivider{
             anchors.top:parent.top
-            anchors.topMargin:rowPathView.height/3+50
+            anchors.topMargin:rowPathView.height/3+30
         }
         PageDivider{
             anchors.top:parent.top
-            anchors.topMargin:rowPathView.height/3*2+50
+            anchors.topMargin:rowPathView.height/3*2+30
         }
 
         ListModel {
@@ -266,7 +204,7 @@ Rectangle {
         Row {
             id:rowPathView
             width: parent.width-60
-            height:parent.height-70
+            height:parent.height-60
             anchors.centerIn: parent
             spacing: 0
 
@@ -280,6 +218,7 @@ Rectangle {
                 Image {
                     visible: modePathView.moving
                     asynchronous:true
+                    smooth:false
                     anchors.centerIn: parent
                     source: "qrc:/x50/steam/mode-change-background.png"
                 }
@@ -342,6 +281,7 @@ Rectangle {
                 Image {
                     visible: tempPathView.moving
                     asynchronous:true
+                    smooth:false
                     anchors.centerIn: parent
                     source: "qrc:/x50/steam/temp-time-change-background.png"
                 }
@@ -358,6 +298,7 @@ Rectangle {
                 Image {
                     visible: timePathView.moving
                     asynchronous:true
+                    smooth:false
                     anchors.centerIn: parent
                     source: "qrc:/x50/steam/temp-time-change-background.png"
                 }

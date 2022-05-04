@@ -92,7 +92,6 @@
         <file>pageProductionTest/PageScreenTouch.qml</file>
         <file>pageProductionTest/PageGetQuad.qml</file>
         <file>PagePopup.qml</file>
-        <file>x50/icon/形状 2824.png</file>
         <file>pageMain/PageThemes.qml</file>
         <file>pageProductionTest/PageAgingTest.qml</file>
         <file>x50/steam/right-cook-background.png</file>
@@ -113,5 +112,6 @@
         <file>x50/test/image8.png</file>
         <file>x50/test/image9.png</file>
         <file>x50/test/image10.png</file>
+        <file>x50/icon/icon_alarm.png</file>
     </qresource>
 </RCC>

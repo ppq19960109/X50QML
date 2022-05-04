@@ -12,10 +12,10 @@ Rectangle {
         id:timer_run
         repeat: true
         running: leftProgressBar.workState === workStateEnum.WORKSTATE_PREHEAT||rightProgressBar.workState === workStateEnum.WORKSTATE_PREHEAT
-        interval: 100
+        interval: 200
         triggeredOnStart: false
         onTriggered: {
-//            console.log("timer_run onTriggered");
+            //            console.log("timer_run onTriggered");
             if(leftProgressBar.workState === workStateEnum.WORKSTATE_PREHEAT)
             {
                 leftProgressBar.roate+=10
@@ -39,7 +39,6 @@ Rectangle {
 
     Component.onCompleted: {
         console.log("PageSteamBakeRun onCompleted")
-        SendFunc.permitSteamStartStatus(0)
         leftProgressBar.updatePaint()
         rightProgressBar.updatePaint()
     }
@@ -66,6 +65,17 @@ Rectangle {
         }
     }
 
+    function cookConfirm(){
+        if(leftProgressBar.workState===workStateEnum.WORKSTATE_FINISH)
+        {
+            SendFunc.setCookOperation(leftDevice,workOperationEnum.CONFIRM)
+        }
+        if(rightProgressBar.workState===workStateEnum.WORKSTATE_FINISH)
+        {
+            SendFunc.setCookOperation(rightDevice,workOperationEnum.CONFIRM)
+        }
+    }
+
     Item{
         width:parent.width/2
         anchors.top:parent.top
@@ -86,15 +96,39 @@ Rectangle {
             canvasDiameter:width
             percent:workState === workStateEnum.WORKSTATE_RESERVE?(100-100*QmlDevState.state.LStOvOrderTimerLeft/QmlDevState.state.LStOvOrderTimer):(100-100*QmlDevState.state.LStOvSetTimerLeft/QmlDevState.state.LStOvSetTimer)
             workState:QmlDevState.state.LStOvState
-            workTime:workState === workStateEnum.WORKSTATE_RESERVE?QmlDevState.state.LStOvOrderTimerLeft:QmlDevState.state.LStOvSetTimerLeft
-            workTemp:qsTr(QmlDevState.state.LStOvRealTemp+"℃")
+            workTime:
+            {
+                if(workState === workStateEnum.WORKSTATE_RESERVE)
+                {
+                    var time=QmlDevState.state.LStOvOrderTimerLeft
+                    return (time<600?"0":"")+ Math.floor(time/60)+":"+(time%60<10?"0":"")+time%60//
+                }
+                else
+                {
+                    return QmlDevState.state.LStOvSetTimerLeft
+                }
+            }
+            workTemp:qsTr(QmlDevState.state.LStOvSetTemp+"℃")
             MouseArea{
                 anchors.fill: parent
                 propagateComposedEvents: true
                 onClicked: {
-                    if(leftProgressBar.workState === workStateEnum.WORKSTATE_STOP||leftProgressBar.workState === workStateEnum.WORKSTATE_PAUSE)
+                    if(leftProgressBar.workState === workStateEnum.WORKSTATE_STOP)
                     {
                         showNewCook(leftProgressBar.device)
+                    }
+                    else if(leftProgressBar.workState === workStateEnum.WORKSTATE_PAUSE && QmlDevState.state.MultiMode==0)
+                    {
+                        if(QmlDevState.state.LStOvOrderTimerLeft==0)
+                        {
+                            load_page("pageSteamBakeBase",JSON.stringify({"device":leftDevice,"reserve":0}))
+                        }
+                        else
+                        {
+                            var para =CookFunc.getDefHistory()
+                            para.cookPos=leftDevice
+                            load_page("pageSteamBakeReserve",JSON.stringify(para))
+                        }
                     }
                     else
                     {
@@ -110,9 +144,10 @@ Rectangle {
                         mouse.accepted = false
                 }
             }
+            onConfirm:cookConfirm()
         }
         Button{
-            visible: leftProgressBar.workState !== workStateEnum.WORKSTATE_STOP
+            visible: leftProgressBar.workState !== workStateEnum.WORKSTATE_STOP && leftProgressBar.workState !== workStateEnum.WORKSTATE_FINISH
             width:95
             height: width
             anchors.left: leftProgressBar.left
@@ -121,6 +156,7 @@ Rectangle {
             //            anchors.bottomMargin: -10
             background:Image {
                 asynchronous:true
+                smooth:false
                 anchors.centerIn:parent
                 source: themesImagesPath+"icon-cookclose.png"
             }
@@ -128,11 +164,11 @@ Rectangle {
                 if(QmlDevState.state.LStOvState === workStateEnum.WORKSTATE_RESERVE)
                     showCancelRun("左腔","预约")
                 else
-                    showCancelRun("左腔","运行")
+                    showCancelRun("左腔","工作")
             }
         }
         Button{
-            visible: leftProgressBar.workState !== workStateEnum.WORKSTATE_STOP
+            visible: leftProgressBar.workState !== workStateEnum.WORKSTATE_STOP && leftProgressBar.workState !== workStateEnum.WORKSTATE_FINISH
             width:95
             height: width
             anchors.right: leftProgressBar.right
@@ -141,8 +177,9 @@ Rectangle {
             //            anchors.bottomMargin: -10
             background:Image {
                 asynchronous:true
+                smooth:false
                 anchors.centerIn:parent
-                source: themesImagesPath+(QmlDevState.state.LStOvState===workStateEnum.WORKSTATE_PAUSE?"icon-cookrun.png":"icon-cookpause.png")
+                source: themesImagesPath+(QmlDevState.state.LStOvState===workStateEnum.WORKSTATE_PAUSE?"icon-cookpause.png":"icon-cookrun.png")
             }
             onClicked:{
                 if(QmlDevState.state.LStOvState===workStateEnum.WORKSTATE_PAUSE)
@@ -201,7 +238,7 @@ Rectangle {
             percent:workState === workStateEnum.WORKSTATE_RESERVE?(100-100*QmlDevState.state.RStOvOrderTimerLeft/QmlDevState.state.RStOvOrderTimer):(100-100*QmlDevState.state.RStOvSetTimerLeft/QmlDevState.state.RStOvSetTimer)
             workState:QmlDevState.state.RStOvState
             workTime:workState === workStateEnum.WORKSTATE_RESERVE?QmlDevState.state.RStOvOrderTimerLeft:QmlDevState.state.RStOvSetTimerLeft
-            workTemp:qsTr(QmlDevState.state.RStOvRealTemp+"℃")
+            workTemp:qsTr(QmlDevState.state.RStOvSetTemp+"℃")
             MouseArea{
                 anchors.fill: parent
                 propagateComposedEvents: true
@@ -209,6 +246,19 @@ Rectangle {
                     if(rightProgressBar.workState === workStateEnum.WORKSTATE_STOP||rightProgressBar.workState === workStateEnum.WORKSTATE_PAUSE)
                     {
                         showNewCook(rightProgressBar.device)
+                    }
+                    else if(rightProgressBar.workState === workStateEnum.WORKSTATE_PAUSE)
+                    {
+                        if(QmlDevState.state.RStOvOrderTimerLeft==0)
+                        {
+                            load_page("pageSteamBakeBase",JSON.stringify({"device":rightDevice,"reserve":0}))
+                        }
+                        else
+                        {
+                            var para =CookFunc.getDefHistory()
+                            para.cookPos=rightDevice
+                            load_page("pageSteamBakeReserve",JSON.stringify(para))
+                        }
                     }
                     else
                     {
@@ -224,9 +274,10 @@ Rectangle {
                         mouse.accepted = false
                 }
             }
+            onConfirm:cookConfirm()
         }
         Button{
-            visible: rightProgressBar.workState !== workStateEnum.WORKSTATE_STOP
+            visible: rightProgressBar.workState !== workStateEnum.WORKSTATE_STOP && rightProgressBar.workState !== workStateEnum.WORKSTATE_FINISH
             width:95
             height: width
             anchors.left: rightProgressBar.left
@@ -235,6 +286,7 @@ Rectangle {
             //            anchors.bottomMargin: -10
             background:Image {
                 asynchronous:true
+                smooth:false
                 anchors.centerIn:parent
                 source: themesImagesPath+"icon-cookclose.png"
             }
@@ -242,11 +294,11 @@ Rectangle {
                 if(QmlDevState.state.RStOvState === workStateEnum.WORKSTATE_RESERVE)
                     showCancelRun("右腔","预约")
                 else
-                    showCancelRun("右腔","运行")
+                    showCancelRun("右腔","工作")
             }
         }
         Button{
-            visible: rightProgressBar.workState !== workStateEnum.WORKSTATE_STOP
+            visible: rightProgressBar.workState !== workStateEnum.WORKSTATE_STOP  && rightProgressBar.workState !== workStateEnum.WORKSTATE_FINISH
             width:95
             height: width
             anchors.right: rightProgressBar.right
@@ -255,8 +307,9 @@ Rectangle {
             //            anchors.bottomMargin: -10
             background:Image {
                 asynchronous:true
+                smooth:false
                 anchors.centerIn:parent
-                source: themesImagesPath+(QmlDevState.state.RStOvState===workStateEnum.WORKSTATE_PAUSE?"icon-cookrun.png":"icon-cookpause.png")
+                source: themesImagesPath+(QmlDevState.state.RStOvState===workStateEnum.WORKSTATE_PAUSE?"icon-cookpause.png":"icon-cookrun.png")
             }
             onClicked:{
                 if(QmlDevState.state.RStOvState===workStateEnum.WORKSTATE_PAUSE)

@@ -20,12 +20,14 @@ Item {
 
             background:Image {
                 anchors.fill: parent
+                smooth:false
                 asynchronous:true
                 source: themesImagesPath+"homefirst-button1-background.png"
             }
 
             Image {
                 asynchronous:true
+                smooth:false
                 anchors.top: parent.top
                 anchors.topMargin: 42
                 anchors.horizontalCenter: parent.horizontalCenter
@@ -43,12 +45,14 @@ Item {
 
             background:Image {
                 asynchronous:true
+                smooth:false
                 anchors.fill: parent
                 source: themesImagesPath+"homefirst-button2-background.png"
             }
 
             Image {
                 asynchronous:true
+                smooth:false
                 anchors.top: parent.top
                 anchors.topMargin: 31
                 anchors.horizontalCenter: parent.horizontalCenter

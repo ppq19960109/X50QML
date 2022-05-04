@@ -27,7 +27,16 @@ Item {
         para.dishName=CookFunc.getDishName(list,para.cookPos)
         para.cookSteps=JSON.stringify(list)
 
-        startCooking(para,list,0)
+        if(systemSettings.cookDialog[4]>0)
+        {
+            if(CookFunc.isSteam(list))
+                showLoaderSteam1(358,"请将食物放入左腔\n将水箱加满水","开始烹饪",para,4)
+            else
+                showLoaderSteam1(306,"请将食物放入左腔","开始烹饪",para,4)
+            return
+        }
+
+        startCooking(para,list)
     }
 
 
@@ -56,7 +65,7 @@ Item {
         id:topBar
         anchors.bottom:parent.bottom
         name:qsTr("多段烹饪 <font size='30px'>(最多可添加三段烹饪)</font>")
-        leftBtnText:qsTr("启动")
+//                leftBtnText:qsTr("启动")
         rightBtnText:qsTr("预约")
         onLeftClick:{
             steamStart()
@@ -82,7 +91,6 @@ Item {
             load_page("pageSteamBakeReserve",JSON.stringify(para))
         }
         onClose:{
-            SendFunc.permitSteamStartStatus(0)
             backPrePage()
         }
     }
@@ -99,10 +107,11 @@ Item {
                 height:parent.height
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.right: parent.right
-//                anchors.rightMargin:40
+                //                anchors.rightMargin:40
 
                 background: Image {
                     asynchronous:true
+                    smooth:false
                     anchors.centerIn: parent
                     source: themesImagesPath+"icon_cook_add.png"
                 }

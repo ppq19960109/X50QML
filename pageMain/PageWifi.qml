@@ -10,84 +10,6 @@ import "../"
 Item {
     property int scan_count: 0
 
-    function signalLevel(rssi)
-    {
-        if (rssi <= -100)
-        {
-            return 0
-        }
-        else if (rssi < -75)
-        {
-            return 1
-        }
-        else if (rssi < -55)
-        {
-            return 2
-        }
-        else
-        {
-            return 3
-        }
-    }
-
-    function encrypType(flags)
-    {
-        if (flags.indexOf("WPA") !== -1)
-        {
-            return 1
-        }
-        else if (flags.indexOf("WEP") !== -1)
-        {
-            return 2
-        }
-        else
-        {
-            return 0
-        }
-    }
-
-
-    function setWifiList(sanR)
-    {
-        var root=JSON.parse(sanR)
-        //        console.log("setWifiList:" ,sanR,root.length)
-        root.sort(function(a, b){return b.rssi - a.rssi})
-        wifiModel.clear()
-        var result={}
-
-        for(var i = 0; i < root.length; ++i) {
-            if(root[i].ssid==="")
-                continue
-            result.connected=0
-
-            result.ssid=root[i].ssid
-            result.level=signalLevel(root[i].rssi)
-            result.flags=encrypType(root[i].flags)
-
-            if(root[i].bssid===QmlDevState.state.bssid)
-            {
-                if(wifiConnected==false)
-                    wifiConnected=true
-                result.connected=1
-                wifiModel.insert(0,result)
-            }
-            else
-                wifiModel.append(result)
-            console.log("result:",QmlDevState.state.bssid,root[i].bssid,root[i].rssi,result.connected,result.ssid,result.level,result.flags)
-        }
-        if(QmlDevState.state.bssid=="")
-        {
-            wifiConnected=false
-        }
-    }
-
-    function getCurWifi()
-    {
-        var Data={}
-        Data.WifiCurConnected = null
-        SendFunc.getToServer(Data)
-    }
-
     function wifi_scan_timer_reset()
     {
         console.log("wifi_scan_timer_reset")
@@ -103,11 +25,7 @@ Item {
         onStateChanged: { // 处理目标对象信号的槽函数
             console.log("page wifi onStateChanged:",key)
 
-            if("WifiScanR"==key)
-            {
-                setWifiList(value)
-            }
-            else if("WifiState"==key)
+            if("WifiState"==key)
             {
                 console.log("page wifi WifiState:",value)
                 if(value > 1)
@@ -119,7 +37,7 @@ Item {
                     else if(value==4)
                     {
                         dismissWifiInput()
-                        //                        showQrcodeBind("连接成功！")
+                        showQrcodeBind("连接成功！")
                     }
                     wifi_scan_timer_reset()
                 }
@@ -152,23 +70,23 @@ Item {
         repeat: true
         running: systemSettings.wifiEnable
         interval: 1000
-        triggeredOnStart: scan_count < 3?true:false
+        triggeredOnStart: scan_count < 4?true:false
         onTriggered: {
             console.log("timer_wifi_scan",timer_wifi_scan.interval,scan_count,wifiConnecting)
-            if(scan_count < 3)
+            if(scan_count < 4)
             {
                 ++scan_count
                 if(scan_count==1)
                 {
                     timer_wifi_scan.interval=2000
                 }
-                else if(scan_count==3)
+                else if(scan_count==4)
                 {
                     timer_wifi_scan.interval=15000
                 }
                 if(wifiConnecting==false)
                 {
-                    getCurWifi()
+                    WifiFunc.getCurWifi()
                     SendFunc.scanRWifi()
                 }
             }
@@ -177,7 +95,7 @@ Item {
                 if(wifiConnecting==false)
                 {
                     SendFunc.scanWifi()
-                    getCurWifi()
+                    WifiFunc.getCurWifi()
                     SendFunc.scanRWifi()
                 }
             }
@@ -226,25 +144,27 @@ Item {
                 //                width: indicatorImg.width
                 //                height:indicatorImg.height
                 checked:systemSettings.wifiEnable
-
+                width:implicitWidth+40
+                height:implicitHeight+20
                 anchors.right: parent.right
-                anchors.rightMargin: 40
-                anchors.top: parent.top
-                anchors.topMargin: 65
+                anchors.rightMargin: 20
+                anchors.bottom: divider.top
 
                 indicator: Item {
+                    id:indicator
                     implicitWidth: indicatorImg.width
                     implicitHeight: indicatorImg.height
-
+                    anchors.centerIn: parent
                     Image{
                         id:indicatorImg
                         asynchronous:true
+                        smooth:false
                         anchors.centerIn: parent
                         source: wifi_switch.checked ?"/x50/wifi/kai.png":"/x50/wifi/guan.png"
                     }
                 }
                 onCheckedChanged: {
-                    console.log("wifi_switch:" + wifi_switch.checked)
+                    console.log("wifi_switch:" + wifi_switch.checked,wifi_switch.width,indicator.width)
                     if(systemSettings.wifiEnable!=wifi_switch.checked)
                         SendFunc.enableWifi(wifi_switch.checked)
 
@@ -296,6 +216,7 @@ Item {
                 }
                 Image{
                     asynchronous:true
+                    smooth:false
                     visible: connected==1
                     anchors.centerIn: parent
                     source: "/x50/wifi/icon_selected.png"
@@ -322,6 +243,7 @@ Item {
             Image {
                 id: wifi_level
                 asynchronous:true
+                smooth:false
                 anchors.right: parent.right
                 anchors.rightMargin:  53
                 anchors.bottom: parent.bottom
@@ -341,6 +263,7 @@ Item {
                 }
                 Image{
                     asynchronous:true
+                    smooth:false
                     anchors.fill: parent
                     anchors.centerIn: parent
                     visible: flags > 0
@@ -417,12 +340,12 @@ Item {
             interactive: true
             delegate: wifiDelegate
             model: wifiModel
-
+            cacheBuffer:20
             header: headerView
             clip: true
             highlightRangeMode: ListView.ApplyRange
             //            snapMode: ListView.SnapToItem
-            //            boundsBehavior:Flickable.StopAtBounds
+            boundsBehavior:Flickable.StopAtBounds
             footer: footerView
             // 连接信号槽
             //            Component.onCompleted: {
@@ -540,7 +463,7 @@ Item {
                     echoMode: TextInput.Normal//TextInput.Password:TextInput.Normal
                     passwordCharacter: "*"
                     passwordMaskDelay: 1
-                    placeholderText: qsTr("密码")
+                    placeholderText: qsTr("请输入密码")
 
                     activeFocusOnPress:true
                     overwriteMode: false

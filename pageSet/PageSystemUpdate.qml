@@ -4,7 +4,7 @@ import QtQuick.Layouts 1.3
 import "../"
 import "qrc:/SendFunc.js" as SendFunc
 Item {
-    enabled: loader_main.status == Loader.Null
+//    enabled: loader_main.status == Loader.Null
     property bool versionChecked: false
 
     Connections { // 将目标对象信号与槽函数进行连接
@@ -67,6 +67,7 @@ Item {
         Image{
             id:logo
             cache:false
+            smooth:false
             asynchronous:true
             anchors.top: parent.top
             anchors.topMargin: 50
@@ -91,6 +92,7 @@ Item {
             Image {
                 cache:false
                 asynchronous:true
+                smooth:false
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.right: parent.right
                 source: "qrc:/x50/set/gengduo.png"

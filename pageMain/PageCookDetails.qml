@@ -17,7 +17,18 @@ Item {
         onStateChanged: { // 处理目标对象信号的槽函数
             if("SteamStart"==key)
             {
-                startCooking(root,cookSteps,0)
+                if(recipe.visible==true)
+                {
+                    if(systemSettings.cookDialog[5]>0)
+                    {
+                        if(CookFunc.isSteam(cookSteps))
+                            showLoaderSteam1(358,"请将食物放入左腔\n将水箱加满水","开始烹饪",root,5)
+                        else
+                            showLoaderSteam1(306,"请将食物放入左腔","开始烹饪",root,5)
+                        return
+                    }
+                }
+                startCooking(root,cookSteps)
             }
         }
     }
@@ -55,7 +66,7 @@ Item {
             recipe.visible=true
             dishName.text="菜名："+root.dishName
             cookTime.text="烹饪用时："+getCookTime(cookSteps)+"分钟"
-//            cookSteps[0].dishName=root.dishName
+            //            cookSteps[0].dishName=root.dishName
         }
         else
         {
@@ -64,22 +75,20 @@ Item {
             listView.height=cookSteps.length*100
             cookPos=root.cookPos
         }
-        SendFunc.permitSteamStartStatus(1)
     }
 
     PageBackBar{
         id:topBar
         anchors.bottom:parent.bottom
         name:"详情"
-        leftBtnText:qsTr("启动")
+        //        leftBtnText:qsTr("启动")
         rightBtnText:qsTr("预约")
         onClose:{
-            SendFunc.permitSteamStartStatus(0)
             backPrePage()
         }
 
         onLeftClick:{
-            startCooking(root,cookSteps,0)
+            startCooking(root,cookSteps)
         }
         onRightClick:{
             load_page("pageSteamBakeReserve",JSON.stringify(root))
@@ -101,14 +110,18 @@ Item {
             height:parent.height
             Image{
                 id:recipeImg
+                width: 220
+                height: 330
                 sourceSize.width: 220
                 sourceSize.height: 330
                 anchors.centerIn: parent
                 cache:false
                 asynchronous:true
+                smooth:false
             }
             Image{
                 asynchronous:true
+                smooth:false
                 anchors.top: recipeImg.top
                 anchors.left: recipeImg.left
                 sourceSize.width: 88

@@ -25,17 +25,79 @@ Item {
         //            Data.RStoveTimingOpera =timingOperationEnum.CANCEL
         //            SendFunc.setToServer(Data)
         //        }
-        if(QmlDevState.state.RStoveStatus!==1)
-            showLoaderFaultCenter("右灶未开启\n开启后才可定时关火",275)
-    }
 
+    }
+    Connections { // 将目标对象信号与槽函数进行连接
+        id:connections
+        enabled:false
+        target: QmlDevState
+        onStateChanged: { // 处理目标对象信号的槽函数
+            console.log("PageCloseHeat onStateChanged",key)
+            if("SteamStart"==key)
+            {
+                steamStart()
+            }
+            else if("RStoveStatus"==key)
+            {
+                if(value)
+                    permitStart()
+                else
+                    SendFunc.permitSteamStartStatus(0)
+            }
+        }
+    }
+    StackView.onActivated:{
+        connections.enabled=true
+    }
+    StackView.onDeactivated:{
+        connections.enabled=false
+    }
+    function permitStart()
+    {
+        if(hourPathView.currentIndex==0 && minutePathView.currentIndex==0)
+        {
+            if(permitStartStatus!=0)
+            {
+                SendFunc.permitSteamStartStatus(0)
+            }
+        }
+        else
+        {
+            if(permitStartStatus==0)
+            {
+                SendFunc.permitSteamStartStatus(1)
+            }
+        }
+    }
+    function steamStart()
+    {
+        if(QmlDevState.state.RStoveStatus===1)
+        {
+            if(hourPathView.currentIndex==0 && minutePathView.currentIndex==0)
+                return
+            console.log("PageCloseHeat",hourPathView.model[hourPathView.currentIndex],minutePathView.model[minutePathView.currentIndex])
+
+            var Data={}
+            Data.RStoveTimingOpera = timingOperationEnum.START
+            Data.RStoveTimingSet = hourPathView.currentIndex*60+minutePathView.currentIndex
+            SendFunc.setToServer(Data)
+
+            //                            QmlDevState.setState("RStoveTimingLeft",hourPathView.currentIndex*60+minutePathView.currentIndex)
+            //                            QmlDevState.setState("RStoveTimingState",timingStateEnum.RUN)
+            backPrePage()
+        }
+        else
+        {
+            showLoaderFaultCenter("右灶未开启\n开启后才可定时关火",275)
+        }
+    }
 
     PageBackBar{
         id:topBar
         anchors.bottom:parent.bottom
         name:"定时关火  <font size='30px'>(右灶开启后才可定时关火)</font>"
         leftBtnText:qsTr("")
-        rightBtnText:qsTr("启动")
+        //                rightBtnText:qsTr("启动")
         onClose:{
             backPrePage()
         }
@@ -44,21 +106,7 @@ Item {
 
         }
         onRightClick:{
-            if(QmlDevState.state.RStoveStatus===1)
-            {
-                if(hourPathView.currentIndex==0 && minutePathView.currentIndex==0)
-                    return
-                console.log("PageCloseHeat",hourPathView.model[hourPathView.currentIndex],minutePathView.model[minutePathView.currentIndex])
-
-                var Data={}
-                Data.RStoveTimingOpera = timingOperationEnum.START
-                Data.RStoveTimingSet = hourPathView.currentIndex*60+minutePathView.currentIndex
-                SendFunc.setToServer(Data)
-
-                //                QmlDevState.setState("RStoveTimingLeft",hourPathView.currentIndex*60+minutePathView.currentIndex)
-                //                QmlDevState.setState("RStoveTimingState",timingStateEnum.RUN)
-                backPrePage()
-            }
+            steamStart()
         }
     }
 
@@ -70,11 +118,11 @@ Item {
 
         PageDivider{
             anchors.top:parent.top
-            anchors.topMargin:rowPathView.height/3+50
+            anchors.topMargin:rowPathView.height/3+40
         }
         PageDivider{
             anchors.top:parent.top
-            anchors.topMargin:rowPathView.height/3*2+50
+            anchors.topMargin:rowPathView.height/3*2+40
         }
 
         Row {
@@ -84,7 +132,7 @@ Item {
             anchors.top:parent.top
             anchors.bottom: parent.bottom
             anchors.centerIn: parent
-            spacing: 20
+            spacing: 0
 
             DataPathView {
                 id:hourPathView
@@ -94,8 +142,13 @@ Item {
                 Image {
                     visible: hourPathView.moving
                     asynchronous:true
+                    smooth:false
                     anchors.centerIn: parent
                     source: "qrc:/x50/steam/temp-time-change-background.png"
+                }
+                onValueChanged: {
+                    console.log(index,valueName)
+                    permitStart()
                 }
                 Component.onCompleted:{
                     if(QmlDevState.state.RStoveTimingState===1)
@@ -110,21 +163,27 @@ Item {
                 Image {
                     visible: minutePathView.moving
                     asynchronous:true
+                    smooth:false
                     anchors.centerIn: parent
                     source: "qrc:/x50/steam/temp-time-change-background.png"
+                }
+                onValueChanged: {
+                    console.log(index,valueName)
+                    permitStart()
                 }
                 Component.onCompleted:{
                     if(QmlDevState.state.RStoveTimingState===1)
                         currentIndex=QmlDevState.state.RStoveTimingLeft%60
-                    else
-                        currentIndex=1
                 }
             }
             Text{
-                width:180
+                width:200
+
                 color:themesTextColor2
                 font.pixelSize: 35
                 anchors.verticalCenter: parent.verticalCenter
+                horizontalAlignment:Text.AlignHCenter
+                verticalAlignment:Text.AlignVCenter
                 text:qsTr("后定时关火")
             }
         }

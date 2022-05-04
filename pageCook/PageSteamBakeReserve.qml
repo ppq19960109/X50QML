@@ -1,12 +1,40 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.2
+
+import "qrc:/CookFunc.js" as CookFunc
 import "../"
 Item {
     property var root
     function steamStart()
     {
         console.log("PageSteamBakeReserve",hourPathView.model[hourPathView.currentIndex],minutePathView.model[minutePathView.currentIndex])
-        startCooking(root,JSON.parse(root.cookSteps),hourPathView.currentIndex*60+minutePathView.currentIndex)
+        root.orderTime=hourPathView.currentIndex*60+minutePathView.currentIndex
+        if(root.cookSteps=="")
+        {
+            startCooking(root,null)
+            return
+        }
+        var cookSteps=JSON.parse(root.cookSteps)
+        if(root.cookPos===leftDevice)
+        {
+            if(systemSettings.cookDialog[2]>0)
+            {
+                if(CookFunc.isSteam(cookSteps))
+                    showLoaderSteam1(358,"请将食物放入左腔\n将水箱加满水","开始预约",root,2)
+                else
+                    showLoaderSteam1(306,"请将食物放入左腔","开始预约",root,2)
+                return
+            }
+        }
+        else
+        {
+            if(systemSettings.cookDialog[4]>0)
+            {
+                showLoaderSteam1(358,"请将食物放入右腔\n将水箱加满水","开始预约",root,3)
+                return
+            }
+        }
+        startCooking(root,cookSteps)
     }
 
     Connections { // 将目标对象信号与槽函数进行连接
@@ -51,7 +79,7 @@ Item {
         anchors.bottom:parent.bottom
         name:"预约  <font size='30px'>("+root.dishName+")</font>"
         leftBtnText:qsTr("")
-        rightBtnText:qsTr("启动")
+//                rightBtnText:qsTr("启动")
         onClose:{
             backPrePage()
         }
@@ -72,11 +100,11 @@ Item {
 
         PageDivider{
             anchors.top:parent.top
-            anchors.topMargin:rowPathView.height/3+50
+            anchors.topMargin:rowPathView.height/3+40
         }
         PageDivider{
             anchors.top:parent.top
-            anchors.topMargin:rowPathView.height/3*2+50
+            anchors.topMargin:rowPathView.height/3*2+40
         }
 
         ListModel {
@@ -87,7 +115,7 @@ Item {
             width: parent.width-140
             height:parent.height-80
             anchors.centerIn: parent
-            spacing: 20
+            spacing: 0
 
             DataPathView {
                 id:hourPathView
@@ -98,6 +126,7 @@ Item {
                 Image {
                     visible: hourPathView.moving
                     asynchronous:true
+                    smooth:false
                     anchors.centerIn: parent
                     source: "qrc:/x50/steam/temp-time-change-background.png"
                 }
@@ -112,18 +141,21 @@ Item {
                 Image {
                     visible: minutePathView.moving
                     asynchronous:true
+                    smooth:false
                     anchors.centerIn: parent
                     source: "qrc:/x50/steam/temp-time-change-background.png"
                 }
                 Component.onCompleted:{
-                    currentIndex=1
+
                 }
             }
             Text{
-                width:180
+                width:200
                 color:themesTextColor2
                 font.pixelSize: 35
                 anchors.verticalCenter: parent.verticalCenter
+                horizontalAlignment:Text.AlignHCenter
+                verticalAlignment:Text.AlignVCenter
                 text:qsTr("后启动")
             }
         }

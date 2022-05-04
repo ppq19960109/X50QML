@@ -59,7 +59,6 @@ Item {
 
                 onValueSlider: {
                     console.log("lightSlider:",value)
-                    Backlight.backlightSet(value)
                     systemSettings.brightness=value
                 }
             }

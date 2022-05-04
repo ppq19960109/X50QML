@@ -517,7 +517,7 @@ void QmlDevState::setState(const QString& name,const QVariant& value)
     //    if(stateMap.contains(name))
     //    {
 
-    qDebug()<<"setState name:"<<name << "new value:" << value;
+    //    qDebug()<<"setState name:"<<name << "new value:" << value;
     //    if(stateMap.contains(name))
     //        qDebug()<< "old value:" << stateMap[name];
     stateMap[name]=value;

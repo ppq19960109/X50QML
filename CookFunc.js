@@ -1,7 +1,7 @@
 
 function leftWorkModeFun(n)
 {
-    console.log("leftWorkModeFun",n)
+//    console.log("leftWorkModeFun",n)
     var mode
     switch(n)
     {
@@ -37,7 +37,7 @@ function leftWorkModeFun(n)
 }
 function leftWorkModeNumberFun(n)
 {
-    console.log("leftWorkModeFun",n)
+//    console.log("leftWorkModeFun",n)
     var mode
     switch(n)
     {
@@ -90,9 +90,20 @@ function getDefHistory()
     param.recipeid=0
     param.recipeType=0
     param.cookPos=0
+    param.orderTime=0
     return param
 }
-
+function isSteam(cookSteps)
+{
+    for(var i = 0; i < cookSteps.length; i++)
+    {
+        if(cookSteps[i].mode==1||cookSteps[i].mode==2||cookSteps[i].mode==40)
+        {
+           return 1
+        }
+    }
+    return 0
+}
 function getDishName(root,cookPos)
 {
     var dishName=""

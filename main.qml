@@ -7,17 +7,20 @@ import "pageCook"
 import "pageMain"
 import "pageSet"
 import "pageProductionTest"
+
 import "qrc:/SendFunc.js" as SendFunc
 
 ApplicationWindow {
     id: window
     width: 800
     height: 480
-    visible: true
-    property int sysPowerPressCount:0
+//    visible: true
+    property int sysPower:-1
+    //    property int sysPowerPressCount:0
+    property int permitStartStatus:0
     readonly property string uiVersion:"1.0"
     readonly property string productionTestWIFISSID:"moduletest"
-    readonly property string productionTestWIFIPWD:"12345678"
+    readonly property string productionTestWIFIPWD:"58185818"
     readonly property int leftDevice:0
     readonly property int rightDevice:1
     readonly property int allDevice:2
@@ -26,9 +29,9 @@ ApplicationWindow {
     readonly property var leftWorkModeNumber:[0,1,2,35,36,38,40,42,72]
     readonly property string rightWorkMode:"便捷蒸"
 
-    readonly property var leftModel:[{"modelData":1,"temp":100,"time":30,"minTemp":40,"maxTemp":100},{"modelData":2,"temp":120,"time":20,"minTemp":101,"maxTemp":120},{"modelData":3,"temp":200,"time":60,"minTemp":50,"maxTemp":230}
-        ,{"modelData":4,"temp":180,"time":120,"minTemp":50,"maxTemp":230},{"modelData":5,"temp":180,"time":120,"minTemp":50,"maxTemp":230},{"modelData":6,"temp":150,"time":60,"minTemp":50,"maxTemp":200}
-        ,{"modelData":7,"temp":220,"time":15,"minTemp":200,"maxTemp":230},{"modelData":8,"temp":60,"time":30,"minTemp":50,"maxTemp":120}]
+    readonly property var leftModel:[{"modelData":1,"temp":100,"time":30,"minTemp":40,"maxTemp":100},{"modelData":2,"temp":120,"time":20,"minTemp":101,"maxTemp":120},{"modelData":6,"temp":150,"time":60,"minTemp":50,"maxTemp":200},{"modelData":7,"temp":220,"time":15,"minTemp":200,"maxTemp":230},{"modelData":3,"temp":200,"time":60,"minTemp":50,"maxTemp":230}
+        ,{"modelData":5,"temp":180,"time":120,"minTemp":50,"maxTemp":230},{"modelData":4,"temp":180,"time":120,"minTemp":50,"maxTemp":230}
+        ,{"modelData":8,"temp":60,"time":30,"minTemp":50,"maxTemp":120}]
     readonly property var rightModel:{"modelData":0,"temp":100,"time":30,"minTemp":40,"maxTemp":100}
 
     readonly property var workStateEnum:{"WORKSTATE_STOP":0,"WORKSTATE_RESERVE":1,"WORKSTATE_PREHEAT":2,"WORKSTATE_RUN":3,"WORKSTATE_FINISH":4,"WORKSTATE_PAUSE":5}
@@ -77,33 +80,44 @@ ApplicationWindow {
     Settings {
         id: systemSettings
         category: "system"
+        property bool firstStartup: true
         //        property int currentTheme: 0
         //        onCurrentThemeChanged: {
         //            console.log("onCurrentThemeChanged",systemSettings.currentTheme)
         //            themeChange(systemSettings.currentTheme)
         //        }
         //设置-休眠时间(范围:1-5,单位:分钟 )
-        property int sleepTime: 4
+        property int sleepTime: 3
 
         //运行期间临时保存设置的亮度值，在收到开机状态是把该值重新设置回去 设置-屏幕亮度
         property int brightness: 250
 
-        property bool wifiEnable: true
+        property bool wifiEnable: false
 
         //判断儿童锁(true表示锁定，false表示未锁定)
         property bool childLock:false
 
-        property bool leftCookDialog:true
-        property bool rightCookDialog:true
+        property var cookDialog:[1,1,1,1,1,1]
+
         property bool multistageRemind:true
-        property bool multistageDialog:true
         property var wifiPasswdArray:[]
 
-        property int productionTestAging:0
-
+        onFirstStartupChanged: {
+            console.log("onFirstStartupChanged....",systemSettings.brightness)
+            SendFunc.enableWifi(true)
+            Backlight.backlightSet(systemSettings.brightness)
+        }
+        onBrightnessChanged: {
+            console.log("onBrightnessChanged....",systemSettings.brightness)
+            Backlight.backlightSet(systemSettings.brightness)
+        }
+        onWifiEnableChanged: {
+            console.log("onWifiEnableChanged....",systemSettings.wifiEnable)
+        }
         onSleepTimeChanged: {
             console.log("onSleepTimeChanged")
             timer_window.interval=systemSettings.sleepTime*60000
+            timer_window.restart()
         }
     }
 
@@ -113,23 +127,25 @@ ApplicationWindow {
         Data.reset = null
         SendFunc.setToServer(Data)
 
-        systemSettings.sleepTime=4
+        systemSettings.sleepTime=3
         systemSettings.brightness=250
-        Backlight.backlightSet(systemSettings.brightness)
-        if(systemSettings.wifiEnable!=true)
-        {
-            systemSettings.wifiEnable=true
-            SendFunc.enableWifi(true)
-        }
+
+        SendFunc.enableWifi(true)
+        systemSettings.wifiEnable=true
+
         systemSettings.childLock=false
-        systemSettings.leftCookDialog=true
-        systemSettings.rightCookDialog=true
+
+        systemSettings.cookDialog=[1,1,1,1,1,1]
+
         systemSettings.multistageRemind=true
         systemSettings.wifiPasswdArray=[]
-        systemSettings.productionTestAging=0
     }
 
     function systemPower(power){
+        console.log("systemPower",power)
+        if(sysPower==power)
+            return
+
         if(power)
         {
             Backlight.backlightSet(systemSettings.brightness)
@@ -144,11 +160,11 @@ ApplicationWindow {
         if(window.visible===false)
             window.visible=true
         //        timer_sysPower.stop()
+        sysPower=power
     }
 
     Component.onCompleted: {
         console.warn("Window onCompleted: ",Qt.fontFamilies())
-
         //        if(systemSettings.currentTheme===0)
         //            themeChange(systemSettings.currentTheme)
 
@@ -180,12 +196,13 @@ ApplicationWindow {
     Timer{
         id:timer_window
         repeat: false
-        running: true
+        running: sysPower > 0
         interval: systemSettings.sleepTime*60000//
         triggeredOnStart: false
         onTriggered: {
-            console.log("timer_window sleep...")
-            if(sleepState==false && QmlDevState.state.SysPower>0 && QmlDevState.state.HoodSpeed == 0 &&QmlDevState.state.LStoveStatus == 0 && QmlDevState.state.RStoveStatus == 0 &&QmlDevState.state.RStOvState == 0 && QmlDevState.state.LStOvState == 0 && QmlDevState.state.OTAState == 0 && QmlDevState.state.ErrorCodeShow == 0 && QmlDevState.localConnected == 1 && isExistView("PageTestFront")==null)
+            console.log("timer_window sleep:")
+            //            console.log("timer_window sleep:",QmlDevState.state.HoodSpeed,QmlDevState.state.RStOvState,QmlDevState.state.LStOvState,QmlDevState.state.ErrorCodeShow,QmlDevState.localConnected)
+            if(QmlDevState.state.HoodSpeed == 0  &&QmlDevState.state.RStOvState == 0 && QmlDevState.state.LStOvState == 0 && QmlDevState.state.ErrorCodeShow == 0 && QmlDevState.localConnected > 0 && isExistView("PageTestFront")==null)
             {
                 //                Backlight.backlightDisable()
                 sleepState=true
@@ -193,11 +210,16 @@ ApplicationWindow {
             }
             else
             {
+                sleepState=false
                 timer_window.restart()
             }
         }
     }
-
+    signal sleepTimerRestart()
+    onSleepTimerRestart:{
+        //        console.log("onSleepTimerRestart")
+        timer_window.restart()
+    }
     //    Timer{
     //        id:timer_sysPower
     //        repeat: QmlDevState.state.SysPower==0
@@ -247,14 +269,19 @@ ApplicationWindow {
         }
     }
     function showQrcodeBind(title){
-        loader_main.sourceComponent = component_bind
-        loader_main.item.hintTopText=title
+        console.log("BindTokenState",QmlDevState.state.BindTokenState)//QmlDevState.state.BindTokenState > 0
+        if(QmlDevState.state.WifiState==4 && QmlDevState.state.DeviceSecret!="")
+        {
+            loader_main.sourceComponent = component_bind
+            loader_main.item.hintTopText=title
+        }
     }
     //---------------------------------------------------------------
     Loader{
         //加载弹窗组件
         id:loader_error
-        //        asynchronous: true
+        //        active:false
+        //                asynchronous: true
         anchors.fill: parent
         sourceComponent:null
     }
@@ -278,6 +305,7 @@ ApplicationWindow {
         loader_error.item.hintBottomText=hintBottomText
         if(closeVisible!=null)
             loader_error.item.closeVisible=closeVisible
+        //        loader_error.setSource("PageFaultPopup.qml",{"hintTopText": hintTopText,"hintBottomText": hintBottomText,"closeVisible": closeVisible})
     }
     function showLoaderFaultCenter(hintCenterText,hintHeight){
         loader_error.sourceComponent = component_fault
@@ -294,6 +322,18 @@ ApplicationWindow {
             loader_error.sourceComponent = undefined
     }
 
+    function showLoaderDoorState(hintCenterText,hintHeight){
+        if(loader_main.status == Loader.Null || loader_main.status == Loader.Error|| loader_main.sourceComponent === component_fault)
+        {
+            loader_main.sourceComponent = component_fault
+            loader_main.item.hintCenterText=hintCenterText
+            loader_main.item.hintHeight=hintHeight
+        }
+    }
+    function closeLoaderDoorState(){
+        if(loader_main.sourceComponent === component_fault)
+            loader_main.sourceComponent = undefined
+    }
     //---------------------------------------------------------------
     Loader{
         //加载弹窗组件
@@ -309,24 +349,23 @@ ApplicationWindow {
         propagateComposedEvents: true
 
         onPressed: {
-            console.log("Window onPressed")
-            if(QmlDevState.state.SysPower>0)
+            //            console.log("Window onPressed",wifiConnecting)
+            //            console.log("Window onPressed:",sysPower,QmlDevState.state.HoodSpeed,QmlDevState.state.RStOvState,QmlDevState.state.LStOvState,QmlDevState.state.ErrorCodeShow,QmlDevState.localConnected)
+            if(sysPower > 0)
             {
+                mouse.accepted = false
+                sleepTimerRestart()
+
                 if(sleepState==true)
                 {
                     sleepState=false
                     Backlight.backlightSet(systemSettings.brightness)
                     mouse.accepted = true
                 }
-                else
-                {
-                    mouse.accepted = false
-                }
-                timer_window.restart()
             }
             else
             {
-                mouse.accepted = true //
+                mouse.accepted = true
                 //                sysPowerPressCount=0
                 //                timer_sysPower.restart()
             }
@@ -348,24 +387,24 @@ ApplicationWindow {
     }
     ListModel {
         id: wifiModel
-//                        ListElement {
-//                            connected: 1
-//                            ssid: "qwertyuio"
-//                            level:2
-//                            flags:2
-//                        }
-//                        ListElement {
-//                            connected: 0
-//                            ssid: "123"
-//                            level:2
-//                            flags:1
-//                        }
-//                        ListElement {
-//                            connected: 0
-//                            ssid: "456"
-//                            level:2
-//                            flags:0
-//                        }
+        //        ListElement {
+        //            connected: 1
+        //            ssid: "qwertyuio"
+        //            level:2
+        //            flags:2
+        //        }
+        //        ListElement {
+        //            connected: 0
+        //            ssid: "123"
+        //            level:2
+        //            flags:1
+        //        }
+        //        ListElement {
+        //            connected: 0
+        //            ssid: "456"
+        //            level:2
+        //            flags:0
+        //        }
     }
     //    Component {
     //        id: pageTest
@@ -638,41 +677,48 @@ ApplicationWindow {
     //        return Qt.formatDateTime(new Date(),"hh:mm")
     //    }
 
-    function startCooking(root,cookSteps,orderTime)
+    function startCooking(root,cookSteps)
     {
+        if(cookSteps==null)
+        {
+            SendFunc.setCooking(cookSteps,root.orderTime,root.cookPos)
+            return
+        }
+
         console.log("startCooking:",JSON.stringify(root),JSON.stringify(cookSteps))
         if(cookSteps.length===1 && (undefined === cookSteps[0].number || 0 === cookSteps[0].number))
         {
-            SendFunc.setCooking(cookSteps,orderTime,root.cookPos)
-//                        if(leftDevice===root.cookPos)
-//                        {
-//                            QmlDevState.setState("LStOvState",2)
-//                            QmlDevState.setState("LStOvMode",cookSteps[0].mode)
-//                            QmlDevState.setState("LStOvRealTemp",cookSteps[0].temp)
-//                            QmlDevState.setState("LStOvSetTimer",cookSteps[0].time)
-//                            QmlDevState.setState("LStOvSetTimerLeft",cookSteps[0].time)
-//                            QmlDevState.setState("LStOvOrderTimer",cookSteps[0].time)
-//                            QmlDevState.setState("LStOvOrderTimerLeft",cookSteps[0].time/2)
-//                        }
-//                        else
-//                        {
-//                            QmlDevState.setState("RStOvState",1)
-//                            QmlDevState.setState("RStOvRealTemp",cookSteps[0].temp)
-//                            QmlDevState.setState("RStOvSetTimerLeft",cookSteps[0].time)
-//                            QmlDevState.setState("RStOvSetTimer",cookSteps[0].time)
-//                            QmlDevState.setState("RStOvOrderTimer",cookSteps[0].time)
-//                            QmlDevState.setState("RStOvOrderTimerLeft",cookSteps[0].time/2)
-//                        }
+            SendFunc.setCooking(cookSteps,root.orderTime,root.cookPos)
+            //            if(leftDevice===root.cookPos)
+            //            {
+            //                QmlDevState.setState("LStOvState",1)
+            //                QmlDevState.setState("LStOvMode",cookSteps[0].mode)
+            //                QmlDevState.setState("LStOvSetTemp",cookSteps[0].temp)
+            //                QmlDevState.setState("LStOvRealTemp",cookSteps[0].temp)
+            //                QmlDevState.setState("LStOvSetTimer",cookSteps[0].time)
+            //                QmlDevState.setState("LStOvSetTimerLeft",cookSteps[0].time)
+            //                QmlDevState.setState("LStOvOrderTimer",cookSteps[0].time)
+            //                QmlDevState.setState("LStOvOrderTimerLeft",cookSteps[0].time)
+            //            }
+            //            else
+            //            {
+            //                QmlDevState.setState("RStOvState",1)
+            //                QmlDevState.setState("RStOvRealTemp",cookSteps[0].temp)
+            //                QmlDevState.setState("RStOvSetTimerLeft",cookSteps[0].time)
+            //                QmlDevState.setState("RStOvSetTimer",cookSteps[0].time)
+            //                QmlDevState.setState("RStOvOrderTimer",cookSteps[0].time)
+            //                QmlDevState.setState("RStOvOrderTimerLeft",cookSteps[0].time/2)
+            //            }
         }
         else
         {
             if(root.recipeType>0)
             {
-                SendFunc.setMultiCooking(cookSteps,orderTime,root.dishName,root.recipeid)
+                SendFunc.setMultiCooking(cookSteps,root.orderTime,root.dishName,root.recipeid)
             }
             else
             {
-                SendFunc.setMultiCooking(cookSteps,orderTime)
+                SendFunc.setMultiCooking(cookSteps,root.orderTime)
             }
             //            QmlDevState.setState("LStOvState",1)
             //            QmlDevState.setState("LStOvMode",cookSteps[0].mode)
@@ -688,5 +734,41 @@ ApplicationWindow {
         //        else
         //            backTopPage()
     }
+    Component{
+        id:component_steam1
+        PageDialog{
+            id:steamDialog1
+            hintHeight: 358
+            hintTopText:"请将食物放入\n将水箱加满水"
+            confirmText:"开始烹饪"
+            checkboxVisible:true
+            onCancel:{
+                console.info("component_steam1 onCancel")
+                closeLoaderMain()
+            }
+            onConfirm:{
+                console.info("component_steam1 onConfirm")
 
+                if(steamDialog1.checkboxState)
+                {
+                    var dialog=systemSettings.cookDialog
+                    dialog[steamDialog1.cookDialog]=0
+                    systemSettings.cookDialog=dialog
+                }
+                startCooking(steamDialog1.para,JSON.parse(steamDialog1.para.cookSteps))
+                closeLoaderMain()
+            }
+        }
+    }
+    function showLoaderSteam1(hintHeight,hintTopText,confirmText,para,cookDialog){
+        if(loader_main.status == Loader.Null || loader_main.status == Loader.Error)
+        {
+            loader_main.sourceComponent = component_steam1
+            loader_main.item.hintHeight=hintHeight
+            loader_main.item.hintTopText=hintTopText
+            loader_main.item.confirmText=confirmText
+            loader_main.item.para=para
+            loader_main.item.cookDialog=cookDialog
+        }
+    }
 }

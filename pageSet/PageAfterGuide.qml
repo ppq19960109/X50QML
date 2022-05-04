@@ -29,6 +29,7 @@ Item {
             anchors.topMargin: 40
             anchors.horizontalCenter: parent.horizontalCenter
             asynchronous:true
+            smooth:false
             source: "file:AfterSalesQrCode.png"
         }
 

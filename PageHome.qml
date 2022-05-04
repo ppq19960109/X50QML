@@ -6,9 +6,11 @@ import "WifiFunc.js" as WifiFunc
 import "qrc:/SendFunc.js" as SendFunc
 Item {
     property int productionTestFlag:1
+    property int lastLStOvState:0
+    property int lastRStOvState:0
 
     id:root
-    enabled: QmlDevState.state.SysPower==1
+    enabled: sysPower > 0
     //    anchors.fill: parent
 
     Timer{
@@ -37,11 +39,12 @@ Item {
             }
             Image {
                 asynchronous:true
+                smooth:false
                 anchors.top: parent.top
                 anchors.topMargin: 87+65
                 anchors.right: parent.right
                 anchors.rightMargin:100+160
-                source: "qrc:/x50/icon/形状 2824.png"
+                source: "qrc:/x50/icon/icon_alarm.png"
             }
         }
     }
@@ -71,7 +74,8 @@ Item {
         }
     }
     function showUpdateConfirm(){
-        loader_main.sourceComponent = component_updateConfirm
+        if(loader_main.status == Loader.Null || loader_main.status == Loader.Error)
+            loader_main.sourceComponent = component_updateConfirm
     }
 
     Component{
@@ -182,6 +186,10 @@ Item {
             {
                 closeLoaderFault()
                 SendFunc.permitSteamStartStatus(0)
+                if(systemSettings.firstStartup===true)
+                    systemSettings.firstStartup=false
+                //                else if(systemSettings.wifiEnable==false)
+                //                    SendFunc.enableWifi(false)
             }
             else
             {
@@ -192,12 +200,11 @@ Item {
             console.log("page home onStateChanged",key,value)
             if("SysPower"==key)
             {
-                console.log("SysPower:",QmlDevState.state.SysPower)
                 systemPower(value)
             }
-            else if(("LStOvState"==key || "RStOvState"==key))
+            else if("LStOvState"==key)
             {
-                console.log("LStOvState RStOvState",value,QmlDevState.state.LStOvState,QmlDevState.state.RStOvState)
+                console.log("LStOvState",value,QmlDevState.state.LStOvState)
                 var ret=isExistView("pageSteamBakeRun")
                 console.log(ret,typeof ret)
                 if(value > 0)
@@ -211,16 +218,62 @@ Item {
                 {
                     if(ret!=null)
                     {
-                        if("LStOvState"==key && QmlDevState.state.RStOvState===workStateEnum.WORKSTATE_STOP)
-                        {
-                            backTopPage()
-                        }
-                        else if("RStOvState"==key && QmlDevState.state.LStOvState===workStateEnum.WORKSTATE_STOP)
+                        if(QmlDevState.state.RStOvState===workStateEnum.WORKSTATE_STOP)
                         {
                             backTopPage()
                         }
                     }
                 }
+
+                if(lastLStOvState!=value)
+                {
+                    if(value==5)
+                    {
+                        if(QmlDevState.state.LStOvDoorState==1)
+                            showLoaderDoorState("左腔门开启，工作暂停",275)
+                    }
+                    else
+                    {
+                        closeLoaderDoorState()
+                    }
+                }
+                lastLStOvState=value
+            }
+            else if("RStOvState"==key)
+            {
+                console.log("RStOvState",value,QmlDevState.state.RStOvState)
+                var ret=isExistView("pageSteamBakeRun")
+                console.log(ret,typeof ret)
+                if(value > 0)
+                {
+                    if(ret===null)
+                    {
+                        load_page("pageSteamBakeRun")
+                    }
+                }
+                else
+                {
+                    if(ret!=null)
+                    {
+                        if(QmlDevState.state.LStOvState===workStateEnum.WORKSTATE_STOP)
+                        {
+                            backTopPage()
+                        }
+                    }
+                }
+                if(lastRStOvState!=value)
+                {
+                    if(value==5)
+                    {
+                        if(QmlDevState.state.RStOvDoorState==1)
+                            showLoaderDoorState("右腔门开启，工作暂停",275)
+                    }
+                    else
+                    {
+                        closeLoaderDoorState()
+                    }
+                }
+                lastRStOvState=value
             }
             else if("ErrorCode"==key)
             {
@@ -292,38 +345,6 @@ Item {
                     closeLoaderFault()
                 }
             }
-            else if("LStOvDoorState"==key)
-            {
-                if(QmlDevState.state.ErrorCodeShow==0)
-                {
-                    if(value==1)
-                    {
-                        if(QmlDevState.state.LStOvState!=workStateEnum.WORKSTATE_STOP && QmlDevState.state.LStOvState!=workStateEnum.WORKSTATE_FINISH&& QmlDevState.state.LStOvState!=workStateEnum.WORKSTATE_PAUSE)
-                            showLoaderFaultCenter("左腔门开启，工作暂停",275)
-                    }
-                    else
-                    {
-                        if(QmlDevState.state.RStOvDoorState==0)
-                            closeLoaderFault()
-                    }
-                }
-            }
-            else if("RStOvDoorState"==key)
-            {
-                if(QmlDevState.state.ErrorCodeShow==0)
-                {
-                    if(value==1)
-                    {
-                        if(QmlDevState.state.RStOvState!=workStateEnum.WORKSTATE_STOP && QmlDevState.state.RStOvState!=workStateEnum.WORKSTATE_FINISH&& QmlDevState.state.RStOvState!=workStateEnum.WORKSTATE_PAUSE)
-                            showLoaderFaultCenter("右腔门开启，工作暂停",275)
-                    }
-                    else
-                    {
-                        if(QmlDevState.state.LStOvDoorState==0)
-                            closeLoaderFault()
-                    }
-                }
-            }
             else if("WifiEnable"==key)
             {
                 systemSettings.wifiEnable=value
@@ -332,6 +353,10 @@ Item {
                     wifiConnected=false
                 }
                 console.log("WifiEnable",value)
+                if(productionTestFlag==2 && value > 0)
+                {
+                    getQuadScanWifi()
+                }
             }
             else if("WifiState"==key)
             {
@@ -404,21 +429,63 @@ Item {
                 if(value==""||value==null)
                 {
                     productionTestFlag=2
-                    SendFunc.scanWifi()
-                    timer_scanwifi.restart()
+                    if(systemSettings.wifiEnable==false)
+                        SendFunc.enableWifi(true)
+                    else
+                    {
+                        getQuadScanWifi()
+                    }
                 }
                 else
                 {
                     productionTestFlag=3
                 }
             }
-            else if("WifiScanR"==key && productionTestFlag==2 && QmlDevState.state.DeviceSecret==="")
+            else if("WifiScanR"==key && systemSettings.wifiEnable>0)
             {
-                productionTestFlag=3
-                parseWifiList(value)
+                setWifiList(value)
+                if( productionTestFlag==2 && QmlDevState.state.DeviceSecret==="")
+                {
+                    parseWifiList()
+                }
             }
         }
     }
+
+    function setWifiList(sanR)
+    {
+        var root=JSON.parse(sanR)
+        //        console.log("setWifiList:" ,sanR,root.length)
+        root.sort(function(a, b){return b.rssi - a.rssi})
+        wifiModel.clear()
+        var result={}
+
+        for(var i = 0; i < root.length; ++i) {
+            if(root[i].ssid==="")
+                continue
+            result.connected=0
+
+            result.ssid=root[i].ssid
+            result.level=WifiFunc.signalLevel(root[i].rssi)
+            result.flags=WifiFunc.encrypType(root[i].flags)
+
+            if(root[i].bssid===QmlDevState.state.bssid)
+            {
+                if(wifiConnected==false)
+                    wifiConnected=true
+                result.connected=1
+                wifiModel.insert(0,result)
+            }
+            else
+                wifiModel.append(result)
+            console.log("result:",QmlDevState.state.bssid,root[i].bssid,root[i].rssi,result.connected,result.ssid,result.level,result.flags)
+        }
+        if(QmlDevState.state.bssid=="")
+        {
+            wifiConnected=false
+        }
+    }
+
     Component{
         id:component_burn_wifi
         Item {
@@ -444,24 +511,39 @@ Item {
         }
     }
     function showBurnWifi(){
-        loader_main.sourceComponent = component_burn_wifi
+        if(loader_main.status == Loader.Null || loader_main.status == Loader.Error)
+            loader_main.sourceComponent = component_burn_wifi
+    }
+    function getQuadScanWifi()
+    {
+        SendFunc.scanWifi()
+        timer_scanwifi.restart()
     }
 
-    function parseWifiList(sanR)
+    function parseWifiList()
     {
-        var root=JSON.parse(sanR)
         var i
-        for( i = 0; i < root.length; ++i) {
-            if(root[i].ssid===productionTestWIFISSID)
+        for( i = 0; i < wifiModel.count; ++i) {
+            if(wifiModel.get(i).ssid==productionTestWIFISSID)
             {
+                wifiModel.setProperty(0,"connected",0)
+                wifiModel.setProperty(i,"connected",2)
+                wifiModel.move(i,0,1)
                 break
             }
         }
-        if(i == root.length)
+        if(i == wifiModel.count)
         {
+            if(productionTestFlag==2)
+            {
+                productionTestFlag=3
+                getQuadScanWifi()
+                return
+            }
             showBurnWifi()
             return
         }
+        productionTestFlag=3
         load_page("pageGetQuad")
     }
     Timer{
@@ -479,7 +561,7 @@ Item {
 
         QmlDevState.startLocalConnect()
         //        showAlarm()
-        //showLoaderFault("左腔蒸箱加热异常！","请拨打售后电话 <font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员");
+        //        showLoaderFault("左腔蒸箱加热异常！","请拨打售后电话 <font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员");
         //        showLoaderFaultImg("/x50/icon/icon_pop_th.png","记得及时清理油盒\n保持清洁哦")
         //                showLoaderFaultCenter("左腔门开启，工作暂停",275)
         //                showLoaderFaultCenter("右灶未开启\n开启后才可定时关火",275)
@@ -490,6 +572,7 @@ Item {
     }
 
     Item{
+        id:swipe
         anchors.top:parent.top
         width:parent.width
         height: 400
@@ -533,54 +616,53 @@ Item {
                 implicitHeight: 4
             }
         }
-        Button{
-            id:preBtn
-            width:60
-            height:80
-            anchors.left:parent.left
-
-            anchors.verticalCenter: parent.verticalCenter
-            visible: swipeview.currentIndex===0?false:true
-            background:Image{
-                asynchronous:true
-                anchors.centerIn: parent
-                source: themesImagesPath+"previouspage-background.png"
-            }
-            onClicked:{
-                console.log('preBtn',swipeview.currentIndex)
-                if(swipeview.currentIndex>0){
-                    //                    swipeview.currentIndex-=1
-                    //                    swipeview.setCurrentIndex(swipeview.currentIndex-1)
-                    swipeview.decrementCurrentIndex()
-                }
-            }
-        }
-
-        Button{
-            id:nextBtn
-            width:60
-            height:80
-            anchors.right:parent.right
-
-            anchors.verticalCenter: parent.verticalCenter
-            visible: swipeview.currentIndex===(swipeview.count-1)?false:true
-            background:Image{
-                asynchronous:true
-                anchors.centerIn: parent
-                source: themesImagesPath+"nextpage-background.png"
-            }
-            onClicked:{
-                console.log('nextBtn',swipeview.currentIndex)
-                if(swipeview.currentIndex < swipeview.count){
-                    //                    swipeview.currentIndex+=1
-                    //                    swipeview.setCurrentIndex(swipeview.currentIndex+1)
-                    swipeview.incrementCurrentIndex()
-                }
-            }
-        }
-
     }
+    Button{
+        id:preBtn
+        width:60
+        height:100
+        anchors.left:parent.left
 
+        anchors.verticalCenter: swipe.verticalCenter
+        visible: swipeview.currentIndex===0?false:true
+        background:Image{
+            asynchronous:true
+            smooth:false
+            anchors.centerIn: parent
+            source: themesImagesPath+"previouspage-background.png"
+        }
+        onClicked:{
+            console.log('preBtn',swipeview.currentIndex)
+            if(swipeview.currentIndex>0){
+                //                    swipeview.currentIndex-=1
+                //                    swipeview.setCurrentIndex(swipeview.currentIndex-1)
+                swipeview.decrementCurrentIndex()
+            }
+        }
+    }
+    Button{
+        id:nextBtn
+        width:60
+        height:100
+        anchors.right:parent.right
+
+        anchors.verticalCenter: swipe.verticalCenter
+        visible: swipeview.currentIndex===(swipeview.count-1)?false:true
+        background:Image{
+            asynchronous:true
+            smooth:false
+            anchors.centerIn: parent
+            source: themesImagesPath+"nextpage-background.png"
+        }
+        onClicked:{
+            console.log('nextBtn',swipeview.currentIndex)
+            if(swipeview.currentIndex < swipeview.count){
+                //                    swipeview.currentIndex+=1
+                //                    swipeview.setCurrentIndex(swipeview.currentIndex+1)
+                swipeview.incrementCurrentIndex()
+            }
+        }
+    }
     PageHomeBar {
         anchors.bottom: parent.bottom
     }

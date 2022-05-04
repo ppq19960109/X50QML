@@ -3,7 +3,7 @@ import QtQuick.Controls 2.2
 import "qrc:/SendFunc.js" as SendFunc
 Item {
     property int device
-    property real percent:-1
+    property real percent:0
     property int roate:0
 
     property int workState
@@ -14,7 +14,7 @@ Item {
 
     property alias workTime:time.text
     property alias workTemp:temp.text
-
+    signal confirm()
     function updatePaint()
     {
 //        console.log("updatePaint:",device,mode.text,percent,roate)
@@ -128,8 +128,8 @@ Item {
         }
     }
     Item{
-        //        width:canvas.width
-        //        height: canvas.height
+//                width:canvas.width
+//                height: canvas.height
         anchors.fill: parent
 
         Text{
@@ -153,14 +153,17 @@ Item {
 
             Text{
                 id:time
+
+                textFormat: Text.RichText
                 anchors.top:parent.top
                 anchors.horizontalCenter: parent.horizontalCenter
-                anchors.horizontalCenterOffset: -20
+                anchors.horizontalCenterOffset: workState === workStateEnum.WORKSTATE_RUN?-20:0
                 color:workColor
                 font.pixelSize: 70
-                font.bold: true
+                font.bold: workState === workStateEnum.WORKSTATE_RUN?true:false
             }
             Text{
+                visible: workState === workStateEnum.WORKSTATE_RUN
                 anchors.left: time.right
                 anchors.leftMargin: 5
                 anchors.bottom: time.bottom
@@ -191,22 +194,12 @@ Item {
             }
             onClicked:{
                 console.log("PageCirProgressBar device",device)
-                if(workState===workStateEnum.WORKSTATE_FINISH)
-                {
-                    //                    if(leftDevice==device)
-                    //                    {
-                    //                        QmlDevState.setState("LStOvState",workStateEnum.WORKSTATE_STOP)
-                    //                    }
-                    //                    else
-                    //                    {
-                    //                        QmlDevState.setState("RStOvState",workStateEnum.WORKSTATE_STOP)
-                    //                    }
-                    SendFunc.setCookOperation(device,workOperationEnum.CONFIRM)
-                }
+                confirm()
             }
         }
         Image {
             asynchronous:true
+            smooth:false
             visible: workState === workStateEnum.WORKSTATE_STOP
             anchors.top:parent.top
             anchors.topMargin:90
@@ -215,13 +208,16 @@ Item {
         }
         Text{
             id:mode
+            width:200
             visible: workState !== workStateEnum.WORKSTATE_FINISH
             color:themesTextColor2
             font.pixelSize: workState === workStateEnum.WORKSTATE_STOP?32:30
             anchors.top:parent.top
-            anchors.topMargin: workState === workStateEnum.WORKSTATE_STOP?200:190
+            anchors.topMargin: workState === workStateEnum.WORKSTATE_STOP?200:194
             anchors.horizontalCenter: parent.horizontalCenter
-            elide : Text.ElideRight
+            horizontalAlignment:Text.AlignHCenter
+            verticalAlignment:Text.AlignVCenter
+            elide: Text.ElideRight
         }
         Text{
             id:temp

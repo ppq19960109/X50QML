@@ -61,7 +61,7 @@ Rectangle {
         }
         if(root[i].rssi > -75)
         {
-            SendFunc.connectWiFi("IoT-Test",productionTestWIFIPWD,1)
+            SendFunc.connectWiFi(productionTestWIFISSID,productionTestWIFIPWD,1)
         }
     }
 

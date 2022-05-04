@@ -4,6 +4,7 @@ import QtQuick.Controls 2.2
 Image {
     id: busyImg
     asynchronous:true
+    smooth:false
     RotationAnimator {
         target: busyImg
         running: busyImg.visible

@@ -2,6 +2,8 @@ import QtQuick 2.7
 import QtQuick.Controls 2.2
 
 Item {
+    property var para
+    property int cookDialog:0
     property alias hintTopText: hintTop.text
     property alias confirmText: confirmBtnText.text
     property alias checkboxVisible: control.visible
@@ -45,6 +47,7 @@ Item {
             Image {
                 id:closeImg
                 asynchronous:true
+                smooth:false
                 anchors.centerIn: parent
                 source: themesImagesPath+"icon-window-close.png"
             }

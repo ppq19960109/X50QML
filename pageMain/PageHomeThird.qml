@@ -16,6 +16,7 @@ Item {
 
             background:Image {
                 asynchronous:true
+                smooth:false
                 source: themesImagesPath+"homethird-button1-background.png"
             }
             Text{
@@ -37,6 +38,7 @@ Item {
             height:312
             background:Image {
                 asynchronous:true
+                smooth:false
                 source: themesImagesPath+"homethird-button2-background.png"
             }
             Text{
