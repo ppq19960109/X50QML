@@ -79,11 +79,11 @@ Item {
             }
             Image{
                 id:wind_icon
-                visible: QmlDevState.state.HoodSpeed!=null && QmlDevState.state.HoodSpeed!=0
+                visible: QmlDevState.state.HoodSpeed!=0
                 asynchronous:true
                 smooth:false
                 anchors.centerIn: parent
-                source: themesImagesPath+"icon_wind_"+QmlDevState.state.HoodSpeed+".png"
+                source: QmlDevState.state.HoodSpeed!=0?(themesImagesPath+"icon_wind_"+QmlDevState.state.HoodSpeed+".png"):""
             }
             onClicked: {
 

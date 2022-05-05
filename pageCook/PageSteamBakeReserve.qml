@@ -2,6 +2,7 @@ import QtQuick 2.7
 import QtQuick.Controls 2.2
 
 import "qrc:/CookFunc.js" as CookFunc
+import "qrc:/SendFunc.js" as SendFunc
 import "../"
 Item {
     property var root
@@ -70,14 +71,14 @@ Item {
 
         console.log("state",state,typeof state)
         root=JSON.parse(state)
-
+        SendFunc.permitSteamStartStatus(1)
     }
     //'<font size="5">测试</font>
 
     PageBackBar{
         id:topBar
         anchors.bottom:parent.bottom
-        name:"预约  <font size='30px'>("+root.dishName+")</font>"
+        name:"预约  "+(root.dishName==""?"":"<font size='30px'>("+root.dishName+")</font>")
         leftBtnText:qsTr("")
 //                rightBtnText:qsTr("启动")
         onClose:{

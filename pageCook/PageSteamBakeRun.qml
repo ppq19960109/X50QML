@@ -326,37 +326,37 @@ Rectangle {
         }
 
     }
-    //    Rectangle{
-    //        id:statusBar
-    //        width:parent.width
-    //        height: 80
-    //        anchors.bottom: parent.bottom
-    //        Slider {
-    //            id: slider
-    //            anchors.centerIn: parent
-    //            stepSize: 2
-    //            to: 100
-    //            value: 30
-    //            onValueChanged: {
-    //                console.log("slider:",value)
+//    Rectangle{
+//        id:statusBar
+//        width:parent.width
+//        height: 80
+//        anchors.bottom: parent.bottom
+//        Slider {
+//            id: slider
+//            anchors.centerIn: parent
+//            stepSize: 2
+//            to: 100
+//            value: 30
+//            onValueChanged: {
+//                console.log("slider:",value)
 
-    //                QmlDevState.setState("LStOvSetTimerLeft",100-value)
-    //                QmlDevState.setState("LStOvSetTimer",100)
-    //                QmlDevState.setState("LStOvOrderTimerLeft",100-value)
-    //                QmlDevState.setState("LStOvOrderTimer",100)
-    //                QmlDevState.setState("RStOvSetTimerLeft",100-value)
-    //                QmlDevState.setState("RStOvSetTimer",100)
-    //                QmlDevState.setState("RStOvOrderTimerLeft",100-value)
-    //                QmlDevState.setState("RStOvOrderTimer",100)
-    //                                        if(value==100)
-    //                                        {
-    //                                            QmlDevState.setState("LStOvState",4)
-    //                                            QmlDevState.setState("RStOvState",4)
-    //                                        }
+//                QmlDevState.setState("LStOvSetTimerLeft",100-value)
+//                QmlDevState.setState("LStOvSetTimer",100)
+//                QmlDevState.setState("LStOvOrderTimerLeft",100-value)
+//                QmlDevState.setState("LStOvOrderTimer",100)
+//                QmlDevState.setState("RStOvSetTimerLeft",100-value)
+//                QmlDevState.setState("RStOvSetTimer",100)
+//                QmlDevState.setState("RStOvOrderTimerLeft",100-value)
+//                QmlDevState.setState("RStOvOrderTimer",100)
+//                if(value==100)
+//                {
+//                    QmlDevState.setState("LStOvState",4)
+//                    QmlDevState.setState("RStOvState",4)
+//                }
 
-    //            }
-    //        }
-    //    }
+//            }
+//        }
+//    }
     PageHomeBar {
         id:statusBar
         anchors.bottom: parent.bottom

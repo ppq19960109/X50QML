@@ -211,6 +211,44 @@ ApplicationWindow {
             loader_main.item.hintTopText=title
         }
     }
+    Component{
+        id:component_popup
+        PagePopup{
+            hintTopText:""
+            hintHeight:306
+            confirmText:""
+            onCancel: {
+                closeLoaderPopup()
+            }
+        }
+    }
+    function showLoaderPopup(hintCenterText,hintHeight,confirmText,confirmFunc){
+        if(loader_main.status == Loader.Null || loader_main.status == Loader.Error|| loader_main.sourceComponent === component_popup)
+        {
+            loader_main.sourceComponent = component_popup
+            loader_main.item.hintCenterText=hintCenterText
+            loader_main.item.hintHeight=hintHeight
+            if(confirmText!=null)
+                loader_main.item.confirmText=confirmText
+            if(confirmFunc!=null)
+                loader_main.item.confirmFunc=confirmFunc
+        }
+    }
+    function closeLoaderPopup(){
+        if(loader_main.sourceComponent === component_popup)
+            loader_main.sourceComponent = undefined
+    }
+    function closeLoaderDoorPopup(dir){
+        if(loader_main.sourceComponent === component_popup)
+        {
+            if(loader_main.item.hintCenterText.indexOf("门开启")!=-1 &&  loader_main.item.hintCenterText.indexOf(dir)!=-1)
+                loader_main.sourceComponent = undefined
+        }
+    }
+    function hoodOffconfirmFunc(hintTopText,confirmText){
+        SendFunc.closeHoodOff()
+        closeLoaderPopup()
+    }
     //---------------------------------------------------------------
     Loader{
         //加载弹窗组件
@@ -255,19 +293,6 @@ ApplicationWindow {
     function closeLoaderFault(){
         if(loader_error.sourceComponent === component_fault)
             loader_error.sourceComponent = undefined
-    }
-
-    function showLoaderDoorState(hintCenterText,hintHeight){
-        if(loader_main.status == Loader.Null || loader_main.status == Loader.Error|| loader_main.sourceComponent === component_fault)
-        {
-            loader_main.sourceComponent = component_fault
-            loader_main.item.hintCenterText=hintCenterText
-            loader_main.item.hintHeight=hintHeight
-        }
-    }
-    function closeLoaderDoorState(){
-        if(loader_main.sourceComponent === component_fault)
-            loader_main.sourceComponent = undefined
     }
     //---------------------------------------------------------------
     Loader{
@@ -595,51 +620,52 @@ ApplicationWindow {
         if(cookSteps==null)
         {
             SendFunc.setCooking(cookSteps,root.orderTime,root.cookPos)
-            return
-        }
-
-        console.log("startCooking:",JSON.stringify(root),JSON.stringify(cookSteps))
-        if(cookSteps.length===1 && (undefined === cookSteps[0].number || 0 === cookSteps[0].number))
-        {
-            SendFunc.setCooking(cookSteps,root.orderTime,root.cookPos)
-            //            if(leftDevice===root.cookPos)
-            //            {
-            //                QmlDevState.setState("LStOvState",1)
-            //                QmlDevState.setState("LStOvMode",cookSteps[0].mode)
-            //                QmlDevState.setState("LStOvSetTemp",cookSteps[0].temp)
-            //                QmlDevState.setState("LStOvRealTemp",cookSteps[0].temp)
-            //                QmlDevState.setState("LStOvSetTimer",cookSteps[0].time)
-            //                QmlDevState.setState("LStOvSetTimerLeft",cookSteps[0].time)
-            //                QmlDevState.setState("LStOvOrderTimer",cookSteps[0].time)
-            //                QmlDevState.setState("LStOvOrderTimerLeft",cookSteps[0].time)
-            //            }
-            //            else
-            //            {
-            //                QmlDevState.setState("RStOvState",1)
-            //                QmlDevState.setState("RStOvRealTemp",cookSteps[0].temp)
-            //                QmlDevState.setState("RStOvSetTimerLeft",cookSteps[0].time)
-            //                QmlDevState.setState("RStOvSetTimer",cookSteps[0].time)
-            //                QmlDevState.setState("RStOvOrderTimer",cookSteps[0].time)
-            //                QmlDevState.setState("RStOvOrderTimerLeft",cookSteps[0].time/2)
-            //            }
         }
         else
         {
-            if(root.recipeType>0)
+            console.log("startCooking:",JSON.stringify(root),JSON.stringify(cookSteps))
+            if(cookSteps.length===1 && (undefined === cookSteps[0].number || 0 === cookSteps[0].number))
             {
-                SendFunc.setMultiCooking(cookSteps,root.orderTime,root.dishName,root.recipeid)
+                SendFunc.setCooking(cookSteps,root.orderTime,root.cookPos)
+                //            if(leftDevice===root.cookPos)
+                //            {
+                //                QmlDevState.setState("LStOvState",1)
+                //                QmlDevState.setState("LStOvMode",cookSteps[0].mode)
+                //                QmlDevState.setState("LStOvSetTemp",cookSteps[0].temp)
+                //                QmlDevState.setState("LStOvRealTemp",cookSteps[0].temp)
+                //                QmlDevState.setState("LStOvSetTimer",cookSteps[0].time)
+                //                QmlDevState.setState("LStOvSetTimerLeft",cookSteps[0].time)
+                //                QmlDevState.setState("LStOvOrderTimer",cookSteps[0].time)
+                //                QmlDevState.setState("LStOvOrderTimerLeft",cookSteps[0].time)
+                //            }
+                //            else
+                //            {
+                //                QmlDevState.setState("RStOvState",1)
+                //                QmlDevState.setState("RStOvRealTemp",cookSteps[0].temp)
+                //                QmlDevState.setState("RStOvSetTimerLeft",cookSteps[0].time)
+                //                QmlDevState.setState("RStOvSetTimer",cookSteps[0].time)
+                //                QmlDevState.setState("RStOvOrderTimer",cookSteps[0].time)
+                //                QmlDevState.setState("RStOvOrderTimerLeft",cookSteps[0].time/2)
+                //            }
             }
             else
             {
-                SendFunc.setMultiCooking(cookSteps,root.orderTime)
-            }
-            //            QmlDevState.setState("LStOvState",1)
-            //            QmlDevState.setState("LStOvMode",cookSteps[0].mode)
-            //            QmlDevState.setState("LStOvRealTemp",cookSteps[0].temp)
-            //            QmlDevState.setState("LStOvOrderTimerLeft",cookSteps[0].time)
+                if(root.recipeType>0)
+                {
+                    SendFunc.setMultiCooking(cookSteps,root.orderTime,root.dishName,root.recipeid)
+                }
+                else
+                {
+                    SendFunc.setMultiCooking(cookSteps,root.orderTime)
+                }
+                //            QmlDevState.setState("LStOvState",1)
+                //            QmlDevState.setState("LStOvMode",cookSteps[0].mode)
+                //            QmlDevState.setState("LStOvRealTemp",cookSteps[0].temp)
+                //            QmlDevState.setState("LStOvOrderTimerLeft",cookSteps[0].time)
 
-            //            QmlDevState.setState("cnt",cookSteps.length)
-            //            QmlDevState.setState("current",2)
+                //            QmlDevState.setState("cnt",cookSteps.length)
+                //            QmlDevState.setState("current",2)
+            }
         }
         var page=isExistView("pageSteamBakeRun")
         if(page!==null)

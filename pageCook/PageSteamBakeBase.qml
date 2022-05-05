@@ -133,7 +133,7 @@ Rectangle {
         id:topBar
         anchors.bottom:parent.bottom
         name:""
-        //        leftBtnText:qsTr("启动")
+//        leftBtnText:qsTr("启动")
         rightBtnText:qsTr("预约")
         onClose:{
 

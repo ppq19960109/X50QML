@@ -88,8 +88,8 @@ Item {
                 {
                     if(device==leftDevice)
                     {
-                        gr.addColorStop(0, "#A0420F")
-                        gr.addColorStop(1, "#E68855")
+                        gr.addColorStop(1, "#A0420F")
+                        gr.addColorStop(0, "#E68855")
                     }
                     else
                     {
@@ -103,7 +103,7 @@ Item {
                     }
                     else
                     {
-                        ctx.arc(0, 0, r, (1.92*percent/100-0.5+0.04)*Math.PI, (1.5-0.04)*Math.PI)
+                        ctx.arc(0, 0, r, (-0.5+0.04)*Math.PI, (1.5-0.04-1.92*percent/100)*Math.PI)
                     }
                 }
                 ctx.stroke()

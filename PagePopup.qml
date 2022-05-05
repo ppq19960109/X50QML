@@ -3,8 +3,10 @@ import QtQuick.Controls 2.2
 
 Item {
     property alias hintTopText: hintTop.text
+    property alias hintCenterText: hintCenter.text
     property alias confirmText: confirmBtnText.text
     property alias hintHeight: hint.height
+    property var confirmFunc:null
     signal cancel()
     signal confirm()
     MouseArea{
@@ -19,23 +21,23 @@ Item {
         implicitHeight: 305
         color: themesPopupWindowColor
         radius: 16
-//        PageGradient{
-//            anchors.fill: parent
-//        }
+        //        PageGradient{
+        //            anchors.fill: parent
+        //        }
         Button {
             width:closeImg.width+60
             height:closeImg.height+60
             anchors.top:parent.top
-//            anchors.topMargin: 33
+            //            anchors.topMargin: 33
             anchors.right:parent.right
-//            anchors.rightMargin: 33
+            //            anchors.rightMargin: 33
 
             Image {
                 id:closeImg
                 asynchronous:true
                 smooth:false
                 anchors.centerIn: parent
-                source: "/x50/icon/icon_close.png"
+                source: themesImagesPath+"icon-window-close.png"
             }
             background: Item {}
             onClicked: {
@@ -56,9 +58,19 @@ Item {
             verticalAlignment: Text.AlignVCenter
             lineHeight :1.2
             wrapMode:Text.WrapAnywhere
-
         }
+        Text{
+            id:hintCenter
+            visible: hintCenter.text!=""
+            width:parent.width
+            color:"white"
+            font.pixelSize: 40
+            anchors.centerIn: parent
+            horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignVCenter
 
+            wrapMode:Text.Wrap
+        }
 
         Button {
             id:confirmBtn
@@ -87,6 +99,8 @@ Item {
             }
             onClicked: {
                 confirm()
+                if(confirmFunc!=null)
+                    confirmFunc()
             }
         }
     }

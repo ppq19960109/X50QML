@@ -37,7 +37,7 @@ Item {
 
         PageScrollBarText{
             anchors.fill: parent
-            text:"系统版本\n"+QmlDevState.state.ComSWVersion+"UI版本\n"+uiVersion+"\n更新日志\n"+QmlDevState.state.UpdateLog
+            text:"系统版本:"+QmlDevState.state.ComSWVersion+"\nUI版本:"+uiVersion+"\n更新日志\n"+QmlDevState.state.UpdateLog
         }
     }
 }

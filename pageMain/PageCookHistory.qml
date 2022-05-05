@@ -34,7 +34,9 @@ Item {
 
         QmlDevState.sortHistory()
         getHistory(cookPos)
-        SendFunc.permitSteamStartStatus(1)
+
+        if(recipeListView.visible===true)
+            SendFunc.permitSteamStartStatus(1)
     }
     ListModel {
         id:historyModel
@@ -68,6 +70,8 @@ Item {
         if(action=="InsertHistory")
         {
             historyModel.append(value)
+            if(historyModel.count==1)
+                SendFunc.permitSteamStartStatus(1)
         }
         else if(action=="DeleteHistory")
         {
@@ -76,6 +80,8 @@ Item {
                 {
                     historyModel.remove(i,1)
                     console.warn("PageCookHistory DeleteHistory",value.id,i)
+                    if(historyModel.count==0)
+                        SendFunc.permitSteamStartStatus(0)
                     break
                 }
             }

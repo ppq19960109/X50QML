@@ -58,33 +58,6 @@ Item {
     }
 
     Component{
-        id:component_hoodOff
-        PagePopup{
-            hintTopText:""
-            hintHeight:306
-            confirmText:""
-            onCancel: {
-                closeHoodOff()
-            }
-            onConfirm: {
-                SendFunc.closeHoodOff()
-                closeHoodOff()
-            }
-        }
-    }
-    function showHoodOff(hintTopText,confirmText){
-        if(loader_main.status == Loader.Null || loader_main.status == Loader.Error)
-        {
-            loader_main.sourceComponent = component_hoodOff
-            loader_main.item.hintTopText=hintTopText
-            loader_main.item.confirmText=confirmText
-        }
-    }
-    function closeHoodOff(){
-        if(loader_main.sourceComponent === component_hoodOff)
-            loader_main.sourceComponent = undefined
-    }
-    Component{
         id:component_updateConfirm
         PageDialogConfirm{
             hintTopText:"系统更新"
@@ -243,11 +216,12 @@ Item {
                     if(value==5)
                     {
                         if(QmlDevState.state.LStOvDoorState==1)
-                            showLoaderDoorState("左腔门开启，工作暂停",275)
+                            showLoaderPopup("左腔门开启，工作暂停",275)
                     }
                     else
                     {
-                        closeLoaderDoorState()
+                        if(QmlDevState.state.LStOvDoorState==0)
+                            closeLoaderDoorPopup("左腔")
                     }
                 }
                 lastLStOvState=value
@@ -279,11 +253,12 @@ Item {
                     if(value==5)
                     {
                         if(QmlDevState.state.RStOvDoorState==1)
-                            showLoaderDoorState("右腔门开启，工作暂停",275)
+                            showLoaderPopup("右腔门开启，工作暂停",275)
                     }
                     else
                     {
-                        closeLoaderDoorState()
+                        if(QmlDevState.state.RStOvDoorState==0)
+                            closeLoaderDoorPopup("右腔")
                     }
                 }
                 lastRStOvState=value
@@ -575,8 +550,8 @@ Item {
         //        showAlarm()
         //        showLoaderFault("左腔蒸箱加热异常！","请拨打售后电话 <font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员");
         //        showLoaderFaultImg("/x50/icon/icon_pop_th.png","记得及时清理油盒\n保持清洁哦")
-        //                showLoaderFaultCenter("左腔门开启，工作暂停",275)
-        //                showLoaderFaultCenter("右灶未开启\n开启后才可定时关火",275)
+        //                        showLoaderPopup("左腔门开启，工作暂停",275)
+        //                showLoaderPopup("右灶未开启\n开启后才可定时关火",275)
     }
     StackView.onActivated:{
         console.log("page home onActivated")
