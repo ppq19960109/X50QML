@@ -30,9 +30,15 @@ Item {
                 console.log("page wifi WifiState:",value)
                 if(value > 1)
                 {
-                    if(value==2||value==3|| value==5)
+                    if(value==2| value==5)
                     {
-                        showLoaderFaultImg("/x50/icon/icon_pop_th.png","联网超时，请重试")
+                        if(systemSettings.wifiEnable)
+                            showLoaderFaultImg("/x50/icon/icon_pop_th.png","联网超时，请重试")
+                    }
+                    else if(value==3)
+                    {
+                        if(systemSettings.wifiEnable)
+                            showLoaderFaultImg("/x50/icon/icon_pop_th.png","密码错误，连接失败")
                     }
                     else if(value==4)
                     {
@@ -65,7 +71,6 @@ Item {
     }
 
     Timer{
-
         id:timer_wifi_scan
         repeat: true
         running: systemSettings.wifiEnable

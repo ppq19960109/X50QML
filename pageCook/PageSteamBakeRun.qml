@@ -92,15 +92,21 @@ Rectangle {
             anchors.leftMargin: 75
 
             workColor:"#E68855"
+            workState:QmlDevState.state.LStOvState
             workMode:workState===workStateEnum.WORKSTATE_STOP?qsTr("左腔烹饪"):QmlDevState.state.MultiMode===1?QmlDevState.state.CookbookName:CookFunc.leftWorkModeFun(QmlDevState.state.LStOvMode)
             canvasDiameter:width
             percent:workState === workStateEnum.WORKSTATE_RESERVE?(100-100*QmlDevState.state.LStOvOrderTimerLeft/QmlDevState.state.LStOvOrderTimer):(100-100*QmlDevState.state.LStOvSetTimerLeft/QmlDevState.state.LStOvSetTimer)
-            workState:QmlDevState.state.LStOvState
+
+            orderTimeLeft:QmlDevState.state.LStOvOrderTimerLeft
             workTime:
             {
-                if(workState === workStateEnum.WORKSTATE_RESERVE)
+                if(workState === workStateEnum.WORKSTATE_PREHEAT)
                 {
-                    var time=QmlDevState.state.LStOvOrderTimerLeft
+                    return QmlDevState.state.LStOvRealTemp
+                }
+                else if(workState === workStateEnum.WORKSTATE_RESERVE || (workState === workStateEnum.WORKSTATE_PAUSE && orderTimeLeft!=0))
+                {
+                    var time=orderTimeLeft
                     return (time<600?"0":"")+ Math.floor(time/60)+":"+(time%60<10?"0":"")+time%60//
                 }
                 else
@@ -233,11 +239,28 @@ Rectangle {
             anchors.rightMargin: 75
 
             workColor:"#DE932F"
+            workState:QmlDevState.state.RStOvState
             workMode:workState===workStateEnum.WORKSTATE_STOP?qsTr("右腔烹饪"):rightWorkMode
             canvasDiameter:width
             percent:workState === workStateEnum.WORKSTATE_RESERVE?(100-100*QmlDevState.state.RStOvOrderTimerLeft/QmlDevState.state.RStOvOrderTimer):(100-100*QmlDevState.state.RStOvSetTimerLeft/QmlDevState.state.RStOvSetTimer)
-            workState:QmlDevState.state.RStOvState
-            workTime:workState === workStateEnum.WORKSTATE_RESERVE?QmlDevState.state.RStOvOrderTimerLeft:QmlDevState.state.RStOvSetTimerLeft
+
+            orderTimeLeft:QmlDevState.state.RStOvOrderTimerLeft
+            workTime:
+            {
+                if(workState === workStateEnum.WORKSTATE_PREHEAT)
+                {
+                    return QmlDevState.state.RStOvRealTemp
+                }
+                else if(workState === workStateEnum.WORKSTATE_RESERVE || (workState === workStateEnum.WORKSTATE_PAUSE && orderTimeLeft!=0))
+                {
+                    var time=orderTimeLeft
+                    return (time<600?"0":"")+ Math.floor(time/60)+":"+(time%60<10?"0":"")+time%60//
+                }
+                else
+                {
+                    return QmlDevState.state.RStOvSetTimerLeft
+                }
+            }
             workTemp:qsTr(QmlDevState.state.RStOvSetTemp+"℃")
             MouseArea{
                 anchors.fill: parent
@@ -326,37 +349,37 @@ Rectangle {
         }
 
     }
-//    Rectangle{
-//        id:statusBar
-//        width:parent.width
-//        height: 80
-//        anchors.bottom: parent.bottom
-//        Slider {
-//            id: slider
-//            anchors.centerIn: parent
-//            stepSize: 2
-//            to: 100
-//            value: 30
-//            onValueChanged: {
-//                console.log("slider:",value)
+    //    Rectangle{
+    //        id:statusBar
+    //        width:parent.width
+    //        height: 80
+    //        anchors.bottom: parent.bottom
+    //        Slider {
+    //            id: slider
+    //            anchors.centerIn: parent
+    //            stepSize: 2
+    //            to: 100
+    //            value: 30
+    //            onValueChanged: {
+    //                console.log("slider:",value)
 
-//                QmlDevState.setState("LStOvSetTimerLeft",100-value)
-//                QmlDevState.setState("LStOvSetTimer",100)
-//                QmlDevState.setState("LStOvOrderTimerLeft",100-value)
-//                QmlDevState.setState("LStOvOrderTimer",100)
-//                QmlDevState.setState("RStOvSetTimerLeft",100-value)
-//                QmlDevState.setState("RStOvSetTimer",100)
-//                QmlDevState.setState("RStOvOrderTimerLeft",100-value)
-//                QmlDevState.setState("RStOvOrderTimer",100)
-//                if(value==100)
-//                {
-//                    QmlDevState.setState("LStOvState",4)
-//                    QmlDevState.setState("RStOvState",4)
-//                }
+    //                QmlDevState.setState("LStOvSetTimerLeft",100-value)
+    //                QmlDevState.setState("LStOvSetTimer",100)
+    //                QmlDevState.setState("LStOvOrderTimerLeft",100-value)
+    //                QmlDevState.setState("LStOvOrderTimer",100)
+    //                QmlDevState.setState("RStOvSetTimerLeft",100-value)
+    //                QmlDevState.setState("RStOvSetTimer",100)
+    //                QmlDevState.setState("RStOvOrderTimerLeft",100-value)
+    //                QmlDevState.setState("RStOvOrderTimer",100)
+    //                if(value==100)
+    //                {
+    //                    QmlDevState.setState("LStOvState",4)
+    //                    QmlDevState.setState("RStOvState",4)
+    //                }
 
-//            }
-//        }
-//    }
+    //            }
+    //        }
+    //    }
     PageHomeBar {
         id:statusBar
         anchors.bottom: parent.bottom

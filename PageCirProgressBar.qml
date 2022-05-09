@@ -8,23 +8,25 @@ Item {
 
     property int workState
     property var workColor
+    property int orderTimeLeft:0
 
     property alias workMode:mode.text
     property alias canvasDiameter:canvas.width
 
     property alias workTime:time.text
     property alias workTemp:temp.text
+
     signal confirm()
     function updatePaint()
     {
-//        console.log("updatePaint:",device,mode.text,percent,roate)
+        //        console.log("updatePaint:",device,mode.text,percent,roate)
         canvas.requestPaint()
     }
     onWorkStateChanged: {
-//        if(workState === workStateEnum.WORKSTATE_STOP||workState === workStateEnum.WORKSTATE_FINISH||workState === workStateEnum.WORKSTATE_PREHEAT)
-//        {
-//            percent=-1
-//        }
+        //        if(workState === workStateEnum.WORKSTATE_STOP||workState === workStateEnum.WORKSTATE_FINISH||workState === workStateEnum.WORKSTATE_PREHEAT)
+        //        {
+        //            percent=-1
+        //        }
         updatePaint()
     }
     onPercentChanged: {
@@ -128,49 +130,48 @@ Item {
         }
     }
     Item{
-//                width:canvas.width
-//                height: canvas.height
+        //                width:canvas.width
+        //                height: canvas.height
         anchors.fill: parent
 
         Text{
             id:state
-            color:(workState === workStateEnum.WORKSTATE_PREHEAT ||workState === workStateEnum.WORKSTATE_FINISH) ?workColor:"#D7D7D7"
+            color:(workState === workStateEnum.WORKSTATE_FINISH) ?workColor:"#D7D7D7"
             visible: workState !== workStateEnum.WORKSTATE_STOP
-            font.pixelSize:(workState === workStateEnum.WORKSTATE_PREHEAT ||workState === workStateEnum.WORKSTATE_FINISH) ? 45:32
+            font.pixelSize:(workState === workStateEnum.WORKSTATE_FINISH) ? 45:32
             anchors.top:parent.top
-            anchors.topMargin: (workState === workStateEnum.WORKSTATE_PREHEAT ||workState === workStateEnum.WORKSTATE_FINISH) ? 116:75
+            anchors.topMargin: (workState === workStateEnum.WORKSTATE_FINISH) ? 116:75
             anchors.horizontalCenter: parent.horizontalCenter
             //            horizontalAlignment :Text.AlignHCenter
             //            verticalAlignment :Text.AlignHCenter
-            text: workStateArray[workState]
+            text: workStateArray[workState]+((workState === workStateEnum.WORKSTATE_PAUSE && orderTimeLeft!=0)?"预约":"")
         }
         Item
         {
-            visible: !(workState === workStateEnum.WORKSTATE_PREHEAT ||workState === workStateEnum.WORKSTATE_FINISH||workState === workStateEnum.WORKSTATE_STOP)
+            visible: !(workState === workStateEnum.WORKSTATE_FINISH||workState === workStateEnum.WORKSTATE_STOP)
             anchors.top:parent.top
             anchors.topMargin:120
             anchors.horizontalCenter: parent.horizontalCenter
 
             Text{
                 id:time
-
                 textFormat: Text.RichText
                 anchors.top:parent.top
                 anchors.horizontalCenter: parent.horizontalCenter
-                anchors.horizontalCenterOffset: workState === workStateEnum.WORKSTATE_RUN?-20:0
+                anchors.horizontalCenterOffset:(workState === workStateEnum.WORKSTATE_PREHEAT||workState === workStateEnum.WORKSTATE_RUN)?-20:0
                 color:workColor
                 font.pixelSize: 70
                 font.bold: workState === workStateEnum.WORKSTATE_RUN?true:false
             }
             Text{
-                visible: workState === workStateEnum.WORKSTATE_RUN
+                visible: !(workState === workStateEnum.WORKSTATE_RESERVE || (workState === workStateEnum.WORKSTATE_PAUSE && orderTimeLeft!=0))
                 anchors.left: time.right
                 anchors.leftMargin: 5
                 anchors.bottom: time.bottom
                 anchors.bottomMargin: 5
                 color:"#D7D7D7"
-                font.pixelSize: 26
-                text: qsTr("分钟")
+                font.pixelSize: workState === workStateEnum.WORKSTATE_PREHEAT?44:26
+                text: workState === workStateEnum.WORKSTATE_PREHEAT?qsTr("℃"):qsTr("分钟")
             }
         }
         Button{

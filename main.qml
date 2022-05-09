@@ -14,7 +14,7 @@ ApplicationWindow {
     id: window
     width: 800
     height: 480
-//    visible: true
+    //    visible: true
     property int sysPower:-1
     property int permitStartStatus:0
     readonly property string uiVersion:"1.1"
@@ -205,7 +205,7 @@ ApplicationWindow {
     }
     function showQrcodeBind(title){
         console.log("BindTokenState",QmlDevState.state.BindTokenState)//QmlDevState.state.BindTokenState > 0
-        if(QmlDevState.state.WifiState==4 && QmlDevState.state.DeviceSecret!="")
+        if(systemSettings.wifiEnable && QmlDevState.state.WifiState==4 && QmlDevState.state.DeviceSecret!="")
         {
             loader_main.sourceComponent = component_bind
             loader_main.item.hintTopText=title
@@ -245,9 +245,33 @@ ApplicationWindow {
                 loader_main.sourceComponent = undefined
         }
     }
-    function hoodOffconfirmFunc(hintTopText,confirmText){
-        SendFunc.closeHoodOff()
-        closeLoaderPopup()
+    Component{
+        id:component_hoodoff
+        PagePopup{
+            hintTopText:"灶具关闭后，烟机自动延时"+QmlDevState.state.HoodOffLeftTime+"分钟关 闭，点击(立即关闭)可直接关闭烟机"
+            hintHeight:306
+            confirmText:"立即关闭"
+            onCancel: {
+                closeLoaderHoodOff()
+            }
+            onConfirm:{
+                SendFunc.setHoodSpeed(0)
+                closeLoaderHoodOff()
+            }
+        }
+    }
+
+    function showLoaderHoodOff(){
+        if(loader_main.status == Loader.Null || loader_main.status == Loader.Error)
+        {
+            loader_main.sourceComponent = component_hoodoff
+        }
+    }
+    function closeLoaderHoodOff(){
+        if(loader_main.sourceComponent === component_hoodoff)
+        {
+            loader_main.sourceComponent = undefined
+        }
     }
     //---------------------------------------------------------------
     Loader{
@@ -292,7 +316,9 @@ ApplicationWindow {
     }
     function closeLoaderFault(){
         if(loader_error.sourceComponent === component_fault)
+        {
             loader_error.sourceComponent = undefined
+        }
     }
     //---------------------------------------------------------------
     Loader{

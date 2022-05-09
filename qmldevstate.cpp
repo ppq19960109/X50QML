@@ -75,9 +75,8 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     stateType.append(QPair<QString,int>("HoodLightLink",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("HoodOffTimer",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("HoodOffLeftTime",LINK_VALUE_TYPE_NUM));
-    stateType.append(QPair<QString,int>("SteamOffTime",LINK_VALUE_TYPE_NUM));
-    stateType.append(QPair<QString,int>("SteamOffLeftTime",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("HoodSpeed",LINK_VALUE_TYPE_NUM));
+    stateType.append(QPair<QString,int>("HoodOffRemind",LINK_VALUE_TYPE_NUM));
 
     stateType.append(QPair<QString,int>("ProductCategory",LINK_VALUE_TYPE_STRING));
     stateType.append(QPair<QString,int>("ProductModel",LINK_VALUE_TYPE_STRING));

@@ -89,10 +89,10 @@ function setAlarm(operation)
     setToServer(Data)
 }
 
-function closeHoodOff()
+function setHoodSpeed(speed)
 {
     var Data={}
-    Data.HoodOff=0
+    Data.HoodSpeed=speed
     setToServer(Data)
 }
 function setBuzControl(operation)
@@ -128,9 +128,9 @@ function setCooking(list,orderTime,cookPos)
 
     if(cookPos===leftDevice)
     {
-        Data.MultiMode=multiModeEnum.NONE
         if(list!=null)
         {
+            Data.MultiMode=multiModeEnum.NONE
             Data.LStOvMode=list[0].mode
             Data.LStOvSetTimer=list[0].time
             Data.LStOvSetTemp=list[0].temp
