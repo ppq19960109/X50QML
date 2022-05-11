@@ -14,7 +14,7 @@ ApplicationWindow {
     id: window
     width: 800
     height: 480
-    //    visible: true
+//    visible: true
     property int sysPower:-1
     property int permitStartStatus:0
     readonly property string uiVersion:"1.1"
@@ -222,10 +222,11 @@ ApplicationWindow {
             }
         }
     }
-    function showLoaderPopup(hintCenterText,hintHeight,confirmText,confirmFunc){
+    function showLoaderPopup(hintTopText,hintCenterText,hintHeight,confirmText,confirmFunc){
         if(loader_main.status == Loader.Null || loader_main.status == Loader.Error|| loader_main.sourceComponent === component_popup)
         {
             loader_main.sourceComponent = component_popup
+            loader_main.item.hintTopText=hintTopText
             loader_main.item.hintCenterText=hintCenterText
             loader_main.item.hintHeight=hintHeight
             if(confirmText!=null)
@@ -248,7 +249,7 @@ ApplicationWindow {
     Component{
         id:component_hoodoff
         PagePopup{
-            hintTopText:"灶具关闭后，烟机自动延时"+QmlDevState.state.HoodOffLeftTime+"分钟关 闭，点击(立即关闭)可直接关闭烟机"
+            hintTopText:"灶具关闭后，烟机自动延时"+QmlDevState.state.HoodOffLeftTime+"分钟关\n闭，点击(立即关闭)可直接关闭烟机"
             hintHeight:306
             confirmText:"立即关闭"
             onCancel: {
@@ -289,30 +290,22 @@ ApplicationWindow {
             hintTopImgSrc:""
             hintCenterText:""
             hintBottomText:""
-            hintHeight:292
+            hintHeight:290
 
             onCancel:{
                 closeLoaderFault()
             }
         }
     }
-    function showLoaderFault(hintTopText,hintBottomText,closeVisible){
+    function showLoaderFault(hintTopText,hintBottomText,closeVisible,hintCenterText,hintTopImgSrc){
         loader_error.sourceComponent = component_fault
-        loader_error.item.hintTopText=hintTopText
-        loader_error.item.hintBottomText=hintBottomText
-        if(closeVisible!=null)
-            loader_error.item.closeVisible=closeVisible
+        loader_error.item.hintTopText=hintTopText==null?"":hintTopText
+        loader_error.item.hintCenterText=hintCenterText==null?"":hintCenterText
+        loader_error.item.hintBottomText=hintBottomText==null?"":hintBottomText
+        loader_error.item.hintTopImgSrc=hintTopImgSrc==null?"":hintTopImgSrc
+        loader_error.item.closeVisible=closeVisible==null?true:closeVisible
+
         //        loader_error.setSource("PageFaultPopup.qml",{"hintTopText": hintTopText,"hintBottomText": hintBottomText,"closeVisible": closeVisible})
-    }
-    function showLoaderFaultCenter(hintCenterText,hintHeight){
-        loader_error.sourceComponent = component_fault
-        loader_error.item.hintCenterText=hintCenterText
-        loader_error.item.hintHeight=hintHeight
-    }
-    function showLoaderFaultImg(imageUrl,hintBottomText){
-        loader_error.sourceComponent = component_fault
-        loader_error.item.hintTopImgSrc=imageUrl
-        loader_error.item.hintBottomText=hintBottomText
     }
     function closeLoaderFault(){
         if(loader_error.sourceComponent === component_fault)
@@ -336,6 +329,7 @@ ApplicationWindow {
 
         onPressed: {
             //            console.log("Window onPressed:",sysPower,QmlDevState.state.HoodSpeed,QmlDevState.state.RStOvState,QmlDevState.state.LStOvState,QmlDevState.state.ErrorCodeShow,QmlDevState.localConnected)
+            console.log("Window onPressed:",JSON.stringify(systemSettings.wifiPasswdArray))
             if(sysPower > 0)
             {
                 mouse.accepted = false

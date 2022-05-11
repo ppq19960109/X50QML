@@ -44,7 +44,7 @@ function getCurWifi()
 
 function deleteWifiInfo(wifiInfo)
 {
-    if(wifiInfo.ssid=="" ||wifiInfo.psk=="" || wifiInfo.encryp===0)
+    if(wifiInfo==null || wifiInfo.ssid=="" ||wifiInfo.psk=="" || wifiInfo.encryp===0)
         return
     var wifiPasswdArray=systemSettings.wifiPasswdArray
     if(typeof wifiPasswdArray!="object")
@@ -69,11 +69,12 @@ function deleteWifiInfo(wifiInfo)
         return
     }
     systemSettings.wifiPasswdArray=wifiPasswdArray
+    wifiConnectInfo.psk=""
 }
 
 function addWifiInfo(wifiInfo)
 {
-    if(wifiInfo.ssid=="" ||wifiInfo.psk=="" || wifiInfo.encryp===0)
+    if(wifiInfo==null || wifiInfo.ssid=="" ||wifiInfo.psk=="" || wifiInfo.encryp===0)
         return
     var wifiPasswdArray=systemSettings.wifiPasswdArray
 
@@ -108,6 +109,7 @@ function addWifiInfo(wifiInfo)
         wifiPasswdArray.push(newWifiInfo)
     }
     systemSettings.wifiPasswdArray=wifiPasswdArray
+    wifiConnectInfo.psk=""
 }
 
 function getWifiInfo(ssid)

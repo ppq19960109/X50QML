@@ -31,15 +31,14 @@ Item {
     }
     function showCloseHeat()
     {
-        if(QmlDevState.state.RStoveTimingState==timingStateEnum.RUN)
-            loader_main.sourceComponent = component_closeHeat
+        loader_main.sourceComponent = component_closeHeat
     }
 
     ToolBar {
-        width: parent.width
-        implicitHeight:80
-
-        anchors.top: parent.top
+        //        width: parent.width
+        //        implicitHeight:80
+        //        anchors.top: parent.top
+        anchors.fill: parent
         background:Image {
             asynchronous:true
             smooth:false
@@ -61,7 +60,7 @@ Item {
                 asynchronous:true
                 smooth:false
                 anchors.centerIn: parent
-                source: themesImagesPath+(wifiConnected ? "icon_wifi_connected.png":"icon_wifi_disconnect.png")
+                source: themesImagesPath+(wifiConnected==true ? "icon_wifi_connected.png":"icon_wifi_disconnect.png")
             }
             onClicked: {
                 load_page("pageWifi")
@@ -92,16 +91,15 @@ Item {
 
         TabButton {
             id:closeHeat
-
-            width:time.width+closeHeatImg.width+20
+            visible: QmlDevState.state.RStoveStatus
+            width:closeHeatImg.width+10+time.width
             height:parent.height
             anchors.right:childLockBtn.left
-            anchors.rightMargin: 10
+            anchors.rightMargin: 20
 
             background: Item {}
             Image{
                 id:closeHeatImg
-                visible: QmlDevState.state.RStoveStatus
                 asynchronous:true
                 smooth:false
                 anchors.right: time.left
@@ -113,13 +111,21 @@ Item {
                 id:time
                 visible: QmlDevState.state.RStoveTimingState==timingStateEnum.RUN
                 anchors.verticalCenter: parent.verticalCenter
+                anchors.right: parent.right
                 color:themesTextColor2
                 text:"0"+Math.floor(QmlDevState.state.RStoveTimingLeft/60)+":"+Math.floor(QmlDevState.state.RStoveTimingLeft%60/10)+(QmlDevState.state.RStoveTimingLeft%60%10)//qsTr("01:12")
                 font.pixelSize:34
-                anchors.right: parent.right
+                horizontalAlignment:Text.AlignHCenter
+                verticalAlignment:Text.AlignVCenter
             }
             onClicked: {
-                showCloseHeat()
+                if(QmlDevState.state.RStoveTimingState==timingStateEnum.RUN)
+                    showCloseHeat()
+                else
+                    load_page("pageCloseHeat")
+            }
+            Component.onCompleted: {
+                console.log("TabButton:",time.width)
             }
         }
 

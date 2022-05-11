@@ -88,7 +88,7 @@ Item {
         }
         else
         {
-            showLoaderPopup("右灶未开启\n开启后才可定时关火",275)
+            showLoaderPopup("","右灶未开启\n开启后才可定时关火",275)
         }
     }
 

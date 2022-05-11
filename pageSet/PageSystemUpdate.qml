@@ -4,7 +4,7 @@ import QtQuick.Layouts 1.3
 import "../"
 import "qrc:/SendFunc.js" as SendFunc
 Item {
-//    enabled: loader_main.status == Loader.Null
+    //    enabled: loader_main.status == Loader.Null
     property bool versionChecked: false
 
     Connections { // 将目标对象信号与槽函数进行连接
@@ -157,7 +157,7 @@ Item {
                 }
                 else
                 {
-                    showLoaderFaultImg("/x50/icon/icon_pop_th.png","未连网，请连接网络后再试")
+                    showLoaderFault("","未连网，请连接网络后再试",true,"","/x50/icon/icon_pop_error.png")
                 }
 
                 //                showUpdateConfirm()

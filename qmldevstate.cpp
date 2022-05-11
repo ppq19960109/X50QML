@@ -384,6 +384,7 @@ void QmlDevState::readData(const QJsonValue &data)
                     QJsonValue bssid =object_struct.value("bssid");
                     QJsonValue ip_address =object_struct.value("ip_address");
                     QJsonValue mac_address =object_struct.value("mac_address");
+                    setState("ssid",ssid.toString());
                     setState("bssid",bssid.toString());
                     qDebug()<<"key:"<<"bssid"<<"value:"<<bssid.toString();
                 }

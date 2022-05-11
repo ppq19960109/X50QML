@@ -60,6 +60,7 @@ function scanRWifi()
 {
     var Data={}
     Data.WifiScanR = null
+    Data.WifiCurConnected = null
     getToServer(Data)
 }
 

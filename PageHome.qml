@@ -217,7 +217,7 @@ Item {
                     if(value==5)
                     {
                         if(QmlDevState.state.LStOvDoorState==1)
-                            showLoaderPopup("左腔门开启，工作暂停",275)
+                            showLoaderPopup("","左腔门开启，工作暂停",275)
                     }
                     else
                     {
@@ -254,7 +254,7 @@ Item {
                     if(value==5)
                     {
                         if(QmlDevState.state.RStOvDoorState==1)
-                            showLoaderPopup("右腔门开启，工作暂停",275)
+                            showLoaderPopup("","右腔门开启，工作暂停",275)
                     }
                     else
                     {
@@ -264,15 +264,23 @@ Item {
                 }
                 lastRStOvState=value
             }
+            else if("HoodOffLeftTime"==key)
+            {
+                if(value==0)
+                    closeLoaderHoodOff()
+            }
             else if("HoodOffRemind"==key)
             {
                 if(value==1)
                 {
-                    showLoaderHoodOff()
+                    if(QmlDevState.state.HoodOffLeftTime!=0)
+                    {
+                        showLoaderHoodOff()
+                    }
                 }
                 else if(value==2)
                 {
-                    showLoaderPopup("蒸烤箱工作中，\n烟机需要散热无法关闭。",306,"知道了",closeLoaderPopup)
+                    showLoaderPopup("蒸烤箱工作中，\n烟机需要散热无法关闭","",306,"知道了",closeLoaderPopup)
                 }
             }
             //            else if("ErrorCode"==key)
@@ -377,10 +385,15 @@ Item {
                     else if(value==4)
                     {
                         wifiConnected=true
-                        WifiFunc.addWifiInfo(wifiConnectInfo)
+                        WifiFunc.getCurWifi()
                     }
                 }
                 console.log("WifiState",value,wifiConnected,wifiConnecting)
+            }
+            else if("ssid"==key)
+            {
+                if(wifiConnected==true && value==wifiConnectInfo.ssid)
+                    WifiFunc.addWifiInfo(wifiConnectInfo)
             }
             else if("ProductionTest"==key)
             {
@@ -562,9 +575,10 @@ Item {
         QmlDevState.startLocalConnect()
         //        showAlarm()
         //        showLoaderFault("左腔蒸箱加热异常！","请拨打售后电话 <font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员");
-        //        showLoaderFaultImg("/x50/icon/icon_pop_th.png","记得及时清理油盒\n保持清洁哦")
-        //                        showLoaderPopup("左腔门开启，工作暂停",275)
-        //                showLoaderPopup("右灶未开启\n开启后才可定时关火",275)
+        //                        showLoaderPopup("","左腔门开启，工作暂停",275)
+        //                showLoaderPopup("","右灶未开启\n开启后才可定时关火",275)
+// showLoaderFault("右腔干烧检测电路故障！","请拨打售后电话<font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员")
+//        showLoaderFault("","网络连接失败，请重试",true,"","qrc:/x50/icon/icon_pop_error.png")
     }
     StackView.onActivated:{
         console.log("page home onActivated")
@@ -599,7 +613,7 @@ Item {
                 //                contentItem.highlightRangeMode=istView.StrictlyEnforceRange
                 //                contentItem.highlightResizeDuration= 0
                 //                contentItem.highlightResizeVelocity=-1
-                contentItem.highlightMoveDuration = 10       //将移动时间设为0
+                contentItem.highlightMoveDuration = 5       //将移动时间设为0
                 contentItem.highlightMoveVelocity = -1
             }
         }

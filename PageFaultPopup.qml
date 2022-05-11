@@ -91,7 +91,7 @@ Item {
             color:"white"
             font.pixelSize: 34
             anchors.top: parent.top
-            anchors.topMargin: 145
+            anchors.topMargin: 150
             anchors.horizontalCenter: parent.horizontalCenter
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter

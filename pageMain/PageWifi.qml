@@ -9,7 +9,7 @@ import "qrc:/SendFunc.js" as SendFunc
 import "../"
 Item {
     property int scan_count: 0
-
+    property bool wifiInputConnecting:false
     function wifi_scan_timer_reset()
     {
         console.log("wifi_scan_timer_reset")
@@ -30,28 +30,36 @@ Item {
                 console.log("page wifi WifiState:",value)
                 if(value > 1)
                 {
-                    if(value==2| value==5)
+                    if(value==2||value==5)
                     {
                         if(systemSettings.wifiEnable)
-                            showLoaderFaultImg("/x50/icon/icon_pop_th.png","联网超时，请重试")
+                            showLoaderFault("","网络连接失败，请重试",true,"","/x50/icon/icon_pop_error.png")
                     }
                     else if(value==3)
                     {
                         if(systemSettings.wifiEnable)
-                            showLoaderFaultImg("/x50/icon/icon_pop_th.png","密码错误，连接失败")
+                            showLoaderFault("","密码错误，连接失败",true,"","/x50/icon/icon_pop_error.png")
                     }
                     else if(value==4)
                     {
                         dismissWifiInput()
-                        showQrcodeBind("连接成功！")
                     }
                     wifi_scan_timer_reset()
+                    wifiInputConnecting=false
                 }
                 else
                 {
                     SendFunc.scanWifi()
                 }
 
+            }
+            else if("ssid"==key)
+            {
+                if(wifiConnected==true && value!="" && value==wifiConnectInfo.ssid)
+                {
+                    wifiConnectInfo.ssid=""
+                    showQrcodeBind("连接成功！")
+                }
             }
             else if("WifiEnable"==key)
             {
@@ -83,7 +91,7 @@ Item {
                 ++scan_count
                 if(scan_count==1)
                 {
-                    timer_wifi_scan.interval=2000
+                    timer_wifi_scan.interval=1500
                 }
                 else if(scan_count==4)
                 {
@@ -91,7 +99,7 @@ Item {
                 }
                 if(wifiConnecting==false)
                 {
-                    WifiFunc.getCurWifi()
+                    //                    WifiFunc.getCurWifi()
                     SendFunc.scanRWifi()
                 }
             }
@@ -100,7 +108,7 @@ Item {
                 if(wifiConnecting==false)
                 {
                     SendFunc.scanWifi()
-                    WifiFunc.getCurWifi()
+                    //                    WifiFunc.getCurWifi()
                     SendFunc.scanRWifi()
                 }
             }
@@ -280,10 +288,8 @@ Item {
                 anchors.fill: parent
                 onClicked: {
                     console.log("WiFi name:" + wifi_name.text,wifiConnecting)
-                    if(connected==false)
+                    if(connected==0)
                     {
-                        if(wifiConnecting==true)
-                            return
                         if(flags==0)
                         {
                             console.log("open connect:" , ssid,flags)
@@ -412,7 +418,7 @@ Item {
 
                 PageRotationImg {
                     id: connectBusy
-                    visible: wifiConnecting==true?true:false
+                    visible: wifiInputConnecting==true?true:false
                     anchors.right:connectBtn.left
                     anchors.rightMargin: 15
                     anchors.verticalCenter: parent.verticalCenter
@@ -442,7 +448,7 @@ Item {
                         color:permit_connect?themesTextColor:"white"
                         font.pixelSize: 40
                         anchors.centerIn:parent
-                        text: wifiConnecting==true?"正在连接":qsTr("连接")
+                        text: wifiInputConnecting==true?"正在连接":qsTr("连接")
                     }
                     background: Item {}
                     onClicked: {
@@ -453,6 +459,7 @@ Item {
                             wifiModel.setProperty(0,"connected",0)
                             wifiModel.setProperty(index,"connected",2)
                             wifiModel.move(index,0,1)
+                            wifiInputConnecting=true
                         }
                     }
                 }
@@ -511,6 +518,9 @@ Item {
             }
             Component.onCompleted: {
                 textField.forceActiveFocus()
+            }
+            Component.onDestruction: {
+                wifiInputConnecting=false
             }
         }
     }

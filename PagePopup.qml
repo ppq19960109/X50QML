@@ -52,7 +52,7 @@ Item {
             color:"white"
             font.pixelSize: 34
             anchors.top: parent.top
-            anchors.topMargin: 60
+            anchors.topMargin: 70
             anchors.horizontalCenter: parent.horizontalCenter
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
