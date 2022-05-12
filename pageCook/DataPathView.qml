@@ -53,7 +53,7 @@ Item {
 //                anchors.horizontalCenterOffset: 20
                 color:textColor
                 font.pixelSize: textFont
-                text: modelData==0?rightWorkMode:leftWorkMode[modelData]
+                text: leftWorkMode[modelData]
             }
         }
     }
@@ -64,7 +64,7 @@ Item {
 //        currentIndex:0
         pathItemCount:3
         interactive: true
-        focus: true
+//        focus: true
         preferredHighlightBegin: 0.5;
         preferredHighlightEnd: 0.5;
         highlightRangeMode: PathView.StrictlyEnforceRange;

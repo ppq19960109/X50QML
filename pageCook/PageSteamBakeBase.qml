@@ -17,8 +17,8 @@ Rectangle {
     property var root
     property var para
 
-    readonly property var leftWorkBigImg: ["qrc:/x50/steam/icon_便捷蒸.png", "qrc:/x50/steam/icon_经典蒸.png", "qrc:/x50/steam/icon_高温蒸.png", "qrc:/x50/steam/icon_热风烧烤.png", "qrc:/x50/steam/icon_上下加热.png", "qrc:/x50/steam/icon_立体热风.png", "qrc:/x50/steam/icon_蒸汽烤.png", "qrc:/x50/steam/icon_空气炸.png", "qrc:/x50/steam/icon_保暖烘干.png"]
-    readonly property var leftWorkSmallImg: ["", "qrc:/x50/steam/icon_经典蒸缩小.png", "qrc:/x50/steam/icon_高温蒸缩小.png", "qrc:/x50/steam/icon_热风烧烤缩小.png", "qrc:/x50/steam/icon_上下加热缩小.png", "qrc:/x50/steam/icon_立体热风缩小.png", "qrc:/x50/steam/icon_蒸汽烤缩小.png", "qrc:/x50/steam/icon_空气炸缩小.png", "qrc:/x50/steam/icon_保暖烘干缩小.png"]
+    readonly property var leftWorkBigImg: ["", "qrc:/x50/steam/icon_经典蒸.png", "qrc:/x50/steam/icon_高温蒸.png", "qrc:/x50/steam/icon_热风烧烤.png", "qrc:/x50/steam/icon_上下加热.png", "qrc:/x50/steam/icon_立体热风.png", "qrc:/x50/steam/icon_蒸汽烤.png", "qrc:/x50/steam/icon_空气炸.png", "qrc:/x50/steam/icon_保暖烘干.png","qrc:/x50/steam/icon_便捷蒸.png"]
+    readonly property var leftWorkSmallImg: ["", "qrc:/x50/steam/icon_经典蒸缩小.png", "qrc:/x50/steam/icon_高温蒸缩小.png", "qrc:/x50/steam/icon_热风烧烤缩小.png", "qrc:/x50/steam/icon_上下加热缩小.png", "qrc:/x50/steam/icon_立体热风缩小.png", "qrc:/x50/steam/icon_蒸汽烤缩小.png", "qrc:/x50/steam/icon_空气炸缩小.png", "qrc:/x50/steam/icon_保暖烘干缩小.png","qrc:/x50/steam/icon_经典蒸缩小.png"]
 
     function steamStart()
     {
@@ -101,14 +101,14 @@ Rectangle {
             if(leftDevice===root.device)
             {
                 topBar.name="左腔蒸烤"
-                for (i=0; i< leftModel.length; ++i) {
+                for (i=0; i< rightModeIndex; ++i)
                     modeListModel.append(leftModel[i])
-                }
             }
             else
             {
                 topBar.name="右腔速蒸"
-                modeListModel.append(rightModel)
+                for (i=rightModeIndex; i< leftModel.length; ++i)
+                    modeListModel.append(leftModel[i])
             }
             SendFunc.permitSteamStartStatus(1)
             if(root.reserve!=null)
@@ -116,7 +116,7 @@ Rectangle {
         }
         else
         {
-            for (i=0; i< leftModel.length; ++i) {
+            for (i=0; i< rightModeIndex; ++i) {
                 modeListModel.append(leftModel[i])
             }
         }

@@ -39,7 +39,7 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     stateType.append(QPair<QString,int>("AfterSalesQrCode",LINK_VALUE_TYPE_STRING));
 
     stateType.append(QPair<QString,int>("LStOvMode",LINK_VALUE_TYPE_NUM));
-    stateType.append(QPair<QString,int>("LStOvOperation",LINK_VALUE_TYPE_NUM));
+//    stateType.append(QPair<QString,int>("LStOvOperation",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("LStOvSetTimer",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("LStOvSetTimerLeft",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("LStOvSetTemp",LINK_VALUE_TYPE_NUM));
@@ -50,7 +50,7 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     stateType.append(QPair<QString,int>("LStOvState",LINK_VALUE_TYPE_NUM));
 
     stateType.append(QPair<QString,int>("RStOvMode",LINK_VALUE_TYPE_NUM));
-    stateType.append(QPair<QString,int>("RStOvOperation",LINK_VALUE_TYPE_NUM));
+//    stateType.append(QPair<QString,int>("RStOvOperation",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("RStOvSetTimer",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("RStOvSetTimerLeft",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("RStOvSetTemp",LINK_VALUE_TYPE_NUM));

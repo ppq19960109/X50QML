@@ -29,6 +29,9 @@ function leftWorkModeFun(n)
     case 72:
         mode=leftWorkMode[8]
         break
+    case 100:
+        mode=leftWorkMode[9]
+        break
     default:
         mode=leftWorkMode[0]
         break
@@ -64,6 +67,9 @@ function leftWorkModeNumberFun(n)
         break
     case 72:
         mode=8
+        break
+    case 100:
+        mode=9
         break
     default:
         mode=0
@@ -118,10 +124,7 @@ function getDishName(root,cookPos)
         console.log(root[i].mode,root[i].temp,root[i].time,leftWorkModeFun(root[i].mode))
         if(root.length===1 && root[i].number == null)
         {
-            if(leftDevice===cookPos)
-                dishName=leftWorkModeFun(root[i].mode)+"-"+root[i].temp+"℃-"+root[i].time+"分钟"
-            else
-                dishName=rightWorkMode+"-"+root[i].temp+"℃-"+root[i].time+"分钟"
+            dishName=leftWorkModeFun(root[i].mode)+"-"+root[i].temp+"℃-"+root[i].time+"分钟"
         }
         else
         {

@@ -240,7 +240,7 @@ Rectangle {
 
             workColor:"#DE932F"
             workState:QmlDevState.state.RStOvState
-            workMode:workState===workStateEnum.WORKSTATE_STOP?qsTr("右腔烹饪"):rightWorkMode
+            workMode:workState===workStateEnum.WORKSTATE_STOP?qsTr("右腔烹饪"):CookFunc.leftWorkModeFun(QmlDevState.state.RStOvMode)
             canvasDiameter:width
             percent:workState === workStateEnum.WORKSTATE_RESERVE?(100-100*QmlDevState.state.RStOvOrderTimerLeft/QmlDevState.state.RStOvOrderTimer):(100-100*QmlDevState.state.RStOvSetTimerLeft/QmlDevState.state.RStOvSetTimer)
 
