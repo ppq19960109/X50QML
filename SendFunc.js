@@ -132,9 +132,9 @@ function setCooking(list,orderTime,cookPos)
         if(list!=null)
         {
             Data.MultiMode=multiModeEnum.NONE
-            Data.LStOvMode=list[0].mode
-            Data.LStOvSetTimer=list[0].time
-            Data.LStOvSetTemp=list[0].temp
+            Data.LStOvMode=list.mode
+            Data.LStOvSetTimer=list.time
+            Data.LStOvSetTemp=list.temp
         }
         Data.LStOvOperation=workOperationEnum.START
 
@@ -147,9 +147,9 @@ function setCooking(list,orderTime,cookPos)
     {
         if(list!=null)
         {
-            Data.RStOvMode=list[0].mode
-            Data.RStOvSetTimer=list[0].time
-            Data.RStOvSetTemp=list[0].temp
+            Data.RStOvMode=list.mode
+            Data.RStOvSetTimer=list.time
+            Data.RStOvSetTemp=list.temp
         }
         Data.RStOvOperation=workOperationEnum.START
 
@@ -160,8 +160,53 @@ function setCooking(list,orderTime,cookPos)
     }
     setToServer(Data)
 }
+function setIceCooking(list,orderTime)
+{
+    var Data={}
+    Data.IceStOvMode=list.mode
+    Data.IceStOvSetTimer=list.time
+    Data.IceStOvSetTemp=list.temp
+    Data.IceStOvOperation=workOperationEnum.START
+    setToServer(Data)
+}
 
-function setMultiCooking(list,orderTime,dishName,cookbookID)
+function setMultiIceCooking(list,orderTime)
+{
+    console.log("setIceCooking")
+    if(list.length==1)
+    {
+        if(list[0].pos!=rightDevice || list[0].mode!=iceWorkMode)
+            return
+        iceWorkStep.state=iceWorkOperaEnum.ICE
+        setIceCooking(list[0],orderTime)
+    }
+    else
+    {
+        if(list[0].pos==leftDevice && list[1].pos==rightDevice  && list[1].mode==iceWorkMode)
+        {
+            iceWorkStep.state=iceWorkOperaEnum.LEFT_ICE
+            setCooking(list[0],0,list[0].pos)
+        }
+        else if(list[0].pos==rightDevice && list[0].mode!=iceWorkMode && list[1].pos==rightDevice  && list[1].mode==iceWorkMode)
+        {
+            iceWorkStep.state=iceWorkOperaEnum.RIGHT_ICE
+            iceWorkStep.cookStep=list[1]
+            setCooking(list[0],0,list[0].pos)
+        }
+        else if(list[0].pos==rightDevice  && list[0].mode==iceWorkMode && list[1].pos==rightDevice && list[1].mode!=iceWorkMode)
+        {
+            iceWorkStep.state=iceWorkOperaEnum.ICE_RIGHT
+            iceWorkStep.cookStep=list[1]
+            setIceCooking(list[0],0)
+        }
+        else
+        {
+
+        }
+        console.log("setIceCooking",JSON.stringify(iceWorkStep))
+    }
+}
+function setMultiCooking(lists,orderTime,dishName,cookbookID)
 {
     console.log("setMultiCooking")
     var Data={}
@@ -170,9 +215,9 @@ function setMultiCooking(list,orderTime,dishName,cookbookID)
     for(var i = 0; i < list.length; i++)
     {
         var buf={}
-        buf.Mode=list[i].mode
-        buf.Temp=list[i].temp
-        buf.Timer=list[i].time
+        buf.Mode=lists[i].mode
+        buf.Temp=lists[i].temp
+        buf.Timer=lists[i].time
         MultiStageContent.push(buf)
     }
 
@@ -197,3 +242,4 @@ function setMultiCooking(list,orderTime,dishName,cookbookID)
 
     setToServer(Data)
 }
+

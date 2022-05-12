@@ -111,5 +111,9 @@
         <file>x50/test/image10.png</file>
         <file>x50/icon/icon_alarm.png</file>
         <file>x50/icon/icon_pop_error.png</file>
+        <file>pageIce/PageMultistageIce.qml</file>
+        <file>pageIce/PageIceSteam.qml</file>
+        <file>pageIce/PageMultistageIceDelegate.qml</file>
+        <file>pageIce/IceDataPathView.qml</file>
     </qresource>
 </RCC>

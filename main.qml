@@ -7,6 +7,7 @@ import "pageCook"
 import "pageMain"
 import "pageSet"
 import "pageProductionTest"
+import "pageIce"
 
 import "qrc:/SendFunc.js" as SendFunc
 
@@ -14,29 +15,32 @@ ApplicationWindow {
     id: window
     width: 800
     height: 480
-//    visible: true
-    property int sysPower:-1
+    visible: true
+    property int sysPower:1
     property int permitStartStatus:0
     readonly property string uiVersion:"1.1"
     readonly property string productionTestWIFISSID:"moduletest"
     readonly property string productionTestWIFIPWD:"58185818"
     readonly property int leftDevice:0
     readonly property int rightDevice:1
+    readonly property int iceDevice:2
     readonly property int allDevice:2
     readonly property var  cookModeImg: ["icon-steamed.png","icon-bake.png","icon-multistage.png"]
-    readonly property var leftWorkMode: ["未设定", "经典蒸", "高温蒸", "热风烧烤", "上下加热", "立体热风", "蒸汽烤", "空气炸", "保温烘干"]
-    readonly property var leftWorkModeNumber:[0,1,2,35,36,38,40,42,72]
-    readonly property string rightWorkMode:"便捷蒸"
+    readonly property var leftWorkMode: ["未设定", "经典蒸", "高温蒸", "热风烧烤", "上下加热", "立体热风", "蒸汽烤", "空气炸", "保温烘干","便捷蒸","制冷","未设定"]
+    readonly property var leftWorkModeNumber:[0,1,2,35,36,38,40,42,72,100,120,121]
+    readonly property int iceWorkMode:120
+    readonly property int rightModeIndex:8
 
     readonly property var leftModel:[{"modelData":1,"temp":100,"time":30,"minTemp":40,"maxTemp":100},{"modelData":2,"temp":120,"time":20,"minTemp":101,"maxTemp":120},{"modelData":6,"temp":150,"time":60,"minTemp":50,"maxTemp":200},{"modelData":7,"temp":220,"time":15,"minTemp":200,"maxTemp":230},{"modelData":3,"temp":200,"time":60,"minTemp":50,"maxTemp":230}
         ,{"modelData":5,"temp":180,"time":120,"minTemp":50,"maxTemp":230},{"modelData":4,"temp":180,"time":120,"minTemp":50,"maxTemp":230}
-        ,{"modelData":8,"temp":60,"time":30,"minTemp":50,"maxTemp":120}]
-    readonly property var rightModel:{"modelData":0,"temp":100,"time":30,"minTemp":40,"maxTemp":100}
+        ,{"modelData":8,"temp":60,"time":30,"minTemp":50,"maxTemp":120},{"modelData":9,"temp":100,"time":30,"minTemp":40,"maxTemp":100},{"modelData":10,"temp":5,"time":30,"minTemp":5,"maxTemp":15},{"modelData":11,"temp":100,"time":30,"minTemp":40,"maxTemp":100}]
 
     readonly property var workStateEnum:{"WORKSTATE_STOP":0,"WORKSTATE_RESERVE":1,"WORKSTATE_PREHEAT":2,"WORKSTATE_RUN":3,"WORKSTATE_FINISH":4,"WORKSTATE_PAUSE":5}
     readonly property var workStateArray:["停止","预约中","预热中","运行中","烹饪完成","暂停"]
 
     readonly property var workOperationEnum:{"START":0,"PAUSE":1,"CANCEL":2,"CONFIRM":3,"RUN_NOW":4}
+    readonly property var iceWorkOperaEnum:{"STOP":0,"ICE":1,"LEFT_ICE":2,"RIGHT_ICE":3,"ICE_RIGHT":4}
+    property var iceWorkStep:{"state":0,"cookStep":null}
 
     readonly property var timingStateEnum:{"STOP":0,"RUN":1,"PAUSE":2,"CONFIRM":3}
     readonly property var timingOperationEnum:{"START":1,"CANCEL":2}
@@ -507,6 +511,14 @@ ApplicationWindow {
         id: pageGetQuad
         PageGetQuad {}
     }
+    Component {
+        id: pageIceSteam
+        PageIceSteam {}
+    }
+    Component {
+        id: pageMultistageIce
+        PageMultistageIce {}
+    }
 
     function isExistView(pageName) {
         console.log("isExistView:",pageName)
@@ -625,6 +637,12 @@ ApplicationWindow {
         case "pageGetQuad":
             stackView.push(pageGetQuad,StackView.Immediate)
             break;
+        case "pageIceSteam":
+            stackView.push(pageIceSteam, {"state":args},StackView.Immediate)
+            break;
+        case "pageMultistageIce":
+            stackView.push(pageMultistageIce,StackView.Immediate)
+            break;
         }
 
         console.log("stackView depth:"+stackView.depth)
@@ -644,9 +662,14 @@ ApplicationWindow {
         else
         {
             console.log("startCooking:",JSON.stringify(root),JSON.stringify(cookSteps))
-            if(cookSteps.length===1 && (undefined === cookSteps[0].number || 0 === cookSteps[0].number))
+            iceWorkStep.state=iceWorkOperaEnum.STOP
+            if(root.cookPos===iceDevice)
             {
-                SendFunc.setCooking(cookSteps,root.orderTime,root.cookPos)
+                SendFunc.setMultiIceCooking(cookSteps,0)
+            }
+            else if(cookSteps.length===1 && (undefined === cookSteps[0].number || 0 === cookSteps[0].number))
+            {
+                SendFunc.setCooking(cookSteps[0],root.orderTime,root.cookPos)
                 //            if(leftDevice===root.cookPos)
                 //            {
                 //                QmlDevState.setState("LStOvState",1)

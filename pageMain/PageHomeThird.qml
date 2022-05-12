@@ -55,5 +55,27 @@ Item {
             }
         }
 
+        Button{
+            width: 210
+            height:312
+            background:Image {
+                asynchronous:true
+                smooth:false
+                source: themesImagesPath+"homethird-button2-background.png"
+            }
+            Text{
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.top: parent.top
+                anchors.topMargin: 45
+                color:"#FFF"
+                font.pixelSize: 40
+                text:qsTr("冰蒸")
+            }
+
+            onClicked: {
+                load_page("pageMultistageIce")
+            }
+        }
+
     }
 }

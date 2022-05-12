@@ -1,7 +1,7 @@
 
 function leftWorkModeFun(n)
 {
-//    console.log("leftWorkModeFun",n)
+    //    console.log("leftWorkModeFun",n)
     var mode
     switch(n)
     {
@@ -29,6 +29,15 @@ function leftWorkModeFun(n)
     case 72:
         mode=leftWorkMode[8]
         break
+    case 100:
+        mode=leftWorkMode[9]
+        break
+    case 120:
+        mode=leftWorkMode[10]
+        break
+    case 121:
+        mode=leftWorkMode[11]
+        break
     default:
         mode=leftWorkMode[0]
         break
@@ -37,7 +46,7 @@ function leftWorkModeFun(n)
 }
 function leftWorkModeNumberFun(n)
 {
-//    console.log("leftWorkModeFun",n)
+    //    console.log("leftWorkModeFun",n)
     var mode
     switch(n)
     {
@@ -64,6 +73,15 @@ function leftWorkModeNumberFun(n)
         break
     case 72:
         mode=8
+        break
+    case 100:
+        mode=9
+        break
+    case 120:
+        mode=10
+        break
+    case 121:
+        mode=11
         break
     default:
         mode=0
@@ -99,7 +117,7 @@ function isSteam(cookSteps)
     {
         if(cookSteps[i].mode==1||cookSteps[i].mode==2||cookSteps[i].mode==40)
         {
-           return 1
+            return 1
         }
     }
     return 0
@@ -118,10 +136,7 @@ function getDishName(root,cookPos)
         console.log(root[i].mode,root[i].temp,root[i].time,leftWorkModeFun(root[i].mode))
         if(root.length===1 && root[i].number == null)
         {
-            if(leftDevice===cookPos)
-                dishName=leftWorkModeFun(root[i].mode)+"-"+root[i].temp+"℃-"+root[i].time+"分钟"
-            else
-                dishName=rightWorkMode+"-"+root[i].temp+"℃-"+root[i].time+"分钟"
+            dishName=leftWorkModeFun(root[i].mode)+"-"+root[i].temp+"℃-"+root[i].time+"分钟"
         }
         else
         {

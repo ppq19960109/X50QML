@@ -79,12 +79,10 @@ Item {
                 x :root.width/2
                 y:root.height
             }
-
         }
         onMovementEnded: {
             console.log("currentIndex:",currentIndex);
             valueChanged(currentIndex,"model");
         }
-
     }
 }

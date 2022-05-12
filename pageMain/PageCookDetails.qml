@@ -178,7 +178,7 @@ Item {
         Component {
             id: multiDelegate
             PageMultistageDelegate {
-                nameText:(cookPos>0?rightWorkMode:CookFunc.leftWorkModeFun(modelData.mode))+"-"+modelData.temp+"℃"+"-"+modelData.time+"分钟"
+                nameText:CookFunc.leftWorkModeFun(modelData.mode)+"-"+modelData.temp+"℃"+"-"+modelData.time+"分钟"
 
                 closeVisible:false
             }

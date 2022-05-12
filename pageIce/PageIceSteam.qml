@@ -5,7 +5,7 @@ import "qrc:/CookFunc.js" as CookFunc
 import "qrc:/SendFunc.js" as SendFunc
 Rectangle {
     color:themesWindowBackgroundColor
-    property int multiMode:0
+    property int cookPos:0
     property alias name: topBar.name
     property alias leftBtnText: topBar.leftBtnText
     property alias rightBtnText: topBar.rightBtnText
@@ -17,8 +17,8 @@ Rectangle {
     property var root
     property var para
 
-    readonly property var leftWorkBigImg: ["", "qrc:/x50/steam/icon_经典蒸.png", "qrc:/x50/steam/icon_高温蒸.png", "qrc:/x50/steam/icon_热风烧烤.png", "qrc:/x50/steam/icon_上下加热.png", "qrc:/x50/steam/icon_立体热风.png", "qrc:/x50/steam/icon_蒸汽烤.png", "qrc:/x50/steam/icon_空气炸.png", "qrc:/x50/steam/icon_保暖烘干.png","qrc:/x50/steam/icon_便捷蒸.png"]
-    readonly property var leftWorkSmallImg: ["", "qrc:/x50/steam/icon_经典蒸缩小.png", "qrc:/x50/steam/icon_高温蒸缩小.png", "qrc:/x50/steam/icon_热风烧烤缩小.png", "qrc:/x50/steam/icon_上下加热缩小.png", "qrc:/x50/steam/icon_立体热风缩小.png", "qrc:/x50/steam/icon_蒸汽烤缩小.png", "qrc:/x50/steam/icon_空气炸缩小.png", "qrc:/x50/steam/icon_保暖烘干缩小.png","qrc:/x50/steam/icon_经典蒸缩小.png"]
+    readonly property var leftWorkBigImg: ["", "qrc:/x50/steam/icon_经典蒸.png", "qrc:/x50/steam/icon_高温蒸.png", "qrc:/x50/steam/icon_热风烧烤.png", "qrc:/x50/steam/icon_上下加热.png", "qrc:/x50/steam/icon_立体热风.png", "qrc:/x50/steam/icon_蒸汽烤.png", "qrc:/x50/steam/icon_空气炸.png", "qrc:/x50/steam/icon_保暖烘干.png","qrc:/x50/steam/icon_便捷蒸.png","qrc:/x50/steam/icon_便捷蒸.png","qrc:/x50/steam/icon_便捷蒸.png"]
+    readonly property var leftWorkSmallImg: ["", "qrc:/x50/steam/icon_经典蒸缩小.png", "qrc:/x50/steam/icon_高温蒸缩小.png", "qrc:/x50/steam/icon_热风烧烤缩小.png", "qrc:/x50/steam/icon_上下加热缩小.png", "qrc:/x50/steam/icon_立体热风缩小.png", "qrc:/x50/steam/icon_蒸汽烤缩小.png", "qrc:/x50/steam/icon_空气炸缩小.png", "qrc:/x50/steam/icon_保暖烘干缩小.png","qrc:/x50/steam/icon_经典蒸缩小.png","qrc:/x50/steam/icon_经典蒸缩小.png","qrc:/x50/steam/icon_经典蒸缩小.png"]
 
     function steamStart()
     {
@@ -39,25 +39,6 @@ Rectangle {
         para.cookSteps=JSON.stringify(list)
         console.log("para:",JSON.stringify(para),systemSettings.leftCookDialog,systemSettings.rightCookDialog,root.device)
 
-        if(para.cookPos===leftDevice)
-        {
-            if(systemSettings.cookDialog[0]>0)
-            {
-                if(CookFunc.isSteam(list))
-                    showLoaderSteam1(358,"请将食物放入左腔\n将水箱加满水","开始烹饪",para,0)
-                else
-                    showLoaderSteam1(306,"请将食物放入左腔","开始烹饪",para,0)
-                return
-            }
-        }
-        else
-        {
-            if(systemSettings.cookDialog[1]>0)
-            {
-                showLoaderSteam1(358,"请将食物放入右腔\n将水箱加满水","开始烹饪",para,1)
-                return
-            }
-        }
         startCooking(para,list)
     }
 
@@ -66,7 +47,6 @@ Rectangle {
         enabled:false
         target: QmlDevState
         onStateChanged: { // 处理目标对象信号的槽函数
-            console.log("PageSteamBakeBase onStateChanged",key)
             if("SteamStart"==key)
             {
                 steamStart()
@@ -80,7 +60,7 @@ Rectangle {
         connections.enabled=false
     }
     Component.onCompleted: {
-        console.log("PageSteamBakeBase onCompleted")
+        console.log("PageIceSteam onCompleted",cookPos)
         var i;
 
         var timeArray = new Array
@@ -91,40 +71,18 @@ Rectangle {
             timeArray.push(i+"分钟")
         }
         timePathView.model=timeArray
-        console.log("state",state,typeof state)
-        if(multiMode==0 )//|| undefined != state || null != state || "" != state
+
+        if(cookPos==leftDevice)
         {
-            root=JSON.parse(state)
-            if(leftDevice===root.device)
-            {
-                topBar.name="左腔蒸烤"
-                for (i=0; i< rightModeIndex; ++i)
-                    modeListModel.append(leftModel[i])
-            }
-            else
-            {
-                topBar.name="右腔速蒸"
-                for (i=rightModeIndex; i< rightModeIndex+1; ++i)
-                    modeListModel.append(leftModel[i])
-            }
-            SendFunc.permitSteamStartStatus(1)
-            if(root.reserve!=null)
-                topBar.rightBtnText=""
+            for (i=0; i< rightModeIndex; ++i)
+                modeListModel.append(leftModel[i])
         }
         else
         {
-            for (i=0; i< rightModeIndex; ++i) {
+            for (i=rightModeIndex; i< leftModel.length; ++i)
                 modeListModel.append(leftModel[i])
-            }
         }
-
     }
-
-    //    PageGradient{
-    //        anchors.fill: parent
-    //        radius:0
-    //        border.width:0
-    //    }
 
     PageBackBar{
         id:topBar
@@ -133,49 +91,21 @@ Rectangle {
         //        leftBtnText:qsTr("启动")
         rightBtnText:qsTr("预约")
         onClose:{
-
-            if(multiMode>0)
-            {
-                dismissTanchang();
-            }
-            else
-            {
-                backPrePage()
-            }
+            dismissTanchang();
         }
 
         onLeftClick:{
             steamStart()
         }
         onRightClick:{
-            if(multiMode>0)
-            {
-                var param = {};
-                param.mode=leftWorkModeNumber[modePathView.model.get(modePathView.currentIndex).modelData]
-                param.temp=parseInt(tempPathView.model[tempPathView.currentIndex])
-                param.time=parseInt(timePathView.model[timePathView.currentIndex])
-                showListData(param);
-                dismissTanchang();
-            }
-            else
-            {
-                var list = []
-                var steps={}
-                if(root.device==leftDevice)
-                    steps.mode=leftWorkModeNumber[modePathView.model.get(modePathView.currentIndex).modelData]
-                else
-                    steps.mode= 100
-                steps.temp=parseInt(tempPathView.model[tempPathView.currentIndex])
-                steps.time=parseInt(timePathView.model[timePathView.currentIndex])
-                list.push(steps)
 
-                var para =CookFunc.getDefHistory()
-                para.cookPos=root.device
-                para.dishName=CookFunc.getDishName(list,para.cookPos)
-                para.cookSteps=JSON.stringify(list)
-
-                load_page("pageSteamBakeReserve",JSON.stringify(para))
-            }
+            var param = {}
+            param.pos=cookPos
+            param.mode=leftWorkModeNumber[modePathView.model.get(modePathView.currentIndex).modelData]
+            param.temp=parseInt(tempPathView.model[tempPathView.currentIndex])
+            param.time=parseInt(timePathView.model[timePathView.currentIndex])
+            showListData(param);
+            dismissTanchang();
         }
     }
 
@@ -205,7 +135,7 @@ Rectangle {
             anchors.centerIn: parent
             spacing: 0
 
-            DataPathView {
+            IceDataPathView {
                 id:modePathView
                 width: 292
                 height:parent.height
@@ -270,7 +200,7 @@ Rectangle {
                     }
                 }
             }
-            DataPathView {
+            IceDataPathView {
                 id:tempPathView
                 width: 226
                 height:parent.height
@@ -287,7 +217,7 @@ Rectangle {
 
                 }
             }
-            DataPathView {
+            IceDataPathView {
                 id:timePathView
                 width: 226
                 height:parent.height
