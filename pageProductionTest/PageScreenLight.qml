@@ -10,6 +10,8 @@ Item{
         Image{
             id:startImg
             asynchronous:true
+            smooth:false
+            cache:false
             source: "qrc:/x50/set/icon_light_small.png"
             anchors.left: parent.left
             anchors.verticalCenter: parent.verticalCenter
@@ -33,6 +35,8 @@ Item{
         Image{
             id:endImg
             asynchronous:true
+            smooth:false
+            cache:false
             source: "qrc:/x50/set/icon_light_big.png"
             anchors.right: parent.right
             anchors.verticalCenter: parent.verticalCenter

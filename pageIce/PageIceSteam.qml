@@ -9,6 +9,7 @@ Rectangle {
     property alias name: topBar.name
     property alias leftBtnText: topBar.leftBtnText
     property alias rightBtnText: topBar.rightBtnText
+    property alias modePathViewEnabled:modePathView.enabled
     property var modePathViewIndex
     property var tempPathViewIndex
     property var timePathViewIndex
@@ -67,7 +68,7 @@ Rectangle {
         for(i=1; i<= 120; ++i) {
             timeArray.push(i+"分钟")
         }
-        for(i=125; i<= 180; i+=5) {
+        for(i=125; i<= 720; i+=5) {
             timeArray.push(i+"分钟")
         }
         timePathView.model=timeArray

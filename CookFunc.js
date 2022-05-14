@@ -56,19 +56,19 @@ function leftWorkModeNumberFun(n)
     case 2:
         mode=2
         break
-    case 35:
+    case 40:
         mode=3
         break
-    case 36:
+    case 42:
         mode=4
         break
-    case 38:
+    case 35:
         mode=5
         break
-    case 40:
+    case 38:
         mode=6
         break
-    case 42:
+    case 36:
         mode=7
         break
     case 72:
@@ -89,6 +89,7 @@ function leftWorkModeNumberFun(n)
     }
     return mode
 }
+
 function getCookType(cookSteps)
 {
     var root=JSON.parse(cookSteps)

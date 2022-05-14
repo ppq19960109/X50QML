@@ -116,9 +116,13 @@ function setCookOperation(device,operation)
     {
         Data.LStOvOperation=operation
     }
-    else
+    else if(rightDevice===device)
     {
         Data.RStOvOperation=operation
+    }
+    else
+    {
+        Data.IceStOvOperation=operation
     }
     setToServer(Data)
 }
@@ -185,13 +189,22 @@ function setMultiIceCooking(list,orderTime)
         if(list[0].pos==leftDevice && list[1].pos==rightDevice  && list[1].mode==iceWorkMode)
         {
             iceWorkStep.state=iceWorkOperaEnum.LEFT_ICE
-            setCooking(list[0],0,list[0].pos)
+            iceWorkStep.cookStep=JSON.parse(JSON.stringify(list[1]))
+            if(list[0].time<=30)
+                setCooking(list[0],0,list[0].pos)
+            else
+                setCooking(list[0],10,list[0].pos)
+            list[1].time=720
+            setIceCooking(list[1],orderTime)
         }
         else if(list[0].pos==rightDevice && list[0].mode!=iceWorkMode && list[1].pos==rightDevice  && list[1].mode==iceWorkMode)
         {
             iceWorkStep.state=iceWorkOperaEnum.RIGHT_ICE
-            iceWorkStep.cookStep=list[1]
+            iceWorkStep.cookStep=JSON.parse(JSON.stringify(list[1]))
             setCooking(list[0],0,list[0].pos)
+
+            list[1].mode=121
+            setIceCooking(list[1],orderTime)
         }
         else if(list[0].pos==rightDevice  && list[0].mode==iceWorkMode && list[1].pos==rightDevice && list[1].mode!=iceWorkMode)
         {

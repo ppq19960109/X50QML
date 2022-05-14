@@ -26,14 +26,14 @@ ApplicationWindow {
     readonly property int iceDevice:2
     readonly property int allDevice:2
     readonly property var  cookModeImg: ["icon-steamed.png","icon-bake.png","icon-multistage.png"]
-    readonly property var leftWorkMode: ["未设定", "经典蒸", "高温蒸", "热风烧烤", "上下加热", "立体热风", "蒸汽烤", "空气炸", "保温烘干","便捷蒸","制冷","未设定"]
+    readonly property var leftWorkMode: ["未设定", "经典蒸", "高温蒸", "热风烧烤", "上下加热", "立体热风", "蒸汽烤", "空气炸", "保温烘干","便捷蒸","制冷","冷凝风机"]
     readonly property var leftWorkModeNumber:[0,1,2,35,36,38,40,42,72,100,120,121]
     readonly property int iceWorkMode:120
     readonly property int rightModeIndex:8
 
     readonly property var leftModel:[{"modelData":1,"temp":100,"time":30,"minTemp":40,"maxTemp":100},{"modelData":2,"temp":120,"time":20,"minTemp":101,"maxTemp":120},{"modelData":6,"temp":150,"time":60,"minTemp":50,"maxTemp":200},{"modelData":7,"temp":220,"time":15,"minTemp":200,"maxTemp":230},{"modelData":3,"temp":200,"time":60,"minTemp":50,"maxTemp":230}
         ,{"modelData":5,"temp":180,"time":120,"minTemp":50,"maxTemp":230},{"modelData":4,"temp":180,"time":120,"minTemp":50,"maxTemp":230}
-        ,{"modelData":8,"temp":60,"time":30,"minTemp":50,"maxTemp":120},{"modelData":9,"temp":100,"time":30,"minTemp":40,"maxTemp":100},{"modelData":10,"temp":5,"time":30,"minTemp":5,"maxTemp":15},{"modelData":11,"temp":100,"time":30,"minTemp":40,"maxTemp":100}]
+        ,{"modelData":8,"temp":60,"time":30,"minTemp":50,"maxTemp":120},{"modelData":9,"temp":100,"time":30,"minTemp":40,"maxTemp":100},{"modelData":10,"temp":5,"time":30,"minTemp":5,"maxTemp":15},{"modelData":11,"temp":5,"time":30,"minTemp":5,"maxTemp":15}]
 
     readonly property var workStateEnum:{"WORKSTATE_STOP":0,"WORKSTATE_RESERVE":1,"WORKSTATE_PREHEAT":2,"WORKSTATE_RUN":3,"WORKSTATE_FINISH":4,"WORKSTATE_PAUSE":5}
     readonly property var workStateArray:["停止","预约中","预热中","运行中","烹饪完成","暂停"]
@@ -224,6 +224,9 @@ ApplicationWindow {
             onCancel: {
                 closeLoaderPopup()
             }
+            onConfirm:{
+
+            }
         }
     }
     function showLoaderPopup(hintTopText,hintCenterText,hintHeight,confirmText,confirmFunc){
@@ -233,10 +236,8 @@ ApplicationWindow {
             loader_main.item.hintTopText=hintTopText
             loader_main.item.hintCenterText=hintCenterText
             loader_main.item.hintHeight=hintHeight
-            if(confirmText!=null)
-                loader_main.item.confirmText=confirmText
-            if(confirmFunc!=null)
-                loader_main.item.confirmFunc=confirmFunc
+            loader_main.item.confirmText=confirmText==null?"":confirmText
+            loader_main.item.confirmFunc=confirmFunc
         }
     }
     function closeLoaderPopup(){
@@ -249,6 +250,9 @@ ApplicationWindow {
             if(loader_main.item.hintCenterText.indexOf("门开启")!=-1 &&  loader_main.item.hintCenterText.indexOf(dir)!=-1)
                 loader_main.sourceComponent = undefined
         }
+    }
+    function sendIceConfirmCmd(){
+        setIceCooking(iceWorkStep.cookStep,0)
     }
     Component{
         id:component_hoodoff
@@ -670,26 +674,26 @@ ApplicationWindow {
             else if(cookSteps.length===1 && (undefined === cookSteps[0].number || 0 === cookSteps[0].number))
             {
                 SendFunc.setCooking(cookSteps[0],root.orderTime,root.cookPos)
-                //            if(leftDevice===root.cookPos)
-                //            {
-                //                QmlDevState.setState("LStOvState",1)
-                //                QmlDevState.setState("LStOvMode",cookSteps[0].mode)
-                //                QmlDevState.setState("LStOvSetTemp",cookSteps[0].temp)
-                //                QmlDevState.setState("LStOvRealTemp",cookSteps[0].temp)
-                //                QmlDevState.setState("LStOvSetTimer",cookSteps[0].time)
-                //                QmlDevState.setState("LStOvSetTimerLeft",cookSteps[0].time)
-                //                QmlDevState.setState("LStOvOrderTimer",cookSteps[0].time)
-                //                QmlDevState.setState("LStOvOrderTimerLeft",cookSteps[0].time)
-                //            }
-                //            else
-                //            {
-                //                QmlDevState.setState("RStOvState",1)
-                //                QmlDevState.setState("RStOvRealTemp",cookSteps[0].temp)
-                //                QmlDevState.setState("RStOvSetTimerLeft",cookSteps[0].time)
-                //                QmlDevState.setState("RStOvSetTimer",cookSteps[0].time)
-                //                QmlDevState.setState("RStOvOrderTimer",cookSteps[0].time)
-                //                QmlDevState.setState("RStOvOrderTimerLeft",cookSteps[0].time/2)
-                //            }
+//                if(leftDevice===root.cookPos)
+//                {
+//                    QmlDevState.setState("LStOvState",1)
+//                    QmlDevState.setState("LStOvMode",cookSteps[0].mode)
+//                    QmlDevState.setState("LStOvSetTemp",cookSteps[0].temp)
+//                    QmlDevState.setState("LStOvRealTemp",cookSteps[0].temp)
+//                    QmlDevState.setState("LStOvSetTimer",cookSteps[0].time)
+//                    QmlDevState.setState("LStOvSetTimerLeft",cookSteps[0].time)
+//                    QmlDevState.setState("LStOvOrderTimer",cookSteps[0].time)
+//                    QmlDevState.setState("LStOvOrderTimerLeft",cookSteps[0].time)
+//                }
+//                else
+//                {
+//                    QmlDevState.setState("RStOvState",1)
+//                    QmlDevState.setState("RStOvRealTemp",cookSteps[0].temp)
+//                    QmlDevState.setState("RStOvSetTimerLeft",cookSteps[0].time)
+//                    QmlDevState.setState("RStOvSetTimer",cookSteps[0].time)
+//                    QmlDevState.setState("RStOvOrderTimer",cookSteps[0].time)
+//                    QmlDevState.setState("RStOvOrderTimerLeft",cookSteps[0].time/2)
+//                }
             }
             else
             {

@@ -12,7 +12,7 @@ Item {
     property int timeout:30
     readonly property int rectWidth: 60
     readonly property int passWidth: 480
-    readonly property int passHeight: 280
+    readonly property int passHeight: 300
     Timer{
         id:timer_test
         repeat: true
@@ -35,7 +35,7 @@ Item {
     function touchJudge(x,y,parent)
     {
         console.warn("touchJudge",parent.width,parent.height,x,y,pressedX,pressedY)
-        if(touchExited>0)
+        if(touchExited>2)
             return -1
 
         if(parent.width>parent.height)
@@ -108,7 +108,7 @@ Item {
             }
             onExited:{
                 console.warn("onExited")
-                touchExited=1
+                ++touchExited
             }
         }
     }
@@ -156,6 +156,7 @@ Item {
         }
         else if(touchCount==6)
         {
+            rect.width=root.width+20
             rect.rotation=31
         }
         else if(touchCount==7)

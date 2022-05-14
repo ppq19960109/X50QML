@@ -40,6 +40,7 @@ Item {
                 Layout.alignment: Qt.AlignHCenter|Qt.AlignVCenter
                 background:Image{
                     asynchronous:true
+                    smooth:false
                     anchors.fill: parent
                     source:themesImagesPath+"statusset-button1-background.png"
                 }
@@ -60,6 +61,7 @@ Item {
                 Layout.alignment: Qt.AlignHCenter|Qt.AlignVCenter
                 background:Image{
                     asynchronous:true
+                    smooth:false
                     anchors.fill: parent
                     source:themesImagesPath+"statusset-button1-background.png"
                 }
@@ -80,6 +82,7 @@ Item {
                 Layout.alignment: Qt.AlignHCenter|Qt.AlignVCenter
                 background:Image{
                     asynchronous:true
+                    smooth:false
                     anchors.fill: parent
                     source:themesImagesPath+"statusset-button2-background.png"
                 }
@@ -100,6 +103,7 @@ Item {
                 Layout.alignment: Qt.AlignHCenter|Qt.AlignVCenter
                 background:Image{
                     asynchronous:true
+                    smooth:false
                     anchors.fill: parent
                     source:themesImagesPath+"statusset-button1-background.png"
                 }
@@ -120,6 +124,7 @@ Item {
                 Layout.alignment: Qt.AlignHCenter|Qt.AlignVCenter
                 background:Image{
                     asynchronous:true
+                    smooth:false
                     anchors.fill: parent
                     source:themesImagesPath+"statusset-button1-background.png"
                 }
@@ -140,6 +145,7 @@ Item {
                 Layout.alignment: Qt.AlignHCenter|Qt.AlignVCenter
                 background:Image{
                     asynchronous:true
+                    smooth:false
                     anchors.fill: parent
                     source:themesImagesPath+"statusset-button2-background.png"
                 }

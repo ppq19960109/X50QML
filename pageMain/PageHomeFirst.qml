@@ -50,17 +50,26 @@ Item {
                 source: themesImagesPath+"homefirst-button2-background.png"
             }
 
-            Image {
-                asynchronous:true
-                smooth:false
+//            Image {
+//                asynchronous:true
+//                smooth:false
+//                anchors.top: parent.top
+//                anchors.topMargin: 31
+//                anchors.horizontalCenter: parent.horizontalCenter
+//                source: themesImagesPath+"homefirst-button2-image.png"
+//            }
+            Text{
+                text:"右腔冰蒸"
+                color:"#fff"
+                font.pixelSize: 50
+                anchors.horizontalCenter: parent.horizontalCenter
                 anchors.top: parent.top
                 anchors.topMargin: 31
-                anchors.horizontalCenter: parent.horizontalCenter
-                source: themesImagesPath+"homefirst-button2-image.png"
             }
 
             onClicked: {
-                load_page("pageSteamBakeBase",JSON.stringify({"device":rightDevice}))
+                load_page("pageMultistageIce")
+//                load_page("pageSteamBakeBase",JSON.stringify({"device":rightDevice}))
             }
         }
     }

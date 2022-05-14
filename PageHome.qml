@@ -184,6 +184,7 @@ Item {
             }
         }
         onStateChanged: { // 处理目标对象信号的槽函数
+            var ret
             console.log("page home onStateChanged",key,value)
             if("SysPower"==key)
             {
@@ -192,8 +193,7 @@ Item {
             else if("LStOvState"==key)
             {
                 console.log("LStOvState",value,QmlDevState.state.LStOvState)
-                var ret=isExistView("pageSteamBakeRun")
-                console.log(ret,typeof ret)
+                ret=isExistView("pageSteamBakeRun")
                 if(value > 0)
                 {
                     if(ret==null)
@@ -205,11 +205,15 @@ Item {
                 {
                     if(ret!=null)
                     {
-                        if(QmlDevState.state.RStOvState===workStateEnum.WORKSTATE_STOP)
+                        if(QmlDevState.state.RStOvState===workStateEnum.WORKSTATE_STOP && QmlDevState.state.IceStOvState===workStateEnum.WORKSTATE_STOP)
                         {
                             backTopPage()
                         }
                     }
+                }
+                if(value==4 && iceWorkStep.state==iceWorkOperaEnum.LEFT_ICE)
+                {
+                    showLoaderPopup("请将左腔食物放入右腔","",306,"确定",sendIceConfirmCmd)
                 }
 
                 if(lastLStOvState!=value && lastLStOvState>=0)
@@ -230,8 +234,7 @@ Item {
             else if("RStOvState"==key)
             {
                 console.log("RStOvState",value,QmlDevState.state.RStOvState)
-                var ret=isExistView("pageSteamBakeRun")
-                console.log(ret,typeof ret)
+                ret=isExistView("pageSteamBakeRun")
                 if(value > 0)
                 {
                     if(ret==null)
@@ -243,12 +246,17 @@ Item {
                 {
                     if(ret!=null)
                     {
-                        if(QmlDevState.state.LStOvState===workStateEnum.WORKSTATE_STOP)
+                        if(QmlDevState.state.LStOvState===workStateEnum.WORKSTATE_STOP&& QmlDevState.state.IceStOvState===workStateEnum.WORKSTATE_STOP)
                         {
                             backTopPage()
                         }
                     }
                 }
+                if(value==4 && iceWorkStep.state==iceWorkOperaEnum.RIGHT_ICE)
+                {
+                    sendIceConfirmCmd()
+                }
+
                 if(lastRStOvState!=value && lastRStOvState>=0)
                 {
                     if(value==5)
@@ -263,6 +271,32 @@ Item {
                     }
                 }
                 lastRStOvState=value
+            }
+            else if("IceStOvState"==key)
+            {
+                console.log("IceStOvState",value,QmlDevState.state.IceStOvState)
+                ret=isExistView("pageSteamBakeRun")
+                if(value > 0)
+                {
+                    if(ret==null)
+                    {
+                        load_page("pageSteamBakeRun")
+                    }
+                }
+                else
+                {
+                    if(ret!=null)
+                    {
+                        if(QmlDevState.state.LStOvState===workStateEnum.WORKSTATE_STOP&& QmlDevState.state.RStOvState===workStateEnum.WORKSTATE_STOP)
+                        {
+                            backTopPage()
+                        }
+                    }
+                }
+                if(value==4 && iceWorkStep.state==iceWorkOperaEnum.ICE_RIGHT)
+                {
+                    setCooking(iceWorkStep.cookStep,0,rightDevice)
+                }
             }
             else if("HoodOffLeftTime"==key)
             {

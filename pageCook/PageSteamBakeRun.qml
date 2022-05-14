@@ -77,7 +77,8 @@ Rectangle {
     }
 
     Item{
-        width:parent.width/2
+        id:leftItem
+        width:parent.width/3
         anchors.top:parent.top
         anchors.bottom: statusBar.top
         anchors.left: parent.left
@@ -85,11 +86,9 @@ Rectangle {
         PageCirProgressBar{
             id:leftProgressBar
             device:0
-            width:310
+            width:265
             height: width
-            anchors.verticalCenter: parent.verticalCenter
-            anchors.left: parent.left
-            anchors.leftMargin: 75
+            anchors.centerIn: parent
 
             workColor:"#E68855"
             workState:QmlDevState.state.LStOvState
@@ -154,10 +153,9 @@ Rectangle {
         }
         Button{
             visible: leftProgressBar.workState !== workStateEnum.WORKSTATE_STOP && leftProgressBar.workState !== workStateEnum.WORKSTATE_FINISH
-            width:90
+            width:60
             height: width
             anchors.left: leftProgressBar.left
-            anchors.leftMargin: 5
             anchors.bottom: leftProgressBar.bottom
             //            anchors.bottomMargin: -10
             background:Image {
@@ -175,10 +173,11 @@ Rectangle {
         }
         Button{
             visible: leftProgressBar.workState !== workStateEnum.WORKSTATE_STOP && leftProgressBar.workState !== workStateEnum.WORKSTATE_FINISH
-            width:90
+            width:60
             height: width
             anchors.right: leftProgressBar.right
-            anchors.rightMargin: 5
+
+
             anchors.bottom: leftProgressBar.bottom
             //            anchors.bottomMargin: -10
             background:Image {
@@ -224,7 +223,8 @@ Rectangle {
         }
     }
     Item{
-        width:parent.width/2
+        id:rightItem
+        width:parent.width/3
         anchors.top:parent.top
         anchors.bottom: statusBar.top
         anchors.right: parent.right
@@ -232,11 +232,9 @@ Rectangle {
         PageCirProgressBar{
             id:rightProgressBar
             device:1
-            width:310
+            width:265
             height: width
-            anchors.verticalCenter: parent.verticalCenter
-            anchors.right: parent.right
-            anchors.rightMargin: 75
+            anchors.centerIn: parent
 
             workColor:"#DE932F"
             workState:QmlDevState.state.RStOvState
@@ -301,10 +299,9 @@ Rectangle {
         }
         Button{
             visible: rightProgressBar.workState !== workStateEnum.WORKSTATE_STOP && rightProgressBar.workState !== workStateEnum.WORKSTATE_FINISH
-            width:90
+            width:60
             height: width
             anchors.left: rightProgressBar.left
-            anchors.leftMargin: 5
             anchors.bottom: rightProgressBar.bottom
             //            anchors.bottomMargin: -10
             background:Image {
@@ -322,10 +319,9 @@ Rectangle {
         }
         Button{
             visible: rightProgressBar.workState !== workStateEnum.WORKSTATE_STOP  && rightProgressBar.workState !== workStateEnum.WORKSTATE_FINISH
-            width:90
+            width:60
             height: width
             anchors.right: rightProgressBar.right
-            anchors.rightMargin: 5
             anchors.bottom: rightProgressBar.bottom
             //            anchors.bottomMargin: -10
             background:Image {
@@ -344,6 +340,104 @@ Rectangle {
                 {
                     //                    QmlDevState.setState("RStOvState",workStateEnum.WORKSTATE_PAUSE)
                     SendFunc.setCookOperation(rightDevice,workOperationEnum.PAUSE)
+                }
+            }
+        }
+
+    }
+    Item{
+        width:parent.width/3
+        anchors.top:parent.top
+        anchors.bottom: statusBar.top
+        anchors.horizontalCenter: parent.horizontalCenter
+
+        PageCirProgressBar{
+            id:iceProgressBar
+            device:2
+            width:265
+            height: width
+            anchors.centerIn: parent
+
+            workColor:"#DE932F"
+            workState:QmlDevState.state.IceStOvState
+            workMode:workState===workStateEnum.WORKSTATE_STOP?qsTr("右腔冰蒸"):CookFunc.leftWorkModeFun(QmlDevState.state.IceStOvMode)
+            canvasDiameter:width
+            percent:(100-100*QmlDevState.state.IceStOvSetTimerLeft/QmlDevState.state.IceStOvSetTimer)
+
+//            orderTimeLeft:QmlDevState.state.IceStOvOrderTimerLeft
+            workTime:
+            {
+                if(workState === workStateEnum.WORKSTATE_PREHEAT)
+                {
+                    return QmlDevState.state.RStOvRealTemp
+                }
+                else if(workState === workStateEnum.WORKSTATE_RESERVE || (workState === workStateEnum.WORKSTATE_PAUSE && orderTimeLeft!=0))
+                {
+                    var time=orderTimeLeft
+                    return (time<600?"0":"")+ Math.floor(time/60)+":"+(time%60<10?"0":"")+time%60//
+                }
+                else
+                {
+                    return QmlDevState.state.IceStOvSetTimerLeft
+                }
+            }
+            workTemp:qsTr(QmlDevState.state.IceStOvSetTemp+"℃")
+            MouseArea{
+                anchors.fill: parent
+                propagateComposedEvents: true
+                onClicked: {
+                        mouse.accepted = false
+                }
+                onPressed: {
+                        mouse.accepted = false
+                }
+                onReleased: {
+                        mouse.accepted = false
+                }
+            }
+            onConfirm:cookConfirm()
+        }
+        Button{
+            visible: iceProgressBar.workState !== workStateEnum.WORKSTATE_STOP && iceProgressBar.workState !== workStateEnum.WORKSTATE_FINISH
+            width:60
+            height: width
+            anchors.left: iceProgressBar.left
+            anchors.bottom: iceProgressBar.bottom
+            //            anchors.bottomMargin: -10
+            background:Image {
+                asynchronous:true
+                smooth:false
+                anchors.centerIn:parent
+                source: themesImagesPath+"icon-cookclose.png"
+            }
+            onClicked:{
+                if(QmlDevState.state.IcStOvState === workStateEnum.WORKSTATE_RESERVE)
+                    showCancelRun("冰蒸","预约")
+                else
+                    showCancelRun("冰蒸","工作")
+            }
+        }
+        Button{
+            visible: iceProgressBar.workState !== workStateEnum.WORKSTATE_STOP  && iceProgressBar.workState !== workStateEnum.WORKSTATE_FINISH
+            width:60
+            height: width
+            anchors.right: iceProgressBar.right
+            anchors.bottom: iceProgressBar.bottom
+            //            anchors.bottomMargin: -10
+            background:Image {
+                asynchronous:true
+                smooth:false
+                anchors.centerIn:parent
+                source: themesImagesPath+(QmlDevState.state.RStOvState===workStateEnum.WORKSTATE_PAUSE?"icon-cookpause.png":"icon-cookrun.png")
+            }
+            onClicked:{
+                if(QmlDevState.state.IcStOvState===workStateEnum.WORKSTATE_PAUSE)
+                {
+                    SendFunc.setCookOperation(iceDevice,workOperationEnum.START)
+                }
+                else
+                {
+                    SendFunc.setCookOperation(iceDevice,workOperationEnum.PAUSE)
                 }
             }
         }
@@ -399,9 +493,13 @@ Rectangle {
                 {
                     SendFunc.setCookOperation(leftDevice,workOperationEnum.CANCEL)
                 }
-                else
+                else if(hintTopText.indexOf("右腔")!=-1)
                 {
                     SendFunc.setCookOperation(rightDevice,workOperationEnum.CANCEL)
+                }
+                else
+                {
+                    SendFunc.setCookOperation(iceDevice,workOperationEnum.CANCEL)
                 }
                 closeLoaderMain()
             }

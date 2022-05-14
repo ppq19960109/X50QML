@@ -64,7 +64,9 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     stateType.append(QPair<QString,int>("IceStOvSetTimer",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("IceStOvSetTimerLeft",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("IceStOvSetTemp",LINK_VALUE_TYPE_NUM));
-    stateType.append(QPair<QString,int>("IceStOvRealTemp",LINK_VALUE_TYPE_NUM));
+//    stateType.append(QPair<QString,int>("IceStOvRealTemp",LINK_VALUE_TYPE_NUM));
+//    stateType.append(QPair<QString,int>("IceStOvOrderTimer",LINK_VALUE_TYPE_NUM));
+//    stateType.append(QPair<QString,int>("IceStOvOrderTimerLeft",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("IceStOvState",LINK_VALUE_TYPE_NUM));
 
     stateType.append(QPair<QString,int>("MultiMode",LINK_VALUE_TYPE_NUM));
@@ -114,10 +116,16 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     setState("LStOvRealTemp",0);
     setState("LStOvOrderTimerLeft",0);
 
+    setState("RStOvMode",0);
     setState("RStOvState",0);
     setState("RStOvSetTimerLeft",0);
     setState("RStOvRealTemp",0);
     setState("RStOvOrderTimerLeft",0);
+
+    setState("IceStOvMode",0);
+    setState("IceStOvState",0);
+    setState("IceStOvSetTimerLeft",0);
+    setState("IceStOvRealTemp",0);
 
     setState("cnt",0);
     setState("current",1);

@@ -51,14 +51,15 @@ Item {
     }
     Component.onCompleted: {
         console.log("PageMultistage onCompleted")
+        SendFunc.permitSteamStartStatus(1)
     }
 
     PageBackBar{
         id:topBar
         anchors.bottom:parent.bottom
-        name:qsTr("冰蒸")
+        name:qsTr("右腔冰蒸")
         leftBtnText:qsTr("")
-        rightBtnText:qsTr("启动")
+        rightBtnText:qsTr("")//启动
         onLeftClick:{
 
         }
@@ -78,11 +79,35 @@ Item {
             visible:listView.count >= 2?false:true
             // 新增按钮
             Button {
-                id:left
+                id:right
                 width: 140
                 height:50
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.right: parent.right
+                anchors.rightMargin:40
+
+                background: Rectangle {
+                    color:"transparent"
+                    border.color:themesTextColor
+                    radius: 16
+                }
+                Text{
+                    anchors.centerIn: parent
+                    color:themesTextColor
+                    font.pixelSize:30
+                    text:"右腔冰蒸"
+                }
+                onClicked:{
+                    listClickIndex=listView.count
+                    showTanchang(rightDevice)
+                }
+            }
+            Button {
+                id:left
+                width: 140
+                height:50
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.right: right.left
                 anchors.rightMargin:40
 
                 background: Rectangle {
@@ -99,30 +124,6 @@ Item {
                 onClicked:{
                     listClickIndex=listView.count
                     showTanchang(leftDevice)
-                }
-            }
-            Button {
-                id:right
-                width: 140
-                height:50
-                anchors.verticalCenter: parent.verticalCenter
-                anchors.right: left.left
-                anchors.rightMargin:40
-
-                background: Rectangle {
-                    color:"transparent"
-                    border.color:themesTextColor
-                    radius: 16
-                }
-                Text{
-                    anchors.centerIn: parent
-                    color:themesTextColor
-                    font.pixelSize:30
-                    text:"右腔速蒸"
-                }
-                onClicked:{
-                    listClickIndex=listView.count
-                    showTanchang(rightDevice)
                 }
             }
 
@@ -145,9 +146,9 @@ Item {
         id: listDelegate
         PageMultistageIceDelegate {
             id:iceDelegate
-            nameText:CookFunc.leftWorkModeFun(mode)+"-"+temp+"℃"+"-"+time+"分钟"
+            nameText:(cookPos==0?"左腔":"右腔")+" "+CookFunc.leftWorkModeFun(mode)+"  "+temp+"℃"+"  "+time+"分钟"
             cookPos:pos
-            closeVisible:true
+            closeVisible:false
             onCancel:{
                 listView.model.remove(index)
                 if(listView.count==0)
@@ -174,7 +175,7 @@ Item {
             delegate: listDelegate
             model: listModel
 
-            footer: footerView
+            //            footer: footerView
             focus: true
             //            highlightRangeMode: ListView.StrictlyEnforceRange
             //            highlightFollowsCurrentItem: true
@@ -185,11 +186,13 @@ Item {
         id:component_tanchuang
         PageIceSteam {
             cookPos:iceCookPos
+            modePathViewEnabled:cookPos==0
             name:'第'+ (listClickIndex+1) +'段'
             leftBtnText:""
             rightBtnText:"确定"
             modePathViewIndex:listClickIndex >= listView.count?undefined:CookFunc.leftWorkModeNumberFun(listView.model.get(listClickIndex).mode)-1-(cookPos==0?0:rightModeIndex)
-            tempPathViewIndex:listClickIndex >= listView.count?undefined:listView.model.get(listClickIndex).temp-leftModel[modePathViewIndex].minTemp
+            tempPathViewIndex:listClickIndex >= listView.count?undefined:listView.model.get(listClickIndex).temp-leftModel[modePathViewIndex+(cookPos==0?0:rightModeIndex)].minTemp
+
             timePathViewIndex:listClickIndex >= listView.count?undefined:listView.model.get(listClickIndex).time-1
         }
     }
@@ -222,6 +225,72 @@ Item {
 
                 if(listView.count==1)
                     SendFunc.permitSteamStartStatus(1)
+            }
+        }
+    }
+
+    Item {
+        id:remind
+        width: parent.width
+        anchors.top: parent.top
+        anchors.bottom: topBar.top
+
+        Grid
+        {
+            anchors.fill: parent
+            rows: 2
+            columns: 3
+            Repeater
+            {
+                model: ListModel{
+                    ListElement{name: "便捷早餐"
+                        value:4
+                        cookSteps:"[{\"pos\":1,\"mode\":120,\"temp\":5,\"time\":720,\"number\":1},{\"pos\":1,\"mode\":100,\"temp\":100,\"time\":30,\"number\":2}]"}
+                    ListElement{name: "大菜预约"
+                        value:4
+                        cookSteps:"[{\"pos\":1,\"mode\":120,\"temp\":5,\"time\":480,\"number\":1},{\"pos\":1,\"mode\":100,\"temp\":100,\"time\":30,\"number\":2}]"}
+                    ListElement{name: "冷卤"
+                        value:3
+                        cookSteps:"[{\"pos\":1,\"mode\":100,\"temp\":100,\"time\":30,\"number\":1},{\"pos\":1,\"mode\":120,\"temp\":5,\"time\":120,\"number\":2}]"}
+                    ListElement{name: "气调冰镇"
+                        value:3
+                        cookSteps:"[{\"pos\":0,\"mode\":1,\"temp\":100,\"time\":30,\"number\":1},{\"pos\":1,\"mode\":120,\"temp\":5,\"time\":120,\"number\":2}]"}
+                    ListElement{name: "低温腌制"
+                        value:1
+                        cookSteps:"[{\"pos\":1,\"mode\":120,\"temp\":5,\"time\":120,\"number\":1}]"}
+                    ListElement{name: "冷藏提鲜"
+                        value:1
+                        cookSteps:"[{\"pos\":1,\"mode\":120,\"temp\":5,\"time\":120,\"number\":1}]"}
+                }
+                Button{
+                    width:parent.width/3
+                    height: parent.height/2
+                    background:Image{
+                        asynchronous:true
+                        smooth:false
+                        anchors.fill: parent
+                        source:themesImagesPath+"statusset-button2-background.png"
+                    }
+                    Text {
+                        width: parent.width
+                        color:"#FFF"
+                        text: qsTr(name)
+                        anchors.centerIn: parent
+                        font.pixelSize: 40
+                        font.bold: true
+                        wrapMode: Text.WordWrap
+                        horizontalAlignment:Text.AlignHCenter
+                        verticalAlignment:Text.AlignVCenter
+                    }
+                    onClicked: {
+                        remind.visible=false
+                        topBar.rightBtnText="启动"
+
+                        var steps=JSON.parse(cookSteps)
+                        for(var i = 0; i < steps.length; i++)
+                            listView.model.append(steps[i])
+                    }
+                }
             }
         }
     }

@@ -13,7 +13,7 @@ Item {
     signal confirm()
 
     implicitWidth: parent.width
-    implicitHeight: 100
+    implicitHeight: 150
 
     PageDivider{
         anchors.bottom: parent.bottom
