@@ -30,6 +30,7 @@ Item {
             anchors.horizontalCenter: parent.horizontalCenter
             asynchronous:true
             smooth:false
+            cache:false
             source: "file:AfterSalesQrCode.png"
         }
 

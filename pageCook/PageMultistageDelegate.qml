@@ -26,7 +26,6 @@ Item {
         anchors.right: parent.right
 
         background: Image {
-                cache:false
                 asynchronous:true
                 smooth:false
                 anchors.centerIn: parent

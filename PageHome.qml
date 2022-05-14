@@ -184,6 +184,7 @@ Item {
             }
         }
         onStateChanged: { // 处理目标对象信号的槽函数
+            var ret
             console.log("page home onStateChanged",key,value)
             if("SysPower"==key)
             {
@@ -192,8 +193,7 @@ Item {
             else if("LStOvState"==key)
             {
                 console.log("LStOvState",value,QmlDevState.state.LStOvState)
-                var ret=isExistView("pageSteamBakeRun")
-                console.log(ret,typeof ret)
+                ret=isExistView("pageSteamBakeRun")
                 if(value > 0)
                 {
                     if(ret==null)
@@ -230,8 +230,7 @@ Item {
             else if("RStOvState"==key)
             {
                 console.log("RStOvState",value,QmlDevState.state.RStOvState)
-                var ret=isExistView("pageSteamBakeRun")
-                console.log(ret,typeof ret)
+                ret=isExistView("pageSteamBakeRun")
                 if(value > 0)
                 {
                     if(ret==null)

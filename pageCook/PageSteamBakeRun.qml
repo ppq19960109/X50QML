@@ -85,11 +85,9 @@ Rectangle {
         PageCirProgressBar{
             id:leftProgressBar
             device:0
-            width:310
+            width:320
             height: width
-            anchors.verticalCenter: parent.verticalCenter
-            anchors.left: parent.left
-            anchors.leftMargin: 75
+            anchors.centerIn: parent
 
             workColor:"#E68855"
             workState:QmlDevState.state.LStOvState
@@ -232,11 +230,9 @@ Rectangle {
         PageCirProgressBar{
             id:rightProgressBar
             device:1
-            width:310
+            width:320
             height: width
-            anchors.verticalCenter: parent.verticalCenter
-            anchors.right: parent.right
-            anchors.rightMargin: 75
+            anchors.centerIn: parent
 
             workColor:"#DE932F"
             workState:QmlDevState.state.RStOvState

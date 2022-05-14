@@ -5,6 +5,7 @@ Image {
     id: busyImg
     asynchronous:true
     smooth:false
+    cache:false
     RotationAnimator {
         target: busyImg
         running: busyImg.visible

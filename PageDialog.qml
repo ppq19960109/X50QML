@@ -48,6 +48,7 @@ Item {
                 id:closeImg
                 asynchronous:true
                 smooth:false
+                cache:false
                 anchors.centerIn: parent
                 source: themesImagesPath+"icon-window-close.png"
             }

@@ -61,7 +61,7 @@ Item {
                 console.warn("row onReleased......",pressedX,mouse.x)
                 rowCanvas.context.reset()
 //                rowCanvas.requestPaint()
-                if(touchExited==0 && rowPos>0 && Math.abs(mouse.x-pressedX)>600)
+                if(touchExited<3 && rowPos>0 && Math.abs(mouse.x-pressedX)>600)
                     ++rowCount
             }
             onPositionChanged:{
@@ -71,7 +71,7 @@ Item {
             }
             onExited:{
                 console.warn("onExited")
-                touchExited=1
+                ++touchExited
             }
         }
     }
@@ -140,7 +140,7 @@ Item {
                 console.warn("col onReleased......",pressedY,mouse.y)
                 colCanvas.context.reset()
 //                colCanvas.requestPaint()
-                if( touchExited==0 && colPos>0&& Math.abs(mouse.y-pressedY)>400)
+                if( touchExited<3 && colPos>0&& Math.abs(mouse.y-pressedY)>400)
                     ++colCount
             }
             onPositionChanged:{
@@ -150,7 +150,7 @@ Item {
             }
             onExited:{
                 console.warn("onExited")
-                touchExited=1
+                ++touchExited
             }
         }
     }

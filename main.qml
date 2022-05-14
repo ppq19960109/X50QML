@@ -14,7 +14,7 @@ ApplicationWindow {
     id: window
     width: 800
     height: 480
-    //    visible: true
+//    visible: true
     property int sysPower:-1
     property int permitStartStatus:0
     readonly property string uiVersion:"1.1"
@@ -27,7 +27,6 @@ ApplicationWindow {
     readonly property var leftWorkMode: ["未设定", "经典蒸", "高温蒸", "热风烧烤", "上下加热", "立体热风", "蒸汽烤", "空气炸", "保温烘干","便捷蒸"]
     readonly property var leftWorkModeNumber:[0,1,2,35,36,38,40,42,72,100]
     readonly property int rightModeIndex:8
-    readonly property string rightWorkMode:"便捷蒸"
 
     readonly property var leftModel:[{"modelData":1,"temp":100,"time":30,"minTemp":40,"maxTemp":100},{"modelData":2,"temp":120,"time":20,"minTemp":101,"maxTemp":120},{"modelData":6,"temp":150,"time":60,"minTemp":50,"maxTemp":200},{"modelData":7,"temp":220,"time":15,"minTemp":200,"maxTemp":230},{"modelData":3,"temp":200,"time":60,"minTemp":50,"maxTemp":230}
         ,{"modelData":5,"temp":180,"time":120,"minTemp":50,"maxTemp":230},{"modelData":4,"temp":180,"time":120,"minTemp":50,"maxTemp":230}
@@ -179,7 +178,7 @@ ApplicationWindow {
 
     StackView {
         id: stackView
-        //                initialItem: pageTestFront // pageHome pageTestFront pageTest pageGetQuad
+//        initialItem: pageTestFront // pageHome pageTestFront pageTest pageGetQuad
         anchors.fill: parent
     }
 
@@ -229,10 +228,8 @@ ApplicationWindow {
             loader_main.item.hintTopText=hintTopText
             loader_main.item.hintCenterText=hintCenterText
             loader_main.item.hintHeight=hintHeight
-            if(confirmText!=null)
-                loader_main.item.confirmText=confirmText
-            if(confirmFunc!=null)
-                loader_main.item.confirmFunc=confirmFunc
+            loader_main.item.confirmText=confirmText==null?"":confirmText
+            loader_main.item.confirmFunc=confirmFunc
         }
     }
     function closeLoaderPopup(){
@@ -329,7 +326,7 @@ ApplicationWindow {
 
         onPressed: {
             //            console.log("Window onPressed:",sysPower,QmlDevState.state.HoodSpeed,QmlDevState.state.RStOvState,QmlDevState.state.LStOvState,QmlDevState.state.ErrorCodeShow,QmlDevState.localConnected)
-            console.log("Window onPressed:",JSON.stringify(systemSettings.wifiPasswdArray))
+            //            console.log("Window onPressed:",JSON.stringify(systemSettings.wifiPasswdArray))
             if(sysPower > 0)
             {
                 mouse.accepted = false
