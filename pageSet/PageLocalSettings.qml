@@ -22,8 +22,11 @@ Item {
     //内容
     Item{
         width:parent.width-100
+//        height: parent.height-topBar.height-100
         anchors.bottom:topBar.top
+        anchors.bottomMargin: 20
         anchors.top: parent.top
+        anchors.topMargin: 60
         anchors.horizontalCenter: parent.horizontalCenter
 
         Item{
@@ -53,7 +56,7 @@ Item {
                 anchors.rightMargin: 20
                 anchors.verticalCenter: parent.verticalCenter
                 stepSize: 2
-                from: 40
+                from: 1
                 to: 255
                 value: Backlight.backlightGet()
 

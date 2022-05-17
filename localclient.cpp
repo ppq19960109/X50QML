@@ -8,7 +8,7 @@
 LocalClient::LocalClient(QObject *parent) : QObject(parent)
 {
     timeoutCount=0;
-    m_socket = new QLocalSocket();
+    m_socket = new QLocalSocket(this);
     qDebug() << "readBufferSize:" <<m_socket->readBufferSize();
     qDebug() << "UNIX_DOMAIN:" << UNIX_DOMAIN;
     connect(m_socket, SIGNAL(connected()), this,SLOT(socketConnectedHandler()));
@@ -24,7 +24,8 @@ LocalClient::LocalClient(QObject *parent) : QObject(parent)
 
 LocalClient::~LocalClient()
 {
-    delete m_socket;
+//    delete timer;
+//    delete m_socket;
 }
 
 void LocalClient::startConnectTimer()

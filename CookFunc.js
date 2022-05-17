@@ -1,82 +1,107 @@
 
-function leftWorkModeFun(n)
+function leftWorkModeName(mode)
 {
-    //    console.log("leftWorkModeFun",n)
-    var mode
-    switch(n)
+    //    console.log("leftWorkModeNamee",mode)
+    var name
+    switch(mode)
     {
     case 1:
-        mode=leftWorkMode[1]
+        name=leftWorkMode[1]
         break
     case 2:
-        mode=leftWorkMode[2]
+        name=leftWorkMode[2]
         break
     case 35:
-        mode=leftWorkMode[3]
+        name=leftWorkMode[3]
         break
     case 36:
-        mode=leftWorkMode[4]
+        name=leftWorkMode[4]
         break
     case 38:
-        mode=leftWorkMode[5]
+        name=leftWorkMode[5]
         break
     case 40:
-        mode=leftWorkMode[6]
+        name=leftWorkMode[6]
         break
     case 42:
-        mode=leftWorkMode[7]
+        name=leftWorkMode[7]
         break
     case 72:
-        mode=leftWorkMode[8]
+        name=leftWorkMode[8]
         break
     case 100:
-        mode=leftWorkMode[9]
+        name=leftWorkMode[9]
+        break
+    case 120:
+        name=leftWorkMode[10]
+        break
+    case 121:
+        name=leftWorkMode[11]
         break
     default:
-        mode=leftWorkMode[0]
+        name=leftWorkMode[0]
         break
     }
-    return mode
+    return name
 }
-function leftWorkModeNumberFun(n)
+function leftWorkModeToIndex(mode)
 {
-    //    console.log("leftWorkModeFun",n)
-    var mode
-    switch(n)
+//        console.log("leftWorkModeToIndex",mode)
+    var index
+    switch(mode)
     {
     case 1:
-        mode=1
+        index=1
         break
     case 2:
-        mode=2
+        index=2
         break
     case 40:
-        mode=3
+        index=3
         break
     case 42:
-        mode=4
+        index=4
         break
     case 35:
-        mode=5
+        index=5
         break
     case 38:
-        mode=6
+        index=6
         break
     case 36:
-        mode=7
+        index=7
         break
     case 72:
-        mode=8
+        index=8
         break
     case 100:
-        mode=9
+        index=9
+        break
+    case 120:
+        index=10
+        break
+    case 121:
+        index=11
         break
     default:
-        mode=0
+        index=0
         break
     }
-    return mode
+    return index
 }
+
+function getCookTimeIndex(time)
+{
+    if(time <= 120)
+    {
+        return time-1
+    }
+    else
+    {
+        return (time - 120)/5+120-1
+    }
+}
+
 function getCookType(cookSteps)
 {
     var root=JSON.parse(cookSteps)
@@ -121,14 +146,14 @@ function getDishName(root,cookPos)
 
     for(var i = 0; i < root.length; i++)
     {
-        console.log(root[i].mode,root[i].temp,root[i].time,leftWorkModeFun(root[i].mode))
+        console.log(root[i].mode,root[i].temp,root[i].time,leftWorkModeName(root[i].mode))
         if(root.length===1 && root[i].number == null)
         {
-            dishName=leftWorkModeFun(root[i].mode)+"-"+root[i].temp+"℃-"+root[i].time+"分钟"
+            dishName=leftWorkModeName(root[i].mode)+"-"+root[i].temp+"℃-"+root[i].time+"分钟"
         }
         else
         {
-            dishName+=leftWorkModeFun(root[i].mode)
+            dishName+=leftWorkModeName(root[i].mode)
             if(i!==root.length-1)
                 dishName+="-"
         }

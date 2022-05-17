@@ -1,4 +1,4 @@
-QT += quick quickcontrols2
+QT += quick quickcontrols2 network
 
 CONFIG += c++11 #qtquickcompiler
 
@@ -17,6 +17,7 @@ SOURCES += \
         backlight.cpp \
         localclient.cpp \
         main.cpp \
+        mnetwork.cpp \
         qmldevstate.cpp \
         qrcodeen.cpp
 
@@ -56,6 +57,7 @@ contains(QT_ARCH, arm){
 HEADERS += \
     backlight.h \
     localclient.h \
+    mnetwork.h \
     qmldevstate.h \
     qrcodeen.h
 

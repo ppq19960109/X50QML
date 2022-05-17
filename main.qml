@@ -14,7 +14,7 @@ ApplicationWindow {
     id: window
     width: 800
     height: 480
-//    visible: true
+    //    visible: true
     property int sysPower:-1
     property int permitStartStatus:0
     readonly property string uiVersion:"1.1"
@@ -68,11 +68,9 @@ ApplicationWindow {
         property bool multistageRemind:true
         property var wifiPasswdArray:[]
 
-        onFirstStartupChanged: {
-            console.log("onFirstStartupChanged....",systemSettings.brightness)
-            SendFunc.enableWifi(true)
-            Backlight.backlightSet(systemSettings.brightness)
-        }
+        //        onFirstStartupChanged: {
+        //            console.log("onFirstStartupChanged....",systemSettings.firstStartup)
+        //        }
         onBrightnessChanged: {
             console.log("onBrightnessChanged....",systemSettings.brightness)
             Backlight.backlightSet(systemSettings.brightness)
@@ -143,6 +141,8 @@ ApplicationWindow {
         {
             systemSettings.brightness=250
         }
+        //        SendFunc.makeRequest()
+        //        SendFunc.weatherRequest("杭州")
     }
     background:Rectangle {
         color: themesWindowBackgroundColor
@@ -178,7 +178,7 @@ ApplicationWindow {
 
     StackView {
         id: stackView
-//        initialItem: pageTestFront // pageHome pageTestFront pageTest pageGetQuad
+        //        initialItem: pageTestFront // pageHome pageTestFront pageTest pageGetQuad
         anchors.fill: parent
     }
 

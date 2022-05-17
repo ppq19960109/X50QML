@@ -1,7 +1,7 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.2
 Item {
-
+    implicitWidth: parent.width
     height: control.height
     property alias stepSize: control.stepSize
     property alias from: control.from

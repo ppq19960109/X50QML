@@ -7,7 +7,7 @@ import "../"
 Item {
     //定义全局分类菜谱
     readonly property var  menuId: ['蔬菜','肉类','水产','面点','烘培','其他']
-    readonly property var  cookModeColor: ["#19A582","#EC7A00","#298FD1"]
+//    readonly property var  cookModeColor: ["#19A582","#EC7A00","#298FD1"]
 
     Connections { // 将目标对象信号与槽函数进行连接
         id:connections
@@ -193,7 +193,7 @@ Item {
                             color:"transparent"
                             radius: 4
                             border.width: 4
-                            border.color: recipeListView.currentIndex===index?cookModeColor[cookType]:"transparent"
+                            border.color: recipeListView.currentIndex===index?themesTextColor:"transparent"
                         }
 
                         //                        Rectangle{

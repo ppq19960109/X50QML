@@ -86,7 +86,7 @@ Rectangle {
         console.log("PageSteamBakeBase onCompleted")
         var i;
 
-        var timeArray = new Array
+        var timeArray = []
         for(i=1; i<= 120; ++i) {
             timeArray.push(i+"分钟")
         }
@@ -232,9 +232,8 @@ Rectangle {
                         tempArray.push(i+"℃")
                     }
                     tempPathView.model=tempArray
-                    tempPathView.currentIndex=model.get(index).temp-model.get(index).minTemp;
-                    timePathView.currentIndex=model.get(index).time-1;
-
+                    tempPathView.currentIndex=model.get(index).temp-model.get(index).minTemp
+                    timePathView.currentIndex=CookFunc.getCookTimeIndex(model.get(index).time)
                 }
                 Component.onCompleted:{
                     console.log("modePathView",modePathView.currentIndex,modePathViewIndex)
@@ -244,7 +243,7 @@ Rectangle {
                     }
                     else
                     {
-                        modePathView.currentIndex=modePathViewIndex
+                        modePathView.currentIndex=modePathViewIndex>=rightModeIndex?modePathViewIndex-rightModeIndex:modePathViewIndex
                     }
                     var minTemp=model.get(modePathView.currentIndex).minTemp
                     var maxTemp=model.get(modePathView.currentIndex).maxTemp
@@ -256,20 +255,20 @@ Rectangle {
 
                     if(tempPathViewIndex===undefined)
                     {
-                        tempPathView.currentIndex=modePathView.model.get(modePathView.currentIndex).temp-modePathView.model.get(modePathView.currentIndex).minTemp;
+                        tempPathView.currentIndex=modePathView.model.get(modePathView.currentIndex).temp-modePathView.model.get(modePathView.currentIndex).minTemp
                     }
                     else
                     {
-                        tempPathView.currentIndex=tempPathViewIndex
+                        tempPathView.currentIndex=tempPathViewIndex-modePathView.model.get(modePathView.currentIndex).minTemp
                     }
 
                     if(timePathViewIndex===undefined)
                     {
-                        timePathView.currentIndex=modePathView.model.get(modePathView.currentIndex).time-1;
+                        timePathView.currentIndex=CookFunc.getCookTimeIndex(modePathView.model.get(modePathView.currentIndex).time)
                     }
                     else
                     {
-                        timePathView.currentIndex=timePathViewIndex
+                        timePathView.currentIndex=CookFunc.getCookTimeIndex(timePathViewIndex)
                     }
                 }
             }

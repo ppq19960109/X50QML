@@ -164,6 +164,23 @@ Item {
         loader_main.sourceComponent = component_updateSuccess
         loader_main.item.hintCenterText=text
     }
+//    Connections { // 将目标对象信号与槽函数进行连接
+//        target: MNetwork
+//        onReplyLocationData:{
+
+//            var resp=JSON.parse(value);
+//            console.log("onReplyLocationData",value,resp.data.cityName)
+//            MNetwork.weatherRequest(resp.data.cityName);//杭州
+//        }
+//        onReplyWeatherData:{
+//            //            console.log("onReplyWeatherData",value)
+//            var resp=JSON.parse(value);
+//            var curTemp=resp.current_condition[0].temp_C
+//            var curMinTemp=resp.weather[0].mintempC
+//            var curMaxTemp=resp.weather[0].maxtempC
+//            console.log("onReplyWeatherData",curTemp,curMinTemp,curMaxTemp)
+//        }
+//    }
 
     Connections { // 将目标对象信号与槽函数进行连接
         target: QmlDevState
@@ -174,7 +191,11 @@ Item {
                 closeLoaderFault()
                 SendFunc.permitSteamStartStatus(0)
                 if(systemSettings.firstStartup===true)
+                {
                     systemSettings.firstStartup=false
+                    SendFunc.enableWifi(true)
+                    Backlight.backlightSet(systemSettings.brightness)
+                }
                 //                else if(systemSettings.wifiEnable==false)
                 //                    SendFunc.enableWifi(false)
             }
@@ -572,12 +593,14 @@ Item {
         console.log("page home onCompleted")
 
         QmlDevState.startLocalConnect()
+//        MNetwork.locationRequest();
+
         //        showAlarm()
         //        showLoaderFault("左腔蒸箱加热异常！","请拨打售后电话 <font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员");
         //                        showLoaderPopup("","左腔门开启，工作暂停",275)
         //                showLoaderPopup("","右灶未开启\n开启后才可定时关火",275)
-// showLoaderFault("右腔干烧检测电路故障！","请拨打售后电话<font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员")
-//        showLoaderFault("","网络连接失败，请重试",true,"","qrc:/x50/icon/icon_pop_error.png")
+        // showLoaderFault("右腔干烧检测电路故障！","请拨打售后电话<font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员")
+        //        showLoaderFault("","网络连接失败，请重试",true,"","qrc:/x50/icon/icon_pop_error.png")
     }
     StackView.onActivated:{
         console.log("page home onActivated")
