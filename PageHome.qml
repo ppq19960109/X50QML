@@ -174,7 +174,11 @@ Item {
                 closeLoaderFault()
                 SendFunc.permitSteamStartStatus(0)
                 if(systemSettings.firstStartup===true)
+                {
                     systemSettings.firstStartup=false
+                    SendFunc.enableWifi(true)
+                    Backlight.backlightSet(systemSettings.brightness)
+                }
                 //                else if(systemSettings.wifiEnable==false)
                 //                    SendFunc.enableWifi(false)
             }
@@ -189,6 +193,14 @@ Item {
             if("SysPower"==key)
             {
                 systemPower(value)
+            }
+            else if("ComSWVersion"==key)
+            {
+                if(systemSettings.otaSuccess==true)
+                {
+                    systemSettings.otaSuccess=false
+                    showUpdateResult("系统已更新至最新版本 "+value)
+                }
             }
             else if("LStOvState"==key)
             {
@@ -460,7 +472,8 @@ Item {
                 }
                 else if(value==8)
                 {
-                    showUpdateResult("系统已更新至最新版本 "+QmlDevState.state.OTANewVersion)
+                    systemSettings.otaSuccess=true
+//                    showUpdateResult("系统已更新至最新版本 "+QmlDevState.state.OTANewVersion)
                 }
             }
             else if(("OTAProgress"==key))

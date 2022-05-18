@@ -72,12 +72,11 @@ ApplicationWindow {
         property var cookDialog:[1,1,1,1,1,1]
         property bool multistageRemind:true
         property var wifiPasswdArray:[]
+        property bool otaSuccess:false
 
-        onFirstStartupChanged: {
-            console.log("onFirstStartupChanged....",systemSettings.brightness)
-            SendFunc.enableWifi(true)
-            Backlight.backlightSet(systemSettings.brightness)
-        }
+//        onFirstStartupChanged: {
+//            console.log("onFirstStartupChanged....",systemSettings.brightness)
+//        }
         onBrightnessChanged: {
             console.log("onBrightnessChanged....",systemSettings.brightness)
             Backlight.backlightSet(systemSettings.brightness)
