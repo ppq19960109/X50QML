@@ -93,7 +93,7 @@ Item {
                 Text{
                     text:"绑定官方APP"
                     color:"#fff"
-                    font.pixelSize: 30
+                    font.pixelSize: 35
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.left: parent.left
                     horizontalAlignment:Text.AlignHCenter

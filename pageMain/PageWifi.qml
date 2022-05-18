@@ -237,6 +237,7 @@ Item {
             }
             Text {
                 id: wifi_name
+                width:500
                 text: ssid
 
                 font.pixelSize: 40

@@ -164,23 +164,23 @@ Item {
         loader_main.sourceComponent = component_updateSuccess
         loader_main.item.hintCenterText=text
     }
-//    Connections { // 将目标对象信号与槽函数进行连接
-//        target: MNetwork
-//        onReplyLocationData:{
+    //    Connections { // 将目标对象信号与槽函数进行连接
+    //        target: MNetwork
+    //        onReplyLocationData:{
 
-//            var resp=JSON.parse(value);
-//            console.log("onReplyLocationData",value,resp.data.cityName)
-//            MNetwork.weatherRequest(resp.data.cityName);//杭州
-//        }
-//        onReplyWeatherData:{
-//            //            console.log("onReplyWeatherData",value)
-//            var resp=JSON.parse(value);
-//            var curTemp=resp.current_condition[0].temp_C
-//            var curMinTemp=resp.weather[0].mintempC
-//            var curMaxTemp=resp.weather[0].maxtempC
-//            console.log("onReplyWeatherData",curTemp,curMinTemp,curMaxTemp)
-//        }
-//    }
+    //            var resp=JSON.parse(value);
+    //            console.log("onReplyLocationData",value,resp.data.cityName)
+    //            MNetwork.weatherRequest(resp.data.cityName);//杭州
+    //        }
+    //        onReplyWeatherData:{
+    //            //            console.log("onReplyWeatherData",value)
+    //            var resp=JSON.parse(value);
+    //            var curTemp=resp.current_condition[0].temp_C
+    //            var curMinTemp=resp.weather[0].mintempC
+    //            var curMaxTemp=resp.weather[0].maxtempC
+    //            console.log("onReplyWeatherData",curTemp,curMinTemp,curMaxTemp)
+    //        }
+    //    }
 
     Connections { // 将目标对象信号与槽函数进行连接
         target: QmlDevState
@@ -196,6 +196,7 @@ Item {
                     SendFunc.enableWifi(true)
                     Backlight.backlightSet(systemSettings.brightness)
                 }
+
                 //                else if(systemSettings.wifiEnable==false)
                 //                    SendFunc.enableWifi(false)
             }
@@ -210,6 +211,14 @@ Item {
             if("SysPower"==key)
             {
                 systemPower(value)
+            }
+            else if("ComSWVersion"==key)
+            {
+                if(systemSettings.otaSuccess==true)
+                {
+                    systemSettings.otaSuccess=false
+                    showUpdateResult("系统已更新至最新版本 "+value)
+                }
             }
             else if("LStOvState"==key)
             {
@@ -446,7 +455,8 @@ Item {
                 }
                 else if(value==8)
                 {
-                    showUpdateResult("系统已更新至最新版本 "+QmlDevState.state.OTANewVersion)
+                    systemSettings.otaSuccess=true
+//                    showUpdateResult("系统已更新至最新版本 "+QmlDevState.state.OTANewVersion)
                 }
             }
             else if(("OTAProgress"==key))
@@ -593,7 +603,7 @@ Item {
         console.log("page home onCompleted")
 
         QmlDevState.startLocalConnect()
-//        MNetwork.locationRequest();
+        //        MNetwork.locationRequest();
 
         //        showAlarm()
         //        showLoaderFault("左腔蒸箱加热异常！","请拨打售后电话 <font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员");

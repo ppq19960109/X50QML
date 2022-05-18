@@ -14,7 +14,7 @@ ApplicationWindow {
     id: window
     width: 800
     height: 480
-    //    visible: true
+//    visible: true
     property int sysPower:-1
     property int permitStartStatus:0
     readonly property string uiVersion:"1.1"
@@ -67,7 +67,7 @@ ApplicationWindow {
         property var cookDialog:[1,1,1,1,1,1]
         property bool multistageRemind:true
         property var wifiPasswdArray:[]
-
+        property bool otaSuccess:false
         //        onFirstStartupChanged: {
         //            console.log("onFirstStartupChanged....",systemSettings.firstStartup)
         //        }
@@ -209,6 +209,10 @@ ApplicationWindow {
             loader_main.sourceComponent = component_bind
             loader_main.item.hintTopText=title
         }
+        else
+        {
+            showLoaderFault("","未连网，请连接网络后再试",true,"","/x50/icon/icon_pop_error.png")
+        }
     }
     Component{
         id:component_popup
@@ -349,24 +353,24 @@ ApplicationWindow {
     }
     ListModel {
         id: wifiModel
-        //        ListElement {
-        //            connected: 1
-        //            ssid: "qwertyuio"
-        //            level:2
-        //            flags:2
-        //        }
-        //        ListElement {
-        //            connected: 0
-        //            ssid: "123"
-        //            level:2
-        //            flags:1
-        //        }
-        //        ListElement {
-        //            connected: 0
-        //            ssid: "456"
-        //            level:2
-        //            flags:0
-        //        }
+        ListElement {
+            connected: 1
+            ssid: "qwertyuio"
+            level:2
+            flags:2
+        }
+        ListElement {
+            connected: 0
+            ssid: "123456789123456789123456789"
+            level:2
+            flags:1
+        }
+        ListElement {
+            connected: 0
+            ssid: "456"
+            level:2
+            flags:0
+        }
     }
     //    Component {
     //        id: pageTest
