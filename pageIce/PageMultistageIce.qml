@@ -146,7 +146,7 @@ Item {
         id: listDelegate
         PageMultistageIceDelegate {
             id:iceDelegate
-            nameText:(cookPos==0?"左腔":"右腔")+" "+CookFunc.leftWorkModeFun(mode)+"  "+temp+"℃"+"  "+time+"分钟"
+            nameText:(cookPos==0?"左腔":"右腔")+" "+CookFunc.leftWorkModeName(mode)+"  "+temp+"℃"+"  "+time+"分钟"
             cookPos:pos
             closeVisible:false
             onCancel:{
@@ -190,10 +190,9 @@ Item {
             name:'第'+ (listClickIndex+1) +'段'
             leftBtnText:""
             rightBtnText:"确定"
-            modePathViewIndex:listClickIndex >= listView.count?undefined:CookFunc.leftWorkModeNumberFun(listView.model.get(listClickIndex).mode)-1-(cookPos==0?0:rightModeIndex)
-            tempPathViewIndex:listClickIndex >= listView.count?undefined:listView.model.get(listClickIndex).temp-leftModel[modePathViewIndex+(cookPos==0?0:rightModeIndex)].minTemp
-
-            timePathViewIndex:listClickIndex >= listView.count?undefined:listView.model.get(listClickIndex).time-1
+            modePathViewIndex:listClickIndex >= listView.count?undefined:CookFunc.leftWorkModeToIndex(listView.model.get(listClickIndex).mode)-1
+            tempPathViewIndex:listClickIndex >= listView.count?undefined:listView.model.get(listClickIndex).temp
+            timePathViewIndex:listClickIndex >= listView.count?undefined:listView.model.get(listClickIndex).time
         }
     }
     function showTanchang(cookPos){

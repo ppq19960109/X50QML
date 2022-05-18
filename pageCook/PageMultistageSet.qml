@@ -138,7 +138,7 @@ Item {
     Component {
         id: listDelegate
         PageMultistageDelegate {
-            nameText:CookFunc.leftWorkModeFun(mode)+"-"+temp+"℃"+"-"+time+"分钟"
+            nameText:CookFunc.leftWorkModeName(mode)+"-"+temp+"℃"+"-"+time+"分钟"
 
             closeVisible:true
             onCancel:{
@@ -180,9 +180,9 @@ Item {
             name:'第'+ (listClickIndex+1) +'段'
             leftBtnText:""
             rightBtnText:"确定"
-            modePathViewIndex:listClickIndex >= listView.count?undefined:CookFunc.leftWorkModeNumberFun(listView.model.get(listClickIndex).mode)-1
-            tempPathViewIndex:listClickIndex >= listView.count?undefined:listView.model.get(listClickIndex).temp-leftModel[modePathViewIndex].minTemp
-            timePathViewIndex:listClickIndex >= listView.count?undefined:listView.model.get(listClickIndex).time-1
+            modePathViewIndex:listClickIndex >= listView.count?undefined:CookFunc.leftWorkModeToIndex(listView.model.get(listClickIndex).mode)-1
+            tempPathViewIndex:listClickIndex >= listView.count?undefined:listView.model.get(listClickIndex).temp
+            timePathViewIndex:listClickIndex >= listView.count?undefined:listView.model.get(listClickIndex).time
         }
     }
     function showTanchang(){
