@@ -5,6 +5,7 @@ import QtTest 1.1
 
 import "qrc:/SendFunc.js" as SendFunc
 Rectangle {
+    property string name: "PageGetQuad"
     property int get_quad_count: 0
     color: "transparent"
 
@@ -24,7 +25,10 @@ Rectangle {
         SendFunc.connectWiFi(productionTestWIFISSID,productionTestWIFIPWD,1)
     }
 
-
+    Component.onDestruction: {
+        sysPower=-1
+        systemPower(QmlDevState.state.SysPower)
+    }
     function getQuad()
     {
         var Data={}

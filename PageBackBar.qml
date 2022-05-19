@@ -12,11 +12,11 @@ Item {
     signal rightClick()
     signal close()
     implicitWidth: parent.width
-    implicitHeight:80
+    implicitHeight:90
     ToolBar {
-
         width: parent.width
         implicitHeight:80
+        anchors.top: parent.top
 
         background:Image {
             asynchronous:true

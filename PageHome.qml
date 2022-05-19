@@ -47,6 +47,12 @@ Item {
                 anchors.rightMargin:100+160
                 source: "qrc:/x50/icon/icon_alarm.png"
             }
+            Component.onCompleted: {
+                SendFunc.setBuzControl(buzControlEnum.OPEN)
+            }
+            Component.onDestruction: {
+                SendFunc.setBuzControl(buzControlEnum.STOP)
+            }
         }
     }
     function showAlarm(){
@@ -196,9 +202,12 @@ Item {
                     SendFunc.enableWifi(true)
                     Backlight.backlightSet(systemSettings.brightness)
                 }
-
+                SendFunc.setBuzControl(buzControlEnum.SHORT)
                 //                else if(systemSettings.wifiEnable==false)
                 //                    SendFunc.enableWifi(false)
+
+                //                                showLoaderFault("右腔干烧检测电路故障！","请拨打售后电话<font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员")
+                //                showLoaderFault("","网络连接失败，请重试",true,"","qrc:/x50/icon/icon_pop_error.png",false)
             }
             else
             {
@@ -373,11 +382,9 @@ Item {
                         default:
                             break
                         }
-                        SendFunc.setBuzControl(0x04)
                     }
                     else
                     {
-                        SendFunc.setBuzControl(0)
                         closeLoaderFault()
                     }
                     lastErrorCodeShow=value
@@ -427,7 +434,11 @@ Item {
             else if("ProductionTest"==key)
             {
                 if(productionTestFlag > 0)
+                {
+                    systemPower(0xff)
+                    SendFunc.setSysPower(1)
                     load_page("pageTestFront")
+                }
             }
             else if("Alarm"==key)
             {
@@ -456,7 +467,7 @@ Item {
                 else if(value==8)
                 {
                     systemSettings.otaSuccess=true
-//                    showUpdateResult("系统已更新至最新版本 "+QmlDevState.state.OTANewVersion)
+                    //                    showUpdateResult("系统已更新至最新版本 "+QmlDevState.state.OTANewVersion)
                 }
             }
             else if(("OTAProgress"==key))
@@ -471,6 +482,8 @@ Item {
             {
                 if(value==""||value==null)
                 {
+                    systemPower(0xff)
+                    SendFunc.setSysPower(1)
                     productionTestFlag=2
                     if(systemSettings.wifiEnable==false)
                         SendFunc.enableWifi(true)
@@ -610,7 +623,7 @@ Item {
         //                        showLoaderPopup("","左腔门开启，工作暂停",275)
         //                showLoaderPopup("","右灶未开启\n开启后才可定时关火",275)
         // showLoaderFault("右腔干烧检测电路故障！","请拨打售后电话<font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员")
-        //        showLoaderFault("","网络连接失败，请重试",true,"","qrc:/x50/icon/icon_pop_error.png")
+        //        showLoaderFault("","网络连接失败，请重试",true,"","qrc:/x50/icon/icon_pop_error.png",false)
     }
     StackView.onActivated:{
         console.log("page home onActivated")
@@ -653,7 +666,7 @@ Item {
             count: swipeview.count
             currentIndex: swipeview.currentIndex
             anchors.bottom: parent.bottom
-            anchors.bottomMargin: 20
+            anchors.bottomMargin: 15
             anchors.horizontalCenter: parent.horizontalCenter
             //            interactive: true
             delegate: Rectangle {

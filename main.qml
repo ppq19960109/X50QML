@@ -14,7 +14,7 @@ ApplicationWindow {
     id: window
     width: 800
     height: 480
-//    visible: true
+    //    visible: true
     property int sysPower:-1
     property int permitStartStatus:0
     readonly property string uiVersion:"1.1"
@@ -50,6 +50,7 @@ ApplicationWindow {
     readonly property string themesPopupWindowColor:"#333333"
     readonly property string themesTextColor:"#E68855"
     readonly property string themesTextColor2:"#A2A2A2"
+    readonly property var buzControlEnum:{"STOP":0,"SHORT":1,"SHORTTWO":2,"2SCECONDS":3,"OPEN":4}
 
     Settings {
         id: systemSettings
@@ -105,7 +106,7 @@ ApplicationWindow {
 
     function systemPower(power){
         console.log("systemPower",power)
-        if(sysPower==power)
+        if(sysPower==power || sysPower==0xff)
             return
         if(power)
         {
@@ -211,7 +212,7 @@ ApplicationWindow {
         }
         else
         {
-            showLoaderFault("","未连网，请连接网络后再试",true,"","/x50/icon/icon_pop_error.png")
+            showLoaderFault("","未连网，请连接网络后再试",true,"","/x50/icon/icon_pop_error.png",false)
         }
     }
     Component{
@@ -287,6 +288,7 @@ ApplicationWindow {
     Component{
         id:component_fault
         PageFaultPopup {
+            buzzer:false
             hintTopText:""
             hintTopImgSrc:""
             hintCenterText:""
@@ -296,15 +298,33 @@ ApplicationWindow {
             onCancel:{
                 closeLoaderFault()
             }
+
+            Component.onDestruction: {
+                console.log("component_fault onDestruction",buzzer)
+                if(buzzer)
+                    SendFunc.setBuzControl(buzControlEnum.STOP)
+            }
         }
     }
-    function showLoaderFault(hintTopText,hintBottomText,closeVisible,hintCenterText,hintTopImgSrc){
+    function showLoaderFault(hintTopText,hintBottomText,closeVisible,hintCenterText,hintTopImgSrc,buzzer){
+        if(sysPower==0xff)
+            return
         loader_error.sourceComponent = component_fault
         loader_error.item.hintTopText=hintTopText==null?"":hintTopText
         loader_error.item.hintCenterText=hintCenterText==null?"":hintCenterText
         loader_error.item.hintBottomText=hintBottomText==null?"":hintBottomText
         loader_error.item.hintTopImgSrc=hintTopImgSrc==null?"":hintTopImgSrc
         loader_error.item.closeVisible=closeVisible==null?true:closeVisible
+        //        loader_error.item.buzzer=buzzer==null?true:buzzer
+        if(buzzer==null||buzzer==true)
+        {
+            loader_error.item.buzzer=true
+            SendFunc.setBuzControl(buzControlEnum.OPEN)
+        }
+        else
+        {
+            loader_error.item.buzzer=false
+        }
 
         //        loader_error.setSource("PageFaultPopup.qml",{"hintTopText": hintTopText,"hintBottomText": hintBottomText,"closeVisible": closeVisible})
     }
@@ -353,24 +373,24 @@ ApplicationWindow {
     }
     ListModel {
         id: wifiModel
-        ListElement {
-            connected: 1
-            ssid: "qwertyuio"
-            level:2
-            flags:2
-        }
-        ListElement {
-            connected: 0
-            ssid: "123456789123456789123456789"
-            level:2
-            flags:1
-        }
-        ListElement {
-            connected: 0
-            ssid: "456"
-            level:2
-            flags:0
-        }
+        //        ListElement {
+        //            connected: 1
+        //            ssid: "qwertyuio"
+        //            level:2
+        //            flags:2
+        //        }
+        //        ListElement {
+        //            connected: 0
+        //            ssid: "123456789123456789123456789"
+        //            level:2
+        //            flags:1
+        //        }
+        //        ListElement {
+        //            connected: 0
+        //            ssid: "456"
+        //            level:2
+        //            flags:0
+        //        }
     }
     //    Component {
     //        id: pageTest

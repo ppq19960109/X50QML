@@ -4,7 +4,7 @@ import "qrc:/SendFunc.js" as SendFunc
 
 Item {
     implicitWidth: parent.width
-    implicitHeight:80
+    implicitHeight:90
 
     Component{
         id:component_closeHeat
@@ -35,10 +35,10 @@ Item {
     }
 
     ToolBar {
-        //        width: parent.width
-        //        implicitHeight:80
-        //        anchors.top: parent.top
-        anchors.fill: parent
+        width: parent.width
+        implicitHeight:80
+        anchors.top: parent.top
+//        anchors.fill: parent
         background:Image {
             asynchronous:true
             smooth:false
@@ -109,14 +109,16 @@ Item {
             }
             Text{
                 id:time
+
                 visible: QmlDevState.state.RStoveTimingState==timingStateEnum.RUN
                 anchors.verticalCenter: parent.verticalCenter
+                anchors.verticalCenterOffset: 5
                 anchors.right: parent.right
-                color:themesTextColor2
+                color:themesTextColor
                 text:"0"+Math.floor(QmlDevState.state.RStoveTimingLeft/60)+":"+Math.floor(QmlDevState.state.RStoveTimingLeft%60/10)+(QmlDevState.state.RStoveTimingLeft%60%10)//qsTr("01:12")
                 font.pixelSize:34
-                horizontalAlignment:Text.AlignHCenter
-                verticalAlignment:Text.AlignVCenter
+                //                horizontalAlignment:Text.AlignHCenter
+                //                verticalAlignment:Text.AlignVCenter
             }
             onClicked: {
                 if(QmlDevState.state.RStoveTimingState==timingStateEnum.RUN)
@@ -132,6 +134,12 @@ Item {
         Component{
             id:component_lock_screen
             PageLockScreen{
+                Component.onCompleted: {
+                    SendFunc.setBuzControl(buzControlEnum.SHORT)
+                }
+                Component.onDestruction: {
+                    SendFunc.setBuzControl(buzControlEnum.SHORTTWO)
+                }
             }
         }
 

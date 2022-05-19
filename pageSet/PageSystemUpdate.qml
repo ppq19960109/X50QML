@@ -157,7 +157,7 @@ Item {
                 }
                 else
                 {
-                    showLoaderFault("","未连网，请连接网络后再试",true,"","/x50/icon/icon_pop_error.png")
+                    showLoaderFault("","未连网，请连接网络后再试",true,"","/x50/icon/icon_pop_error.png",false)
                 }
 
                 //                showUpdateConfirm()

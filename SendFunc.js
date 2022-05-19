@@ -88,11 +88,16 @@ function getAllToServer()
     console.info("getAllToServer:",json)
     QmlDevState.sendToServer(json)
 }
-
 function otaRquest(request)
 {
     var Data={}
     Data.OTARquest = request
+    setToServer(Data)
+}
+function setSysPower(status)
+{
+    var Data={}
+    Data.SysPower = status
     setToServer(Data)
 }
 function permitSteamStartStatus(status)

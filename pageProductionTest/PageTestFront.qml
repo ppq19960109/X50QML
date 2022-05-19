@@ -7,6 +7,10 @@ Item {
     Component.onCompleted: {
 
     }
+    Component.onDestruction: {
+        sysPower=-1
+        systemPower(QmlDevState.state.SysPower)
+    }
 
     Item{
         id:topBar
