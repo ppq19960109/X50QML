@@ -625,7 +625,7 @@ Item {
         //                        showLoaderPopup("","左腔门开启，工作暂停",275)
         //                showLoaderPopup("","右灶未开启\n开启后才可定时关火",275)
 // showLoaderFault("右腔干烧检测电路故障！","请拨打售后电话<font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员")
-//        showLoaderFault("","网络连接失败，请重试",true,"","qrc:/x50/icon/icon_pop_error.png")
+//        showLoaderFault("","网络连接失败，请重试",true,"","qrc:/x50/icon/icon_pop_error.png",false)
     }
     StackView.onActivated:{
         console.log("page home onActivated")

@@ -33,12 +33,12 @@ Item {
                     if(value==2||value==5)
                     {
                         if(systemSettings.wifiEnable)
-                            showLoaderFault("","网络连接失败，请重试",true,"","/x50/icon/icon_pop_error.png")
+                            showLoaderFault("","网络连接失败，请重试",true,"","/x50/icon/icon_pop_error.png",false)
                     }
                     else if(value==3)
                     {
                         if(systemSettings.wifiEnable)
-                            showLoaderFault("","密码错误，连接失败",true,"","/x50/icon/icon_pop_error.png")
+                            showLoaderFault("","密码错误，连接失败",true,"","/x50/icon/icon_pop_error.png",false)
                     }
                     else if(value==4)
                     {

@@ -112,7 +112,7 @@ Item {
                 visible: QmlDevState.state.RStoveTimingState==timingStateEnum.RUN
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.right: parent.right
-                color:themesTextColor2
+                color:themesTextColor
                 text:"0"+Math.floor(QmlDevState.state.RStoveTimingLeft/60)+":"+Math.floor(QmlDevState.state.RStoveTimingLeft%60/10)+(QmlDevState.state.RStoveTimingLeft%60%10)//qsTr("01:12")
                 font.pixelSize:34
                 horizontalAlignment:Text.AlignHCenter
@@ -132,6 +132,12 @@ Item {
         Component{
             id:component_lock_screen
             PageLockScreen{
+                Component.onCompleted: {
+                    SendFunc.setBuzControl(buzControlEnum.SHORT)
+                }
+                Component.onDestruction: {
+                    SendFunc.setBuzControl(buzControlEnum.SHORTTWO)
+                }
             }
         }
 

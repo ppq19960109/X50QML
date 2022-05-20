@@ -213,6 +213,10 @@ ApplicationWindow {
             loader_main.sourceComponent = component_bind
             loader_main.item.hintTopText=title
         }
+        else
+        {
+            showLoaderFault("","未连网，请连接网络后再试",true,"","/x50/icon/icon_pop_error.png",false)
+        }
     }
     Component{
         id:component_popup
@@ -304,13 +308,22 @@ ApplicationWindow {
             }
         }
     }
-    function showLoaderFault(hintTopText,hintBottomText,closeVisible,hintCenterText,hintTopImgSrc){
+    function showLoaderFault(hintTopText,hintBottomText,closeVisible,hintCenterText,hintTopImgSrc,buzzer){
         loader_error.sourceComponent = component_fault
         loader_error.item.hintTopText=hintTopText==null?"":hintTopText
         loader_error.item.hintCenterText=hintCenterText==null?"":hintCenterText
         loader_error.item.hintBottomText=hintBottomText==null?"":hintBottomText
         loader_error.item.hintTopImgSrc=hintTopImgSrc==null?"":hintTopImgSrc
         loader_error.item.closeVisible=closeVisible==null?true:closeVisible
+        if(buzzer==null||buzzer==true)
+        {
+            loader_error.item.buzzer=true
+            SendFunc.setBuzControl(buzControlEnum.OPEN)
+        }
+        else
+        {
+            loader_error.item.buzzer=false
+        }
 
         //        loader_error.setSource("PageFaultPopup.qml",{"hintTopText": hintTopText,"hintBottomText": hintBottomText,"closeVisible": closeVisible})
     }
