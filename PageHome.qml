@@ -195,6 +195,7 @@ Item {
             if(value > 0)
             {
                 closeLoaderFault()
+
                 SendFunc.permitSteamStartStatus(0)
                 if(systemSettings.firstStartup===true)
                 {
@@ -202,7 +203,9 @@ Item {
                     SendFunc.enableWifi(true)
                     Backlight.backlightSet(systemSettings.brightness)
                 }
+                SendFunc.setBuzControl(buzControlEnum.STOP)
                 SendFunc.setBuzControl(buzControlEnum.SHORT)
+
                 //                else if(systemSettings.wifiEnable==false)
                 //                    SendFunc.enableWifi(false)
 
@@ -336,52 +339,7 @@ Item {
                 {
                     if(value>0)
                     {
-                        switch (value) {
-                        case 1:
-                            showLoaderFault("左腔蒸箱加热异常！","请拨打售后电话 <font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员")
-                            break
-                        case 2:
-                            showLoaderFault("没有水箱或水箱没有放到位","没有水箱或水箱没有放到位<br/>请重新放置")
-                            break
-                        case 3:
-                            showLoaderFault("水箱缺水","水箱缺水，请及时加水")
-                            break
-                        case 4:
-                            showLoaderFault("左腔蒸箱干烧！","请暂停使用左腔蒸箱并<br/>拨打售后电话<font color='"+themesTextColor+"'>400-888-8490</font>")
-                            break
-                        case 5:
-                            showLoaderFault("左腔干烧检测电路故障！","请拨打售后电话<font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员")
-                            break
-                        case 6:
-                            showLoaderFault("防火墙传感器故障！","请拨打售后电话<font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员")
-                            break
-                        case 7:
-                            showLoaderFault("烟机进风口出现火情！","请及时关闭灶具旋钮 等待温度降低后使用")
-                            break
-                        case 8:
-                            showLoaderFault("燃气泄漏","燃气有泄露风险\n请立即关闭灶具旋钮\n关闭总阀并开窗通气")
-                            break
-                        case 9:
-                            showLoaderFault("电源板串口故障！","请拨打售后电话<font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员");
-                            break
-                        case 10:
-                            showLoaderFault("左腔烤箱加热异常！","请拨打售后电话<font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员");
-                            break
-                        case 12:
-                            showLoaderFault("右腔蒸箱加热异常！","请拨打售后电话<font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员");
-                            break
-                        case 13:
-                            showLoaderFault("右腔蒸箱干烧","请暂停使用右腔蒸箱并<br/>拨打售后电话<font color='"+themesTextColor+"'>400-888-8490</font>");
-                            break
-                        case 14:
-                            showLoaderFault("右腔干烧检测电路故障！","请拨打售后电话<font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员")
-                            break
-                        case 20:
-                            showLoaderFault("手势板故障！","请拨打售后电话<font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员");
-                            break
-                        default:
-                            break
-                        }
+                        showFaultPopup(value)
                     }
                     else
                     {

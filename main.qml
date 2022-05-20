@@ -309,7 +309,14 @@ ApplicationWindow {
     function showLoaderFault(hintTopText,hintBottomText,closeVisible,hintCenterText,hintTopImgSrc,buzzer){
         if(sysPower==0xff)
             return
-        loader_error.sourceComponent = component_fault
+        if(loader_error.sourceComponent === component_fault)
+        {
+            if(loader_error.item.closeVisible==false)
+                return
+        }
+        else
+            loader_error.sourceComponent = component_fault
+
         loader_error.item.hintTopText=hintTopText==null?"":hintTopText
         loader_error.item.hintCenterText=hintCenterText==null?"":hintCenterText
         loader_error.item.hintBottomText=hintBottomText==null?"":hintBottomText
@@ -751,4 +758,63 @@ ApplicationWindow {
             loader_main.item.cookDialog=cookDialog
         }
     }
+    function showFaultPopup(value,dir)
+    {
+        switch (value) {
+        case 1:
+            if(dir==null||dir==leftDevice)
+                showLoaderFault("左腔蒸箱加热异常！","请拨打售后电话 <font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员")
+            break
+        case 2:
+            showLoaderFault("没有水箱或水箱没有放到位","请重新放置")
+            break
+        case 3:
+            showLoaderFault("水箱缺水","水箱缺水，请及时加水")
+            break
+        case 4:
+            if(dir==null||dir==leftDevice)
+                showLoaderFault("左腔蒸箱干烧！","请暂停使用左腔蒸箱并<br/>拨打售后电话<font color='"+themesTextColor+"'>400-888-8490</font>")
+            break
+        case 5:
+            if(dir==null||dir==leftDevice)
+                showLoaderFault("左腔干烧检测电路故障！","请拨打售后电话<font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员")
+            break
+        case 6:
+            showLoaderFault("防火墙传感器故障！","请拨打售后电话<font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员",false)
+            break
+        case 7:
+            showLoaderFault("烟机进风口出现火情！","请及时关闭灶具旋钮 等待温度降低后使用",false)
+            break
+        case 8:
+            showLoaderFault("燃气泄漏","燃气有泄露风险\n请立即关闭灶具旋钮\n关闭总阀并开窗通气",false)
+            break
+        case 9:
+            if(dir==null)
+                showLoaderFault("电源板串口故障！","请拨打售后电话<font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员",false);
+            break
+        case 10:
+            if(dir==null||dir==leftDevice)
+                showLoaderFault("左腔烤箱加热异常！","请拨打售后电话<font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员");
+            break
+        case 12:
+            if(dir==null||dir==rightDevice)
+                showLoaderFault("右腔蒸箱加热异常！","请拨打售后电话<font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员");
+            break
+        case 13:
+            if(dir==null||dir==rightDevice)
+                showLoaderFault("右腔蒸箱干烧","请暂停使用右腔蒸箱并<br/>拨打售后电话<font color='"+themesTextColor+"'>400-888-8490</font>");
+            break
+        case 14:
+            if(dir==null||dir==rightDevice)
+                showLoaderFault("右腔干烧检测电路故障！","请拨打售后电话<font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员")
+            break
+        case 20:
+            if(dir==null)
+                showLoaderFault("手势板故障！","请拨打售后电话<font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员");
+            break
+        default:
+            break
+        }
+    }
 }
+

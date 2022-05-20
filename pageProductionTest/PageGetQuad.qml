@@ -77,8 +77,7 @@ Rectangle {
                         quad.color="red"
                         quadText.text="四元组烧录失败"
                     }
-                    else
-                        timer_quad.restart()
+                    timer_quad.restart()
                 }
             }
         }

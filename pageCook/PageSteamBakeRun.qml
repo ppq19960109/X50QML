@@ -190,6 +190,17 @@ Rectangle {
                 {
                     //                    QmlDevState.setState("LStOvState",workStateEnum.WORKSTATE_RUN)
                     SendFunc.setCookOperation(leftDevice,workOperationEnum.START)
+                    if(QmlDevState.state.ErrorCodeShow==0)
+                    {
+                        if(QmlDevState.state.LStOvDoorState==1)
+                        {
+                            showLoaderPopup("","左腔门开启，工作暂停",275)
+                        }
+                    }
+                    else
+                    {
+                        showFaultPopup(QmlDevState.state.ErrorCodeShow,leftDevice)
+                    }
                 }
                 else
                 {
@@ -335,6 +346,18 @@ Rectangle {
                 {
                     //                    QmlDevState.setState("RStOvState",workStateEnum.WORKSTATE_RUN)
                     SendFunc.setCookOperation(rightDevice,workOperationEnum.START)
+
+                    if(QmlDevState.state.ErrorCodeShow==0)
+                    {
+                        if(QmlDevState.state.RStOvDoorState==1)
+                        {
+                            showLoaderPopup("","右腔门开启，工作暂停",275)
+                        }
+                    }
+                    else
+                    {
+                        showFaultPopup(QmlDevState.state.ErrorCodeShow,rightDevice)
+                    }
                 }
                 else
                 {
