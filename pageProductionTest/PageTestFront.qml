@@ -2,14 +2,14 @@ import QtQuick 2.7
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
 
+import "qrc:/SendFunc.js" as SendFunc
 Item {
     property string name: "PageTestFront"
     Component.onCompleted: {
-
+        SendFunc.setBuzControl(buzControlEnum.SHORT)
     }
     Component.onDestruction: {
-        sysPower=-1
-        systemPower(QmlDevState.state.SysPower)
+
     }
 
     Item{

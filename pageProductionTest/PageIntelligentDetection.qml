@@ -1,35 +1,38 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
-import QtTest 1.1
+//import QtTest 1.1
 
 import "qrc:/SendFunc.js" as SendFunc
-Rectangle {
+Item {
+    property int step: 0
 
-    color: "transparent"
     Timer{
         id:timer_wifi
         repeat: false
         running: false
-        interval: 2000
+        interval: 3000
         triggeredOnStart: false
         onTriggered: {
-            SendFunc.scanRWifi()
+            if(step==0)
+            {
+                versionText.visible=true
+                version.color="red"
+                versionText.text="通讯异常"
+                SendFunc.scanWifi()
+            }
+            else if(step==1)
+            {
+                SendFunc.scanRWifi()
+            }
         }
     }
 
     Component.onCompleted: {
         SendFunc.scanWifi()
-        if(QmlDevState.state.ComSWVersion==null)
-        {
-            version.color="red"
-            versionText.text="通讯异常"
-        }
-        else
-        {
-            version.color="green"
-            timer_wifi.restart()
-        }
+        SendFunc.getAllToServer()
+
+        timer_wifi.restart()
     }
 
     function parseWifiList(sanR)
@@ -40,6 +43,7 @@ Rectangle {
         for( i = 0; i < root.length; ++i) {
             if(root[i].ssid===productionTestWIFISSID)
             {
+                wifiSignalText.visible=true
                 if(root[i].rssi < -75)
                 {
                     wifiSignal.color="red"
@@ -48,19 +52,28 @@ Rectangle {
                 {
                     wifiSignal.color="green"
                 }
-
                 wifiSignalText.text=root[i].rssi+"db"
                 break
             }
         }
         if(i == root.length)
         {
+            if(wifiSignalText.visible==false)
+            {
+                SendFunc.scanWifi()
+                wifiSignalText.visible=true
+                timer_wifi.restart()
+                return
+            }
+            wifiSignalText.visible=true
             wifiSignal.color="red"
             wifiSignalText.text="获取信号值失败"
             return
         }
+
         if(root[i].rssi > -75)
         {
+            step=2
             SendFunc.connectWiFi(productionTestWIFISSID,productionTestWIFIPWD,1)
         }
     }
@@ -69,46 +82,63 @@ Rectangle {
         target: QmlDevState
 
         onStateChanged: { // 处理目标对象信号的槽函数
-            console.log("page PageIntelligentDetection:",key)
-
-            if("WifiScanR"==key && wifiSignalText.visible==false)
+            console.log("page PageIntelligentDetection:",key,value,step)
+            if("ElcSWVersion"==key && step==0)
             {
-                wifiSignalText.visible=true
+                step=1
+                versionText.visible=true
+                version.color="green"
+                timer_wifi.restart()
+            }
+            else if("WifiScanR"==key && step==1)
+            {
                 parseWifiList(value)
             }
-            else if("WifiState"==key && wifiConnectText.visible==false)
+            else if("WifiState"==key && step==2)
             {
-                if(value>1)
+                wifiConnectText.visible=true
+                if(value==2 || value==3|| value==5)
                 {
-                    wifiConnectText.visible=true
+                    wifiConnect.color="red"
+                    wifiConnectText.text="失败"
+                }
+                else if(value==4)
+                {
+                    step=3
+                    wifiConnect.color="green"
+                    wifiConnectText.text="成功"
 
-                    if(value==4)
+                    quadText.visible=true
+                    if(QmlDevState.state.ProductKey=="" || QmlDevState.state.DeviceName==""|| QmlDevState.state.ProductSecret==""|| QmlDevState.state.DeviceSecret=="")
                     {
-                        wifiConnect.color="green"
-                        wifiConnectText.text="成功"
-
-                        quadText.visible=true
-                        if(QmlDevState.state.ProductKey=="" || QmlDevState.state.DeviceName==""|| QmlDevState.state.ProductSecret==""|| QmlDevState.state.DeviceSecret=="")
-                        {
-                            quad.color="red"
-                            quadText.text="四元组缺失"
-                        }
-                        else
-                        {
-                            quad.color="green"
-                            quadText.text="四元组正常"
-                            systemReset()
-                        }
+                        quad.color="red"
+                        quadText.text="四元组缺失"
                     }
                     else
                     {
-                        wifiConnect.color="red"
-                        wifiConnectText.text="失败"
+                        quad.color="green"
+                        quadText.text="四元组正常"
+                        systemReset()
                     }
                 }
             }
-            else if("Reset"==key && resetText.visible==false)
+            //            else if("ssid"==key && step==3)
+            //            {
+
+            //                if(wifiConnected==true && value==wifiConnectInfo.ssid)
+            //                {
+            //                    step=3
+
+            //                }
+            //                else
+            //                {
+            //                    wifiConnect.color="red"
+            //                    wifiConnectText.text="失败"
+            //                }
+            //            }
+            else if("Reset"==key && step==3)
             {
+                step=0xff
                 resetText.visible=true
                 if(value==0)
                 {
@@ -126,7 +156,7 @@ Rectangle {
     Item{
         id:topBar
         width:parent.width
-        height:70
+        height:100
         anchors.top: parent.top
         Text {
             anchors.centerIn: parent
@@ -134,6 +164,28 @@ Rectangle {
             font.pixelSize: 40
             font.bold : true
             text: qsTr("智能模块检测")
+        }
+        Button{
+            width:100+50
+            height:parent.height
+            anchors.right: parent.right
+            anchors.bottom: parent.bottom
+            background:Rectangle{
+                width:100
+                height:50
+                anchors.centerIn: parent
+                radius: 8
+                color:themesTextColor2
+            }
+            Text{
+                text:"退出"
+                color:"#fff"
+                font.pixelSize: 40
+                anchors.centerIn: parent
+            }
+            onClicked: {
+                backPrePage()
+            }
         }
     }
     Item{
@@ -143,9 +195,8 @@ Rectangle {
         anchors.bottom: parent.bottom
         GridLayout{
             width:parent.width -100
-            height: parent.height -80
-            anchors.left: parent.left
-            anchors.leftMargin: 20
+            height: parent.height - 20
+            anchors.horizontalCenter: parent.horizontalCenter
             rows: 5
             columns: 2
             rowSpacing: 5
@@ -153,7 +204,7 @@ Rectangle {
 
             Text{
                 Layout.preferredWidth: 220
-                Layout.preferredHeight:60
+                Layout.preferredHeight:50
                 Layout.alignment: Qt.AlignVCenter
                 text:"通讯及版本检测:"
                 color:"#FFF"
@@ -162,13 +213,14 @@ Rectangle {
             Rectangle{
                 id:version
                 Layout.preferredWidth: 400
-                Layout.preferredHeight:60
+                Layout.preferredHeight:120
                 Layout.alignment: Qt.AlignVCenter
                 radius: 8
                 color:"transparent"
 
                 Text{
                     id:versionText
+                    visible: false
                     text:"电控板软件版本号:"+QmlDevState.state.ElcSWVersion+"\n通讯板软件版本号:"+QmlDevState.state.ComSWVersion+"\n屏幕模组软件版本号:"+uiVersion
                     color:"#FFF"
                     font.pixelSize: 30
@@ -178,7 +230,7 @@ Rectangle {
 
             Text{
                 Layout.preferredWidth: 220
-                Layout.preferredHeight:60
+                Layout.preferredHeight:50
                 Layout.alignment: Qt.AlignVCenter
 
                 text:"wifi信号检测:"
@@ -189,7 +241,7 @@ Rectangle {
                 id:wifiSignal
 
                 Layout.preferredWidth: 400
-                Layout.preferredHeight:60
+                Layout.preferredHeight:50
                 Layout.alignment: Qt.AlignVCenter
                 radius: 8
                 color:"transparent"
@@ -206,7 +258,7 @@ Rectangle {
 
             Text{
                 Layout.preferredWidth: 220
-                Layout.preferredHeight:60
+                Layout.preferredHeight:50
                 Layout.alignment: Qt.AlignVCenter
 
                 text:"wifi连接:"
@@ -217,7 +269,7 @@ Rectangle {
                 id:wifiConnect
 
                 Layout.preferredWidth: 400
-                Layout.preferredHeight:60
+                Layout.preferredHeight:50
                 Layout.alignment: Qt.AlignVCenter
                 radius: 8
                 color:"transparent"
@@ -243,7 +295,7 @@ Rectangle {
             Rectangle{
                 id:quad
                 Layout.preferredWidth: 400
-                Layout.preferredHeight:60
+                Layout.preferredHeight:50
                 Layout.alignment: Qt.AlignVCenter
                 radius: 8
                 color:"transparent"
@@ -259,7 +311,7 @@ Rectangle {
             }
             Text{
                 Layout.preferredWidth: 220
-                Layout.preferredHeight:60
+                Layout.preferredHeight:50
                 Layout.alignment: Qt.AlignVCenter
 
                 text:"恢复出厂设置:"
@@ -269,7 +321,7 @@ Rectangle {
             Rectangle{
                 id:reset
                 Layout.preferredWidth: 400
-                Layout.preferredHeight:60
+                Layout.preferredHeight:50
                 Layout.alignment: Qt.AlignVCenter
                 radius: 8
                 color:"transparent"
@@ -281,28 +333,6 @@ Rectangle {
                     font.pixelSize: 30
                     anchors.centerIn: parent
                 }
-            }
-        }
-        Button{
-            width:100+30
-            height:50+30
-            anchors.right: parent.right
-            anchors.bottom: parent.bottom
-            background:Rectangle{
-                width:100
-                height:50
-                anchors.centerIn: parent
-                radius: 8
-                color:themesTextColor2
-            }
-            Text{
-                text:"退出"
-                color:"#fff"
-                font.pixelSize: 40
-                anchors.centerIn: parent
-            }
-            onClicked: {
-                backPrePage()
             }
         }
     }

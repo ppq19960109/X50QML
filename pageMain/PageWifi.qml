@@ -27,17 +27,21 @@ Item {
 
             if("WifiState"==key)
             {
-                console.log("page wifi WifiState:",value)
-                if(value > 1)
+                console.log("page wifi WifiState:",value,wifiConnected,wifiConnectInfo.ssid)
+                if(value==5)
                 {
-                    if(value==2||value==5)
+
+                }
+                else if(value > 1)
+                {
+                    if(value==2)
                     {
-                        if(systemSettings.wifiEnable)
+                        if(systemSettings.wifiEnable && wifiConnected==false && wifiConnectInfo.ssid!="")
                             showLoaderFault("","网络连接失败，请重试",true,"","/x50/icon/icon_pop_error.png",false)
                     }
                     else if(value==3)
                     {
-                        if(systemSettings.wifiEnable)
+                        if(systemSettings.wifiEnable && wifiConnected==false && wifiConnectInfo.ssid!="")
                             showLoaderFault("","密码错误，连接失败",true,"","/x50/icon/icon_pop_error.png",false)
                     }
                     else if(value==4)
@@ -51,7 +55,6 @@ Item {
                 {
                     SendFunc.scanWifi()
                 }
-
             }
             else if("ssid"==key)
             {
@@ -378,12 +381,12 @@ Item {
             property bool permit_connect:false
             color:themesWindowBackgroundColor
 
-            //            MouseArea{
-            //                anchors.fill: parent
-            //                onClicked: {
-            //                    textField.focus=false
-            //                }
-            //            }
+            MouseArea{
+                anchors.fill: parent
+                onClicked: {
+                    textField.focus=false
+                }
+            }
 
             PageBackBar{
                 id:topBar

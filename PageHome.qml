@@ -363,7 +363,6 @@ Item {
             }
             else if("WifiState"==key)
             {
-                console.log("...WifiState:",value)
                 wifiConnected=false
                 if(value==1)
                 {
@@ -393,7 +392,6 @@ Item {
             {
                 if(productionTestFlag > 0)
                 {
-                    systemPower(0xff)
                     SendFunc.setSysPower(1)
                     load_page("pageTestFront")
                 }
@@ -452,13 +450,13 @@ Item {
                 }
                 else
                 {
-                    productionTestFlag=3
+                    productionTestFlag=0x0f
                 }
             }
             else if("WifiScanR"==key && systemSettings.wifiEnable>0)
             {
                 setWifiList(value)
-                if( productionTestFlag==2 && QmlDevState.state.DeviceSecret==="")
+                if( productionTestFlag>=2 && productionTestFlag<=5 && QmlDevState.state.DeviceSecret==="")
                 {
                     parseWifiList()
                 }
@@ -504,14 +502,14 @@ Item {
         id:component_burn_wifi
         Item {
             Rectangle{
-                width: 300
+                width: 400
                 height: 150
-                color: "#000"
+                color: "red"
                 anchors.bottom: parent.bottom
                 anchors.right: parent.right
                 Text {
                     anchors.centerIn: parent
-                    font.pixelSize: 40
+                    font.pixelSize: 50
                     color: "#FFF"
                     text: qsTr("烧录WIFI不存在")
                 }
@@ -525,11 +523,13 @@ Item {
         }
     }
     function showBurnWifi(){
+        console.log("showBurnWifi...")
         if(loader_main.status == Loader.Null || loader_main.status == Loader.Error)
             loader_main.sourceComponent = component_burn_wifi
     }
     function getQuadScanWifi()
     {
+        console.log("getQuadScanWifi",productionTestFlag)
         SendFunc.scanWifi()
         timer_scanwifi.restart()
     }
@@ -538,7 +538,7 @@ Item {
     {
         var i
         for( i = 0; i < wifiModel.count; ++i) {
-            if(wifiModel.get(i).ssid==productionTestWIFISSID)
+            if(wifiModel.get(i).ssid=="productionTestWIFISSID")//productionTestWIFISSID
             {
                 wifiModel.setProperty(0,"connected",0)
                 wifiModel.setProperty(i,"connected",2)
@@ -546,25 +546,26 @@ Item {
                 break
             }
         }
+
         if(i == wifiModel.count)
         {
-            if(productionTestFlag==2)
+            if(productionTestFlag<5)
             {
-                productionTestFlag=3
+                ++productionTestFlag
                 getQuadScanWifi()
                 return
             }
             showBurnWifi()
             return
         }
-        productionTestFlag=3
+        productionTestFlag=0x0f
         load_page("pageGetQuad")
     }
     Timer{
         id:timer_scanwifi
         repeat: false
         running: false
-        interval: 2500
+        interval: 3000
         triggeredOnStart: false
         onTriggered: {
             SendFunc.scanRWifi()

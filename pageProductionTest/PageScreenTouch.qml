@@ -10,7 +10,7 @@ Item {
     property int touchCount: 0
     property int touchExited:0
     property int timeout:30
-    readonly property int rectWidth: 60
+    readonly property int rectWidth: 80
     readonly property int passWidth: 480
     readonly property int passHeight: 300
     Timer{
@@ -123,7 +123,7 @@ Item {
     }
     onTouchCountChanged:{
         console.warn("onTouchCountChanged",touchCount)
-        timeout=30
+        timeout=20
         if(touchCount==1)
         {
             rect.width=rectWidth
@@ -156,7 +156,7 @@ Item {
         }
         else if(touchCount==6)
         {
-            rect.width=root.width+20
+            rect.width=root.width+10
             rect.rotation=31
         }
         else if(touchCount==7)

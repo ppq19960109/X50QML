@@ -4,10 +4,10 @@ import QtQuick.Controls 2.2
 Item {
     property int time_count: 0
     property var containerqml: null
-    property int aging_status:0
+    property int aging_status:-1
 
     Component.onCompleted: {
-
+        containerqml.clickedAgingfunc(aging_status)
     }
     Timer{
         id:timer_aging
@@ -97,7 +97,7 @@ Item {
             }
             else
             {
-                containerqml.clickedfunc(aging_status)
+                containerqml.clickedAgingfunc(aging_status)
                 backPrePage()
             }
         }

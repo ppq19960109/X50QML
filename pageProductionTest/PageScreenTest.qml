@@ -4,21 +4,30 @@ import QtQuick.Layouts 1.3
 
 Item {
     id:root
-    property int productionTestAging:0
-    property int productionTestTouch:0
     Component.onCompleted: {
 
     }
-    function clickedfunc(status)
+    function clickedAgingfunc(status)
     {
-        console.log("clickedfunc:"+status);
-        productionTestAging=status
+        console.log("clickedAgingfunc:"+status);
+        testSettings.productionTestAging=status
     }
     function clickedTouchFunc(status)
     {
-        console.log("productionTestTouch:"+status);
-        productionTestTouch=status
+        console.log("clickedTouchFunc:"+status);
+        testSettings.productionTestTouch=status
     }
+    function clickedLcdFunc(status)
+    {
+        console.log("clickedLcdFunc:"+status);
+        testSettings.productionTestLcd=status
+    }
+    function clickedLightFunc(status)
+    {
+        console.log("clickedLightFunc:"+status);
+        testSettings.productionTestLight=status
+    }
+
     Item{
         id:topBar
         width:parent.width
@@ -55,12 +64,12 @@ Item {
                 }
                 Text{
                     text:"LCD"
-                    color:"#FFF"
+                    color:testSettings.productionTestLcd==0?"#FFF":testSettings.productionTestLcd==1?"green":"red"
                     font.pixelSize: 35
                     anchors.centerIn: parent
                 }
                 onClicked: {
-                    load_page("pageScreenLCD")
+                    load_page("pageScreenLCD",{containerqml:root})
                 }
             }
             Button{
@@ -73,7 +82,7 @@ Item {
                 }
                 Text{
                     text:"触摸"
-                    color:productionTestTouch==0?"#FFF":productionTestTouch==1?"green":"red"
+                    color:testSettings.productionTestTouch==0?"#FFF":testSettings.productionTestTouch==1?"green":"red"
                     font.pixelSize: 35
                     anchors.centerIn: parent
                 }
@@ -91,12 +100,12 @@ Item {
                 }
                 Text{
                     text:"背光"
-                    color:"#FFF"
+                    color:testSettings.productionTestLight==0?"#FFF":testSettings.productionTestLight==1?"green":"red"
                     font.pixelSize: 35
                     anchors.centerIn: parent
                 }
                 onClicked: {
-                    load_page("pageScreenLight")
+                    load_page("pageScreenLight",{containerqml:root})
                 }
             }
             Button{
@@ -146,7 +155,7 @@ Item {
                 }
                 Text{
                     text:"老化测试"
-                    color:productionTestAging==0?"#FFF":productionTestAging==1?"green":"red"
+                    color:testSettings.productionTestAging==0?"#FFF":testSettings.productionTestAging==1?"green":"red"
                     font.pixelSize: 35
                     anchors.centerIn: parent
                 }
@@ -157,13 +166,38 @@ Item {
             }
         }
         Button{
+            width:300+50
+            height:50+40
+            anchors.left: parent.left
+            anchors.bottom: parent.bottom
+            background:Rectangle{
+                width:300
+                height:60
+                anchors.centerIn: parent
+                radius: 8
+                color:themesTextColor2
+            }
+            Text{
+                text:"清除检验记录"
+                color:"#fff"
+                font.pixelSize: 40
+                anchors.centerIn: parent
+            }
+            onClicked: {
+                testSettings.productionTestLcd=0
+                testSettings.productionTestLight=0
+                testSettings.productionTestAging=0
+                testSettings.productionTestTouch=0
+            }
+        }
+        Button{
             width:100+50
-            height:50+50
+            height:50+40
             anchors.right: parent.right
             anchors.bottom: parent.bottom
             background:Rectangle{
                 width:100
-                height:50
+                height:60
                 anchors.centerIn: parent
                 radius: 8
                 color:themesTextColor2

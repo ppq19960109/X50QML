@@ -42,6 +42,9 @@ Rectangle {
         leftProgressBar.updatePaint()
         rightProgressBar.updatePaint()
     }
+    Component.onDestruction: {
+        closeCancelRun()
+    }
 
     StackView.onActivated:{
         SendFunc.permitSteamStartStatus(0)
@@ -149,6 +152,12 @@ Rectangle {
                 }
             }
             onConfirm:cookConfirm()
+            onWorkStateChanged: {
+                if(workState===workStateEnum.WORKSTATE_STOP || workState === workStateEnum.WORKSTATE_FINISH)
+                {
+                    closeCancelRun(leftDevice)
+                }
+            }
         }
         Button{
             visible: leftProgressBar.workState !== workStateEnum.WORKSTATE_STOP && leftProgressBar.workState !== workStateEnum.WORKSTATE_FINISH
@@ -305,6 +314,12 @@ Rectangle {
                 }
             }
             onConfirm:cookConfirm()
+            onWorkStateChanged: {
+                if(workState===workStateEnum.WORKSTATE_STOP || workState === workStateEnum.WORKSTATE_FINISH)
+                {
+                    closeCancelRun(rightDevice)
+                }
+            }
         }
         Button{
             visible: rightProgressBar.workState !== workStateEnum.WORKSTATE_STOP && rightProgressBar.workState !== workStateEnum.WORKSTATE_FINISH
@@ -422,10 +437,10 @@ Rectangle {
                 {
                     SendFunc.setCookOperation(rightDevice,workOperationEnum.CANCEL)
                 }
-                closeLoaderMain()
+                closeCancelRun()
             }
             onConfirm: {
-                closeLoaderMain()
+                closeCancelRun()
             }
         }
     }
@@ -433,6 +448,25 @@ Rectangle {
         loader_main.sourceComponent = component_cancelRun
         loader_main.item.hintTopText= "是否取消"+device+state+"？"
         loader_main.item.cancelText= "取消"+state
+    }
+    function closeCancelRun(device){
+        if(loader_main.sourceComponent === component_cancelRun)
+        {
+            if(device!=null)
+            {
+                if(hintTopText.indexOf("左腔")!=-1)
+                {
+                    if(device!=leftDevice)
+                        return
+                }
+                else
+                {
+                    if(device!=rightDevice)
+                        return
+                }
+            }
+            loader_main.sourceComponent = undefined
+        }
     }
 
 }

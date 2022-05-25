@@ -14,7 +14,7 @@ ApplicationWindow {
     id: window
     width: 800
     height: 480
-    //    visible: true
+//        visible: true
     property int sysPower:-1
     property int permitStartStatus:0
     readonly property string uiVersion:"1.1"
@@ -52,6 +52,15 @@ ApplicationWindow {
     readonly property string themesTextColor2:"#A2A2A2"
     readonly property var buzControlEnum:{"STOP":0,"SHORT":1,"SHORTTWO":2,"2SCECONDS":3,"OPEN":4}
 
+    Settings {
+        id: testSettings
+        category: "test"
+
+        property int productionTestLcd:0
+        property int productionTestLight:0
+        property int productionTestAging:0
+        property int productionTestTouch:0
+    }
     Settings {
         id: systemSettings
         category: "system"
@@ -95,7 +104,7 @@ ApplicationWindow {
         systemSettings.sleepTime=3
         systemSettings.brightness=250
 
-        SendFunc.enableWifi(true)
+//        SendFunc.enableWifi(true)
         systemSettings.wifiEnable=true
 
         systemSettings.childLock=false
@@ -179,7 +188,7 @@ ApplicationWindow {
 
     StackView {
         id: stackView
-        //        initialItem: pageTestFront // pageHome pageTestFront pageTest pageGetQuad
+//                initialItem: pageTestFront // pageHome pageTestFront pageTest pageGetQuad
         anchors.fill: parent
     }
 
@@ -639,10 +648,10 @@ ApplicationWindow {
             stackView.push(pageScreenClick,StackView.Immediate)
             break;
         case "pageScreenLCD":
-            stackView.push(pageScreenLCD,StackView.Immediate)
+            stackView.push(pageScreenLCD,args,StackView.Immediate)
             break;
         case "pageScreenLight":
-            stackView.push(pageScreenLight,StackView.Immediate)
+            stackView.push(pageScreenLight,args,StackView.Immediate)
             break;
         case "pageScreenTouch":
             stackView.push(pageScreenTouch,args,StackView.Immediate)
@@ -783,7 +792,7 @@ ApplicationWindow {
             showLoaderFault("防火墙传感器故障！","请拨打售后电话<font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员",false)
             break
         case 7:
-            showLoaderFault("烟机进风口出现火情！","请及时关闭灶具旋钮 等待温度降低后使用",false)
+            showLoaderFault("烟机进风口出现火情！","请及时关闭灶具旋钮 等待温度降低后使用")
             break
         case 8:
             showLoaderFault("燃气泄漏","燃气有泄露风险\n请立即关闭灶具旋钮\n关闭总阀并开窗通气",false)

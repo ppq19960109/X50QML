@@ -2,6 +2,7 @@ import QtQuick 2.7
 import QtQuick.Controls 2.2
 import "qrc:/pageSet"
 Item{
+    property var containerqml: null
     Item{
         width:parent.width-100
         height: parent.height
@@ -24,7 +25,7 @@ Item{
             anchors.rightMargin: 20
             anchors.verticalCenter: parent.verticalCenter
             stepSize: 2
-            from: 40
+            from: 1
             to: 255
             value: Backlight.backlightGet()
 
@@ -43,9 +44,10 @@ Item{
         }
     }
     Button{
-        width:100+50
-        height:50+50
-        anchors.right: parent.right
+        width:100+40
+        height:50+40
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.horizontalCenterOffset: -150
         anchors.bottom: parent.bottom
         background:Rectangle{
             width:100
@@ -55,12 +57,38 @@ Item{
             color:themesTextColor2
         }
         Text{
-            text:"退出"
+            text:"成功"
             color:"#fff"
             font.pixelSize: 40
             anchors.centerIn: parent
         }
         onClicked: {
+            containerqml.clickedLightFunc(1)
+            Backlight.backlightSet(systemSettings.brightness)
+            backPrePage()
+        }
+    }
+    Button{
+        width:100+40
+        height:50+40
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.horizontalCenterOffset: 150
+        anchors.bottom: parent.bottom
+        background:Rectangle{
+            width:100
+            height:50
+            anchors.centerIn: parent
+            radius: 8
+            color:themesTextColor2
+        }
+        Text{
+            text:"失败"
+            color:"#fff"
+            font.pixelSize: 40
+            anchors.centerIn: parent
+        }
+        onClicked: {
+            containerqml.clickedLightFunc(-1)
             Backlight.backlightSet(systemSettings.brightness)
             backPrePage()
         }

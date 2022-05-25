@@ -20,10 +20,10 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     stateType.append(QPair<QString,int>("ErrorCode",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("ErrorCodeShow",LINK_VALUE_TYPE_NUM));
 
+    stateType.append(QPair<QString,int>("WifiCurConnected",LINK_VALUE_TYPE_STRUCT));
     stateType.append(QPair<QString,int>("WifiState",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("WifiEnable",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("WifiScanR",LINK_VALUE_TYPE_STRING));
-    stateType.append(QPair<QString,int>("WifiCurConnected",LINK_VALUE_TYPE_STRUCT));
 
     stateType.append(QPair<QString,int>("CookRecipe",LINK_VALUE_TYPE_STRUCT));
     stateType.append(QPair<QString,int>("CookHistory",LINK_VALUE_TYPE_STRUCT));
@@ -87,6 +87,7 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     stateType.append(QPair<QString,int>("QrCode",LINK_VALUE_TYPE_STRING));
     stateType.append(QPair<QString,int>("UpdateLog",LINK_VALUE_TYPE_STRING));
     stateType.append(QPair<QString,int>("BindTokenState",LINK_VALUE_TYPE_NUM));
+    stateType.append(QPair<QString,int>("QuadInfo",LINK_VALUE_TYPE_STRING));
 
     localConnected=0;
     connect(&client, SIGNAL(sendData(const QJsonValue&)), this,SLOT(readData(const QJsonValue&)));

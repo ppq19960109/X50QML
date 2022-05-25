@@ -79,7 +79,7 @@ Item {
 
     Timer {
         id: longPressTimer
-        interval: 800
+        interval: 700
         repeat: true
         running: false
 

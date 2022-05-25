@@ -11,7 +11,7 @@
 #include "backlight.h"
 #include <QtQuickControls2>
 //#include <QMetaObject>
-#include "mnetwork.h"
+//#include "mnetwork.h"
 
 int main(int argc, char *argv[])
 {
