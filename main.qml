@@ -255,7 +255,7 @@ ApplicationWindow {
         }
     }
     function sendIceConfirmCmd(){
-        setIceCooking(iceWorkStep.cookStep,0)
+        SendFunc.setIceCooking(iceWorkStep.cookStep,0)
     }
     Component{
         id:component_hoodoff

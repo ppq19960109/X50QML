@@ -74,6 +74,10 @@ Rectangle {
         {
             SendFunc.setCookOperation(rightDevice,workOperationEnum.CONFIRM)
         }
+        if(iceProgressBar.workState===workStateEnum.WORKSTATE_FINISH)
+        {
+            SendFunc.setCookOperation(iceDevice,workOperationEnum.CANCEL)
+        }
     }
 
     Item{

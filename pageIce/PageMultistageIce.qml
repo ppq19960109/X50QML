@@ -244,7 +244,7 @@ Item {
                 model: ListModel{
                     ListElement{name: "便捷早餐"
                         value:4
-                        cookSteps:"[{\"pos\":1,\"mode\":120,\"temp\":5,\"time\":720,\"number\":1},{\"pos\":1,\"mode\":100,\"temp\":100,\"time\":30,\"number\":2}]"}
+                        cookSteps:"[{\"pos\":1,\"mode\":120,\"temp\":5,\"time\":2,\"number\":1},{\"pos\":1,\"mode\":100,\"temp\":100,\"time\":30,\"number\":2}]"}
                     ListElement{name: "大菜预约"
                         value:4
                         cookSteps:"[{\"pos\":1,\"mode\":120,\"temp\":5,\"time\":480,\"number\":1},{\"pos\":1,\"mode\":100,\"temp\":100,\"time\":30,\"number\":2}]"}

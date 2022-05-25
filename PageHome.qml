@@ -286,7 +286,7 @@ Item {
             }
             else if("IceStOvState"==key)
             {
-                console.log("IceStOvState",value,QmlDevState.state.IceStOvState)
+                console.log("IceStOvState",value,QmlDevState.state.IceStOvState, iceWorkStep.state)
                 ret=isExistView("pageSteamBakeRun")
                 if(value > 0)
                 {
@@ -307,7 +307,7 @@ Item {
                 }
                 if(value==4 && iceWorkStep.state==iceWorkOperaEnum.ICE_RIGHT)
                 {
-                    setCooking(iceWorkStep.cookStep,0,rightDevice)
+                    SendFunc.setCooking(iceWorkStep.cookStep,0,rightDevice)
                 }
             }
             else if("HoodOffLeftTime"==key)
@@ -473,7 +473,7 @@ Item {
                 else if(value==8)
                 {
                     systemSettings.otaSuccess=true
-//                    showUpdateResult("系统已更新至最新版本 "+QmlDevState.state.OTANewVersion)
+                    //                    showUpdateResult("系统已更新至最新版本 "+QmlDevState.state.OTANewVersion)
                 }
             }
             else if(("OTAProgress"==key))
@@ -624,8 +624,8 @@ Item {
         //        showLoaderFault("左腔蒸箱加热异常！","请拨打售后电话 <font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员");
         //                        showLoaderPopup("","左腔门开启，工作暂停",275)
         //                showLoaderPopup("","右灶未开启\n开启后才可定时关火",275)
-// showLoaderFault("右腔干烧检测电路故障！","请拨打售后电话<font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员")
-//        showLoaderFault("","网络连接失败，请重试",true,"","qrc:/x50/icon/icon_pop_error.png",false)
+        // showLoaderFault("右腔干烧检测电路故障！","请拨打售后电话<font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员")
+        //        showLoaderFault("","网络连接失败，请重试",true,"","qrc:/x50/icon/icon_pop_error.png",false)
     }
     StackView.onActivated:{
         console.log("page home onActivated")
