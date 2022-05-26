@@ -96,7 +96,7 @@ Rectangle {
             workState:QmlDevState.state.LStOvState
             workMode:workState===workStateEnum.WORKSTATE_STOP?qsTr("左腔烹饪"):QmlDevState.state.MultiMode===1?QmlDevState.state.CookbookName:CookFunc.leftWorkModeName(QmlDevState.state.LStOvMode)
             canvasDiameter:width
-            percent:workState === workStateEnum.WORKSTATE_RESERVE?(100-100*QmlDevState.state.LStOvOrderTimerLeft/QmlDevState.state.LStOvOrderTimer):(100-100*QmlDevState.state.LStOvSetTimerLeft/QmlDevState.state.LStOvSetTimer)
+            percent:(workState === workStateEnum.WORKSTATE_RESERVE|| (workState === workStateEnum.WORKSTATE_PAUSE && orderTimeLeft!=0))?(100-100*QmlDevState.state.LStOvOrderTimerLeft/QmlDevState.state.LStOvOrderTimer):(100-100*QmlDevState.state.LStOvSetTimerLeft/QmlDevState.state.LStOvSetTimer)
 
             orderTimeLeft:QmlDevState.state.LStOvOrderTimerLeft
             workTime:
@@ -134,6 +134,13 @@ Rectangle {
                         {
                             var para =CookFunc.getDefHistory()
                             para.cookPos=leftDevice
+                            var list = []
+                            var steps={}
+                            steps.mode=QmlDevState.state.LStOvMode
+                            steps.temp=QmlDevState.state.LStOvSetTemp
+                            steps.time=QmlDevState.state.LStOvSetTimer
+                            list.push(steps)
+                            para.dishName=CookFunc.getDishName(list)
                             load_page("pageSteamBakeReserve",JSON.stringify(para))
                         }
                     }
@@ -224,7 +231,7 @@ Rectangle {
             count: QmlDevState.state.cnt
             currentIndex: QmlDevState.state.current-1
             anchors.top: leftProgressBar.bottom
-            anchors.topMargin: 18
+            anchors.topMargin: 5
             anchors.horizontalCenter: leftProgressBar.horizontalCenter
             interactive: true
             delegate: Item {
@@ -282,7 +289,7 @@ Rectangle {
                 anchors.fill: parent
                 propagateComposedEvents: true
                 onClicked: {
-                    if(rightProgressBar.workState === workStateEnum.WORKSTATE_STOP||rightProgressBar.workState === workStateEnum.WORKSTATE_PAUSE)
+                    if(rightProgressBar.workState === workStateEnum.WORKSTATE_STOP)
                     {
                         showNewCook(rightProgressBar.device)
                     }
@@ -296,6 +303,13 @@ Rectangle {
                         {
                             var para =CookFunc.getDefHistory()
                             para.cookPos=rightDevice
+                            var list = []
+                            var steps={}
+                            steps.mode=QmlDevState.state.RStOvMode
+                            steps.temp=QmlDevState.state.RStOvSetTemp
+                            steps.time=QmlDevState.state.RStOvSetTimer
+                            list.push(steps)
+                            para.dishName=CookFunc.getDishName(list)
                             load_page("pageSteamBakeReserve",JSON.stringify(para))
                         }
                     }

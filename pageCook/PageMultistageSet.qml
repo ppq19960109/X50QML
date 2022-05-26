@@ -24,7 +24,7 @@ Item {
 
         var para =CookFunc.getDefHistory()
         para.cookPos=leftDevice
-        para.dishName=CookFunc.getDishName(list,para.cookPos)
+        para.dishName=CookFunc.getDishName(list)
         para.cookSteps=JSON.stringify(list)
 
         if(systemSettings.cookDialog[4]>0)
@@ -86,7 +86,7 @@ Item {
             }
             var para =CookFunc.getDefHistory()
             para.cookPos=leftDevice
-            para.dishName=CookFunc.getDishName(list,para.cookPos)
+            para.dishName=CookFunc.getDishName(list)
             para.cookSteps=JSON.stringify(list)
             load_page("pageSteamBakeReserve",JSON.stringify(para))
         }

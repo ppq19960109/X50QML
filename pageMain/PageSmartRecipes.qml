@@ -88,14 +88,15 @@ Item {
                         width:parent.width
                         height:parent.height-2
                         anchors.top: parent.top
-                        background: Item{}
+                        background: Rectangle{
+                            color:menuList.currentIndex===index?"#131313":"transparent"
+                        }
 
                         Text{
                             text: modelData
-                            font.pixelSize: 40
+                            font.pixelSize: menuList.currentIndex===index?45:35
                             anchors.centerIn: parent
                             color:menuList.currentIndex===index?themesTextColor:themesTextColor2
-
                         }
                         onClicked: {
                             console.log("menuList",index)
@@ -129,8 +130,8 @@ Item {
                 anchors.top:parent.top
 
                 orientation:ListView.Horizontal
-                highlightRangeMode: ListView.StrictlyEnforceRange
-                boundsBehavior:Flickable.StopAtBounds
+//                highlightRangeMode: ListView.ApplyRange//StrictlyEnforceRange
+//                boundsBehavior:Flickable.StopAtBounds
                 clip: true
                 currentIndex:0
                 delegate: Item{

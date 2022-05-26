@@ -139,7 +139,7 @@ Item {
             anchors.left: leftContent.right
 
             anchors.right: parent.right
-            anchors.rightMargin: 30
+            anchors.rightMargin: 40
             Text{
                 id:dishName
                 anchors.top:parent.top
@@ -162,7 +162,7 @@ Item {
                 anchors.top: cookTime.bottom
                 anchors.topMargin: 10
                 anchors.bottom: parent.bottom
-                scrollBarLeftMargin:10
+                scrollBarLeftMargin:5
             }
         }
     }

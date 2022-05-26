@@ -26,7 +26,7 @@ Item {
         //back图标
         TabButton {
             id:backBtn
-            width:100
+            width:80
             height:parent.height
             anchors.left:parent.left
             anchors.verticalCenter: parent.verticalCenter

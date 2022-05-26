@@ -161,7 +161,7 @@ Item {
                 anchors.horizontalCenterOffset:(workState === workStateEnum.WORKSTATE_PREHEAT||workState === workStateEnum.WORKSTATE_RUN)?-20:0
                 color:workColor
                 font.pixelSize: 70
-                font.bold: workState === workStateEnum.WORKSTATE_RUN?true:false
+                font.bold: (workState === workStateEnum.WORKSTATE_RUN|| (workState === workStateEnum.WORKSTATE_PAUSE && orderTimeLeft==0))?true:false
             }
             Text{
                 visible: !(workState === workStateEnum.WORKSTATE_RESERVE || (workState === workStateEnum.WORKSTATE_PAUSE && orderTimeLeft!=0))

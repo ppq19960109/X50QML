@@ -213,7 +213,7 @@ Item {
             Rectangle{
                 id:version
                 Layout.preferredWidth: 400
-                Layout.preferredHeight:120
+                Layout.preferredHeight:100
                 Layout.alignment: Qt.AlignVCenter
                 radius: 8
                 color:"transparent"
@@ -221,7 +221,7 @@ Item {
                 Text{
                     id:versionText
                     visible: false
-                    text:"电控板软件版本号:"+QmlDevState.state.ElcSWVersion+"\n通讯板软件版本号:"+QmlDevState.state.ComSWVersion+"\n屏幕模组软件版本号:"+uiVersion
+                    text:"电源板软件版本号:"+QmlDevState.state.ElcSWVersion+"\n屏幕模组软件版本号:"+QmlDevState.state.ComSWVersion
                     color:"#FFF"
                     font.pixelSize: 30
                     anchors.centerIn: parent

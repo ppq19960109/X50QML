@@ -339,6 +339,7 @@ Item {
                 {
                     if(value>0)
                     {
+                        SendFunc.setSysPower(1)
                         showFaultPopup(value)
                     }
                     else
@@ -503,7 +504,7 @@ Item {
         Item {
             Rectangle{
                 width: 400
-                height: 150
+                height: 200
                 color: "red"
                 anchors.bottom: parent.bottom
                 anchors.right: parent.right
@@ -538,7 +539,7 @@ Item {
     {
         var i
         for( i = 0; i < wifiModel.count; ++i) {
-            if(wifiModel.get(i).ssid=="productionTestWIFISSID")//productionTestWIFISSID
+            if(wifiModel.get(i).ssid==productionTestWIFISSID)//productionTestWIFISSID
             {
                 wifiModel.setProperty(0,"connected",0)
                 wifiModel.setProperty(i,"connected",2)
@@ -555,6 +556,7 @@ Item {
                 getQuadScanWifi()
                 return
             }
+            productionTestFlag=0x0f
             showBurnWifi()
             return
         }
@@ -588,28 +590,45 @@ Item {
         console.log("page home onActivated")
         SendFunc.permitSteamStartStatus(0)
     }
-
+    property bool swipeViewFocus:true
     Item{
         id:swipe
-        anchors.top:parent.top
         width:parent.width
-        height: 400
+        anchors.top:parent.top
+        anchors.bottom: homeBar.top
 
         SwipeView {
             id: swipeview
             currentIndex:1
             width:parent.width
             height:parent.height
-
+            focus: true
             interactive:true //是否可以滑动
             Item {
                 PageHomeSecond{}
+                onFocusChanged:{
+                    swipeViewFocus=focus
+                    console.log("PageHomeSecond ",focus,swipeViewFocus)
+                }
             }
             Item {
                 PageHomeFirst{}
+                onFocusChanged:{
+                    swipeViewFocus=focus
+                    console.log("PageHomeFirst ",focus,swipeViewFocus)
+                }
             }
             Item {
                 PageHomeThird{}
+                onFocusChanged:{
+                    swipeViewFocus=focus
+                    console.log("PageHomeThird ",focus,swipeViewFocus)
+                }
+            }
+
+            onCurrentIndexChanged:{
+                swipeViewFocus=true
+                console.log("onCurrentIndexChanged",currentIndex)
             }
             Component.onCompleted:{
                 //                contentItem.highlightFollowsCurrentItem=true
@@ -642,7 +661,11 @@ Item {
         anchors.left:parent.left
 
         anchors.verticalCenter: swipe.verticalCenter
-        visible: swipeview.currentIndex===0?false:true
+        visible:{
+            if(swipeViewFocus==false)
+                return false
+            return swipeview.currentIndex===0?false:true
+        }
         background:Image{
             asynchronous:true
             smooth:false
@@ -655,6 +678,7 @@ Item {
                 //                    swipeview.currentIndex-=1
                 //                    swipeview.setCurrentIndex(swipeview.currentIndex-1)
                 swipeview.decrementCurrentIndex()
+                swipeViewFocus=true
             }
         }
     }
@@ -665,7 +689,11 @@ Item {
         anchors.right:parent.right
 
         anchors.verticalCenter: swipe.verticalCenter
-        visible: swipeview.currentIndex===(swipeview.count-1)?false:true
+        visible: {
+            if(swipeViewFocus==false)
+                return false
+            return swipeview.currentIndex===(swipeview.count-1)?false:true
+        }
         background:Image{
             asynchronous:true
             smooth:false
@@ -678,10 +706,12 @@ Item {
                 //                    swipeview.currentIndex+=1
                 //                    swipeview.setCurrentIndex(swipeview.currentIndex+1)
                 swipeview.incrementCurrentIndex()
+                swipeViewFocus=true
             }
         }
     }
     PageHomeBar {
+        id:homeBar
         anchors.bottom: parent.bottom
     }
 }

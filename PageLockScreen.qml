@@ -79,15 +79,15 @@ Item {
 
     Timer {
         id: longPressTimer
-        interval: 700
+        interval: 900
         repeat: true
         running: false
 
         onTriggered: {
-            if(childLockPressCount<3)
+            if(childLockPressCount<2)
             {
                 ++childLockPressCount
-                if(childLockPressCount==3)
+                if(childLockPressCount==2)
                 {
                     longPressTimer.running = false
                     systemSettings.childLock=false

@@ -135,7 +135,7 @@ function isSteam(cookSteps)
     }
     return 0
 }
-function getDishName(root,cookPos)
+function getDishName(root)
 {
     var dishName=""
 

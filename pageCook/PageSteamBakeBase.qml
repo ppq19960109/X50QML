@@ -37,7 +37,7 @@ Rectangle {
 
         para =CookFunc.getDefHistory()
         para.cookPos=root.device
-        para.dishName=CookFunc.getDishName(list,para.cookPos)
+        para.dishName=CookFunc.getDishName(list)
         para.cookSteps=JSON.stringify(list)
         console.log("para:",JSON.stringify(para),systemSettings.leftCookDialog,systemSettings.rightCookDialog,root.device)
 
@@ -86,14 +86,14 @@ Rectangle {
         console.log("PageSteamBakeBase onCompleted")
         var i;
 
-        var timeArray = []
-        for(i=1; i<= 120; ++i) {
-            timeArray.push(i+"分钟")
-        }
-        for(i=125; i<= 180; i+=5) {
-            timeArray.push(i+"分钟")
-        }
-        timePathView.model=timeArray
+//        var timeArray = []
+//        for(i=1; i<= 120; ++i) {
+//            timeArray.push(i+"分钟")
+//        }
+//        for(i=125; i<= 180; i+=5) {
+//            timeArray.push(i+"分钟")
+//        }
+//        timePathView.model=timeArray
         console.log("state",state,typeof state)
         if(multiMode==0 )//|| undefined != state || null != state || "" != state
         {
@@ -133,7 +133,7 @@ Rectangle {
         id:topBar
         anchors.bottom:parent.bottom
         name:""
-//        leftBtnText:qsTr("启动")
+        //        leftBtnText:qsTr("启动")
         rightBtnText:qsTr("预约")
         onClose:{
 
@@ -174,7 +174,7 @@ Rectangle {
 
                 var para =CookFunc.getDefHistory()
                 para.cookPos=root.device
-                para.dishName=CookFunc.getDishName(list,para.cookPos)
+                para.dishName=CookFunc.getDishName(list)
                 para.cookSteps=JSON.stringify(list)
 
                 load_page("pageSteamBakeReserve",JSON.stringify(para))
@@ -233,6 +233,24 @@ Rectangle {
                     }
                     tempPathView.model=tempArray
                     tempPathView.currentIndex=model.get(index).temp-model.get(index).minTemp
+
+                    var maxTime=model.get(modePathView.currentIndex).maxTime
+                    if(maxTime!=null && maxTime!=0)
+                    {
+                        console.info("maxTime:",maxTime)
+                    }
+                    else
+                    {
+                        maxTime=300
+                    }
+                    var timeArray = []
+                    for(i=1; i<= 120; ++i) {
+                        timeArray.push(i+"分钟")
+                    }
+                    for(i=125; i<= maxTime; i+=5) {
+                        timeArray.push(i+"分钟")
+                    }
+                    timePathView.model=timeArray
                     timePathView.currentIndex=CookFunc.getCookTimeIndex(model.get(index).time)
                 }
                 Component.onCompleted:{
@@ -262,6 +280,23 @@ Rectangle {
                         tempPathView.currentIndex=tempPathViewIndex-modePathView.model.get(modePathView.currentIndex).minTemp
                     }
 
+                    var maxTime=model.get(modePathView.currentIndex).maxTime
+                    if(maxTime!=null && maxTime!=0)
+                    {
+                        console.info("maxTime:",maxTime)
+                    }
+                    else
+                    {
+                        maxTime=300
+                    }
+                    var timeArray = []
+                    for(i=1; i<= 120; ++i) {
+                        timeArray.push(i+"分钟")
+                    }
+                    for(i=125; i<= maxTime; i+=5) {
+                        timeArray.push(i+"分钟")
+                    }
+                    timePathView.model=timeArray
                     if(timePathViewIndex===undefined)
                     {
                         timePathView.currentIndex=CookFunc.getCookTimeIndex(modePathView.model.get(modePathView.currentIndex).time)

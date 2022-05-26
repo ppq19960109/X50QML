@@ -8,6 +8,7 @@ Item {
 
     Row {
         anchors.centerIn: parent
+
         spacing: 40
 
         Button{
@@ -29,7 +30,7 @@ Item {
                 asynchronous:true
                 smooth:false
                 anchors.top: parent.top
-                anchors.topMargin: 42
+                anchors.topMargin: 40
                 anchors.horizontalCenter: parent.horizontalCenter
                 source: themesImagesPath+"homefirst-button1-image.png"
             }
@@ -54,7 +55,7 @@ Item {
                 asynchronous:true
                 smooth:false
                 anchors.top: parent.top
-                anchors.topMargin: 31
+                anchors.topMargin: 40
                 anchors.horizontalCenter: parent.horizontalCenter
                 source: themesImagesPath+"homefirst-button2-image.png"
             }

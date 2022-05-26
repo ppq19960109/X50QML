@@ -149,6 +149,14 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     history.append(info);
     info["dishName"]="烤豆腐";
     history.append(info);
+    info["dishName"]="烤豆腐2";
+    history.append(info);
+    info["dishName"]="烤豆腐3";
+    history.append(info);
+    info["dishName"]="烤豆腐4";
+    history.append(info);
+    info["dishName"]="烤豆腐5";
+    history.append(info);
 #endif
 }
 

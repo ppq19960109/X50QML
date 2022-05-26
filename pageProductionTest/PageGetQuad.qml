@@ -122,7 +122,7 @@ Item {
                     id:wifiConnectText
                     text:"正在连接WIFI..."
                     color:"#FFF"
-                    font.pixelSize: 35
+                    font.pixelSize: 30
                     anchors.centerIn: parent
                 }
             }
@@ -151,7 +151,7 @@ Item {
                     id:quadText
                     text:"正在烧录四元组..."
                     color:"#FFF"
-                    font.pixelSize: 35
+                    font.pixelSize: 30
                     anchors.centerIn: parent
                 }
             }

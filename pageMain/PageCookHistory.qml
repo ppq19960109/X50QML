@@ -36,7 +36,10 @@ Item {
         getHistory(cookPos)
 
         if(recipeListView.visible===true)
+        {
+//            recipeListView.currentIndex=1
             SendFunc.permitSteamStartStatus(1)
+        }
     }
     ListModel {
         id:historyModel
@@ -116,7 +119,14 @@ Item {
         rightBtnOpacity:noHistory.visible==true?0.6:edit===true?0.6:1
         onLeftClick:{
             if(noHistory.visible==false)
+            {
                 edit=!edit
+                if(edit)
+                {
+                    recipeListView.currentIndex=-1
+                    SendFunc.permitSteamStartStatus(0)
+                }
+            }
         }
         onRightClick:{
             if(noHistory.visible==false && edit===false)
@@ -154,9 +164,18 @@ Item {
             anchors.top: parent.top
             anchors.topMargin: 20
             //            highlightRangeMode: ListView.ApplyRange//StrictlyEnforceRange ApplyRange
-            //                        boundsBehavior:Flickable.StopAtBounds
+//            boundsBehavior:Flickable.StopAtBounds
             clip: true
             currentIndex:0
+
+            onCurrentIndexChanged:{
+                console.log("ListView onCurrentIndexChanged",currentIndex)
+                if(permitStartStatus==0)
+                {
+                    SendFunc.permitSteamStartStatus(1)
+                }
+            }
+
             delegate: Item{
                 width:parent.width
                 height:100
@@ -173,7 +192,7 @@ Item {
                     font.pixelSize: 40
                     horizontalAlignment:Text.AlignHCenter
                     verticalAlignment:Text.AlignVCenter
-                    color:recipeListView.currentIndex===index?themesTextColor:"#FFF"
+                    color:(edit==false && recipeListView.currentIndex===index)?themesTextColor:"#FFF"
                 }
                 Button {
                     height:parent.height
@@ -188,7 +207,7 @@ Item {
 
                         //                        horizontalAlignment:Text.AlignHCenter
                         //                        verticalAlignment:Text.AlignHCenter
-                        color:recipeListView.currentIndex===index?themesTextColor:"#fff"
+                        color:(edit==false && recipeListView.currentIndex===index)?themesTextColor:"#fff"
                     }
                     onClicked: {
                         recipeListView.currentIndex=index
