@@ -194,7 +194,7 @@ function setMultiIceCooking(list,orderTime)
                 setCooking(list[0],0,list[0].pos)
             else
                 setCooking(list[0],10,list[0].pos)
-            list[1].time=720
+            list[1].time=960
             setIceCooking(list[1],orderTime)
         }
         else if(list[0].pos==rightDevice && list[0].mode!=iceWorkMode && list[1].pos==rightDevice  && list[1].mode==iceWorkMode)
@@ -204,6 +204,7 @@ function setMultiIceCooking(list,orderTime)
             setCooking(list[0],0,list[0].pos)
 
             list[1].mode=121
+            list[1].time=960
             setIceCooking(list[1],orderTime)
         }
         else if(list[0].pos==rightDevice  && list[0].mode==iceWorkMode && list[1].pos==rightDevice && list[1].mode!=iceWorkMode)

@@ -160,6 +160,7 @@ Rectangle {
             width:60
             height: width
             anchors.left: leftProgressBar.left
+            anchors.leftMargin: 10
             anchors.bottom: leftProgressBar.bottom
             //            anchors.bottomMargin: -10
             background:Image {
@@ -180,8 +181,7 @@ Rectangle {
             width:60
             height: width
             anchors.right: leftProgressBar.right
-
-
+            anchors.rightMargin: 10
             anchors.bottom: leftProgressBar.bottom
             //            anchors.bottomMargin: -10
             background:Image {
@@ -195,6 +195,17 @@ Rectangle {
                 {
                     //                    QmlDevState.setState("LStOvState",workStateEnum.WORKSTATE_RUN)
                     SendFunc.setCookOperation(leftDevice,workOperationEnum.START)
+                    if(QmlDevState.state.ErrorCodeShow==0)
+                    {
+                        if(QmlDevState.state.LStOvDoorState==1)
+                        {
+                            showLoaderPopup("","左腔门开启，工作暂停",275)
+                        }
+                    }
+                    else
+                    {
+                        showFaultPopup(QmlDevState.state.ErrorCodeShow,leftDevice)
+                    }
                 }
                 else
                 {
@@ -306,6 +317,7 @@ Rectangle {
             width:60
             height: width
             anchors.left: rightProgressBar.left
+            anchors.leftMargin: 10
             anchors.bottom: rightProgressBar.bottom
             //            anchors.bottomMargin: -10
             background:Image {
@@ -326,6 +338,7 @@ Rectangle {
             width:60
             height: width
             anchors.right: rightProgressBar.right
+            anchors.rightMargin: 10
             anchors.bottom: rightProgressBar.bottom
             //            anchors.bottomMargin: -10
             background:Image {
@@ -339,6 +352,17 @@ Rectangle {
                 {
                     //                    QmlDevState.setState("RStOvState",workStateEnum.WORKSTATE_RUN)
                     SendFunc.setCookOperation(rightDevice,workOperationEnum.START)
+                    if(QmlDevState.state.ErrorCodeShow==0)
+                    {
+                        if(QmlDevState.state.RStOvDoorState==1)
+                        {
+                            showLoaderPopup("","右腔门开启，工作暂停",275)
+                        }
+                    }
+                    else
+                    {
+                        showFaultPopup(QmlDevState.state.ErrorCodeShow,rightDevice)
+                    }
                 }
                 else
                 {
@@ -368,12 +392,12 @@ Rectangle {
             canvasDiameter:width
             percent:(100-100*QmlDevState.state.IceStOvSetTimerLeft/QmlDevState.state.IceStOvSetTimer)
 
-//            orderTimeLeft:QmlDevState.state.IceStOvOrderTimerLeft
+            //            orderTimeLeft:QmlDevState.state.IceStOvOrderTimerLeft
             workTime:
             {
                 if(workState === workStateEnum.WORKSTATE_PREHEAT)
                 {
-                    return QmlDevState.state.RStOvRealTemp
+                    return QmlDevState.state.RStOvRealTemp-3
                 }
                 else if(workState === workStateEnum.WORKSTATE_RESERVE || (workState === workStateEnum.WORKSTATE_PAUSE && orderTimeLeft!=0))
                 {
@@ -390,13 +414,13 @@ Rectangle {
                 anchors.fill: parent
                 propagateComposedEvents: true
                 onClicked: {
-                        mouse.accepted = false
+                    mouse.accepted = false
                 }
                 onPressed: {
-                        mouse.accepted = false
+                    mouse.accepted = false
                 }
                 onReleased: {
-                        mouse.accepted = false
+                    mouse.accepted = false
                 }
             }
             onConfirm:cookConfirm()
@@ -406,6 +430,7 @@ Rectangle {
             width:60
             height: width
             anchors.left: iceProgressBar.left
+            anchors.leftMargin: 10
             anchors.bottom: iceProgressBar.bottom
             //            anchors.bottomMargin: -10
             background:Image {
@@ -426,6 +451,7 @@ Rectangle {
             width:60
             height: width
             anchors.right: iceProgressBar.right
+            anchors.rightMargin: 10
             anchors.bottom: iceProgressBar.bottom
             //            anchors.bottomMargin: -10
             background:Image {
