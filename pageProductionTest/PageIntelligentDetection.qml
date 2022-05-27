@@ -87,6 +87,7 @@ Item {
             {
                 step=1
                 versionText.visible=true
+                versionText.text="电源板软件版本号:"+QmlDevState.state.ElcSWVersion+"\n屏幕模组软件版本号:"+QmlDevState.state.ComSWVersion
                 version.color="green"
                 timer_wifi.restart()
             }
@@ -221,7 +222,7 @@ Item {
                 Text{
                     id:versionText
                     visible: false
-                    text:"电源板软件版本号:"+QmlDevState.state.ElcSWVersion+"\n屏幕模组软件版本号:"+QmlDevState.state.ComSWVersion
+                    text:""
                     color:"#FFF"
                     font.pixelSize: 30
                     anchors.centerIn: parent
@@ -249,7 +250,7 @@ Item {
                 Text{
                     id:wifiSignalText
                     visible: false
-                    text:"db"
+                    text:""
                     color:"#FFF"
                     font.pixelSize: 30
                     anchors.centerIn: parent

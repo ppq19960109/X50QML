@@ -52,11 +52,11 @@ KeyboardStyle {
     }
 
     keyboardDesignWidth: 2560
-    keyboardDesignHeight: 1060
+    keyboardDesignHeight: 1100
 
     keyboardRelativeLeftMargin: 10 / keyboardDesignWidth
     keyboardRelativeRightMargin: 10 / keyboardDesignWidth
-    keyboardRelativeTopMargin: 20 / keyboardDesignHeight
+    keyboardRelativeTopMargin: 30 / keyboardDesignHeight
     keyboardRelativeBottomMargin: 60 / keyboardDesignHeight
 
     keyboardBackground: Rectangle {
@@ -695,14 +695,14 @@ KeyboardStyle {
         Text {
             id: selectionListLabel
             anchors.left: parent.left
-            anchors.leftMargin: Math.round((compactSelectionList ? 50 : 140) * scaleHint)
+            anchors.leftMargin: Math.round((compactSelectionList ? 60 : 150) * scaleHint)
             anchors.verticalCenter: parent.verticalCenter
             text: decorateText(display, wordCompletionLength)
             color: "black"
             font {
                 family: fontFamily
                 weight: Font.Normal
-                pixelSize: 70 * scaleHint
+                pixelSize: 80 * scaleHint
             }
             function decorateText(text, wordCompletionLength) {
                 if (wordCompletionLength > 0) {
@@ -895,14 +895,14 @@ KeyboardStyle {
             anchors.top: parent.top
             anchors.leftMargin: languageNameTextMetrics.height / 2
             anchors.rightMargin: anchors.leftMargin
-            anchors.topMargin: languageNameTextMetrics.height / 3
+            anchors.topMargin: languageNameTextMetrics.height / 2
             anchors.bottomMargin: anchors.topMargin
             text: languageNameFormatter.elidedText
             color: "#a7adbd"
             font {
                 family: fontFamily
                 weight: Font.Normal
-                pixelSize: 66 * scaleHint
+                pixelSize: 80 * scaleHint
             }
         }
         TextMetrics {

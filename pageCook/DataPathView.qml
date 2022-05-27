@@ -3,6 +3,7 @@ import QtQuick.Controls 2.2
 
 Item {
     property alias model:pathView.model
+    property alias cacheItemCount:pathView.cacheItemCount
     property int delegateIndex:0
     property alias currentIndex:pathView.currentIndex
     property alias moving:pathView.moving
@@ -68,7 +69,7 @@ Item {
         preferredHighlightBegin: 0.5;
         preferredHighlightEnd: 0.5;
         highlightRangeMode: PathView.StrictlyEnforceRange;
-
+        maximumFlickVelocity:400*5
 //        model:textModel
         delegate:delegateIndex==0?rectDelegate:modeDelegate
 

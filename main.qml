@@ -14,8 +14,8 @@ ApplicationWindow {
     id: window
     width: 800
     height: 480
-        visible: true
-    property int sysPower:1
+    //    visible: true
+    property int sysPower:-1
     property int permitStartStatus:0
     readonly property string uiVersion:"1.1"
     readonly property string productionTestWIFISSID:"moduletest"
@@ -60,6 +60,22 @@ ApplicationWindow {
         property int productionTestLight:0
         property int productionTestAging:0
         property int productionTestTouch:0
+        onProductionTestLcdChanged:{
+            if(isExistView("PageTestFront")!=null)
+                systemSync()
+        }
+        onProductionTestLightChanged:{
+            if(isExistView("PageTestFront")!=null)
+                systemSync()
+        }
+        onProductionTestAgingChanged:{
+            if(isExistView("PageTestFront")!=null)
+                systemSync()
+        }
+        onProductionTestTouchChanged:{
+            if(isExistView("PageTestFront")!=null)
+                systemSync()
+        }
     }
     Settings {
         id: systemSettings
@@ -89,10 +105,14 @@ ApplicationWindow {
             console.log("onWifiEnableChanged....",systemSettings.wifiEnable)
         }
         onSleepTimeChanged: {
-            console.log("onSleepTimeChanged")
+            console.log("onSleepTimeChanged",systemSettings.sleepTime)
             timer_window.interval=systemSettings.sleepTime*60000
             timer_window.restart()
         }
+    }
+    function systemSync()
+    {
+        QmlDevState.executeShell("(sleep 1;sync) &")
     }
 
     function systemReset()
@@ -111,6 +131,7 @@ ApplicationWindow {
         systemSettings.cookDialog=[1,1,1,1,1,1]
         systemSettings.multistageRemind=true
         systemSettings.wifiPasswdArray=[]
+        systemSync()
     }
 
     function systemPower(power){
@@ -126,7 +147,10 @@ ApplicationWindow {
         {
             Backlight.backlightSet(0)
             timer_window.stop()
-            backTopPage()
+            if(isExistView("PageTestFront")==null)
+            {
+                backTopPage()
+            }
         }
         if(window.visible===false)
             window.visible=true
@@ -147,7 +171,7 @@ ApplicationWindow {
             }
         }
         systemSettings.childLock=false
-        if(systemSettings.brightness<40 || systemSettings.brightness>255)
+        if(systemSettings.brightness<1 || systemSettings.brightness>255)
         {
             systemSettings.brightness=250
         }
@@ -167,7 +191,7 @@ ApplicationWindow {
         onTriggered: {
             console.log("timer_window sleep:")
             //            console.log("timer_window sleep:",QmlDevState.state.HoodSpeed,QmlDevState.state.RStOvState,QmlDevState.state.LStOvState,QmlDevState.state.ErrorCodeShow,QmlDevState.localConnected)
-            if(QmlDevState.state.RStOvState == 0 && QmlDevState.state.LStOvState == 0 && QmlDevState.state.ErrorCodeShow == 0 && QmlDevState.localConnected > 0 && isExistView("PageTestFront")==null && sysPower==1)
+            if(QmlDevState.state.RStOvState == 0 && QmlDevState.state.LStOvState == 0 && QmlDevState.state.ErrorCodeShow == 0 && QmlDevState.localConnected > 0 && isExistView("PageTestFront")==null && sysPower==1 && wifiConnecting==false)
             {
                 //                Backlight.backlightDisable()
                 sleepState=true
@@ -213,8 +237,10 @@ ApplicationWindow {
         }
     }
     function showQrcodeBind(title){
-        console.log("BindTokenState",QmlDevState.state.BindTokenState)//QmlDevState.state.BindTokenState > 0
-        if(systemSettings.wifiEnable && QmlDevState.state.WifiState==4 && QmlDevState.state.DeviceSecret!="")
+        console.log("BindTokenState",QmlDevState.state.BindTokenState,QmlDevState.state.DeviceSecret,QmlDevState.state.WifiState)//QmlDevState.state.BindTokenState > 0
+        if(QmlDevState.state.DeviceSecret=="")
+            return
+        if(systemSettings.wifiEnable && QmlDevState.state.WifiState==4)
         {
             loader_main.sourceComponent = component_bind
             loader_main.item.hintTopText=title
@@ -351,6 +377,10 @@ ApplicationWindow {
         }
     }
     //---------------------------------------------------------------
+    function wakeup(){
+        systemPower(2)
+    }
+
     Loader{
         //加载弹窗组件
         id:loader_lock_screen
@@ -798,7 +828,10 @@ ApplicationWindow {
             break
         case 9:
             if(dir==null)
+            {
                 showLoaderFault("电源板串口故障！","请拨打售后电话<font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员",false);
+                wakeup()
+            }
             break
         case 10:
             if(dir==null||dir==leftDevice)
@@ -816,7 +849,7 @@ ApplicationWindow {
             if(dir==null||dir==rightDevice)
                 showLoaderFault("右腔干烧检测电路故障！","请拨打售后电话<font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员")
             break
-        case 20:
+        case 15:
             if(dir==null)
                 showLoaderFault("手势板故障！","请拨打售后电话<font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员");
             break

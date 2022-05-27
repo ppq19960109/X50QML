@@ -57,10 +57,12 @@ Item {
         }
         Text{
             id:centerText
+            width: parent.width/2
             visible: centerText.text!=""
             anchors.centerIn: parent
             color:themesTextColor2
             font.pixelSize: 35
+            elide: Text.ElideRight
             horizontalAlignment:Text.AlignHCenter
             verticalAlignment:Text.AlignVCenter
         }

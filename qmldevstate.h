@@ -8,9 +8,11 @@
 #include <QPair>
 #include <QVector>
 #include <QtQml>
+#include <QProcess>
 #include "localclient.h"
 #include "qrcodeen.h"
-
+#include <cstdlib>
+//#include <stdlib.h>
 
 class QmlDevState : public QObject
 {
@@ -33,7 +35,7 @@ public:
         LINK_VALUE_TYPE_STRUCT,
         LINK_VALUE_TYPE_NULL,
     };
-
+    QProcess process;
     void setLocalConnected(const int connected);
     int getLocalConnected() const;
 
@@ -59,6 +61,7 @@ public:
     Q_INVOKABLE int sendJsonToServer(const QString &type,const QJsonObject &json);
 
     Q_INVOKABLE QVariantList getRecipeDetails(const int recipeid);
+    Q_INVOKABLE void executeShell(const QString &cmd);
 private:
 
     int localConnected;

@@ -86,14 +86,14 @@ Rectangle {
         console.log("PageSteamBakeBase onCompleted")
         var i;
 
-//        var timeArray = []
-//        for(i=1; i<= 120; ++i) {
-//            timeArray.push(i+"分钟")
-//        }
-//        for(i=125; i<= 180; i+=5) {
-//            timeArray.push(i+"分钟")
-//        }
-//        timePathView.model=timeArray
+        //        var timeArray = []
+        //        for(i=1; i<= 120; ++i) {
+        //            timeArray.push(i+"分钟")
+        //        }
+        //        for(i=125; i<= 180; i+=5) {
+        //            timeArray.push(i+"分钟")
+        //        }
+        //        timePathView.model=timeArray
         console.log("state",state,typeof state)
         if(multiMode==0 )//|| undefined != state || null != state || "" != state
         {
@@ -231,6 +231,7 @@ Rectangle {
                     for(var i=minTemp; i<= maxTemp; ++i) {
                         tempArray.push(i+"℃")
                     }
+
                     tempPathView.model=tempArray
                     tempPathView.currentIndex=model.get(index).temp-model.get(index).minTemp
 

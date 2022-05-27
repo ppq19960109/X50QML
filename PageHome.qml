@@ -211,10 +211,12 @@ Item {
 
                 //                                showLoaderFault("右腔干烧检测电路故障！","请拨打售后电话<font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员")
                 //                showLoaderFault("","网络连接失败，请重试",true,"","qrc:/x50/icon/icon_pop_error.png",false)
+//                load_page("pageTestFront")
             }
             else
             {
                 showLoaderFault("通讯板故障！","请拨打售后电话<font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员",false)
+                wakeup()
             }
         }
         onStateChanged: { // 处理目标对象信号的槽函数
@@ -355,12 +357,14 @@ Item {
                 if(value==0)
                 {
                     wifiConnected=false
+                    wifiModel.clear()
                 }
                 console.log("WifiEnable",value)
                 if(productionTestFlag==2 && value > 0)
                 {
                     getQuadScanWifi()
                 }
+                systemSync()
             }
             else if("WifiState"==key)
             {
@@ -372,7 +376,7 @@ Item {
                 else
                 {
                     wifiConnecting=false
-                    if(value==2 || value==3|| value==5)
+                    if(value==2 || value==3||value==5)
                     {
                         WifiFunc.deleteWifiInfo(wifiConnectInfo)
                     }
@@ -388,6 +392,10 @@ Item {
             {
                 if(wifiConnected==true && value==wifiConnectInfo.ssid)
                     WifiFunc.addWifiInfo(wifiConnectInfo)
+                if(isExistView("PageWifi")==null)
+                {
+                    wifiConnectInfo.ssid=""
+                }
             }
             else if("ProductionTest"==key)
             {

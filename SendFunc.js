@@ -109,7 +109,7 @@ function permitSteamStartStatus(status)
 }
 function enableWifi(enable)
 {
-    systemSettings.wifiEnable=enable
+//    systemSettings.wifiEnable=enable
     var Data={}
     Data.WifiEnable = enable
     setToServer(Data)

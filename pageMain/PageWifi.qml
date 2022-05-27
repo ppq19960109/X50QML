@@ -10,6 +10,7 @@ import "../"
 Item {
     property int scan_count: 0
     property bool wifiInputConnecting:false
+    property string name: "PageWifi"
     function wifi_scan_timer_reset()
     {
         console.log("wifi_scan_timer_reset")
@@ -28,13 +29,9 @@ Item {
             if("WifiState"==key)
             {
                 console.log("page wifi WifiState:",value,wifiConnected,wifiConnectInfo.ssid)
-                if(value==5)
+                if(value > 1)
                 {
-
-                }
-                else if(value > 1)
-                {
-                    if(value==2)
+                    if(value==2 || value==5)
                     {
                         if(systemSettings.wifiEnable && wifiConnected==false && wifiConnectInfo.ssid!="")
                             showLoaderFault("","网络连接失败，请重试",true,"","/x50/icon/icon_pop_error.png",false)
@@ -183,15 +180,14 @@ Item {
                     console.log("wifi_switch:" + wifi_switch.checked,wifi_switch.width,indicator.width)
                     if(systemSettings.wifiEnable!=wifi_switch.checked)
                         SendFunc.enableWifi(wifi_switch.checked)
+                    //                    if(wifi_switch.checked)
+                    //                    {
 
-                    if(wifi_switch.checked)
-                    {
-
-                    }
-                    else
-                    {
-                        wifiModel.clear()
-                    }
+                    //                    }
+                    //                    else
+                    //                    {
+                    //                        wifiModel.clear()
+                    //                    }
                 }
             }
             Text {
@@ -299,8 +295,11 @@ Item {
                             console.log("open connect:" , ssid,flags)
                             SendFunc.connectWiFi(ssid,"",flags)
                             connected=2
-                            wifiModel.setProperty(0,"connected",0)
-                            wifiModel.move(index,0,1)
+                            if(index>0)
+                            {
+                                wifiModel.setProperty(0,"connected",0)
+                                wifiModel.move(index,0,1)
+                            }
                             //                            wifiModel.setProperty(0,"connected",2)
                             listView.positionViewAtBeginning()
                         }
@@ -316,8 +315,11 @@ Item {
                             {
                                 SendFunc.connectWiFi(wifiInfo.ssid,wifiInfo.psk,wifiInfo.encryp)
                                 connected=2
-                                wifiModel.setProperty(0,"connected",0)
-                                wifiModel.move(index,0,1)
+                                if(index>0)
+                                {
+                                    wifiModel.setProperty(0,"connected",0)
+                                    wifiModel.move(index,0,1)
+                                }
                                 listView.positionViewAtBeginning()
                             }
                         }
@@ -460,9 +462,12 @@ Item {
                         if(permit_connect)
                         {
                             SendFunc.connectWiFi(wifi_ssid,textField.text,wifi_flags)
-                            wifiModel.setProperty(0,"connected",0)
                             wifiModel.setProperty(index,"connected",2)
-                            wifiModel.move(index,0,1)
+                            if(index>0)
+                            {
+                                wifiModel.setProperty(0,"connected",0)
+                                wifiModel.move(index,0,1)
+                            }
                             wifiInputConnecting=true
                         }
                     }
