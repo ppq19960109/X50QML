@@ -144,7 +144,7 @@ Item {
             anchors.horizontalCenter: parent.horizontalCenter
             //            horizontalAlignment :Text.AlignHCenter
             //            verticalAlignment :Text.AlignHCenter
-            text: workStateArray[workState]+((workState === workStateEnum.WORKSTATE_PAUSE && orderTimeLeft!=0)?"预约":"")
+            text: (device==2 && workState==workStateEnum.WORKSTATE_PREHEAT)?"预冷中":(workStateArray[workState]+((workState === workStateEnum.WORKSTATE_PAUSE && orderTimeLeft!=0)?"预约":""))
         }
         Item
         {
