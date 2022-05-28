@@ -12,12 +12,14 @@ Item {
         if(listModel.count==0)
             return
         var list = []
+        var step
         for(var i = 0; i < listModel.count; ++i)
         {
+            step=listModel.get(i)
             var steps={}
-            steps.mode=listModel.get(i).mode
-            steps.temp=listModel.get(i).temp
-            steps.time=listModel.get(i).time
+            steps.mode=step.mode
+            steps.temp=step.temp
+            steps.time=step.time
             steps.number=i+1
             list.push(steps)
         }
@@ -74,13 +76,15 @@ Item {
             if(listModel.count==0)
                 return
             var list = []
+            var step
             for(var i = 0; i < listModel.count; ++i)
             {
+                step=listModel.get(i)
                 var steps={}
-                steps.device=0
-                steps.mode=listModel.get(i).mode
-                steps.temp=listModel.get(i).temp
-                steps.time=listModel.get(i).time
+//                steps.device=0
+                steps.mode=step.mode
+                steps.temp=step.temp
+                steps.time=step.time
                 steps.number=i+1
                 list.push(steps)
             }
@@ -89,6 +93,7 @@ Item {
             para.dishName=CookFunc.getDishName(list)
             para.cookSteps=JSON.stringify(list)
             load_page("pageSteamBakeReserve",JSON.stringify(para))
+            para=undefined
         }
         onClose:{
             backPrePage()
@@ -162,7 +167,7 @@ Item {
             id: listView
             anchors.fill: parent
             anchors.topMargin: 50
-            interactive: true
+            interactive: false
             delegate: listDelegate
             model: listModel
 

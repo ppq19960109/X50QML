@@ -127,8 +127,8 @@ Item {
 
         Row {
             id:rowPathView
-            width: parent.width-140
-            height:parent.height-80
+            width: parent.width-148
+            height:parent.height-71
             anchors.top:parent.top
             anchors.bottom: parent.bottom
             anchors.centerIn: parent
@@ -136,7 +136,7 @@ Item {
 
             DataPathView {
                 id:hourPathView
-                width: 226
+                width: 236
                 height:parent.height
                 currentIndex:0
                 Image {
@@ -157,7 +157,7 @@ Item {
             }
             DataPathView {
                 id:minutePathView
-                width: 226
+                width: 236
                 height:parent.height
                 //                currentIndex:1
                 Image {
@@ -177,7 +177,7 @@ Item {
                 }
             }
             Text{
-                width:200
+                width:180
                 color:themesTextColor2
                 font.pixelSize: 35
                 anchors.verticalCenter: parent.verticalCenter

@@ -4,8 +4,9 @@ import QtQuick.Controls 2.2
 //import QtQuick.Controls.Universal 2.2
 
 Item {
-    anchors.fill: parent
-
+//    anchors.fill: parent
+//    width: 800
+//    height: 400
     Row {
         anchors.centerIn: parent
 

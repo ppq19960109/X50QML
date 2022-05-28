@@ -15,7 +15,6 @@ Rectangle {
     signal showListData(var listData)
 
     property var root
-    property var para
 
     readonly property var leftWorkBigImg: ["", "qrc:/x50/steam/icon_经典蒸.png", "qrc:/x50/steam/icon_高温蒸.png", "qrc:/x50/steam/icon_热风烧烤.png", "qrc:/x50/steam/icon_上下加热.png", "qrc:/x50/steam/icon_立体热风.png", "qrc:/x50/steam/icon_蒸汽烤.png", "qrc:/x50/steam/icon_空气炸.png", "qrc:/x50/steam/icon_保暖烘干.png","qrc:/x50/steam/icon_便捷蒸.png"]
     readonly property var leftWorkSmallImg: ["", "qrc:/x50/steam/icon_经典蒸缩小.png", "qrc:/x50/steam/icon_高温蒸缩小.png", "qrc:/x50/steam/icon_热风烧烤缩小.png", "qrc:/x50/steam/icon_上下加热缩小.png", "qrc:/x50/steam/icon_立体热风缩小.png", "qrc:/x50/steam/icon_蒸汽烤缩小.png", "qrc:/x50/steam/icon_空气炸缩小.png", "qrc:/x50/steam/icon_保暖烘干缩小.png","qrc:/x50/steam/icon_经典蒸缩小.png"]
@@ -25,16 +24,12 @@ Rectangle {
         console.log("PageSteamBakeBase",modePathView.currentIndex,modePathView.model.get(modePathView.currentIndex).modelData,tempPathView.model[tempPathView.currentIndex],timePathView.model[timePathView.currentIndex])
         var list = []
         var steps={}
-        steps.device=root.device
-        if(root.device==leftDevice)
-            steps.mode=leftWorkModeNumber[modePathView.model.get(modePathView.currentIndex).modelData]
-        else
-            steps.mode= 100
-
+//        steps.device=root.device
+        steps.mode=leftWorkModeNumber[modePathView.model.get(modePathView.currentIndex).modelData]
         steps.temp=parseInt(tempPathView.model[tempPathView.currentIndex])
         steps.time=parseInt(timePathView.model[timePathView.currentIndex])
         list.push(steps)
-
+        var para
         para =CookFunc.getDefHistory()
         para.cookPos=root.device
         para.dishName=CookFunc.getDishName(list)
@@ -164,10 +159,7 @@ Rectangle {
             {
                 var list = []
                 var steps={}
-                if(root.device==leftDevice)
-                    steps.mode=leftWorkModeNumber[modePathView.model.get(modePathView.currentIndex).modelData]
-                else
-                    steps.mode= 100
+                steps.mode=leftWorkModeNumber[modePathView.model.get(modePathView.currentIndex).modelData]
                 steps.temp=parseInt(tempPathView.model[tempPathView.currentIndex])
                 steps.time=parseInt(timePathView.model[timePathView.currentIndex])
                 list.push(steps)
@@ -178,6 +170,7 @@ Rectangle {
                 para.cookSteps=JSON.stringify(list)
 
                 load_page("pageSteamBakeReserve",JSON.stringify(para))
+                para=undefined
             }
         }
     }
@@ -203,8 +196,8 @@ Rectangle {
 
         Row {
             id:rowPathView
-            width: parent.width-60
-            height:parent.height-60
+            width: parent.width-36
+            height:parent.height-71
             anchors.centerIn: parent
             spacing: 0
 
@@ -219,7 +212,7 @@ Rectangle {
                     visible: modePathView.moving
                     asynchronous:true
                     smooth:false
-                    anchors.centerIn: parent
+//                    anchors.centerIn: parent
                     source: "qrc:/x50/steam/mode-change-background.png"
                 }
                 onValueChanged: {
@@ -310,7 +303,7 @@ Rectangle {
             }
             DataPathView {
                 id:tempPathView
-                width: 226
+                width: 236
                 height:parent.height
                 delegateIndex:0
                 Image {
@@ -320,14 +313,13 @@ Rectangle {
                     anchors.centerIn: parent
                     source: "qrc:/x50/steam/temp-time-change-background.png"
                 }
-                Component.onCompleted:{
-                    console.log("tempPathView",tempPathView.currentIndex,tempPathViewIndex)
-
-                }
+//                Component.onCompleted:{
+//                    console.log("tempPathView",tempPathView.currentIndex,tempPathViewIndex)
+//                }
             }
             DataPathView {
                 id:timePathView
-                width: 226
+                width: 236
                 height:parent.height
                 delegateIndex:0
                 Image {
@@ -337,9 +329,9 @@ Rectangle {
                     anchors.centerIn: parent
                     source: "qrc:/x50/steam/temp-time-change-background.png"
                 }
-                Component.onCompleted:{
-                    console.log("timePathView",timePathView.currentIndex,timePathViewIndex)
-                }
+//                Component.onCompleted:{
+//                    console.log("timePathView",timePathView.currentIndex,timePathViewIndex)
+//                }
             }
         }
     }

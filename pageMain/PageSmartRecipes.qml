@@ -78,8 +78,11 @@ Item {
                 width:parent.width
                 height:parent.height
                 clip: true
+                cacheBuffer:6
                 orientation:ListView.Vertical
                 currentIndex:0
+                highlightMoveDuration:50
+                highlightMoveVelocity:-1
                 delegate: Item{
                     height: 100
                     width:parent.width
@@ -128,12 +131,14 @@ Item {
                 width:parent.width
                 height:parent.height
                 anchors.top:parent.top
-
+                cacheBuffer:6
                 orientation:ListView.Horizontal
 //                highlightRangeMode: ListView.ApplyRange//StrictlyEnforceRange
 //                boundsBehavior:Flickable.StopAtBounds
                 clip: true
                 currentIndex:0
+                highlightMoveDuration:50
+                highlightMoveVelocity:-1
                 delegate: Item{
                     readonly property int cookType:CookFunc.getCookType(modelData.cookSteps)
                     readonly property var recipeDetail:QmlDevState.getRecipeDetails(modelData.recipeid)

@@ -126,9 +126,11 @@ function getDefHistory()
 }
 function isSteam(cookSteps)
 {
-    for(var i = 0; i < cookSteps.length; i++)
+    var step
+    for(var i = 0; i < cookSteps.length; ++i)
     {
-        if(cookSteps[i].mode==1||cookSteps[i].mode==2||cookSteps[i].mode==40)
+        step=cookSteps[i]
+        if(step.mode==1||step.mode==2||step.mode==40)
         {
            return 1
         }
@@ -138,22 +140,22 @@ function isSteam(cookSteps)
 function getDishName(root)
 {
     var dishName=""
-
     if(root[0].dishName !== undefined)
     {
         return root[0].dishName
     }
-
-    for(var i = 0; i < root.length; i++)
+    var step
+    for(var i = 0; i < root.length; ++i)
     {
-        console.log(root[i].mode,root[i].temp,root[i].time,leftWorkModeName(root[i].mode))
-        if(root.length===1 && root[i].number == null)
+        step=root[i]
+//        console.log(step.mode,step.temp,step.time,leftWorkModeName(step.mode))
+        if(root.length===1 && step.number == null)
         {
-            dishName=leftWorkModeName(root[i].mode)+"-"+root[i].temp+"℃-"+root[i].time+"分钟"
+            dishName=leftWorkModeName(step.mode)+"-"+step.temp+"℃-"+step.time+"分钟"
         }
         else
         {
-            dishName+=leftWorkModeName(root[i].mode)
+            dishName+=leftWorkModeName(step.mode)
             if(i!==root.length-1)
                 dishName+="-"
         }

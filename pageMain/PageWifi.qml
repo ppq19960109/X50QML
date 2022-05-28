@@ -16,7 +16,7 @@ Item {
         console.log("wifi_scan_timer_reset")
         SendFunc.scanWifi()
         scan_count=0
-        timer_wifi_scan.interval=1000
+        timer_wifi_scan.interval=2000
         timer_wifi_scan.restart()
     }
 
@@ -82,7 +82,7 @@ Item {
         id:timer_wifi_scan
         repeat: true
         running: systemSettings.wifiEnable
-        interval: 1000
+        interval: 2000
         triggeredOnStart: scan_count < 4?true:false
         onTriggered: {
             console.log("timer_wifi_scan",timer_wifi_scan.interval,scan_count,wifiConnecting)
@@ -91,7 +91,7 @@ Item {
                 ++scan_count
                 if(scan_count==1)
                 {
-                    timer_wifi_scan.interval=1500
+                    timer_wifi_scan.interval=2500
                 }
                 else if(scan_count==4)
                 {
@@ -99,7 +99,7 @@ Item {
                 }
                 if(wifiConnecting==false)
                 {
-                    //                    WifiFunc.getCurWifi()
+                    //                    SendFunc.getCurWifi()
                     SendFunc.scanRWifi()
                 }
             }
@@ -108,7 +108,7 @@ Item {
                 if(wifiConnecting==false)
                 {
                     SendFunc.scanWifi()
-                    //                    WifiFunc.getCurWifi()
+                    //                    SendFunc.getCurWifi()
                     SendFunc.scanRWifi()
                 }
             }
@@ -292,7 +292,7 @@ Item {
                     {
                         if(flags==0)
                         {
-                            console.log("open connect:" , ssid,flags)
+//                            console.log("open connect:" , ssid,flags)
                             SendFunc.connectWiFi(ssid,"",flags)
                             connected=2
                             if(index>0)
@@ -306,7 +306,7 @@ Item {
                         else
                         {
                             var wifiInfo=WifiFunc.getWifiInfo(ssid)
-                            console.log("wifiInfo",wifiInfo,typeof wifiInfo)
+//                            console.log("wifiInfo",wifiInfo,typeof wifiInfo)
                             if(wifiInfo==null)
                             {
                                 showWifiInput(index,listView.model.get(index))
@@ -322,6 +322,7 @@ Item {
                                 }
                                 listView.positionViewAtBeginning()
                             }
+                            wifiInfo=undefined
                         }
                     }
                 }
@@ -360,15 +361,12 @@ Item {
             cacheBuffer:20
             header: headerView
             clip: true
-            highlightRangeMode: ListView.ApplyRange
+            //            highlightRangeMode: ListView.ApplyRange
             //            snapMode: ListView.SnapToItem
-            boundsBehavior:Flickable.StopAtBounds
+            //            boundsBehavior:Flickable.StopAtBounds
+            highlightMoveDuration:50
+            highlightMoveVelocity:-1
             footer: footerView
-            // 连接信号槽
-            //            Component.onCompleted: {
-
-            //            }
-
         }
     }
     Component{
@@ -482,18 +480,13 @@ Item {
                     font.pixelSize: 40
                     color: "#ECF4FC"
                     echoMode: TextInput.Normal//TextInput.Password:TextInput.Normal
-                    passwordCharacter: "*"
-                    passwordMaskDelay: 1
                     placeholderText: qsTr("请输入密码")
-
-                    activeFocusOnPress:true
-                    overwriteMode: false
-                    inputMethodHints:Qt.ImhNoAutoUppercase
-
-                    onAccepted: {
-                        console.log("onAccepted")
-                        //                            textField.focus = true    /* 结束输入操作行为 */
-                    }
+                    //                    overwriteMode: false
+                    inputMethodHints:Qt.ImhNoAutoUppercase //Qt.ImhNoAutoUppercase Qt.ImhMultiLine
+                    //                    onAccepted: {
+                    //                        console.log("onAccepted")
+                    //                            textField.focus = true    /* 结束输入操作行为 */
+                    //                    }
                     focus: true
                     background: Item {
                     }
@@ -542,7 +535,8 @@ Item {
         console.log("showWifiInput:" , wifiInfo.ssid,wifiInfo.flags)
     }
     function dismissWifiInput(){
-        loader_main.sourceComponent = undefined
+        if(loader_main.sourceComponent==component_wifiInput)
+            loader_main.sourceComponent = undefined
         timer_wifi_scan.start()
         listView.positionViewAtBeginning()
     }

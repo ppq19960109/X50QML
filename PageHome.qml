@@ -211,7 +211,7 @@ Item {
 
                 //                                showLoaderFault("右腔干烧检测电路故障！","请拨打售后电话<font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员")
                 //                showLoaderFault("","网络连接失败，请重试",true,"","qrc:/x50/icon/icon_pop_error.png",false)
-//                load_page("pageTestFront")
+                //                load_page("pageTestFront")
             }
             else
             {
@@ -383,7 +383,7 @@ Item {
                     else if(value==4)
                     {
                         wifiConnected=true
-                        WifiFunc.getCurWifi()
+                        SendFunc.getCurWifi()
                     }
                 }
                 console.log("WifiState",value,wifiConnected,wifiConnecting)
@@ -480,17 +480,18 @@ Item {
         root.sort(function(a, b){return b.rssi - a.rssi})
         wifiModel.clear()
         var result={}
-
+        var element
         for(var i = 0; i < root.length; ++i) {
-            if(root[i].ssid==="")
+            element=root[i]
+            if(element.ssid==="")
                 continue
             result.connected=0
 
             result.ssid=root[i].ssid
-            result.level=WifiFunc.signalLevel(root[i].rssi)
-            result.flags=WifiFunc.encrypType(root[i].flags)
+            result.level=WifiFunc.signalLevel(element.rssi)
+            result.flags=WifiFunc.encrypType(element.flags)
 
-            if(root[i].bssid===QmlDevState.state.bssid)
+            if(element.bssid===QmlDevState.state.bssid)
             {
                 if(wifiConnected==false)
                     wifiConnected=true
@@ -499,7 +500,7 @@ Item {
             }
             else
                 wifiModel.append(result)
-            console.log("result:",QmlDevState.state.bssid,root[i].bssid,root[i].rssi,result.connected,result.ssid,result.level,result.flags)
+            //            console.log("result:",QmlDevState.state.bssid,element.bssid,element.rssi,result.connected,result.ssid,result.level,result.flags)
         }
         if(QmlDevState.state.bssid=="")
         {
@@ -598,7 +599,7 @@ Item {
         console.log("page home onActivated")
         SendFunc.permitSteamStartStatus(0)
     }
-    property bool swipeViewFocus:true
+
     Item{
         id:swipe
         width:parent.width
@@ -610,41 +611,20 @@ Item {
             currentIndex:1
             width:parent.width
             height:parent.height
-            focus: true
+            //            focus: true
             interactive:true //是否可以滑动
-            Item {
-                PageHomeSecond{}
-                onFocusChanged:{
-                    swipeViewFocus=focus
-                    console.log("PageHomeSecond ",focus,swipeViewFocus)
-                }
-            }
-            Item {
-                PageHomeFirst{}
-                onFocusChanged:{
-                    swipeViewFocus=focus
-                    console.log("PageHomeFirst ",focus,swipeViewFocus)
-                }
-            }
-            Item {
-                PageHomeThird{}
-                onFocusChanged:{
-                    swipeViewFocus=focus
-                    console.log("PageHomeThird ",focus,swipeViewFocus)
-                }
-            }
 
-            onCurrentIndexChanged:{
-                swipeViewFocus=true
-                console.log("onCurrentIndexChanged",currentIndex)
-            }
+            PageHomeSecond{}
+            PageHomeFirst{}
+            PageHomeThird{}
+
             Component.onCompleted:{
                 //                contentItem.highlightFollowsCurrentItem=true
 
                 //                contentItem.highlightRangeMode=istView.StrictlyEnforceRange
                 //                contentItem.highlightResizeDuration= 0
                 //                contentItem.highlightResizeVelocity=-1
-                contentItem.highlightMoveDuration = 5       //将移动时间设为0
+                contentItem.highlightMoveDuration = 10       //将移动时间设为0
                 contentItem.highlightMoveVelocity = -1
             }
         }
@@ -654,14 +634,16 @@ Item {
             anchors.bottom: parent.bottom
             anchors.bottomMargin: 15
             anchors.horizontalCenter: parent.horizontalCenter
-            //            interactive: true
+            interactive: false
             delegate: Rectangle {
                 color: index===swipeview.currentIndex?"#FFF":"#4C4C4C"
                 implicitWidth: 22
                 implicitHeight: 4
             }
         }
+
     }
+
     Button{
         id:preBtn
         width:60
@@ -670,7 +652,7 @@ Item {
 
         anchors.verticalCenter: swipe.verticalCenter
         visible:{
-            if(swipeViewFocus==false)
+            if(swipeview.contentItem.moving==true)
                 return false
             return swipeview.currentIndex===0?false:true
         }
@@ -698,7 +680,7 @@ Item {
 
         anchors.verticalCenter: swipe.verticalCenter
         visible: {
-            if(swipeViewFocus==false)
+            if(swipeview.contentItem.moving==true)
                 return false
             return swipeview.currentIndex===(swipeview.count-1)?false:true
         }

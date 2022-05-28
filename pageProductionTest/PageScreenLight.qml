@@ -3,11 +3,22 @@ import QtQuick.Controls 2.2
 import "qrc:/pageSet"
 Item{
     property var containerqml: null
+
     Item{
         width:parent.width-100
         height: parent.height
         anchors.centerIn: parent
-
+        Text {
+            width: parent.width
+//            height: 50
+            anchors.top: parent.top
+            color:"#FFF"
+            font.pixelSize: 40
+            text: qsTr("调节背光设置，背光是否随设置亮暗变化
+    ")
+//            horizontalAlignment:Text.AlignHCenter
+//            verticalAlignment:Text.AlignVCenter
+        }
         Image{
             id:startImg
             asynchronous:true

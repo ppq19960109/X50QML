@@ -68,6 +68,8 @@ function setToServer(Data)
     var json=JSON.stringify(root)
     console.info("setToServer:",json)
     QmlDevState.sendToServer(json)
+    json=undefined
+    root=undefined
 }
 
 function getToServer(Data)
@@ -78,6 +80,8 @@ function getToServer(Data)
     var json=JSON.stringify(root)
     console.info("getToServer:",json)
     QmlDevState.sendToServer(json)
+    json=undefined
+    root=undefined
 }
 function getAllToServer()
 {
@@ -87,6 +91,8 @@ function getAllToServer()
     var json=JSON.stringify(root)
     console.info("getAllToServer:",json)
     QmlDevState.sendToServer(json)
+    json=undefined
+    root=undefined
 }
 function otaRquest(request)
 {
@@ -113,6 +119,12 @@ function enableWifi(enable)
     var Data={}
     Data.WifiEnable = enable
     setToServer(Data)
+}
+function getCurWifi()
+{
+    var Data={}
+    Data.WifiCurConnected = null
+    getToServer(Data)
 }
 function scanWifi()
 {
@@ -230,13 +242,14 @@ function setMultiCooking(list,orderTime,dishName,cookbookID)
     console.log("setMultiCooking")
     var Data={}
     var MultiStageContent=[]
-
-    for(var i = 0; i < list.length; i++)
+    var step
+    for(var i = 0; i < list.length; ++i)
     {
+        step=list[i]
         var buf={}
-        buf.Mode=list[i].mode
-        buf.Temp=list[i].temp
-        buf.Timer=list[i].time
+        buf.Mode=step.mode
+        buf.Temp=step.temp
+        buf.Timer=step.time
         MultiStageContent.push(buf)
     }
 

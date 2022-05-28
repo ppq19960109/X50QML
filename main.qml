@@ -14,7 +14,7 @@ ApplicationWindow {
     id: window
     width: 800
     height: 480
-    //    visible: true
+//        visible: true
     property int sysPower:-1
     property int permitStartStatus:0
     readonly property string uiVersion:"1.1"
@@ -163,11 +163,13 @@ ApplicationWindow {
         if(systemSettings.wifiPasswdArray!=null)
         {
             console.log("systemSettings.wifiPasswdArray",systemSettings.wifiPasswdArray.length)
-            for(var i = 0; i < systemSettings.wifiPasswdArray.length; i++)
+            var element
+            for(var i = 0; i < systemSettings.wifiPasswdArray.length; ++i)
             {
-                console.log("ssid:",systemSettings.wifiPasswdArray[i].ssid)
-                console.log("psk:",systemSettings.wifiPasswdArray[i].psk)
-                console.log("encryp:",systemSettings.wifiPasswdArray[i].encryp)
+                element=systemSettings.wifiPasswdArray[i]
+                console.log("ssid:",element.ssid)
+                console.log("psk:",element.psk)
+                console.log("encryp:",element.encryp)
             }
         }
         systemSettings.childLock=false
@@ -212,7 +214,7 @@ ApplicationWindow {
 
     StackView {
         id: stackView
-        //                initialItem: pageTestFront // pageHome pageTestFront pageTest pageGetQuad
+        //initialItem: pageTestFront // pageHome pageTestFront pageTest pageGetQuad
         anchors.fill: parent
     }
 
@@ -237,7 +239,7 @@ ApplicationWindow {
         }
     }
     function showQrcodeBind(title){
-        console.log("BindTokenState",QmlDevState.state.BindTokenState,QmlDevState.state.DeviceSecret,QmlDevState.state.WifiState)//QmlDevState.state.BindTokenState > 0
+//        console.log("BindTokenState",QmlDevState.state.BindTokenState,QmlDevState.state.DeviceSecret,QmlDevState.state.WifiState)//QmlDevState.state.BindTokenState > 0
         if(QmlDevState.state.DeviceSecret=="")
             return
         if(systemSettings.wifiEnable && QmlDevState.state.WifiState==4)
@@ -418,24 +420,24 @@ ApplicationWindow {
     }
     ListModel {
         id: wifiModel
-        //        ListElement {
-        //            connected: 1
-        //            ssid: "qwertyuio"
-        //            level:2
-        //            flags:2
-        //        }
-        //        ListElement {
-        //            connected: 0
-        //            ssid: "123456789123456789123456789"
-        //            level:2
-        //            flags:1
-        //        }
-        //        ListElement {
-        //            connected: 0
-        //            ssid: "456"
-        //            level:2
-        //            flags:0
-        //        }
+                ListElement {
+                    connected: 1
+                    ssid: "qwertyuio"
+                    level:2
+                    flags:2
+                }
+                ListElement {
+                    connected: 0
+                    ssid: "123456789123456789123456789"
+                    level:2
+                    flags:1
+                }
+                ListElement {
+                    connected: 0
+                    ssid: "456"
+                    level:2
+                    flags:0
+                }
     }
     //    Component {
     //        id: pageTest
@@ -600,7 +602,7 @@ ApplicationWindow {
     }
 
     function load_page(page,args) {
-        console.log("load_page:"+page,"args:"+args)
+//        console.log("load_page:"+page,"args:"+args)
 
         switch (page) {
         case "pageHome":
@@ -821,7 +823,8 @@ ApplicationWindow {
             showLoaderFault("防火墙传感器故障！","请拨打售后电话<font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员",false)
             break
         case 7:
-            showLoaderFault("烟机进风口出现火情！","请及时关闭灶具旋钮 等待温度降低后使用")
+            showLoaderFault("烟机进风口出现火情！","请及时关闭灶具旋钮 等待温度降低后使用",false)
+            wakeup()
             break
         case 8:
             showLoaderFault("燃气泄漏","燃气有泄露风险\n请立即关闭灶具旋钮\n关闭总阀并开窗通气",false)

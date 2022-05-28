@@ -68,9 +68,8 @@ void LocalClient::get_all()
 
 unsigned char CheckSum(unsigned char *buf, int len) //和校验算法
 {
-    int i;
     unsigned char ret = 0;
-    for (i = 0; i < len; i++)
+    for (int i = 0; i < len; ++i)
     {
         ret += *(buf++);
     }

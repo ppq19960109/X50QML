@@ -9,10 +9,10 @@ Item {
     property int pressedY: 0
     property int touchCount: 0
     property int touchExited:0
-    property int timeout:30
-    readonly property int rectWidth: 80
-    readonly property int passWidth: 480
-    readonly property int passHeight: 300
+    property int timeout:20
+    readonly property int rectWidth: 100
+    readonly property int passWidth: 500
+    readonly property int passHeight: 320
     Timer{
         id:timer_test
         repeat: true
@@ -114,11 +114,11 @@ Item {
     }
     Text {
         anchors.top: parent.top
-        anchors.topMargin: 80
+        anchors.topMargin: 120
         anchors.horizontalCenter: parent.horizontalCenter
-        anchors.horizontalCenterOffset: 70
+        anchors.horizontalCenterOffset: 100
         color: themesTextColor
-        font.pixelSize: 30
+        font.pixelSize: 40
         text: timeout+"s"
     }
     onTouchCountChanged:{
@@ -156,7 +156,7 @@ Item {
         }
         else if(touchCount==6)
         {
-            rect.width=root.width+10
+            rect.width=root.width+5
             rect.rotation=31
         }
         else if(touchCount==7)

@@ -3,7 +3,6 @@
 #include <QQmlContext>
 #include <QTextCodec>
 #include <QFontDatabase>
-#include <QDebug>
 #include <QStandardPaths>
 
 #include "qmldevstate.h"
@@ -15,6 +14,7 @@
 
 int main(int argc, char *argv[])
 {
+
     qputenv("QT_IM_MODULE", QByteArray("qtvirtualkeyboard"));
     qputenv("QT_VIRTUALKEYBOARD_STYLE", "light");
 
@@ -60,7 +60,7 @@ int main(int argc, char *argv[])
 
     //        QFontDatabase fdb;
     //        QStringList fontList = fdb.families();
-    //        for(int i = 0; i < fontList.size(); i++){
+    //        for(int i = 0; i < fontList.size(); ++i){
     //            qDebug() << "font name" << i << ": " << fontList.at(i);
     //        }
 

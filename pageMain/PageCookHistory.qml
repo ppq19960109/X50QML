@@ -57,12 +57,13 @@ Item {
         }
         noHistory.visible=false
         recipeListView.visible=true
-
+        var element
         for(var i = 0; i < historys.length; ++i) {
-            if(pos ===allDevice || historys[i].cookPos===pos)
+            element=historys[i]
+            if(pos ===allDevice || element.cookPos===pos)
             {
-                console.log("getHistory ",JSON.stringify(historys[i]))
-                historyModel.append(historys[i])
+//                console.log("getHistory ",JSON.stringify(element))
+                historyModel.append(element)
             }
         }
     }
@@ -165,9 +166,11 @@ Item {
             anchors.topMargin: 20
             //            highlightRangeMode: ListView.ApplyRange//StrictlyEnforceRange ApplyRange
 //            boundsBehavior:Flickable.StopAtBounds
+            cacheBuffer:10
             clip: true
             currentIndex:0
-
+            highlightMoveDuration:50
+            highlightMoveVelocity:-1
             onCurrentIndexChanged:{
                 console.log("ListView onCurrentIndexChanged",currentIndex)
                 if(permitStartStatus==0)
@@ -185,7 +188,7 @@ Item {
                 Text{
                     id:number
                     width:60
-                    height:100
+                    height:parent.height
                     anchors.left: parent.left
                     anchors.leftMargin: 40
                     text: index+1+"、"
@@ -197,6 +200,7 @@ Item {
                 Button {
                     height:parent.height
                     anchors.left:number.right
+                    anchors.leftMargin: 10
                     anchors.right:collection.left
                     background: Item{}
                     Text{

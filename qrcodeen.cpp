@@ -24,9 +24,10 @@ QImage QrcodeEn::encodeImage(const QString& qrTxt, int bulk,const QString& saveN
         painter.drawRect(0, 0, allBulk+20, allBulk+20);
 
         painter.setBrush(fg);
-        for( int y=0; y<qr->width; y++ )
+        int x,y;
+        for( y=0; y<qr->width; ++y )
         {
-            for( int x=0; x<qr->width; x++ )
+            for( x=0; x<qr->width; ++x )
             {
                 if ( qr->data[y*qr->width+x] & 1 )
                 {

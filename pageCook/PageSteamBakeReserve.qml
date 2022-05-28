@@ -113,14 +113,14 @@ Item {
         }
         Row {
             id:rowPathView
-            width: parent.width-140
-            height:parent.height-80
+            width: parent.width-148
+            height:parent.height-71
             anchors.centerIn: parent
             spacing: 0
 
             DataPathView {
                 id:hourPathView
-                width: 226
+                width: 236
                 height:parent.height
 
                 currentIndex:0
@@ -131,13 +131,10 @@ Item {
                     anchors.centerIn: parent
                     source: "qrc:/x50/steam/temp-time-change-background.png"
                 }
-                onValueChanged: {
-
-                }
             }
             DataPathView {
                 id:minutePathView
-                width: 226
+                width: 236
                 height:parent.height
                 Image {
                     visible: minutePathView.moving
@@ -146,12 +143,9 @@ Item {
                     anchors.centerIn: parent
                     source: "qrc:/x50/steam/temp-time-change-background.png"
                 }
-                Component.onCompleted:{
-
-                }
             }
             Text{
-                width:200
+                width:180
                 color:themesTextColor2
                 font.pixelSize: 35
                 anchors.verticalCenter: parent.verticalCenter

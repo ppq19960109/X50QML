@@ -41,7 +41,7 @@ Item {
     function getCookTime(cookSteps)
     {
         var cookTime=0;
-        for(var i = 0; i < cookSteps.length; i++)
+        for(var i = 0; i < cookSteps.length; ++i)
         {
             cookTime+=cookSteps[i].time
         }
@@ -178,8 +178,7 @@ Item {
         Component {
             id: multiDelegate
             PageMultistageDelegate {
-                nameText:ookFunc.leftWorkModeName(modelData.mode)+"-"+modelData.temp+"℃"+"-"+modelData.time+"分钟"
-
+                nameText:CookFunc.leftWorkModeName(modelData.mode)+"-"+modelData.temp+"℃"+"-"+modelData.time+"分钟"
                 closeVisible:false
             }
         }

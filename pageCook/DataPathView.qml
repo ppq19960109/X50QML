@@ -7,7 +7,7 @@ Item {
     property int delegateIndex:0
     property alias currentIndex:pathView.currentIndex
     property alias moving:pathView.moving
-    signal valueChanged(var index,var valueName)
+    signal valueChanged(int index,string valueName)
     id:root
     //        anchors.fill: parent
 
@@ -15,7 +15,7 @@ Item {
         id: rectDelegate
         Item  {
             property int textFont:PathView.isCurrentItem ? 45 : 35
-            property var textColor:PathView.isCurrentItem ?themesTextColor:themesTextColor2
+            property color textColor:PathView.isCurrentItem ?themesTextColor:themesTextColor2
             width:parent.width
             height:parent.height/parent.pathItemCount
 //            opacity: PathView.isCurrentItem ? 1 : 0.5
@@ -33,8 +33,8 @@ Item {
         id: modeDelegate
         Item  {
             property int textFont:PathView.isCurrentItem ? 45 : 35
-            property var textColor:PathView.isCurrentItem ?themesTextColor:themesTextColor2
-            property var imgUrl:PathView.isCurrentItem ?leftWorkBigImg[modelData]:leftWorkSmallImg[modelData]
+            property color textColor:PathView.isCurrentItem ?themesTextColor:themesTextColor2
+            property url imgUrl:PathView.isCurrentItem ?leftWorkBigImg[modelData]:leftWorkSmallImg[modelData]
             width:parent.width
             height:parent.height/parent.pathItemCount
 //            opacity: PathView.isCurrentItem ? 1 : 0.5
@@ -49,9 +49,10 @@ Item {
             }
             Text {
                 id:text
-                anchors.verticalCenter:  parent.verticalCenter
-                anchors.horizontalCenter: parent.horizontalCenter
-//                anchors.horizontalCenterOffset: 20
+//                anchors.verticalCenter:  parent.verticalCenter
+//                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.centerIn: parent
+                anchors.horizontalCenterOffset: 30
                 color:textColor
                 font.pixelSize: textFont
                 text: leftWorkMode[modelData]
@@ -68,8 +69,9 @@ Item {
 //        focus: true
         preferredHighlightBegin: 0.5;
         preferredHighlightEnd: 0.5;
+        highlightMoveDuration:150
         highlightRangeMode: PathView.StrictlyEnforceRange;
-        maximumFlickVelocity:400*5
+        maximumFlickVelocity:2800
 //        model:textModel
         delegate:delegateIndex==0?rectDelegate:modeDelegate
 

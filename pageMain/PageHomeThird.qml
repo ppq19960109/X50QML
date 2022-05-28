@@ -3,7 +3,9 @@ import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
 
 Item {
-    anchors.fill: parent
+//    anchors.fill: parent
+//    width: 800
+//    height: 400
     Row {
         width: parent.width-120
         anchors.centerIn: parent

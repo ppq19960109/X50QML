@@ -96,9 +96,8 @@ Rectangle {
             workState:QmlDevState.state.LStOvState
             workMode:workState===workStateEnum.WORKSTATE_STOP?qsTr("左腔烹饪"):QmlDevState.state.MultiMode===1?QmlDevState.state.CookbookName:CookFunc.leftWorkModeName(QmlDevState.state.LStOvMode)
             canvasDiameter:width
-            percent:(workState === workStateEnum.WORKSTATE_RESERVE|| (workState === workStateEnum.WORKSTATE_PAUSE && orderTimeLeft!=0))?(100-100*QmlDevState.state.LStOvOrderTimerLeft/QmlDevState.state.LStOvOrderTimer):(100-100*QmlDevState.state.LStOvSetTimerLeft/QmlDevState.state.LStOvSetTimer)
-
             orderTimeLeft:QmlDevState.state.LStOvOrderTimerLeft
+            percent:(workState === workStateEnum.WORKSTATE_RESERVE|| (workState === workStateEnum.WORKSTATE_PAUSE && orderTimeLeft!=0))?(100-100*orderTimeLeft/QmlDevState.state.LStOvOrderTimer):(100-100*QmlDevState.state.LStOvSetTimerLeft/QmlDevState.state.LStOvSetTimer)
             workTime:
             {
                 if(workState === workStateEnum.WORKSTATE_PREHEAT)
@@ -142,6 +141,7 @@ Rectangle {
                             list.push(steps)
                             para.dishName=CookFunc.getDishName(list)
                             load_page("pageSteamBakeReserve",JSON.stringify(para))
+                            para=undefined
                         }
                     }
                     else
@@ -181,7 +181,7 @@ Rectangle {
                 source: themesImagesPath+"icon-cookclose.png"
             }
             onClicked:{
-                if(QmlDevState.state.LStOvState === workStateEnum.WORKSTATE_RESERVE)
+                if(leftProgressBar.workState === workStateEnum.WORKSTATE_RESERVE)
                     showCancelRun("左腔","预约")
                 else
                     showCancelRun("左腔","工作")
@@ -199,10 +199,10 @@ Rectangle {
                 asynchronous:true
                 smooth:false
                 anchors.centerIn:parent
-                source: themesImagesPath+(QmlDevState.state.LStOvState===workStateEnum.WORKSTATE_PAUSE?"icon-cookpause.png":"icon-cookrun.png")
+                source: themesImagesPath+(leftProgressBar.workState===workStateEnum.WORKSTATE_PAUSE?"icon-cookpause.png":"icon-cookrun.png")
             }
             onClicked:{
-                if(QmlDevState.state.LStOvState===workStateEnum.WORKSTATE_PAUSE)
+                if(leftProgressBar.workState===workStateEnum.WORKSTATE_PAUSE)
                 {
                     //                    QmlDevState.setState("LStOvState",workStateEnum.WORKSTATE_RUN)
                     SendFunc.setCookOperation(leftDevice,workOperationEnum.START)
@@ -265,9 +265,8 @@ Rectangle {
             workState:QmlDevState.state.RStOvState
             workMode:workState===workStateEnum.WORKSTATE_STOP?qsTr("右腔烹饪"):CookFunc.leftWorkModeName(QmlDevState.state.RStOvMode)
             canvasDiameter:width
-            percent:workState === workStateEnum.WORKSTATE_RESERVE?(100-100*QmlDevState.state.RStOvOrderTimerLeft/QmlDevState.state.RStOvOrderTimer):(100-100*QmlDevState.state.RStOvSetTimerLeft/QmlDevState.state.RStOvSetTimer)
-
             orderTimeLeft:QmlDevState.state.RStOvOrderTimerLeft
+            percent:workState === workStateEnum.WORKSTATE_RESERVE?(100-100*orderTimeLeft/QmlDevState.state.RStOvOrderTimer):(100-100*orderTimeLeft/QmlDevState.state.RStOvSetTimer)
             workTime:
             {
                 if(workState === workStateEnum.WORKSTATE_PREHEAT)
@@ -311,6 +310,7 @@ Rectangle {
                             list.push(steps)
                             para.dishName=CookFunc.getDishName(list)
                             load_page("pageSteamBakeReserve",JSON.stringify(para))
+                            para=undefined
                         }
                     }
                     else
@@ -350,7 +350,7 @@ Rectangle {
                 source: themesImagesPath+"icon-cookclose.png"
             }
             onClicked:{
-                if(QmlDevState.state.RStOvState === workStateEnum.WORKSTATE_RESERVE)
+                if(rightProgressBar.workState === workStateEnum.WORKSTATE_RESERVE)
                     showCancelRun("右腔","预约")
                 else
                     showCancelRun("右腔","工作")
@@ -368,10 +368,10 @@ Rectangle {
                 asynchronous:true
                 smooth:false
                 anchors.centerIn:parent
-                source: themesImagesPath+(QmlDevState.state.RStOvState===workStateEnum.WORKSTATE_PAUSE?"icon-cookpause.png":"icon-cookrun.png")
+                source: themesImagesPath+(rightProgressBar.workState===workStateEnum.WORKSTATE_PAUSE?"icon-cookpause.png":"icon-cookrun.png")
             }
             onClicked:{
-                if(QmlDevState.state.RStOvState===workStateEnum.WORKSTATE_PAUSE)
+                if(QrightProgressBar.workState===workStateEnum.WORKSTATE_PAUSE)
                 {
                     //                    QmlDevState.setState("RStOvState",workStateEnum.WORKSTATE_RUN)
                     SendFunc.setCookOperation(rightDevice,workOperationEnum.START)

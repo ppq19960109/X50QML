@@ -29,11 +29,19 @@ Item{
         currentIndex:0
 
         interactive:true //是否可以滑动
-        Image {
-            asynchronous: true
-            smooth:false
-            cache:false
-            source:"qrc:/x50/test/image5.png"
+        Item{
+            Text {
+                width: parent.width-100
+    //            height: 50
+                anchors.centerIn: parent
+                color:"#FFF"
+                font.pixelSize: 40
+                text: qsTr("滑动屏幕,观察测试过程显示的一些图像上是否有黑点和亮点
+")
+    wrapMode: Text.WordWrap
+    //            horizontalAlignment:Text.AlignHCenter
+    //            verticalAlignment:Text.AlignVCenter
+            }
         }
         Image {
             asynchronous: true
@@ -58,6 +66,12 @@ Item{
             smooth:false
             cache:false
             source:"qrc:/x50/test/image4.png"
+        }
+        Image {
+            asynchronous: true
+            smooth:false
+            cache:false
+            source:"qrc:/x50/test/image5.png"
         }
         Image {
             asynchronous: true
@@ -90,9 +104,6 @@ Item{
             source:"qrc:/x50/test/image10.png"
         }
         Item {
-            width: 800
-            height: 400
-
             RowLayout{
                 anchors.fill: parent
                 Button{
@@ -136,7 +147,7 @@ Item{
             }
         }
         Component.onCompleted:{
-            contentItem.highlightMoveDuration = 1       //将移动时间设为0
+            contentItem.highlightMoveDuration = 10       //将移动时间设为0
             contentItem.highlightMoveVelocity = -1
         }
         onCurrentIndexChanged:{

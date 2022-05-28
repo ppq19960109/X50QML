@@ -7,7 +7,7 @@ Item {
     property int roate:0
 
     property int workState
-    property var workColor
+    property color workColor
     property int orderTimeLeft:0
 
     property alias workMode:mode.text

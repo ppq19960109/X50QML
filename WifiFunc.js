@@ -35,13 +35,6 @@ function encrypType(flags)
     }
 }
 
-function getCurWifi()
-{
-    var Data={}
-    Data.WifiCurConnected = null
-    SendFunc.getToServer(Data)
-}
-
 function deleteWifiInfo(wifiInfo)
 {
     if(wifiInfo==null || wifiInfo.ssid=="" ||wifiInfo.psk=="" || wifiInfo.encryp===0)
@@ -52,19 +45,19 @@ function deleteWifiInfo(wifiInfo)
         console.log("wifiPasswdArray not Object")
         return
     }
-    var i;
-    var len=wifiPasswdArray.length
-    for( i = 0; i < len; i++)
+    var i,element
+    for( i = 0; i < wifiPasswdArray.length; ++i)
     {
-        if(wifiPasswdArray[i].ssid===wifiInfo.ssid)
+        element=wifiPasswdArray[i]
+        if(element.ssid===wifiInfo.ssid)
         {
-            console.log("remove ssid:",i,wifiPasswdArray[i].ssid,wifiInfo.ssid)
+            console.log("remove ssid:",i,element.ssid,wifiInfo.ssid)
             wifiPasswdArray.splice(i,1)
             break;
         }
     }
 
-    if(i===len)
+    if(i===wifiPasswdArray.length)
     {
         return
     }
@@ -84,18 +77,19 @@ function addWifiInfo(wifiInfo)
         wifiPasswdArray=new Array
     }
 
-    var i;
-    for(i = 0; i < wifiPasswdArray.length; i++)
+    var i,element
+    for(i = 0; i < wifiPasswdArray.length; ++i)
     {
-        if(wifiPasswdArray[i].ssid===wifiInfo.ssid)
+        element=wifiPasswdArray[i]
+        if(element.ssid===wifiInfo.ssid)
         {
-            if(wifiPasswdArray[i].psk===wifiInfo.psk && wifiPasswdArray[i].encryp===wifiInfo.encryp)
+            if(element.psk===wifiInfo.psk && element.encryp===wifiInfo.encryp)
             {
                 return
             }
-            console.log("change ssid:",i,wifiPasswdArray[i].ssid,wifiInfo.ssid)
-            wifiPasswdArray[i].psk=wifiInfo.psk
-            wifiPasswdArray[i].encryp=wifiInfo.encryp
+            console.log("change ssid:",i,element.ssid,wifiInfo.ssid)
+            element.psk=wifiInfo.psk
+            element.encryp=wifiInfo.encryp
             break;
         }
     }
@@ -119,19 +113,20 @@ function getWifiInfo(ssid)
     var wifiPasswdArray=systemSettings.wifiPasswdArray
     if(typeof wifiPasswdArray!="object")
     {
-        console.log("wifiPasswdArray not Object")
+//        console.log("wifiPasswdArray not Object")
         return
     }
-    var i;
-    for(i = 0; i < wifiPasswdArray.length; i++)
+    var i,element
+    for(i = 0; i < wifiPasswdArray.length; ++i)
     {
-        if(wifiPasswdArray[i].ssid===ssid)
+        element=wifiPasswdArray[i]
+        if(element.ssid===ssid)
         {
             var wifiInfo={}
-            wifiInfo.ssid=wifiPasswdArray[i].ssid
-            wifiInfo.psk=wifiPasswdArray[i].psk
-            wifiInfo.encryp=wifiPasswdArray[i].encryp
-            console.log("get ssid:",wifiInfo.ssid,wifiInfo.psk,wifiInfo.encryp)
+            wifiInfo.ssid=element.ssid
+            wifiInfo.psk=element.psk
+            wifiInfo.encryp=element.encryp
+//            console.log("get ssid:",wifiInfo.ssid,wifiInfo.psk,wifiInfo.encryp)
             return wifiInfo
         }
     }

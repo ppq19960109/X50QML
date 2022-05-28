@@ -7,6 +7,7 @@
 //QmlDevState* QmlDevState::qmlDevState;
 QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
 {
+//    QProcess::execute("cd /oem && ./logoapp");
     readRecipeDetails();
 
     stateType.append(QPair<QString,int>("Reset",LINK_VALUE_TYPE_NUM));
@@ -360,7 +361,7 @@ void QmlDevState::readData(const QJsonValue &data)
     QString key;
     enum LINK_VALUE_TYPE value_type;
     QVector<QPair<QString,int>>::iterator it;
-    for(it=stateType.begin(); it!=stateType.end(); it++){
+    for(it=stateType.begin(); it!=stateType.end(); ++it){
 
         key=it->first;
         value_type=(enum LINK_VALUE_TYPE)it->second;

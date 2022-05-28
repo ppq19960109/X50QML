@@ -39,12 +39,13 @@ Item {
     {
         var root=JSON.parse(sanR)
         //        console.log("setWifiList:" ,sanR,root.length)
-        var i
+        var i,element
         for( i = 0; i < root.length; ++i) {
-            if(root[i].ssid===productionTestWIFISSID)
+            element=root[i]
+            if(element.ssid===productionTestWIFISSID)
             {
                 wifiSignalText.visible=true
-                if(root[i].rssi < -75)
+                if(element.rssi < -75)
                 {
                     wifiSignal.color="red"
                 }
@@ -52,7 +53,7 @@ Item {
                 {
                     wifiSignal.color="green"
                 }
-                wifiSignalText.text=root[i].rssi+"db"
+                wifiSignalText.text=element.rssi+"db"
                 break
             }
         }

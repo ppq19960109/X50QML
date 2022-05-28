@@ -38,7 +38,7 @@ Item {
         width: parent.width
         implicitHeight:80
         anchors.top: parent.top
-//        anchors.fill: parent
+        //        anchors.fill: parent
         background:Image {
             asynchronous:true
             smooth:false
@@ -78,11 +78,14 @@ Item {
             }
             Image{
                 id:wind_icon
-                visible: QmlDevState.state.HoodSpeed!=0
+                visible: source!=""
                 asynchronous:true
                 smooth:false
                 anchors.centerIn: parent
-                source: QmlDevState.state.HoodSpeed!=0?(themesImagesPath+"icon_wind_"+QmlDevState.state.HoodSpeed+".png"):""
+                source: {
+                    var speed=QmlDevState.state.HoodSpeed
+                    return speed===0?"":(themesImagesPath+"icon_wind_"+speed+".png")
+                }
             }
             onClicked: {
 
@@ -115,7 +118,10 @@ Item {
                 anchors.verticalCenterOffset: 5
                 anchors.right: parent.right
                 color:themesTextColor
-                text:"0"+Math.floor(QmlDevState.state.RStoveTimingLeft/60)+":"+Math.floor(QmlDevState.state.RStoveTimingLeft%60/10)+(QmlDevState.state.RStoveTimingLeft%60%10)//qsTr("01:12")
+                text:{
+                    var time=QmlDevState.state.RStoveTimingLeft
+                    return "0"+Math.floor(time/60)+":"+Math.floor(time%60/10)+(time%60%10)//qsTr("01:12")
+                }
                 font.pixelSize:34
                 //                horizontalAlignment:Text.AlignHCenter
                 //                verticalAlignment:Text.AlignVCenter
