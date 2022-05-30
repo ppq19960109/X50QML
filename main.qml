@@ -14,8 +14,8 @@ ApplicationWindow {
     id: window
     width: 800
     height: 480
-//        visible: true
-    property int sysPower:-1
+    visible: true
+    property int sysPower:1
     property int permitStartStatus:0
     readonly property string uiVersion:"1.1"
     readonly property string productionTestWIFISSID:"moduletest"
@@ -112,7 +112,7 @@ ApplicationWindow {
     }
     function systemSync()
     {
-        QmlDevState.executeShell("(sleep 1;sync) &")
+        QmlDevState.executeShell("(sleep 2;sync) &")
     }
 
     function systemReset()
@@ -185,6 +185,20 @@ ApplicationWindow {
     }
 
     Timer{
+        id:timer_wifi_connecting
+        repeat: false
+        running: false
+        interval: 63000
+        triggeredOnStart: false
+        onTriggered: {
+             if(wifiConnecting==true)
+             {
+                 wifiConnecting=false
+             }
+        }
+    }
+
+    Timer{
         id:timer_window
         repeat: false
         running: sysPower > 0
@@ -239,7 +253,7 @@ ApplicationWindow {
         }
     }
     function showQrcodeBind(title){
-//        console.log("BindTokenState",QmlDevState.state.BindTokenState,QmlDevState.state.DeviceSecret,QmlDevState.state.WifiState)//QmlDevState.state.BindTokenState > 0
+        //        console.log("BindTokenState",QmlDevState.state.BindTokenState,QmlDevState.state.DeviceSecret,QmlDevState.state.WifiState)//QmlDevState.state.BindTokenState > 0
         if(QmlDevState.state.DeviceSecret=="")
             return
         if(systemSettings.wifiEnable && QmlDevState.state.WifiState==4)
@@ -420,24 +434,24 @@ ApplicationWindow {
     }
     ListModel {
         id: wifiModel
-                ListElement {
-                    connected: 1
-                    ssid: "qwertyuio"
-                    level:2
-                    flags:2
-                }
-                ListElement {
-                    connected: 0
-                    ssid: "123456789123456789123456789"
-                    level:2
-                    flags:1
-                }
-                ListElement {
-                    connected: 0
-                    ssid: "456"
-                    level:2
-                    flags:0
-                }
+        ListElement {
+            connected: 1
+            ssid: "qwertyuio"
+            level:2
+            flags:2
+        }
+        ListElement {
+            connected: 0
+            ssid: "123456789123456789123456789"
+            level:2
+            flags:1
+        }
+        ListElement {
+            connected: 0
+            ssid: "456"
+            level:2
+            flags:0
+        }
     }
     //    Component {
     //        id: pageTest
@@ -602,7 +616,7 @@ ApplicationWindow {
     }
 
     function load_page(page,args) {
-//        console.log("load_page:"+page,"args:"+args)
+        //        console.log("load_page:"+page,"args:"+args)
 
         switch (page) {
         case "pageHome":
@@ -820,7 +834,8 @@ ApplicationWindow {
                 showLoaderFault("左腔干烧检测电路故障！","请拨打售后电话<font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员")
             break
         case 6:
-            showLoaderFault("防火墙传感器故障！","请拨打售后电话<font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员",false)
+            if(dir==null)
+                showLoaderFault("防火墙传感器故障！","请拨打售后电话<font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员")
             break
         case 7:
             showLoaderFault("烟机进风口出现火情！","请及时关闭灶具旋钮 等待温度降低后使用",false)

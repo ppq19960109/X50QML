@@ -7,7 +7,7 @@
 //QmlDevState* QmlDevState::qmlDevState;
 QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
 {
-//    QProcess::execute("cd /oem && ./logoapp");
+    //    QProcess::execute("cd /oem && ./logoapp");
     readRecipeDetails();
 
     stateType.append(QPair<QString,int>("Reset",LINK_VALUE_TYPE_NUM));
@@ -296,12 +296,12 @@ QVariantList QmlDevState::getRecipeDetails(const int recipeid)
 
 void QmlDevState::executeShell(const QString &cmd)
 {
-    qDebug() << "executeShell start:" << cmd;
+    qDebug() << "executeShell:" << cmd;
     //    QProcess::execute(cmd);
     //    QProcess::startDetached("cmd");
-    process.start(cmd);
+    //    process.start(cmd);
     //    qDebug() << "executeShell system:" << cmd.toUtf8().data();
-    //    system(cmd.toUtf8().data());
+    system(cmd.toUtf8().data());
 }
 
 void QmlDevState::readRecipeDetails()

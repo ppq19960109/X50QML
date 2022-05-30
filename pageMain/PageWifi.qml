@@ -19,6 +19,30 @@ Item {
         timer_wifi_scan.interval=2000
         timer_wifi_scan.restart()
     }
+    Connections { // 将目标对象信号与槽函数进行连接
+        target: window
+        onWifiConnectingChanged:{
+            console.log("onWifiConnectingChanged:",wifiConnecting,timer_wifi_connecting.running)
+            if(wifiConnecting==true)
+                timer_wifi_connecting.restart()
+            else
+            {
+                if(timer_wifi_connecting.running)
+                    timer_wifi_connecting.stop()
+                else
+                {
+                    if(systemSettings.wifiEnable && wifiConnected==false && wifiConnectInfo.ssid!="")
+                    {
+                        wifiConnectInfo.ssid=""
+                        showLoaderFault("","网络连接失败，请重试",true,"","/x50/icon/icon_pop_error.png",false)
+                    }
+                    QmlDevState.executeShell("(wpa_cli enable_network all && wpa_cli save_config) &")
+                }
+                wifi_scan_timer_reset()
+                wifiInputConnecting=false
+            }
+        }
+    }
 
     Connections { // 将目标对象信号与槽函数进行连接
         target: QmlDevState
@@ -34,19 +58,25 @@ Item {
                     if(value==2 || value==5)
                     {
                         if(systemSettings.wifiEnable && wifiConnected==false && wifiConnectInfo.ssid!="")
+                        {
+                            wifiConnectInfo.ssid=""
                             showLoaderFault("","网络连接失败，请重试",true,"","/x50/icon/icon_pop_error.png",false)
+                        }
                     }
                     else if(value==3)
                     {
                         if(systemSettings.wifiEnable && wifiConnected==false && wifiConnectInfo.ssid!="")
+                        {
+                            wifiConnectInfo.ssid=""
                             showLoaderFault("","密码错误，连接失败",true,"","/x50/icon/icon_pop_error.png",false)
+                        }
                     }
                     else if(value==4)
                     {
                         dismissWifiInput()
                     }
-                    wifi_scan_timer_reset()
-                    wifiInputConnecting=false
+//                    wifi_scan_timer_reset()
+//                    wifiInputConnecting=false
                 }
                 else
                 {
@@ -292,7 +322,7 @@ Item {
                     {
                         if(flags==0)
                         {
-//                            console.log("open connect:" , ssid,flags)
+                            //                            console.log("open connect:" , ssid,flags)
                             SendFunc.connectWiFi(ssid,"",flags)
                             connected=2
                             if(index>0)
@@ -306,7 +336,7 @@ Item {
                         else
                         {
                             var wifiInfo=WifiFunc.getWifiInfo(ssid)
-//                            console.log("wifiInfo",wifiInfo,typeof wifiInfo)
+                            //                            console.log("wifiInfo",wifiInfo,typeof wifiInfo)
                             if(wifiInfo==null)
                             {
                                 showWifiInput(index,listView.model.get(index))
@@ -430,7 +460,7 @@ Item {
                 }
                 Button {
                     id:connectBtn
-                    width:160
+                    width:180
                     height:parent.height
                     anchors.right:parent.right
                     anchors.rightMargin: 40
@@ -474,7 +504,7 @@ Item {
                     id:textField
                     height: parent.height
                     anchors.left: parent.left
-                    anchors.right: connectBtn.left
+                    anchors.right: connectBusy.left
                     leftPadding: 40
                     rightPadding: 20
                     font.pixelSize: 40

@@ -79,7 +79,7 @@ Rectangle {
     }
     Component.onCompleted: {
         console.log("PageSteamBakeBase onCompleted")
-        var i;
+        var i
 
         //        var timeArray = []
         //        for(i=1; i<= 120; ++i) {
@@ -89,7 +89,7 @@ Rectangle {
         //            timeArray.push(i+"分钟")
         //        }
         //        timePathView.model=timeArray
-        console.log("state",state,typeof state)
+//        console.log("state",state,typeof state)
         if(multiMode==0 )//|| undefined != state || null != state || "" != state
         {
             root=JSON.parse(state)

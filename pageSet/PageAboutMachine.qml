@@ -1,7 +1,36 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.2
 import "../"
+import "qrc:/SendFunc.js" as SendFunc
 Item {
+
+    Timer{
+        id:timer_qrcode
+        repeat: false
+        running: false
+        interval: 20*60000
+        triggeredOnStart: false
+//        onTriggered: {
+
+//        }
+    }
+
+    Connections { // 将目标对象信号与槽函数进行连接
+        target: QmlDevState
+
+        onStateChanged: { // 处理目标对象信号的槽函数
+            console.log("PageAboutMachine:",key)
+
+            if("WifiState"==key)
+            {
+                if(value==4 && timer_qrcode.running==false)
+                {
+                    timer_qrcode.restart()
+                    showQrcodeBind("此二维码可以")
+                }
+            }
+        }
+    }
 
     Component.onCompleted: {
         infoModel.get(0).value=QmlDevState.state.ProductCategory
@@ -121,7 +150,20 @@ Item {
                 }
 
                 onClicked: {
+
+                    if( timer_qrcode.running==false)
+                    {
+                        if(systemSettings.wifiEnable && QmlDevState.state.WifiState==4)
+                        {
+                            var Data={}
+                            Data.BackOnline = null
+                            SendFunc.setToServer(Data)
+                        }
+                    }
+                    else
+                    {
                         showQrcodeBind("此二维码可以")
+                    }
                 }
             }
         }

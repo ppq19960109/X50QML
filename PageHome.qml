@@ -225,6 +225,10 @@ Item {
             if("SysPower"==key)
             {
                 systemPower(value)
+                if(value==1 && QmlDevState.state.ErrorCodeShow===6)
+                {
+                    showFaultPopup(6)
+                }
             }
             else if("ComSWVersion"==key)
             {
@@ -491,10 +495,8 @@ Item {
             result.level=WifiFunc.signalLevel(element.rssi)
             result.flags=WifiFunc.encrypType(element.flags)
 
-            if(element.bssid===QmlDevState.state.bssid)
+            if(element.bssid===QmlDevState.state.bssid && wifiConnected==true)
             {
-                if(wifiConnected==false)
-                    wifiConnected=true
                 result.connected=1
                 wifiModel.insert(0,result)
             }

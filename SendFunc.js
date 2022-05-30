@@ -136,6 +136,7 @@ function scanRWifi()
 {
     var Data={}
     Data.WifiScanR = null
+//    Data.WifiState = null
     Data.WifiCurConnected = null
     getToServer(Data)
 }
@@ -150,6 +151,7 @@ function connectWiFi(ssid,psk,encryp)
 
     Data.WifiConnect=wifiConnectInfo
     wifiConnecting=true
+    wifiConnected=false
     setToServer(Data)
 }
 function getWifiState()
