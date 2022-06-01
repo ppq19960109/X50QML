@@ -5,7 +5,6 @@ import "pageMain"
 import "WifiFunc.js" as WifiFunc
 import "qrc:/SendFunc.js" as SendFunc
 Item {
-    property int productionTestFlag:1
     property int lastLStOvState:-1
     property int lastRStOvState:-1
     property int lastErrorCodeShow:0
@@ -14,17 +13,6 @@ Item {
     enabled: sysPower > 0
     //    anchors.fill: parent
 
-    Timer{
-        id:timer_test
-        repeat: false
-        running: true
-        interval: 180000
-        triggeredOnStart: false
-        onTriggered: {
-            console.log("timer_test onTriggered");
-            productionTestFlag=0
-        }
-    }
     Component{
         id:component_alarm
         PagePopup{
@@ -48,6 +36,7 @@ Item {
                 source: "qrc:/x50/icon/icon_alarm.png"
             }
             Component.onCompleted: {
+                sleepWakeup()
                 SendFunc.setBuzControl(buzControlEnum.OPEN)
             }
             Component.onDestruction: {
@@ -216,7 +205,7 @@ Item {
             else
             {
                 showLoaderFault("通讯板故障！","请拨打售后电话<font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员",false)
-                wakeup()
+                standbyWakeup()
             }
         }
         onStateChanged: { // 处理目标对象信号的槽函数
@@ -327,7 +316,21 @@ Item {
                 }
                 else if(value==2)
                 {
-                    showLoaderPopup("蒸烤箱工作中，\n烟机需要散热无法关闭","",306,"知道了",closeLoaderPopup)
+                    var LStOvState=QmlDevState.state.LStOvState
+                    var RStOvState=QmlDevState.state.LStOvState
+                    if(LStOvState == workStateEnum.WORKSTATE_PREHEAT || LStOvState == workStateEnum.WORKSTATE_RUN || LStOvState == workStateEnum.WORKSTATE_PAUSE || RStOvState == workStateEnum.WORKSTATE_PREHEAT || RStOvState == workStateEnum.WORKSTATE_RUN|| RStOvState == workStateEnum.WORKSTATE_PAUSE)
+                        showLoaderPopup("蒸烤箱工作中，\n需散热，烟机最低一档","",306,"知道了",closeLoaderPopup)
+                }
+                else if(value==3)
+                {
+                    var LStOvState=QmlDevState.state.LStOvState
+                    if(LStOvState == workStateEnum.WORKSTATE_PREHEAT || LStOvState == workStateEnum.WORKSTATE_RUN|| LStOvState == workStateEnum.WORKSTATE_PAUSE)
+                        showLoaderPopup("烤模式运行中，\n需散热，烟机最低二档","",306,"知道了",closeLoaderPopup)
+                }
+                else if(value==4)
+                {
+                    if(QmlDevState.state.LStoveStatus > 0 || QmlDevState.state.RStoveStatus > 0)
+                        showLoaderPopup("灶具工作中，\n需散热，烟机最低一档","",306,"知道了",closeLoaderPopup)
                 }
             }
             //            else if("ErrorCode"==key)
@@ -387,7 +390,8 @@ Item {
                     else if(value==4)
                     {
                         wifiConnected=true
-                        SendFunc.getCurWifi()
+                        if(isExistView("PageWifi")==null)
+                            SendFunc.getCurWifi()
                     }
                 }
                 console.log("WifiState",value,wifiConnected,wifiConnecting)

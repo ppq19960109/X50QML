@@ -55,7 +55,7 @@ Item {
                 anchors.horizontalCenterOffset: 30
                 color:textColor
                 font.pixelSize: textFont
-                text: leftWorkMode[modelData]
+                text: workModeEnum[modelData]
             }
         }
     }

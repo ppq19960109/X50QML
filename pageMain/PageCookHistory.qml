@@ -5,7 +5,7 @@ import "qrc:/SendFunc.js" as SendFunc
 import "../"
 Item {
     property bool edit: false
-    property int cookPos: allDevice
+    property int cookPos: cookWorkPosEnum.ALL
     //    property int historyCurrentIndex:0
     //    property alias historyModel:recipeListView.model
 
@@ -60,7 +60,7 @@ Item {
         var element
         for(var i = 0; i < historys.length; ++i) {
             element=historys[i]
-            if(pos ===allDevice || element.cookPos===pos)
+            if(pos ===cookWorkPosEnum.ALL || element.cookPos===pos)
             {
 //                console.log("getHistory ",JSON.stringify(element))
                 historyModel.append(element)

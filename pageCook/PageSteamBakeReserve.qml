@@ -16,7 +16,7 @@ Item {
             return
         }
         var cookSteps=JSON.parse(root.cookSteps)
-        if(root.cookPos===leftDevice)
+        if(root.cookPos===cookWorkPosEnum.LEFT)
         {
             if(systemSettings.cookDialog[2]>0)
             {

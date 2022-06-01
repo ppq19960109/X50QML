@@ -58,7 +58,7 @@ Rectangle {
         PageRightCook{}
     }
     function showNewCook(device){
-        if(device===leftDevice)
+        if(device===cookWorkPosEnum.LEFT)
         {
             loader_main.sourceComponent = pageLeftCook
         }
@@ -71,11 +71,11 @@ Rectangle {
     function cookConfirm(){
         if(leftProgressBar.workState===workStateEnum.WORKSTATE_FINISH)
         {
-            SendFunc.setCookOperation(leftDevice,workOperationEnum.CONFIRM)
+            SendFunc.setCookOperation(cookWorkPosEnum.LEFT,workOperationEnum.CONFIRM)
         }
         if(rightProgressBar.workState===workStateEnum.WORKSTATE_FINISH)
         {
-            SendFunc.setCookOperation(rightDevice,workOperationEnum.CONFIRM)
+            SendFunc.setCookOperation(cookWorkPosEnum.RIGHT,workOperationEnum.CONFIRM)
         }
     }
 
@@ -96,22 +96,23 @@ Rectangle {
             workState:QmlDevState.state.LStOvState
             workMode:workState===workStateEnum.WORKSTATE_STOP?qsTr("左腔烹饪"):QmlDevState.state.MultiMode===1?QmlDevState.state.CookbookName:CookFunc.leftWorkModeName(QmlDevState.state.LStOvMode)
             canvasDiameter:width
+            setTimeLeft:QmlDevState.state.LStOvSetTimerLeft
             orderTimeLeft:QmlDevState.state.LStOvOrderTimerLeft
-            percent:(workState === workStateEnum.WORKSTATE_RESERVE|| (workState === workStateEnum.WORKSTATE_PAUSE && orderTimeLeft!=0))?(100-100*orderTimeLeft/QmlDevState.state.LStOvOrderTimer):(100-100*QmlDevState.state.LStOvSetTimerLeft/QmlDevState.state.LStOvSetTimer)
+            percent:(workState === workStateEnum.WORKSTATE_RESERVE|| workState === workStateEnum.WORKSTATE_PAUSE_RESERVE)?(100-100*orderTimeLeft/QmlDevState.state.LStOvOrderTimer):(100-100*setTimeLeft/QmlDevState.state.LStOvSetTimer)
             workTime:
             {
                 if(workState === workStateEnum.WORKSTATE_PREHEAT)
                 {
                     return QmlDevState.state.LStOvRealTemp
                 }
-                else if(workState === workStateEnum.WORKSTATE_RESERVE || (workState === workStateEnum.WORKSTATE_PAUSE && orderTimeLeft!=0))
+                else if(workState === workStateEnum.WORKSTATE_RESERVE || workState === workStateEnum.WORKSTATE_PAUSE_RESERVE)
                 {
                     var time=orderTimeLeft
                     return (time<600?"0":"")+ Math.floor(time/60)+":"+(time%60<10?"0":"")+time%60//
                 }
                 else
                 {
-                    return QmlDevState.state.LStOvSetTimerLeft
+                    return setTimeLeft
                 }
             }
             workTemp:qsTr(QmlDevState.state.LStOvSetTemp+"℃")
@@ -123,16 +124,16 @@ Rectangle {
                     {
                         showNewCook(leftProgressBar.device)
                     }
-                    else if(leftProgressBar.workState === workStateEnum.WORKSTATE_PAUSE && QmlDevState.state.MultiMode==0)
+                    else if( QmlDevState.state.MultiMode==0)
                     {
-                        if(QmlDevState.state.LStOvOrderTimerLeft==0)
+                        if(leftProgressBar.workState === workStateEnum.WORKSTATE_PAUSE)
                         {
-                            load_page("pageSteamBakeBase",JSON.stringify({"device":leftDevice,"reserve":0}))
+                            load_page("pageSteamBakeBase",JSON.stringify({"device":cookWorkPosEnum.LEFT,"reserve":0}))
                         }
-                        else
+                        else if(leftProgressBar.workState === workStateEnum.WORKSTATE_PAUSE_RESERVE)
                         {
                             var para =CookFunc.getDefHistory()
-                            para.cookPos=leftDevice
+                            para.cookPos=cookWorkPosEnum.LEFT
                             var list = []
                             var steps={}
                             steps.mode=QmlDevState.state.LStOvMode
@@ -142,6 +143,10 @@ Rectangle {
                             para.dishName=CookFunc.getDishName(list)
                             load_page("pageSteamBakeReserve",JSON.stringify(para))
                             para=undefined
+                        }
+                        else
+                        {
+                            mouse.accepted = false
                         }
                     }
                     else
@@ -162,7 +167,7 @@ Rectangle {
             onWorkStateChanged: {
                 if(workState===workStateEnum.WORKSTATE_STOP || workState === workStateEnum.WORKSTATE_FINISH)
                 {
-                    closeCancelRun(leftDevice)
+                    closeCancelRun(cookWorkPosEnum.LEFT)
                 }
             }
         }
@@ -199,13 +204,13 @@ Rectangle {
                 asynchronous:true
                 smooth:false
                 anchors.centerIn:parent
-                source: themesImagesPath+(leftProgressBar.workState===workStateEnum.WORKSTATE_PAUSE?"icon-cookpause.png":"icon-cookrun.png")
+                source: themesImagesPath+((leftProgressBar.workState===workStateEnum.WORKSTATE_PAUSE || leftProgressBar.workState===workStateEnum.WORKSTATE_PAUSE_RESERVE)?"icon-cookpause.png":"icon-cookrun.png")
             }
             onClicked:{
-                if(leftProgressBar.workState===workStateEnum.WORKSTATE_PAUSE)
+                if(leftProgressBar.workState===workStateEnum.WORKSTATE_PAUSE|| leftProgressBar.workState===workStateEnum.WORKSTATE_PAUSE_RESERVE)
                 {
                     //                    QmlDevState.setState("LStOvState",workStateEnum.WORKSTATE_RUN)
-                    SendFunc.setCookOperation(leftDevice,workOperationEnum.START)
+                    SendFunc.setCookOperation(cookWorkPosEnum.LEFT,workOperationEnum.START)
                     if(QmlDevState.state.ErrorCodeShow==0)
                     {
                         if(QmlDevState.state.LStOvDoorState==1)
@@ -215,13 +220,13 @@ Rectangle {
                     }
                     else
                     {
-                        showFaultPopup(QmlDevState.state.ErrorCodeShow,leftDevice)
+                        showFaultPopup(QmlDevState.state.ErrorCodeShow,cookWorkPosEnum.LEFT)
                     }
                 }
                 else
                 {
                     //                    QmlDevState.setState("LStOvState",workStateEnum.WORKSTATE_PAUSE)
-                    SendFunc.setCookOperation(leftDevice,workOperationEnum.PAUSE)
+                    SendFunc.setCookOperation(cookWorkPosEnum.LEFT,workOperationEnum.PAUSE)
                 }
             }
         }
@@ -265,22 +270,23 @@ Rectangle {
             workState:QmlDevState.state.RStOvState
             workMode:workState===workStateEnum.WORKSTATE_STOP?qsTr("右腔烹饪"):CookFunc.leftWorkModeName(QmlDevState.state.RStOvMode)
             canvasDiameter:width
+            setTimeLeft:QmlDevState.state.RStOvSetTimerLeft
             orderTimeLeft:QmlDevState.state.RStOvOrderTimerLeft
-            percent:workState === workStateEnum.WORKSTATE_RESERVE?(100-100*orderTimeLeft/QmlDevState.state.RStOvOrderTimer):(100-100*orderTimeLeft/QmlDevState.state.RStOvSetTimer)
+            percent:(workState === workStateEnum.WORKSTATE_RESERVE|| workState === workStateEnum.WORKSTATE_PAUSE_RESERVE)?(100-100*orderTimeLeft/QmlDevState.state.RStOvOrderTimer):(100-100*setTimeLeft/QmlDevState.state.RStOvSetTimer)
             workTime:
             {
                 if(workState === workStateEnum.WORKSTATE_PREHEAT)
                 {
                     return QmlDevState.state.RStOvRealTemp
                 }
-                else if(workState === workStateEnum.WORKSTATE_RESERVE || (workState === workStateEnum.WORKSTATE_PAUSE && orderTimeLeft!=0))
+                else if(workState === workStateEnum.WORKSTATE_RESERVE || workState === workStateEnum.WORKSTATE_PAUSE_RESERVE)
                 {
                     var time=orderTimeLeft
                     return (time<600?"0":"")+ Math.floor(time/60)+":"+(time%60<10?"0":"")+time%60//
                 }
                 else
                 {
-                    return QmlDevState.state.RStOvSetTimerLeft
+                    return setTimeLeft
                 }
             }
             workTemp:qsTr(QmlDevState.state.RStOvSetTemp+"℃")
@@ -294,24 +300,21 @@ Rectangle {
                     }
                     else if(rightProgressBar.workState === workStateEnum.WORKSTATE_PAUSE)
                     {
-                        if(QmlDevState.state.RStOvOrderTimerLeft==0)
-                        {
-                            load_page("pageSteamBakeBase",JSON.stringify({"device":rightDevice,"reserve":0}))
-                        }
-                        else
-                        {
-                            var para =CookFunc.getDefHistory()
-                            para.cookPos=rightDevice
-                            var list = []
-                            var steps={}
-                            steps.mode=QmlDevState.state.RStOvMode
-                            steps.temp=QmlDevState.state.RStOvSetTemp
-                            steps.time=QmlDevState.state.RStOvSetTimer
-                            list.push(steps)
-                            para.dishName=CookFunc.getDishName(list)
-                            load_page("pageSteamBakeReserve",JSON.stringify(para))
-                            para=undefined
-                        }
+                        load_page("pageSteamBakeBase",JSON.stringify({"device":cookWorkPosEnum.RIGHT,"reserve":0}))
+                    }
+                    else if(rightProgressBar.workState === workStateEnum.WORKSTATE_PAUSE_RESERVE)
+                    {
+                        var para =CookFunc.getDefHistory()
+                        para.cookPos=cookWorkPosEnum.RIGHT
+                        var list = []
+                        var steps={}
+                        steps.mode=QmlDevState.state.RStOvMode
+                        steps.temp=QmlDevState.state.RStOvSetTemp
+                        steps.time=QmlDevState.state.RStOvSetTimer
+                        list.push(steps)
+                        para.dishName=CookFunc.getDishName(list)
+                        load_page("pageSteamBakeReserve",JSON.stringify(para))
+                        para=undefined
                     }
                     else
                     {
@@ -331,7 +334,7 @@ Rectangle {
             onWorkStateChanged: {
                 if(workState===workStateEnum.WORKSTATE_STOP || workState === workStateEnum.WORKSTATE_FINISH)
                 {
-                    closeCancelRun(rightDevice)
+                    closeCancelRun(cookWorkPosEnum.RIGHT)
                 }
             }
         }
@@ -368,13 +371,13 @@ Rectangle {
                 asynchronous:true
                 smooth:false
                 anchors.centerIn:parent
-                source: themesImagesPath+(rightProgressBar.workState===workStateEnum.WORKSTATE_PAUSE?"icon-cookpause.png":"icon-cookrun.png")
+                source: themesImagesPath+((rightProgressBar.workState===workStateEnum.WORKSTATE_PAUSE|| rightProgressBar.workState===workStateEnum.WORKSTATE_PAUSE_RESERVE)?"icon-cookpause.png":"icon-cookrun.png")
             }
             onClicked:{
-                if(QrightProgressBar.workState===workStateEnum.WORKSTATE_PAUSE)
+                if(rightProgressBar.workState===workStateEnum.WORKSTATE_PAUSE|| rightProgressBar.workState===workStateEnum.WORKSTATE_PAUSE_RESERVE)
                 {
                     //                    QmlDevState.setState("RStOvState",workStateEnum.WORKSTATE_RUN)
-                    SendFunc.setCookOperation(rightDevice,workOperationEnum.START)
+                    SendFunc.setCookOperation(cookWorkPosEnum.RIGHT,workOperationEnum.START)
 
                     if(QmlDevState.state.ErrorCodeShow==0)
                     {
@@ -385,13 +388,13 @@ Rectangle {
                     }
                     else
                     {
-                        showFaultPopup(QmlDevState.state.ErrorCodeShow,rightDevice)
+                        showFaultPopup(QmlDevState.state.ErrorCodeShow,cookWorkPosEnum.RIGHT)
                     }
                 }
                 else
                 {
                     //                    QmlDevState.setState("RStOvState",workStateEnum.WORKSTATE_PAUSE)
-                    SendFunc.setCookOperation(rightDevice,workOperationEnum.PAUSE)
+                    SendFunc.setCookOperation(cookWorkPosEnum.RIGHT,workOperationEnum.PAUSE)
                 }
             }
         }
@@ -445,11 +448,11 @@ Rectangle {
             onCancel: {
                 if(hintTopText.indexOf("左腔")!=-1)
                 {
-                    SendFunc.setCookOperation(leftDevice,workOperationEnum.CANCEL)
+                    SendFunc.setCookOperation(cookWorkPosEnum.LEFT,workOperationEnum.CANCEL)
                 }
                 else
                 {
-                    SendFunc.setCookOperation(rightDevice,workOperationEnum.CANCEL)
+                    SendFunc.setCookOperation(cookWorkPosEnum.RIGHT,workOperationEnum.CANCEL)
                 }
                 closeCancelRun()
             }
@@ -470,12 +473,12 @@ Rectangle {
             {
                 if(hintTopText.indexOf("左腔")!=-1)
                 {
-                    if(device!=leftDevice)
+                    if(device!=cookWorkPosEnum.LEFT)
                         return
                 }
                 else
                 {
-                    if(device!=rightDevice)
+                    if(device!=cookWorkPosEnum.RIGHT)
                         return
                 }
             }

@@ -11,6 +11,7 @@ Item {
     property int scan_count: 0
     property bool wifiInputConnecting:false
     property string name: "PageWifi"
+    property int qrcode_display: 0
     function wifi_scan_timer_reset()
     {
         console.log("wifi_scan_timer_reset")
@@ -19,6 +20,7 @@ Item {
         timer_wifi_scan.interval=2000
         timer_wifi_scan.restart()
     }
+
     Connections { // 将目标对象信号与槽函数进行连接
         target: window
         onWifiConnectingChanged:{
@@ -75,8 +77,8 @@ Item {
                     {
                         dismissWifiInput()
                     }
-//                    wifi_scan_timer_reset()
-//                    wifiInputConnecting=false
+                    //                    wifi_scan_timer_reset()
+                    //                    wifiInputConnecting=false
                 }
                 else
                 {
@@ -87,6 +89,7 @@ Item {
             {
                 if(wifiConnected==true && value!="" && value==wifiConnectInfo.ssid)
                 {
+                    qrcode_display=20
                     wifiConnectInfo.ssid=""
                     showQrcodeBind("连接成功！")
                 }
@@ -140,6 +143,14 @@ Item {
                     SendFunc.scanWifi()
                     //                    SendFunc.getCurWifi()
                     SendFunc.scanRWifi()
+                }
+                if(qrcode_display>0)
+                {
+                    --qrcode_display
+                    if(qrcode_display==0)
+                    {
+                        closeLoaderQrcode()
+                    }
                 }
             }
         }

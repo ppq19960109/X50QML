@@ -35,7 +35,7 @@ KeyboardStyle {
     id: currentStyle
     readonly property bool compactSelectionList: [InputEngine.Pinyin, InputEngine.Cangjie, InputEngine.Zhuyin].indexOf(InputContext.inputEngine.inputMode) !== -1
     readonly property string fontFamily: "Sans"
-    readonly property real keyBackgroundMargin: Math.round(8 * scaleHint)
+    readonly property real keyBackgroundMargin: Math.round(10 * scaleHint)
     readonly property real keyContentMargin: Math.round(45 * scaleHint)
     readonly property real keyIconScale: scaleHint * 0.6
     readonly property string resourcePrefix: "qrc:/QtQuick/VirtualKeyboard/content/styles/default/"
@@ -52,12 +52,12 @@ KeyboardStyle {
     }
 
     keyboardDesignWidth: 2560
-    keyboardDesignHeight: 1100
+    keyboardDesignHeight: 1150
 
-    keyboardRelativeLeftMargin: 10 / keyboardDesignWidth
-    keyboardRelativeRightMargin: 10 / keyboardDesignWidth
-    keyboardRelativeTopMargin: 30 / keyboardDesignHeight
-    keyboardRelativeBottomMargin: 60 / keyboardDesignHeight
+    keyboardRelativeLeftMargin: 20 / keyboardDesignWidth
+    keyboardRelativeRightMargin: 20 / keyboardDesignWidth
+    keyboardRelativeTopMargin: 20 / keyboardDesignHeight
+    keyboardRelativeBottomMargin: 50 / keyboardDesignHeight
 
     keyboardBackground: Rectangle {
         color: "#cfd2da"
@@ -788,7 +788,7 @@ KeyboardStyle {
                 ctx.clearRect(0, 0, width, height)
                 var i
                 if (control.horizontalRulers) {
-                    for (i = 0; i < control.horizontalRulers.length; i++) {
+                    for (i = 0; i < control.horizontalRulers.length; ++i) {
                         ctx.beginPath()
                         ctx.moveTo(0, control.horizontalRulers[i])
                         ctx.lineTo(width, control.horizontalRulers[i])
@@ -796,7 +796,7 @@ KeyboardStyle {
                     }
                 }
                 if (control.verticalRulers) {
-                    for (i = 0; i < control.verticalRulers.length; i++) {
+                    for (i = 0; i < control.verticalRulers.length; ++i) {
                         ctx.beginPath()
                         ctx.moveTo(control.verticalRulers[i], 0)
                         ctx.lineTo(control.verticalRulers[i], height)

@@ -10,9 +10,9 @@ Item {
         running: false
         interval: 20*60000
         triggeredOnStart: false
-//        onTriggered: {
-
-//        }
+        onTriggered: {
+            closeLoaderQrcode()
+        }
     }
 
     Connections { // 将目标对象信号与槽函数进行连接
@@ -112,7 +112,7 @@ Item {
             }
             Button{
                 width: parent.width
-                height: 80
+                height: 90
                 anchors.top: listView.bottom
 
                 PageDivider{
@@ -143,7 +143,7 @@ Item {
                     id:qrcodeImg
                     asynchronous:true
                     smooth:false
-                    cache:false
+//                    cache:false
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.right: parent.right
                     source: "qrc:/x50/set/gengduo.png"
@@ -153,11 +153,16 @@ Item {
 
                     if( timer_qrcode.running==false)
                     {
-                        if(systemSettings.wifiEnable && QmlDevState.state.WifiState==4)
+                        if(systemSettings.wifiEnable && wifiConnected==true)
                         {
+                            wifiConnected=false
                             var Data={}
                             Data.BackOnline = null
                             SendFunc.setToServer(Data)
+                        }
+                        else
+                        {
+                            showLoaderFault("","未连网，请连接网络后再试",true,"","/x50/icon/icon_pop_error.png",false)
                         }
                     }
                     else

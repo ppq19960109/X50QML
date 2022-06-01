@@ -14,26 +14,27 @@ ApplicationWindow {
     id: window
     width: 800
     height: 480
-    visible: true
-    property int sysPower:1
+    //    visible: true
+    property int sysPower:-1
     property int permitStartStatus:0
-    readonly property string uiVersion:"1.1"
+    property int productionTestStatus:0
+    property int productionTestFlag:1
+    //    readonly property string uiVersion:"1.1"
     readonly property string productionTestWIFISSID:"moduletest"
     readonly property string productionTestWIFIPWD:"58185818"
-    readonly property int leftDevice:0
-    readonly property int rightDevice:1
-    readonly property int allDevice:2
-    readonly property var  cookModeImg: ["icon-steamed.png","icon-bake.png","icon-multistage.png"]
-    readonly property var leftWorkMode: ["未设定", "经典蒸", "高温蒸", "热风烧烤", "上下加热", "立体热风", "蒸汽烤", "空气炸", "保温烘干","便捷蒸"]
-    readonly property var leftWorkModeNumber:[0,1,2,35,36,38,40,42,72,100]
-    readonly property int rightModeIndex:8
 
-    readonly property var leftModel:[{"modelData":1,"temp":100,"time":30,"minTemp":40,"maxTemp":100},{"modelData":2,"temp":120,"time":20,"minTemp":101,"maxTemp":120},{"modelData":6,"temp":150,"time":60,"minTemp":50,"maxTemp":200},{"modelData":7,"temp":220,"time":15,"minTemp":200,"maxTemp":230,"maxTime":180},{"modelData":3,"temp":200,"time":60,"minTemp":50,"maxTemp":230}
+    readonly property var cookWorkPosEnum:{"LEFT":0,"RIGHT":1,"ALL":2}
+    readonly property var  cookModeImg: ["icon-steamed.png","icon-bake.png","icon-multistage.png"]
+    readonly property var workModeEnum: ["未设定", "经典蒸", "高温蒸", "热风烧烤", "上下加热", "立体热风", "蒸汽烤", "空气炸", "保温烘干","便捷蒸"]
+    readonly property var workModeNumberEnum:[0,1,2,35,36,38,40,42,72,100]
+    readonly property int rightWorkModeIndex:8
+
+    readonly property var workModeModelEnum:[{"modelData":1,"temp":100,"time":30,"minTemp":40,"maxTemp":100},{"modelData":2,"temp":120,"time":20,"minTemp":101,"maxTemp":120},{"modelData":6,"temp":150,"time":60,"minTemp":50,"maxTemp":200},{"modelData":7,"temp":220,"time":15,"minTemp":200,"maxTemp":230,"maxTime":180},{"modelData":3,"temp":200,"time":60,"minTemp":50,"maxTemp":230}
         ,{"modelData":5,"temp":180,"time":120,"minTemp":50,"maxTemp":230},{"modelData":4,"temp":180,"time":120,"minTemp":50,"maxTemp":230}
         ,{"modelData":8,"temp":60,"time":30,"minTemp":50,"maxTemp":120},{"modelData":9,"temp":100,"time":30,"minTemp":40,"maxTemp":100}]
 
-    readonly property var workStateEnum:{"WORKSTATE_STOP":0,"WORKSTATE_RESERVE":1,"WORKSTATE_PREHEAT":2,"WORKSTATE_RUN":3,"WORKSTATE_FINISH":4,"WORKSTATE_PAUSE":5}
-    readonly property var workStateArray:["停止","预约中","预热中","运行中","烹饪完成","暂停"]
+    readonly property var workStateEnum:{"WORKSTATE_STOP":0,"WORKSTATE_RESERVE":1,"WORKSTATE_PREHEAT":2,"WORKSTATE_RUN":3,"WORKSTATE_FINISH":4,"WORKSTATE_PAUSE":5,"WORKSTATE_PAUSE_RESERVE":6}
+    readonly property var workStateArray:["停止","预约中","预热中","运行中","烹饪完成","暂停","暂停预约"]
 
     readonly property var workOperationEnum:{"START":0,"PAUSE":1,"CANCEL":2,"CONFIRM":3,"RUN_NOW":4}
 
@@ -44,13 +45,13 @@ ApplicationWindow {
     property bool sleepState: false
     property var wifiConnectInfo:{"ssid":"","psk":"","encryp":0}
     //    property var multiModeEnum:{"NONE":0,"RECIPE":1,"MULTISTAGE":2}
+    readonly property var buzControlEnum:{"STOP":0,"SHORT":1,"SHORTTWO":2,"2SCECONDS":3,"OPEN":4}
 
     property string themesImagesPath:"file:themes/default/"
     readonly property string themesWindowBackgroundColor:"#1A1A1A"
     readonly property string themesPopupWindowColor:"#333333"
     readonly property string themesTextColor:"#E68855"
     readonly property string themesTextColor2:"#A2A2A2"
-    readonly property var buzControlEnum:{"STOP":0,"SHORT":1,"SHORTTWO":2,"2SCECONDS":3,"OPEN":4}
 
     Settings {
         id: testSettings
@@ -61,19 +62,19 @@ ApplicationWindow {
         property int productionTestAging:0
         property int productionTestTouch:0
         onProductionTestLcdChanged:{
-            if(isExistView("PageTestFront")!=null)
+            if(productionTestStatus>0)
                 systemSync()
         }
         onProductionTestLightChanged:{
-            if(isExistView("PageTestFront")!=null)
+            if(productionTestStatus>0)
                 systemSync()
         }
         onProductionTestAgingChanged:{
-            if(isExistView("PageTestFront")!=null)
+            if(productionTestStatus>0)
                 systemSync()
         }
         onProductionTestTouchChanged:{
-            if(isExistView("PageTestFront")!=null)
+            if(productionTestStatus>0)
                 systemSync()
         }
     }
@@ -147,7 +148,10 @@ ApplicationWindow {
         {
             Backlight.backlightSet(0)
             timer_window.stop()
-            if(isExistView("PageTestFront")==null)
+
+            if(productionTestFlag==0 && timer_standby.running==true)
+                timer_standby.stop()
+            if(productionTestStatus==0)
             {
                 backTopPage()
             }
@@ -185,16 +189,48 @@ ApplicationWindow {
     }
 
     Timer{
+        id:timer_standby
+        repeat: false
+        running: true
+        interval: 180000
+        triggeredOnStart: false
+        onTriggered: {
+            console.log("timer_standby onTriggered",productionTestFlag);
+            if(productionTestFlag>0)
+            {
+                productionTestFlag=0
+                if(sleepState==true)
+                {
+                    timer_standby.interval=9*60000
+                    timer_standby.restart()
+                }
+            }
+            else
+            {
+                if(sleepState==true && QmlDevState.state.LStoveStatus == 0 && QmlDevState.state.RStoveStatus == 0 && QmlDevState.state.HoodSpeed == 0)
+                {
+                    SendFunc.setSysPower(0)
+                }
+                else
+                {
+                    timer_standby.interval=9*60000
+                    timer_standby.restart()
+                }
+            }
+        }
+    }
+
+    Timer{
         id:timer_wifi_connecting
         repeat: false
         running: false
         interval: 63000
         triggeredOnStart: false
         onTriggered: {
-             if(wifiConnecting==true)
-             {
-                 wifiConnecting=false
-             }
+            if(wifiConnecting==true)
+            {
+                wifiConnecting=false
+            }
         }
     }
 
@@ -207,11 +243,14 @@ ApplicationWindow {
         onTriggered: {
             console.log("timer_window sleep:")
             //            console.log("timer_window sleep:",QmlDevState.state.HoodSpeed,QmlDevState.state.RStOvState,QmlDevState.state.LStOvState,QmlDevState.state.ErrorCodeShow,QmlDevState.localConnected)
-            if(QmlDevState.state.RStOvState == 0 && QmlDevState.state.LStOvState == 0 && QmlDevState.state.ErrorCodeShow == 0 && QmlDevState.localConnected > 0 && isExistView("PageTestFront")==null && sysPower==1 && wifiConnecting==false)
+            if(QmlDevState.state.RStOvState == 0 && QmlDevState.state.LStOvState == 0 && QmlDevState.state.ErrorCodeShow == 0 && QmlDevState.localConnected > 0 && productionTestStatus==0 && sysPower==1 && wifiConnecting==false)
             {
                 //                Backlight.backlightDisable()
                 sleepState=true
                 Backlight.backlightSet(0)
+
+                timer_standby.interval=10*60000
+                timer_standby.restart()
             }
             else
             {
@@ -248,15 +287,22 @@ ApplicationWindow {
         id:component_bind
         PageDialogQrcode{
             onCancel: {
-                closeLoaderMain()
+                closeLoaderQrcode()
             }
         }
+    }
+    function closeLoaderQrcode(){
+        if(loader_main.sourceComponent==component_bind)
+            loader_main.sourceComponent = undefined
     }
     function showQrcodeBind(title){
         //        console.log("BindTokenState",QmlDevState.state.BindTokenState,QmlDevState.state.DeviceSecret,QmlDevState.state.WifiState)//QmlDevState.state.BindTokenState > 0
         if(QmlDevState.state.DeviceSecret=="")
+        {
+            showLoaderFault("","四元组不存在",true,"","/x50/icon/icon_pop_error.png",false)
             return
-        if(systemSettings.wifiEnable && QmlDevState.state.WifiState==4)
+        }
+        if(systemSettings.wifiEnable && wifiConnected==true)
         {
             loader_main.sourceComponent = component_bind
             loader_main.item.hintTopText=title
@@ -393,10 +439,20 @@ ApplicationWindow {
         }
     }
     //---------------------------------------------------------------
-    function wakeup(){
+    function standbyWakeup(){
         systemPower(2)
     }
+    function sleepWakeup(){
+        if(sysPower > 0 && sleepState==true)
+        {
+            if(productionTestFlag==0 && timer_standby.running==true)
+                timer_standby.stop()
 
+            sleepState=false
+            Backlight.backlightSet(systemSettings.brightness)
+            timer_window.restart()
+        }
+    }
     Loader{
         //加载弹窗组件
         id:loader_lock_screen
@@ -420,6 +476,9 @@ ApplicationWindow {
 
                 if(sleepState==true)
                 {
+                    if(productionTestFlag==0 && timer_standby.running==true)
+                        timer_standby.stop()
+
                     sleepState=false
                     Backlight.backlightSet(systemSettings.brightness)
                     mouse.accepted = true
@@ -434,24 +493,24 @@ ApplicationWindow {
     }
     ListModel {
         id: wifiModel
-        ListElement {
-            connected: 1
-            ssid: "qwertyuio"
-            level:2
-            flags:2
-        }
-        ListElement {
-            connected: 0
-            ssid: "123456789123456789123456789"
-            level:2
-            flags:1
-        }
-        ListElement {
-            connected: 0
-            ssid: "456"
-            level:2
-            flags:0
-        }
+        //        ListElement {
+        //            connected: 1
+        //            ssid: "qwertyuio"
+        //            level:2
+        //            flags:2
+        //        }
+        //        ListElement {
+        //            connected: 0
+        //            ssid: "123456789123456789123456789"
+        //            level:2
+        //            flags:1
+        //        }
+        //        ListElement {
+        //            connected: 0
+        //            ssid: "456"
+        //            level:2
+        //            flags:0
+        //        }
     }
     //    Component {
     //        id: pageTest
@@ -729,7 +788,7 @@ ApplicationWindow {
             if(cookSteps.length===1 && (undefined === cookSteps[0].number || 0 === cookSteps[0].number))
             {
                 SendFunc.setCooking(cookSteps,root.orderTime,root.cookPos)
-                //            if(leftDevice===root.cookPos)
+                //            if(cookWorkPosEnum.LEFT===root.cookPos)
                 //            {
                 //                QmlDevState.setState("LStOvState",1)
                 //                QmlDevState.setState("LStOvMode",cookSteps[0].mode)
@@ -814,9 +873,10 @@ ApplicationWindow {
     }
     function showFaultPopup(value,dir)
     {
+        sleepWakeup()
         switch (value) {
         case 1:
-            if(dir==null||dir==leftDevice)
+            if(dir==null||dir==cookWorkPosEnum.LEFT)
                 showLoaderFault("左腔蒸箱加热异常！","请拨打售后电话 <font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员")
             break
         case 2:
@@ -826,11 +886,11 @@ ApplicationWindow {
             showLoaderFault("水箱缺水","水箱缺水，请及时加水")
             break
         case 4:
-            if(dir==null||dir==leftDevice)
+            if(dir==null||dir==cookWorkPosEnum.LEFT)
                 showLoaderFault("左腔蒸箱干烧！","请暂停使用左腔蒸箱并<br/>拨打售后电话<font color='"+themesTextColor+"'>400-888-8490</font>")
             break
         case 5:
-            if(dir==null||dir==leftDevice)
+            if(dir==null||dir==cookWorkPosEnum.LEFT)
                 showLoaderFault("左腔干烧检测电路故障！","请拨打售后电话<font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员")
             break
         case 6:
@@ -839,32 +899,32 @@ ApplicationWindow {
             break
         case 7:
             showLoaderFault("烟机进风口出现火情！","请及时关闭灶具旋钮 等待温度降低后使用",false)
-            wakeup()
+            standbyWakeup()
             break
         case 8:
             showLoaderFault("燃气泄漏","燃气有泄露风险\n请立即关闭灶具旋钮\n关闭总阀并开窗通气",false)
             break
         case 9:
-            if(dir==null)
+            if(dir==null && productionTestStatus==0)
             {
                 showLoaderFault("电源板串口故障！","请拨打售后电话<font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员",false);
-                wakeup()
+                standbyWakeup()
             }
             break
         case 10:
-            if(dir==null||dir==leftDevice)
+            if(dir==null||dir==cookWorkPosEnum.LEFT)
                 showLoaderFault("左腔烤箱加热异常！","请拨打售后电话<font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员");
             break
         case 12:
-            if(dir==null||dir==rightDevice)
+            if(dir==null||dir==cookWorkPosEnum.RIGHT)
                 showLoaderFault("右腔蒸箱加热异常！","请拨打售后电话<font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员");
             break
         case 13:
-            if(dir==null||dir==rightDevice)
+            if(dir==null||dir==cookWorkPosEnum.RIGHT)
                 showLoaderFault("右腔蒸箱干烧","请暂停使用右腔蒸箱并<br/>拨打售后电话<font color='"+themesTextColor+"'>400-888-8490</font>");
             break
         case 14:
-            if(dir==null||dir==rightDevice)
+            if(dir==null||dir==cookWorkPosEnum.RIGHT)
                 showLoaderFault("右腔干烧检测电路故障！","请拨打售后电话<font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员")
             break
         case 15:

@@ -25,7 +25,7 @@ Rectangle {
         var list = []
         var steps={}
 //        steps.device=root.device
-        steps.mode=leftWorkModeNumber[modePathView.model.get(modePathView.currentIndex).modelData]
+        steps.mode=workModeNumberEnum[modePathView.model.get(modePathView.currentIndex).modelData]
         steps.temp=parseInt(tempPathView.model[tempPathView.currentIndex])
         steps.time=parseInt(timePathView.model[timePathView.currentIndex])
         list.push(steps)
@@ -36,7 +36,7 @@ Rectangle {
         para.cookSteps=JSON.stringify(list)
         console.log("para:",JSON.stringify(para),systemSettings.leftCookDialog,systemSettings.rightCookDialog,root.device)
 
-        if(para.cookPos===leftDevice)
+        if(para.cookPos===cookWorkPosEnum.LEFT)
         {
             if(systemSettings.cookDialog[0]>0)
             {
@@ -93,17 +93,17 @@ Rectangle {
         if(multiMode==0 )//|| undefined != state || null != state || "" != state
         {
             root=JSON.parse(state)
-            if(leftDevice===root.device)
+            if(cookWorkPosEnum.LEFT===root.device)
             {
                 topBar.name="左腔蒸烤"
-                for (i=0; i< rightModeIndex; ++i)
-                    modeListModel.append(leftModel[i])
+                for (i=0; i< rightWorkModeIndex; ++i)
+                    modeListModel.append(workModeModelEnum[i])
             }
             else
             {
                 topBar.name="右腔速蒸"
-                for (i=rightModeIndex; i< leftModel.length; ++i)
-                    modeListModel.append(leftModel[i])
+                for (i=rightWorkModeIndex; i< workModeModelEnum.length; ++i)
+                    modeListModel.append(workModeModelEnum[i])
             }
             SendFunc.permitSteamStartStatus(1)
             if(root.reserve!=null)
@@ -111,8 +111,8 @@ Rectangle {
         }
         else
         {
-            for (i=0; i< rightModeIndex; ++i) {
-                modeListModel.append(leftModel[i])
+            for (i=0; i< rightWorkModeIndex; ++i) {
+                modeListModel.append(workModeModelEnum[i])
             }
         }
 
@@ -149,7 +149,7 @@ Rectangle {
             if(multiMode>0)
             {
                 var param = {};
-                param.mode=leftWorkModeNumber[modePathView.model.get(modePathView.currentIndex).modelData]
+                param.mode=workModeNumberEnum[modePathView.model.get(modePathView.currentIndex).modelData]
                 param.temp=parseInt(tempPathView.model[tempPathView.currentIndex])
                 param.time=parseInt(timePathView.model[timePathView.currentIndex])
                 showListData(param);
@@ -159,7 +159,7 @@ Rectangle {
             {
                 var list = []
                 var steps={}
-                steps.mode=leftWorkModeNumber[modePathView.model.get(modePathView.currentIndex).modelData]
+                steps.mode=workModeNumberEnum[modePathView.model.get(modePathView.currentIndex).modelData]
                 steps.temp=parseInt(tempPathView.model[tempPathView.currentIndex])
                 steps.time=parseInt(timePathView.model[timePathView.currentIndex])
                 list.push(steps)
@@ -255,7 +255,7 @@ Rectangle {
                     }
                     else
                     {
-                        modePathView.currentIndex=modePathViewIndex>=rightModeIndex?modePathViewIndex-rightModeIndex:modePathViewIndex
+                        modePathView.currentIndex=modePathViewIndex>=rightWorkModeIndex?modePathViewIndex-rightWorkModeIndex:modePathViewIndex
                     }
                     var minTemp=model.get(modePathView.currentIndex).minTemp
                     var maxTemp=model.get(modePathView.currentIndex).maxTemp

@@ -190,7 +190,7 @@ function setSysPower(operation)
 function setCookOperation(device,operation)
 {
     var Data={}
-    if(leftDevice===device)
+    if(cookWorkPosEnum.LEFT===device)
     {
         Data.LStOvOperation=operation
     }
@@ -205,7 +205,7 @@ function setCooking(list,orderTime,cookPos)
 {
     var Data={}
 
-    if(cookPos===leftDevice)
+    if(cookPos===cookWorkPosEnum.LEFT)
     {
         if(list!=null)
         {

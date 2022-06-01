@@ -6,40 +6,40 @@ function leftWorkModeName(mode)
     switch(mode)
     {
     case 1:
-        name=leftWorkMode[1]
+        name=workModeEnum[1]
         break
     case 2:
-        name=leftWorkMode[2]
+        name=workModeEnum[2]
         break
     case 35:
-        name=leftWorkMode[3]
+        name=workModeEnum[3]
         break
     case 36:
-        name=leftWorkMode[4]
+        name=workModeEnum[4]
         break
     case 38:
-        name=leftWorkMode[5]
+        name=workModeEnum[5]
         break
     case 40:
-        name=leftWorkMode[6]
+        name=workModeEnum[6]
         break
     case 42:
-        name=leftWorkMode[7]
+        name=workModeEnum[7]
         break
     case 72:
-        name=leftWorkMode[8]
+        name=workModeEnum[8]
         break
     case 100:
-        name=leftWorkMode[9]
+        name=workModeEnum[9]
         break
     case 120:
-        name=leftWorkMode[10]
+        name=workModeEnum[10]
         break
     case 121:
-        name=leftWorkMode[11]
+        name=workModeEnum[11]
         break
     default:
-        name=leftWorkMode[0]
+        name=workModeEnum[0]
         break
     }
     return name

@@ -25,7 +25,7 @@ Item {
         }
 
         var para =CookFunc.getDefHistory()
-        para.cookPos=leftDevice
+        para.cookPos=cookWorkPosEnum.LEFT
         para.dishName=CookFunc.getDishName(list)
         para.cookSteps=JSON.stringify(list)
 
@@ -89,7 +89,7 @@ Item {
                 list.push(steps)
             }
             var para =CookFunc.getDefHistory()
-            para.cookPos=leftDevice
+            para.cookPos=cookWorkPosEnum.LEFT
             para.dishName=CookFunc.getDishName(list)
             para.cookSteps=JSON.stringify(list)
             load_page("pageSteamBakeReserve",JSON.stringify(para))

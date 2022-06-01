@@ -9,6 +9,7 @@ Item {
     property int workState
     property color workColor
     property int orderTimeLeft:0
+    property int setTimeLeft:0
 
     property alias workMode:mode.text
     property alias canvasDiameter:canvas.width
@@ -30,7 +31,7 @@ Item {
         updatePaint()
     }
     onPercentChanged: {
-        if(workState === workStateEnum.WORKSTATE_RESERVE||workState === workStateEnum.WORKSTATE_RUN||workState === workStateEnum.WORKSTATE_PAUSE)
+        if(workState === workStateEnum.WORKSTATE_RESERVE||workState === workStateEnum.WORKSTATE_RUN||workState === workStateEnum.WORKSTATE_PAUSE||workState === workStateEnum.WORKSTATE_PAUSE_RESERVE)
         {
             updatePaint()
         }
@@ -62,7 +63,7 @@ Item {
                 ctx.stroke()
                 //            ctx.fill()
             }
-            if(workState === workStateEnum.WORKSTATE_PREHEAT||workState === workStateEnum.WORKSTATE_RESERVE||workState === workStateEnum.WORKSTATE_RUN||workState === workStateEnum.WORKSTATE_PAUSE)
+            if(!(workState === workStateEnum.WORKSTATE_FINISH||workState === workStateEnum.WORKSTATE_STOP))
             {
                 gr = ctx.createConicalGradient(0, 0, 0.5*Math.PI)
                 ctx.lineCap="round"
@@ -71,7 +72,7 @@ Item {
                 if(workState === workStateEnum.WORKSTATE_PREHEAT)
                 {
                     ctx.rotate(roate*Math.PI/180);
-                    if(device==leftDevice)
+                    if(device==cookWorkPosEnum.LEFT)
                     {
                         gr.addColorStop(1, "#00EF832B");
                         gr.addColorStop(0, "#FFEF832B");
@@ -88,7 +89,7 @@ Item {
                 }
                 else
                 {
-                    if(device==leftDevice)
+                    if(device==cookWorkPosEnum.LEFT)
                     {
                         gr.addColorStop(1, "#A0420F")
                         gr.addColorStop(0, "#E68855")
@@ -144,7 +145,7 @@ Item {
             anchors.horizontalCenter: parent.horizontalCenter
             //            horizontalAlignment :Text.AlignHCenter
             //            verticalAlignment :Text.AlignHCenter
-            text: workStateArray[workState]+((workState === workStateEnum.WORKSTATE_PAUSE && orderTimeLeft!=0)?"预约":"")
+            text: workStateArray[workState]
         }
         Item
         {
@@ -158,13 +159,13 @@ Item {
                 textFormat: Text.RichText
                 anchors.top:parent.top
                 anchors.horizontalCenter: parent.horizontalCenter
-                anchors.horizontalCenterOffset:(workState === workStateEnum.WORKSTATE_PREHEAT||workState === workStateEnum.WORKSTATE_RUN)?-20:0
+                anchors.horizontalCenterOffset:(workState === workStateEnum.WORKSTATE_PREHEAT||workState === workStateEnum.WORKSTATE_RUN||workState === workStateEnum.WORKSTATE_PAUSE)?-20:0
                 color:workColor
                 font.pixelSize: 70
-                font.bold: (workState === workStateEnum.WORKSTATE_RUN|| (workState === workStateEnum.WORKSTATE_PAUSE && orderTimeLeft==0))?true:false
+                font.bold: (workState === workStateEnum.WORKSTATE_RUN|| workState === workStateEnum.WORKSTATE_PAUSE)?true:false
             }
             Text{
-                visible: !(workState === workStateEnum.WORKSTATE_RESERVE || (workState === workStateEnum.WORKSTATE_PAUSE && orderTimeLeft!=0))
+                visible: !(workState === workStateEnum.WORKSTATE_RESERVE || workState === workStateEnum.WORKSTATE_PAUSE_RESERVE)
                 anchors.left: time.right
                 anchors.leftMargin: 5
                 anchors.bottom: time.bottom

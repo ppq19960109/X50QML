@@ -6,10 +6,11 @@ import "qrc:/SendFunc.js" as SendFunc
 Item {
     property string name: "PageTestFront"
     Component.onCompleted: {
+        productionTestStatus=1
         SendFunc.setBuzControl(buzControlEnum.SHORT)
     }
     Component.onDestruction: {
-
+        productionTestStatus=0
     }
 
     Item{
@@ -95,7 +96,7 @@ Item {
                 anchors.centerIn: parent
             }
             onClicked: {
-                 backPrePage()
+                backPrePage()
             }
         }
     }

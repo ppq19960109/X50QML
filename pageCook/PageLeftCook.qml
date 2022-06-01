@@ -59,7 +59,7 @@ Rectangle {
             }
             onClicked: {
                 closeLoaderMain()
-                load_page("pageSteamBakeBase",JSON.stringify({"device":leftDevice}))
+                load_page("pageSteamBakeBase",JSON.stringify({"device":cookWorkPosEnum.LEFT}))
             }
         }
 
@@ -116,7 +116,7 @@ Rectangle {
 
                 onClicked: {
                     closeLoaderMain()
-                    load_page("pageCookHistory",JSON.stringify({"device":leftDevice}))
+                    load_page("pageCookHistory",JSON.stringify({"device":cookWorkPosEnum.LEFT}))
                 }
             }
             Button{
