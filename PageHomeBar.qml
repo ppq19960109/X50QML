@@ -19,6 +19,7 @@ Item {
             onCancel: {
                 var Data={}
                 Data.RStoveTimingOpera = timingOperationEnum.CANCEL
+                Data.CtrlSrc=0
                 SendFunc.setToServer(Data)
                 //                QmlDevState.setState("RStoveTimingState",timingStateEnum.STOP)
                 closeLoaderMain()

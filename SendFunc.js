@@ -1,5 +1,5 @@
 //.pragma library
-var multiModeEnum={"NONE":0,"RECIPE":1,"MULTISTAGE":2}
+//var multiModeEnum={"NONE":0,"RECIPE":1,"MULTISTAGE":2}
 
 //function makeRequest()
 //{
@@ -100,12 +100,7 @@ function otaRquest(request)
     Data.OTARquest = request
     setToServer(Data)
 }
-function setSysPower(status)
-{
-    var Data={}
-    Data.SysPower = status
-    setToServer(Data)
-}
+
 function permitSteamStartStatus(status)
 {
     permitStartStatus=status
@@ -115,7 +110,7 @@ function permitSteamStartStatus(status)
 }
 function enableWifi(enable)
 {
-//    systemSettings.wifiEnable=enable
+    //    systemSettings.wifiEnable=enable
     var Data={}
     Data.WifiEnable = enable
     setToServer(Data)
@@ -136,7 +131,7 @@ function scanRWifi()
 {
     var Data={}
     Data.WifiScanR = null
-//    Data.WifiState = null
+    //    Data.WifiState = null
     Data.WifiCurConnected = null
     getToServer(Data)
 }
@@ -172,18 +167,21 @@ function setHoodSpeed(speed)
 {
     var Data={}
     Data.HoodSpeed=speed
+    Data.CtrlSrc=0
     setToServer(Data)
 }
 function setBuzControl(operation)
 {
     var Data={}
     Data.BuzControl=operation
+    Data.CtrlSrc=0
     setToServer(Data)
 }
 function setSysPower(operation)
 {
     var Data={}
     Data.SysPower=operation
+    Data.CtrlSrc=0
     setToServer(Data)
 }
 
@@ -198,6 +196,7 @@ function setCookOperation(device,operation)
     {
         Data.RStOvOperation=operation
     }
+    Data.CtrlSrc=0
     setToServer(Data)
 }
 
@@ -236,6 +235,7 @@ function setCooking(list,orderTime,cookPos)
             Data.RStOvOrderTimer=orderTime
         }
     }
+    Data.CtrlSrc=0
     setToServer(Data)
 }
 
@@ -273,6 +273,6 @@ function setMultiCooking(list,orderTime,dishName,cookbookID)
     {
         Data.LStOvOrderTimer=orderTime
     }
-
+    Data.CtrlSrc=0
     setToServer(Data)
 }

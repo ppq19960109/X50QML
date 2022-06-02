@@ -44,7 +44,7 @@ ApplicationWindow {
     property bool wifiConnected:false
     property bool sleepState: false
     property var wifiConnectInfo:{"ssid":"","psk":"","encryp":0}
-    //    property var multiModeEnum:{"NONE":0,"RECIPE":1,"MULTISTAGE":2}
+    readonly property var multiModeEnum:{"NONE":0,"RECIPE":1,"MULTISTAGE":2}
     readonly property var buzControlEnum:{"STOP":0,"SHORT":1,"SHORTTWO":2,"2SCECONDS":3,"OPEN":4}
 
     property string themesImagesPath:"file:themes/default/"
@@ -207,7 +207,7 @@ ApplicationWindow {
             }
             else
             {
-                if(sleepState==true && QmlDevState.state.LStoveStatus == 0 && QmlDevState.state.RStoveStatus == 0 && QmlDevState.state.HoodSpeed == 0)
+                if(sleepState==true && QmlDevState.state.LStoveStatus == 0 && QmlDevState.state.RStoveStatus == 0 && QmlDevState.state.HoodSpeed == 0 && QmlDevState.state.RStoveTimingState!=timingStateEnum.RUN)
                 {
                     SendFunc.setSysPower(0)
                 }

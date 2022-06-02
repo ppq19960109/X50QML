@@ -91,6 +91,7 @@ Rectangle {
             width:320
             height: width
             anchors.centerIn: parent
+            anchors.horizontalCenterOffset: 15
 
             workColor:"#E68855"
             workState:QmlDevState.state.LStOvState
@@ -265,6 +266,7 @@ Rectangle {
             width:320
             height: width
             anchors.centerIn: parent
+            anchors.horizontalCenterOffset: -15
 
             workColor:"#DE932F"
             workState:QmlDevState.state.RStOvState
