@@ -1,15 +1,19 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.2
-
+import "qrc:/SendFunc.js" as SendFunc
 Item {
-    property bool buzzer:false
     property alias closeVisible: closeBtn.visible
     property alias hintTopText: hintTop.text
-    property alias hintTopImgSrc:hintTopImg.source
-    property alias hintCenterText: hintCenter.text
     property alias hintBottomText: hintBottom.text
     property alias hintHeight: hint.height
-    signal cancel()
+
+    Component.onCompleted: {
+        SendFunc.setBuzControl(buzControlEnum.OPEN)
+    }
+    Component.onDestruction: {
+        SendFunc.setBuzControl(buzControlEnum.STOP)
+    }
+
     MouseArea{
         anchors.fill: parent
     }
@@ -19,23 +23,17 @@ Item {
         id:hint
         anchors.centerIn: parent
         implicitWidth: 600
-        implicitHeight: 292
+        implicitHeight: 300
         color: themesPopupWindowColor
         radius: 16
-//        PageDialogGradient{
-//            anchors.fill: parent
-//        }
+
         Button {
             id:closeBtn
             visible: true
-            enabled: visible
             width:closeImg.width+60
             height:closeImg.height+60
             anchors.top:parent.top
-//            anchors.topMargin: 33
             anchors.right:parent.right
-//            anchors.rightMargin: 33
-
             Image {
                 id:closeImg
                 asynchronous:true
@@ -46,7 +44,7 @@ Item {
             }
             background: Item {}
             onClicked: {
-                cancel()
+                loader_error.source = ""
             }
         }
 
@@ -61,32 +59,9 @@ Item {
             anchors.horizontalCenter: parent.horizontalCenter
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
-
             wrapMode:Text.Wrap
         }
-        Image{
-            id:hintTopImg
-            asynchronous:true
-            smooth:false
-            cache:false
-            visible:hintTopImg.source!=""
-            anchors.top: parent.top
-            anchors.topMargin: 65
-            anchors.horizontalCenter: parent.horizontalCenter
-        }
 
-        Text{
-            id:hintCenter
-            visible: hintCenter.text!=""
-            width:parent.width
-            color:"white"
-            font.pixelSize: 40
-            anchors.centerIn: parent
-            horizontalAlignment: Text.AlignHCenter
-            verticalAlignment: Text.AlignVCenter
-
-            wrapMode:Text.Wrap
-        }
         Text{
             id:hintBottom
             visible: hintBottom.text!=""
@@ -98,7 +73,6 @@ Item {
             anchors.horizontalCenter: parent.horizontalCenter
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
-
             wrapMode:Text.WrapAnywhere
         }
     }

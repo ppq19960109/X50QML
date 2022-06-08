@@ -15,7 +15,7 @@ Rectangle {
         leftBtnText:qsTr("")
         rightBtnText:qsTr("")
         onClose:{
-            closeLoaderMain()
+            loaderMainHide()
         }
     }
 
@@ -52,8 +52,8 @@ Rectangle {
                 }
 
                 onClicked: {
-                    closeLoaderMain()
                     load_page("pageSteamBakeBase",JSON.stringify({"device":cookWorkPosEnum.RIGHT}))
+                    loaderMainHide()
                 }
             }
             Button{
@@ -75,8 +75,8 @@ Rectangle {
                 }
 
                 onClicked: {
-                    closeLoaderMain()
                     load_page("pageCookHistory",JSON.stringify({"device":cookWorkPosEnum.RIGHT}))
+                    loaderMainHide()
                 }
             }
 

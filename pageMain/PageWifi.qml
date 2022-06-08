@@ -15,9 +15,11 @@ Item {
     function wifi_scan_timer_reset()
     {
         console.log("wifi_scan_timer_reset")
-        SendFunc.scanWifi()
+        SendFunc.getCurWifi()
+        SendFunc.scanRWifi()
+//        SendFunc.scanWifi()
         scan_count=0
-        timer_wifi_scan.interval=2000
+        timer_wifi_scan.interval=3000
         timer_wifi_scan.restart()
     }
 
@@ -36,9 +38,8 @@ Item {
                     if(systemSettings.wifiEnable && wifiConnected==false && wifiConnectInfo.ssid!="")
                     {
                         wifiConnectInfo.ssid=""
-                        showLoaderFault("","网络连接失败，请重试",true,"","/x50/icon/icon_pop_error.png",false)
+                        loaderImagePopupShow("网络连接失败，请重试","/x50/icon/icon_pop_error.png")
                     }
-                    QmlDevState.executeShell("(wpa_cli enable_network all && wpa_cli save_config) &")
                 }
                 wifi_scan_timer_reset()
                 wifiInputConnecting=false
@@ -57,12 +58,12 @@ Item {
                 console.log("page wifi WifiState:",value,wifiConnected,wifiConnectInfo.ssid)
                 if(value > 1)
                 {
-                    if(value==2 || value==5)
+                    if(value==2|| value==5) //
                     {
                         if(systemSettings.wifiEnable && wifiConnected==false && wifiConnectInfo.ssid!="")
                         {
                             wifiConnectInfo.ssid=""
-                            showLoaderFault("","网络连接失败，请重试",true,"","/x50/icon/icon_pop_error.png",false)
+                            loaderImagePopupShow("网络连接失败，请重试","/x50/icon/icon_pop_error.png")
                         }
                     }
                     else if(value==3)
@@ -70,19 +71,21 @@ Item {
                         if(systemSettings.wifiEnable && wifiConnected==false && wifiConnectInfo.ssid!="")
                         {
                             wifiConnectInfo.ssid=""
-                            showLoaderFault("","密码错误，连接失败",true,"","/x50/icon/icon_pop_error.png",false)
+                            loaderImagePopupShow("密码错误，连接失败","/x50/icon/icon_pop_error.png")
                         }
                     }
                     else if(value==4)
                     {
                         dismissWifiInput()
+                        if(scan_count>=4)
+                            wifi_scan_timer_reset()
                     }
                     //                    wifi_scan_timer_reset()
                     //                    wifiInputConnecting=false
                 }
                 else
                 {
-                    SendFunc.scanWifi()
+
                 }
             }
             else if("ssid"==key)
@@ -91,7 +94,7 @@ Item {
                 {
                     qrcode_display=20
                     wifiConnectInfo.ssid=""
-                    showQrcodeBind("连接成功！")
+                    loaderQrcodeShow("连接成功！")
                 }
             }
             else if("WifiEnable"==key)
@@ -102,37 +105,50 @@ Item {
         }
     }
 
+    function getWifiInfo()
+    {
+        if(wifiConnected==false)
+            SendFunc.getWifiState()
+        else
+            SendFunc.getCurWifi()
+    }
+
     Component.onCompleted: {
         //        VirtualKeyboardSettings.styleName = "retro"
         //        VirtualKeyboardSettings.fullScreenMode=true
         //        console.info("VirtualKeyboardSettings",VirtualKeyboardSettings.availableLocales)
 
+        if(systemSettings.wifiEnable && wifiConnecting==false)
+        {
+            getWifiInfo()
+            SendFunc.scanRWifi()
+            SendFunc.scanWifi()
+        }
         listView.positionViewAtBeginning()
-        console.log("PageWifi onCompleted WifiState:",QmlDevState.state.WifiState,systemSettings.wifiEnable)
     }
 
     Timer{
         id:timer_wifi_scan
         repeat: true
-        running: systemSettings.wifiEnable
-        interval: 2000
-        triggeredOnStart: scan_count < 4?true:false
+        running: (systemSettings.wifiEnable && sleepState==false)
+        interval: 3000
+        triggeredOnStart: false
         onTriggered: {
-            console.log("timer_wifi_scan",timer_wifi_scan.interval,scan_count,wifiConnecting)
-            if(scan_count < 4)
+            //            console.log("timer_wifi_scan",timer_wifi_scan.interval,scan_count,wifiConnecting)
+            ++scan_count
+            if(scan_count <= 4)
             {
-                ++scan_count
                 if(scan_count==1)
                 {
-                    timer_wifi_scan.interval=2500
+                    if(wifiConnectInfo.ssid==="")
+                        getWifiInfo()
                 }
                 else if(scan_count==4)
                 {
-                    timer_wifi_scan.interval=15000
+                    timer_wifi_scan.interval=10000
                 }
                 if(wifiConnecting==false)
                 {
-                    //                    SendFunc.getCurWifi()
                     SendFunc.scanRWifi()
                 }
             }
@@ -140,16 +156,19 @@ Item {
             {
                 if(wifiConnecting==false)
                 {
-                    SendFunc.scanWifi()
-                    //                    SendFunc.getCurWifi()
-                    SendFunc.scanRWifi()
+                    getWifiInfo()
+
+                    if(scan_count%2==0)
+                        SendFunc.scanRWifi()
+                    else
+                        SendFunc.scanWifi()
                 }
                 if(qrcode_display>0)
                 {
                     --qrcode_display
                     if(qrcode_display==0)
                     {
-                        closeLoaderQrcode()
+                        loaderQrcodeHide()
                     }
                 }
             }
@@ -374,7 +393,7 @@ Item {
         id: footerView
         Item {
             width: 40
-            height: 40
+            height: 80
             visible: systemSettings.wifiEnable && listView.count<=1
 
             anchors.left: parent.left

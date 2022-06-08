@@ -12,6 +12,6 @@ Image {
         from: 0
         to: 360
         loops: Animation.Infinite
-        duration: 9000
+        duration: 8000
     }
 }

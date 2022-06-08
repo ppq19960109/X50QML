@@ -14,11 +14,12 @@ ApplicationWindow {
     id: window
     width: 800
     height: 480
-    //    visible: true
+//    visible: true
     property int sysPower:-1
     property int permitStartStatus:0
     property int productionTestStatus:0
     property int productionTestFlag:1
+
     //    readonly property string uiVersion:"1.1"
     readonly property string productionTestWIFISSID:"moduletest"
     readonly property string productionTestWIFIPWD:"58185818"
@@ -148,7 +149,7 @@ ApplicationWindow {
         {
             Backlight.backlightSet(0)
             timer_window.stop()
-
+            loaderMainHide()
             if(productionTestFlag==0 && timer_standby.running==true)
                 timer_standby.stop()
             if(productionTestStatus==0)
@@ -207,7 +208,7 @@ ApplicationWindow {
             }
             else
             {
-                if(sleepState==true && QmlDevState.state.LStoveStatus == 0 && QmlDevState.state.RStoveStatus == 0 && QmlDevState.state.HoodSpeed == 0 && QmlDevState.state.RStoveTimingState!=timingStateEnum.RUN)
+                if(sleepState==true && QmlDevState.state.LStoveStatus == 0 && QmlDevState.state.RStoveStatus == 0 && QmlDevState.state.HoodSpeed == 0 && QmlDevState.state.RStoveTimingState==timingStateEnum.STOP)
                 {
                     SendFunc.setSysPower(0)
                 }
@@ -229,7 +230,10 @@ ApplicationWindow {
         onTriggered: {
             if(wifiConnecting==true)
             {
+                console.log("timer_wifi_connecting...")
                 wifiConnecting=false
+                QmlDevState.executeShell("(wpa_cli reconfigure) &")
+//                QmlDevState.executeShell("(wpa_cli reconfigure && wpa_cli enable_network all && wpa_cli save_config) &")
             }
         }
     }
@@ -279,77 +283,183 @@ ApplicationWindow {
         anchors.fill: parent
         sourceComponent:null
     }
-    function closeLoaderMain(){
+    function loaderMainHide(){
         loader_main.sourceComponent = undefined
     }
-
     Component{
-        id:component_bind
-        PageDialogQrcode{
-            onCancel: {
-                closeLoaderQrcode()
+        id:component_steam
+        PageDialog{
+            id:steamDialog
+            hintHeight: 360
+            hintTopText:"请将食物放入\n将水箱加满水"
+            confirmText:"开始烹饪"
+            checkboxVisible:true
+            onCancel:{
+                console.info("component_steam onCancel")
+                loaderMainHide()
+            }
+            onConfirm:{
+                console.info("component_steam onConfirm")
+
+                if(steamDialog.checkboxState)
+                {
+                    var dialog=systemSettings.cookDialog
+                    dialog[steamDialog.cookDialog]=0
+                    systemSettings.cookDialog=dialog
+                }
+                startCooking(steamDialog.para,JSON.parse(steamDialog.para.cookSteps))
+                loaderMainHide()
             }
         }
     }
-    function closeLoaderQrcode(){
-        if(loader_main.sourceComponent==component_bind)
-            loader_main.sourceComponent = undefined
+    function loaderSteamShow(hintHeight,hintTopText,confirmText,para,cookDialog){
+        loader_main.sourceComponent = component_steam
+        loader_main.item.hintHeight=hintHeight
+        loader_main.item.hintTopText=hintTopText
+        loader_main.item.confirmText=confirmText
+        loader_main.item.para=para
+        loader_main.item.cookDialog=cookDialog
     }
-    function showQrcodeBind(title){
+    Component{
+        id:component_qrcode
+        PageDialogQrcode{
+            onCancel: {
+                loaderQrcodeHide()
+            }
+        }
+    }
+    function loaderQrcodeShow(title){
         //        console.log("BindTokenState",QmlDevState.state.BindTokenState,QmlDevState.state.DeviceSecret,QmlDevState.state.WifiState)//QmlDevState.state.BindTokenState > 0
         if(QmlDevState.state.DeviceSecret=="")
         {
-            showLoaderFault("","四元组不存在",true,"","/x50/icon/icon_pop_error.png",false)
+            loaderImagePopupShow("四元组不存在","/x50/icon/icon_pop_error.png")
             return
         }
         if(systemSettings.wifiEnable && wifiConnected==true)
         {
-            loader_main.sourceComponent = component_bind
+            loader_main.sourceComponent = component_qrcode
             loader_main.item.hintTopText=title
         }
         else
         {
-            showLoaderFault("","未连网，请连接网络后再试",true,"","/x50/icon/icon_pop_error.png",false)
+            loaderImagePopupShow("未连网，请连接网络后再试","/x50/icon/icon_pop_error.png")
         }
+    }
+    function loaderQrcodeHide(){
+        if(loader_main.sourceComponent===component_qrcode)
+            loader_main.sourceComponent = undefined
+    }
+
+    Component{
+        id:component_imagePopup
+        PageImagePopup{
+            hintTopImgSrc:""
+            hintCenterText:""
+            onCancel: {
+                loader_main.sourceComponent = undefined
+            }
+        }
+    }
+    function loaderImagePopupShow(hintCenterText,hintTopImgSrc){
+        loader_main.sourceComponent = component_imagePopup
+        loader_main.item.hintTopImgSrc=hintTopImgSrc
+        loader_main.item.hintCenterText=hintCenterText
     }
     Component{
         id:component_popup
         PagePopup{
             hintTopText:""
-            hintHeight:306
+            hintCenterText:""
             confirmText:""
             onCancel: {
-                closeLoaderPopup()
+                loaderPopupHide()
+            }
+            onConfirm:{
+                loaderPopupHide()
             }
         }
     }
-    function showLoaderPopup(hintTopText,hintCenterText,hintHeight,confirmText,confirmFunc){
-        if(loader_main.status == Loader.Null || loader_main.status == Loader.Error|| loader_main.sourceComponent === component_popup)
+    function loaderPopupShow(hintTopText,hintCenterText,hintHeight,confirmText,confirmFunc,closeVisible){
+
+        if(loader_main.sourceComponent === component_popup)
         {
-            loader_main.sourceComponent = component_popup
-            loader_main.item.hintTopText=hintTopText
-            loader_main.item.hintCenterText=hintCenterText
-            loader_main.item.hintHeight=hintHeight
-            loader_main.item.confirmText=confirmText==null?"":confirmText
-            loader_main.item.confirmFunc=confirmFunc
+            if(closeVisible!==false && loader_main.item.closeVisible===false)
+                return
         }
+        else
+            loader_main.sourceComponent = component_popup
+
+        loader_main.item.hintTopText=hintTopText
+        loader_main.item.hintCenterText=hintCenterText
+        loader_main.item.hintHeight=hintHeight
+        loader_main.item.confirmText=confirmText==null?"":confirmText
+        loader_main.item.confirmFunc=confirmFunc
+        loader_main.item.closeVisible=closeVisible==null?true:closeVisible
     }
-    function closeLoaderPopup(){
+    function loaderPopupHide(){
         if(loader_main.sourceComponent === component_popup)
             loader_main.sourceComponent = undefined
     }
-    function closeLoaderDoorPopup(dir){
-        if(loader_main.sourceComponent === component_popup)
+
+    Loader{
+        //加载弹窗组件
+        id:loaderAuto
+        anchors.fill: parent
+        sourceComponent:undefined
+    }
+    Component{
+        id:component_autoPopup
+        PagePopup{
+            hintTopText:""
+            hintCenterText:""
+            confirmText:""
+            onCancel: {
+                loaderAutoPopupHide()
+            }
+            onConfirm:{
+                loaderAutoPopupHide()
+            }
+        }
+    }
+    function loaderAutoPopupShow(hintTopText,hintCenterText,hintHeight,confirmText,confirmFunc,closeVisible){
+
+        if(loaderAuto.sourceComponent === component_autoPopup)
         {
-            if(loader_main.item.hintCenterText.indexOf("门开启")!=-1 &&  loader_main.item.hintCenterText.indexOf(dir)!=-1)
-                loader_main.sourceComponent = undefined
+            if(closeVisible!==false && loaderAuto.item.closeVisible===false)
+                return
+        }
+        else
+            loaderAuto.sourceComponent = component_autoPopup
+
+        loaderAuto.item.hintTopText=hintTopText
+        loaderAuto.item.hintCenterText=hintCenterText
+        loaderAuto.item.hintHeight=hintHeight
+        loaderAuto.item.confirmText=confirmText==null?"":confirmText
+        loaderAuto.item.confirmFunc=confirmFunc
+        loaderAuto.item.closeVisible=closeVisible==null?true:closeVisible
+    }
+    function loaderAutoPopupHide(){
+        if(loaderAuto.sourceComponent === component_autoPopup)
+            loaderAuto.sourceComponent = undefined
+    }
+    function loaderStoveAutoPopupHide(){
+        if(loaderAuto.sourceComponent === component_autoPopup)
+        {
+            if(loaderAuto.item.hintCenterText.indexOf("定时")!=-1)
+                loaderAuto.sourceComponent = undefined
+        }
+    }
+    function loaderDoorAutoPopupHide(dirText){
+        if(loaderAuto.sourceComponent === component_autoPopup)
+        {
+            if(loaderAuto.item.hintCenterText.indexOf("门开启")!=-1 &&  loaderAuto.item.hintCenterText.indexOf(dirText)!=-1)
+                loaderAuto.sourceComponent = undefined
         }
     }
     Component{
         id:component_hoodoff
         PagePopup{
             hintTopText:"灶具关闭后，烟机自动延时"+QmlDevState.state.HoodOffLeftTime+"分钟关\n闭，点击(立即关闭)可直接关闭烟机"
-            hintHeight:306
             confirmText:"立即关闭"
             onCancel: {
                 closeLoaderHoodOff()
@@ -362,112 +472,61 @@ ApplicationWindow {
     }
 
     function showLoaderHoodOff(){
-        if(loader_main.status == Loader.Null || loader_main.status == Loader.Error)
+        if(loaderAuto.sourceComponent === component_autoPopup)
         {
-            loader_main.sourceComponent = component_hoodoff
+            if(loaderAuto.item.closeVisible===false)
+                return
         }
+        loaderAuto.sourceComponent = component_hoodoff
     }
     function closeLoaderHoodOff(){
-        if(loader_main.sourceComponent === component_hoodoff)
+        if(loaderAuto.sourceComponent === component_hoodoff)
         {
-            loader_main.sourceComponent = undefined
+            loaderAuto.sourceComponent = undefined
         }
+    }
+
+    Loader{
+        //加载弹窗组件
+        id:loaderLockScreen
+        asynchronous: true
+        anchors.fill: parent
+        sourceComponent:undefined
     }
     //---------------------------------------------------------------
     Loader{
         //加载弹窗组件
         id:loader_error
-        //        active:false
         //                asynchronous: true
         anchors.fill: parent
-        sourceComponent:null
+        sourceComponent:undefined
     }
-    Component{
-        id:component_fault
-        PageFaultPopup {
-            buzzer:false
-            hintTopText:""
-            hintTopImgSrc:""
-            hintCenterText:""
-            hintBottomText:""
-            hintHeight:290
 
-            onCancel:{
-                closeLoaderFault()
-            }
-
-            Component.onDestruction: {
-                console.log("component_fault onDestruction",buzzer)
-                if(buzzer)
-                    SendFunc.setBuzControl(buzControlEnum.STOP)
-            }
-        }
-    }
-    function showLoaderFault(hintTopText,hintBottomText,closeVisible,hintCenterText,hintTopImgSrc,buzzer){
+    function loaderErrorShow(hintTopText,hintBottomText,closeVisible){
         if(sysPower==0xff)
             return
-        if(loader_error.sourceComponent === component_fault)
+        if(loader_error.source !== "PageErrorPopup.qml")
         {
-            if(loader_error.item.closeVisible==false)
-                return
+            loader_error.source = "PageErrorPopup.qml"
         }
-        else
-            loader_error.sourceComponent = component_fault
-
         loader_error.item.hintTopText=hintTopText==null?"":hintTopText
-        loader_error.item.hintCenterText=hintCenterText==null?"":hintCenterText
         loader_error.item.hintBottomText=hintBottomText==null?"":hintBottomText
-        loader_error.item.hintTopImgSrc=hintTopImgSrc==null?"":hintTopImgSrc
         loader_error.item.closeVisible=closeVisible==null?true:closeVisible
-        //        loader_error.item.buzzer=buzzer==null?true:buzzer
-        if(buzzer==null||buzzer==true)
-        {
-            loader_error.item.buzzer=true
-            SendFunc.setBuzControl(buzControlEnum.OPEN)
-        }
-        else
-        {
-            loader_error.item.buzzer=false
-        }
-
-        //        loader_error.setSource("PageFaultPopup.qml",{"hintTopText": hintTopText,"hintBottomText": hintBottomText,"closeVisible": closeVisible})
+        //        loader_error.setSource("PageErrorPopup.qml",{"hintTopText": hintTopText,"hintBottomText": hintBottomText,"closeVisible": closeVisible})
     }
-    function closeLoaderFault(){
-        if(loader_error.sourceComponent === component_fault)
+    function loaderErrorHide(){
+        if(loader_error.source !== "")
         {
-            loader_error.sourceComponent = undefined
+            loader_error.source = ""
         }
     }
     //---------------------------------------------------------------
-    function standbyWakeup(){
-        systemPower(2)
-    }
-    function sleepWakeup(){
-        if(sysPower > 0 && sleepState==true)
-        {
-            if(productionTestFlag==0 && timer_standby.running==true)
-                timer_standby.stop()
-
-            sleepState=false
-            Backlight.backlightSet(systemSettings.brightness)
-            timer_window.restart()
-        }
-    }
-    Loader{
-        //加载弹窗组件
-        id:loader_lock_screen
-        asynchronous: true
-        anchors.fill: parent
-        sourceComponent:null
-    }
 
     MouseArea{
         anchors.fill: parent
-        hoverEnabled:true
         propagateComposedEvents: true
 
         onPressed: {
-            //            console.log("Window onPressed:",sysPower,QmlDevState.state.HoodSpeed,QmlDevState.state.RStOvState,QmlDevState.state.LStOvState,QmlDevState.state.ErrorCodeShow,QmlDevState.localConnected)
             //            console.log("Window onPressed:",JSON.stringify(systemSettings.wifiPasswdArray))
             if(sysPower > 0)
             {
@@ -488,7 +547,21 @@ ApplicationWindow {
             {
                 mouse.accepted = true
             }
-            //            mouse.accepted=false
+        }
+    }
+
+    function standbyWakeup(){
+        systemPower(2)
+    }
+    function sleepWakeup(){
+        if(sysPower > 0 && sleepState==true)
+        {
+            if(productionTestFlag==0 && timer_standby.running==true)
+                timer_standby.stop()
+
+            sleepState=false
+            Backlight.backlightSet(systemSettings.brightness)
+            timer_window.restart()
         }
     }
     ListModel {
@@ -682,13 +755,6 @@ ApplicationWindow {
             stackView.push(pageHome,StackView.Immediate)
             break;
         case "pageWifi":
-            if(systemSettings.wifiEnable)
-            {
-                if(wifiConnecting==false)
-                {
-                    SendFunc.scanWifi()
-                }
-            }
             stackView.push(pageWifi,StackView.Immediate)
             break;
         case "pageSteamBakeBase": //蒸烤设置页面
@@ -831,105 +897,67 @@ ApplicationWindow {
         var page=isExistView("pageSteamBakeRun")
         if(page!==null)
             backPage(page)
-        //        else
-        //            backTopPage()
     }
-    Component{
-        id:component_steam1
-        PageDialog{
-            id:steamDialog1
-            hintHeight: 358
-            hintTopText:"请将食物放入\n将水箱加满水"
-            confirmText:"开始烹饪"
-            checkboxVisible:true
-            onCancel:{
-                console.info("component_steam1 onCancel")
-                closeLoaderMain()
-            }
-            onConfirm:{
-                console.info("component_steam1 onConfirm")
 
-                if(steamDialog1.checkboxState)
-                {
-                    var dialog=systemSettings.cookDialog
-                    dialog[steamDialog1.cookDialog]=0
-                    systemSettings.cookDialog=dialog
-                }
-                startCooking(steamDialog1.para,JSON.parse(steamDialog1.para.cookSteps))
-                closeLoaderMain()
-            }
-        }
-    }
-    function showLoaderSteam1(hintHeight,hintTopText,confirmText,para,cookDialog){
-        if(loader_main.status == Loader.Null || loader_main.status == Loader.Error)
-        {
-            loader_main.sourceComponent = component_steam1
-            loader_main.item.hintHeight=hintHeight
-            loader_main.item.hintTopText=hintTopText
-            loader_main.item.confirmText=confirmText
-            loader_main.item.para=para
-            loader_main.item.cookDialog=cookDialog
-        }
-    }
-    function showFaultPopup(value,dir)
+    function loaderErrorCodeShow(value,dir)
     {
         sleepWakeup()
         switch (value) {
         case 1:
             if(dir==null||dir==cookWorkPosEnum.LEFT)
-                showLoaderFault("左腔蒸箱加热异常！","请拨打售后电话 <font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员")
+                loaderErrorShow("左腔蒸箱加热异常！","请拨打售后电话 <font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员")
             break
         case 2:
-            showLoaderFault("没有水箱或水箱没有放到位","请重新放置")
+            loaderErrorShow("没有水箱或水箱没有放到位","请重新放置")
             break
         case 3:
-            showLoaderFault("水箱缺水","水箱缺水，请及时加水")
+            loaderErrorShow("水箱缺水","水箱缺水，请及时加水")
             break
         case 4:
             if(dir==null||dir==cookWorkPosEnum.LEFT)
-                showLoaderFault("左腔蒸箱干烧！","请暂停使用左腔蒸箱并<br/>拨打售后电话<font color='"+themesTextColor+"'>400-888-8490</font>")
+                loaderErrorShow("左腔蒸箱干烧！","请暂停使用左腔蒸箱并<br/>拨打售后电话<font color='"+themesTextColor+"'>400-888-8490</font>")
             break
         case 5:
             if(dir==null||dir==cookWorkPosEnum.LEFT)
-                showLoaderFault("左腔干烧检测电路故障！","请拨打售后电话<font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员")
+                loaderErrorShow("左腔干烧检测电路故障！","请拨打售后电话<font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员")
             break
         case 6:
             if(dir==null)
-                showLoaderFault("防火墙传感器故障！","请拨打售后电话<font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员")
+                loaderErrorShow("防火墙传感器故障！","请拨打售后电话<font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员")
             break
         case 7:
-            showLoaderFault("烟机进风口出现火情！","请及时关闭灶具旋钮 等待温度降低后使用",false)
+            loaderErrorShow("烟机进风口出现火情！","请及时关闭灶具旋钮 等待温度降低后使用",false)
             standbyWakeup()
             break
         case 8:
-            showLoaderFault("燃气泄漏","燃气有泄露风险\n请立即关闭灶具旋钮\n关闭总阀并开窗通气",false)
+            loaderErrorShow("燃气泄漏","燃气有泄露风险\n请立即关闭灶具旋钮\n关闭总阀并开窗通气",false)
             break
         case 9:
             if(dir==null && productionTestStatus==0)
             {
-                showLoaderFault("电源板串口故障！","请拨打售后电话<font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员",false);
+                loaderErrorShow("电源板串口故障！","请拨打售后电话<font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员",false);
                 standbyWakeup()
             }
             break
         case 10:
             if(dir==null||dir==cookWorkPosEnum.LEFT)
-                showLoaderFault("左腔烤箱加热异常！","请拨打售后电话<font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员");
+                loaderErrorShow("左腔烤箱加热异常！","请拨打售后电话<font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员");
             break
         case 12:
             if(dir==null||dir==cookWorkPosEnum.RIGHT)
-                showLoaderFault("右腔蒸箱加热异常！","请拨打售后电话<font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员");
+                loaderErrorShow("右腔蒸箱加热异常！","请拨打售后电话<font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员");
             break
         case 13:
             if(dir==null||dir==cookWorkPosEnum.RIGHT)
-                showLoaderFault("右腔蒸箱干烧","请暂停使用右腔蒸箱并<br/>拨打售后电话<font color='"+themesTextColor+"'>400-888-8490</font>");
+                loaderErrorShow("右腔蒸箱干烧","请暂停使用右腔蒸箱并<br/>拨打售后电话<font color='"+themesTextColor+"'>400-888-8490</font>");
             break
         case 14:
             if(dir==null||dir==cookWorkPosEnum.RIGHT)
-                showLoaderFault("右腔干烧检测电路故障！","请拨打售后电话<font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员")
+                loaderErrorShow("右腔干烧检测电路故障！","请拨打售后电话<font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员")
             break
         case 15:
             if(dir==null)
-                showLoaderFault("手势板故障！","请拨打售后电话<font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员");
+                loaderErrorShow("手势板故障！","请拨打售后电话<font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员");
             break
         default:
             break

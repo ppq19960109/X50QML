@@ -16,15 +16,16 @@ Item {
 
             if("Reset"==key)
             {
-                if(value==0)
-                {
+                loaderPopupShow("恢复出厂设置成功","",275,"确定")
+                //                if(value==0)
+                //                {
 
-                }
-                else
-                {
+                //                }
+                //                else
+                //                {
 
-                }
-                backTopPage()
+                //                }
+                //                backTopPage()
             }
         }
     }
@@ -93,11 +94,23 @@ Item {
             confirmText:"重置设备"
             hintHeight:410
             onCancel: {
-                closeLoaderMain()
+                loaderMainHide()
             }
             onConfirm: {
                 systemReset()
-                closeLoaderMain()    
+
+                hintTopText=""
+                hintBottomText="恢复出厂设置中..."
+                confirmText=""
+                hintHeight=300
+                rotImg.visible=true
+            }
+            PageRotationImg {
+                id:rotImg
+                visible: false
+                anchors.centerIn: parent
+                anchors.verticalCenterOffset: -50
+                source: "/x50/wifi/icon_sx.png"
             }
         }
     }

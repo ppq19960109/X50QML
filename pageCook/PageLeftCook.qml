@@ -17,7 +17,7 @@ Rectangle {
         leftBtnText:qsTr("")
         rightBtnText:qsTr("")
         onClose:{
-            closeLoaderMain()
+            loaderMainHide()
         }
     }
     //内容
@@ -58,8 +58,8 @@ Rectangle {
                 source: themesImagesPath+"icon-cookadd.png"
             }
             onClicked: {
-                closeLoaderMain()
                 load_page("pageSteamBakeBase",JSON.stringify({"device":cookWorkPosEnum.LEFT}))
+                loaderMainHide()
             }
         }
 
@@ -93,7 +93,7 @@ Rectangle {
                 }
 
                 onClicked: {
-                    closeLoaderMain()
+                    loaderMainHide()
                     load_page("pageSmartRecipes")
                 }
             }
@@ -115,8 +115,8 @@ Rectangle {
                 }
 
                 onClicked: {
-                    closeLoaderMain()
                     load_page("pageCookHistory",JSON.stringify({"device":cookWorkPosEnum.LEFT}))
+                    loaderMainHide()
                 }
             }
             Button{
@@ -137,8 +137,8 @@ Rectangle {
                 }
 
                 onClicked: {
-                    closeLoaderMain()
                     load_page("pageMultistageSet")
+                    loaderMainHide()
                 }
             }
 

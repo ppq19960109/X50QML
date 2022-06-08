@@ -216,12 +216,12 @@ Rectangle {
                     {
                         if(QmlDevState.state.LStOvDoorState==1)
                         {
-                            showLoaderPopup("","左腔门开启，工作暂停",275)
+                            loaderAutoPopupShow("","左腔门开启，工作暂停",275)
                         }
                     }
                     else
                     {
-                        showFaultPopup(QmlDevState.state.ErrorCodeShow,cookWorkPosEnum.LEFT)
+                        loaderErrorCodeShow(QmlDevState.state.ErrorCodeShow,cookWorkPosEnum.LEFT)
                     }
                 }
                 else
@@ -385,12 +385,12 @@ Rectangle {
                     {
                         if(QmlDevState.state.RStOvDoorState==1)
                         {
-                            showLoaderPopup("","右腔门开启，工作暂停",275)
+                            loaderAutoPopupShow("","右腔门开启，工作暂停",275)
                         }
                     }
                     else
                     {
-                        showFaultPopup(QmlDevState.state.ErrorCodeShow,cookWorkPosEnum.RIGHT)
+                        loaderErrorCodeShow(QmlDevState.state.ErrorCodeShow,cookWorkPosEnum.RIGHT)
                     }
                 }
                 else

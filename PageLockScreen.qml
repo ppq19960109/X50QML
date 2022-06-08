@@ -1,10 +1,17 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.2
-
+import "qrc:/SendFunc.js" as SendFunc
 Item {
     property int childLockPressCount:0
 
     anchors.fill: parent
+
+    Component.onCompleted: {
+        SendFunc.setBuzControl(buzControlEnum.SHORT)
+    }
+    Component.onDestruction: {
+        SendFunc.setBuzControl(buzControlEnum.SHORTTWO)
+    }
 
     Rectangle {
         anchors.fill: parent
@@ -72,9 +79,9 @@ Item {
                 console.log("请长按童锁键取消童锁")
             }
         }
-        onPositionChanged:{
-            //console.warn("PageLockScreen onPositionChanged",mouse.x,mouse.y)
-        }
+        //        onPositionChanged:{
+        //console.warn("PageLockScreen onPositionChanged",mouse.x,mouse.y)
+        //        }
     }
 
     Timer {
@@ -92,7 +99,7 @@ Item {
                     longPressTimer.running = false
                     systemSettings.childLock=false
                     console.log("童锁键取消")
-                    closeLockScreen()
+                    loaderLockScreen.source=""
                 }
             }
             console.log("childLockPressCount:",childLockPressCount)

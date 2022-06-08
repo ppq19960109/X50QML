@@ -14,7 +14,7 @@ Item {
         repeat: true
         running: true
         interval: 2000
-        triggeredOnStart: true
+        triggeredOnStart: false
         onTriggered: {
 
             if(time_count%3==0)

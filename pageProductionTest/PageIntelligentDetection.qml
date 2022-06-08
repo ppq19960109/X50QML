@@ -19,7 +19,6 @@ Item {
                 versionText.visible=true
                 version.color="red"
                 versionText.text="通讯异常"
-                SendFunc.scanWifi()
             }
             else if(step==1)
             {
@@ -90,6 +89,7 @@ Item {
                 versionText.visible=true
                 versionText.text="电源板软件版本号:"+QmlDevState.state.ElcSWVersion+"\n屏幕模组软件版本号:"+QmlDevState.state.ComSWVersion
                 version.color="green"
+                SendFunc.scanWifi()
                 timer_wifi.restart()
             }
             else if("WifiScanR"==key && step==1)

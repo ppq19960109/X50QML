@@ -32,9 +32,9 @@ Item {
         if(systemSettings.cookDialog[4]>0)
         {
             if(CookFunc.isSteam(list))
-                showLoaderSteam1(358,"请将食物放入左腔\n将水箱加满水","开始烹饪",para,4)
+                loaderSteamShow(358,"请将食物放入左腔\n将水箱加满水","开始烹饪",para,4)
             else
-                showLoaderSteam1(306,"请将食物放入左腔","开始烹饪",para,4)
+                loaderSteamShow(306,"请将食物放入左腔","开始烹饪",para,4)
             return
         }
 
@@ -192,10 +192,12 @@ Item {
     }
     function showTanchang(){
         loader_tanchuang.sourceComponent = component_tanchuang
-
+        SendFunc.permitSteamStartStatus(0)
     }
     function dismissTanchang(){
         loader_tanchuang.sourceComponent = undefined
+        if(listView.count>0)
+            SendFunc.permitSteamStartStatus(1)
     }
     Loader{
         //加载弹窗组件
@@ -216,9 +218,6 @@ Item {
                     listView.model.get(listClickIndex).temp=listData.temp;
                     listView.model.get(listClickIndex).time=listData.time;
                 }
-
-                if(listView.count==1)
-                    SendFunc.permitSteamStartStatus(1)
             }
         }
     }

@@ -41,9 +41,9 @@ Rectangle {
             if(systemSettings.cookDialog[0]>0)
             {
                 if(CookFunc.isSteam(list))
-                    showLoaderSteam1(358,"请将食物放入左腔\n将水箱加满水","开始烹饪",para,0)
+                    loaderSteamShow(358,"请将食物放入左腔\n将水箱加满水","开始烹饪",para,0)
                 else
-                    showLoaderSteam1(306,"请将食物放入左腔","开始烹饪",para,0)
+                    loaderSteamShow(306,"请将食物放入左腔","开始烹饪",para,0)
                 return
             }
         }
@@ -51,7 +51,7 @@ Rectangle {
         {
             if(systemSettings.cookDialog[1]>0)
             {
-                showLoaderSteam1(358,"请将食物放入右腔\n将水箱加满水","开始烹饪",para,1)
+                loaderSteamShow(358,"请将食物放入右腔\n将水箱加满水","开始烹饪",para,1)
                 return
             }
         }

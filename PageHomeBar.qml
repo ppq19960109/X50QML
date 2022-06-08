@@ -22,11 +22,11 @@ Item {
                 Data.CtrlSrc=0
                 SendFunc.setToServer(Data)
                 //                QmlDevState.setState("RStoveTimingState",timingStateEnum.STOP)
-                closeLoaderMain()
+                loaderMainHide()
             }
             onConfirm: {
-                closeLoaderMain()
                 load_page("pageCloseHeat")
+                loaderMainHide()
             }
         }
     }
@@ -39,7 +39,7 @@ Item {
         width: parent.width
         implicitHeight:80
         anchors.top: parent.top
-        //        anchors.fill: parent
+
         background:Image {
             asynchronous:true
             smooth:false
@@ -73,7 +73,6 @@ Item {
             width: wind_icon.width
             height:parent.height
             anchors.centerIn: parent
-            //        anchors.leftMargin: 140
 
             background: Item {
             }
@@ -137,28 +136,14 @@ Item {
                 console.log("TabButton:",time.width)
             }
         }
-
-        Component{
-            id:component_lock_screen
-            PageLockScreen{
-                Component.onCompleted: {
-                    SendFunc.setBuzControl(buzControlEnum.SHORT)
-                }
-                Component.onDestruction: {
-                    SendFunc.setBuzControl(buzControlEnum.SHORTTWO)
-                }
-            }
-        }
-
         //---------------------------------------------------------------
-
         //童锁按钮
         TabButton{
             id:childLockBtn
             width:120
             height:parent.height
             anchors.right:parent.right
-            //        anchors.rightMargin: 0
+
             background:Item{
             }
             Image{
@@ -187,21 +172,14 @@ Item {
             running: false
 
             onTriggered: {
-
                 if(systemSettings.childLock==false)
                 {
                     console.log("启用童锁")
                     systemSettings.childLock=true
-                    showLockScreen()
+                    loaderLockScreen.source="PageLockScreen.qml"
                 }
 
             }
         }
-    }
-    function showLockScreen(){
-        loader_lock_screen.sourceComponent = component_lock_screen
-    }
-    function closeLockScreen(){
-        loader_lock_screen.sourceComponent = undefined
     }
 }

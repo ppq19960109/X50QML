@@ -9,22 +9,19 @@ Item {
     property int lastRStOvState:-1
     property int lastErrorCodeShow:0
 
-    id:root
     enabled: sysPower > 0
     //    anchors.fill: parent
-
     Component{
         id:component_alarm
         PagePopup{
             hintTopText:"点击机头图标\n或点击下方按钮关闭闹钟"
-            hintHeight:306
             confirmText:"关闭闹钟"
             onCancel: {
-                closeAlarm()
+                loaderAlarmHide()
             }
             onConfirm: {
                 SendFunc.setAlarm(0)
-                closeAlarm()
+                loaderAlarmHide()
             }
             Image {
                 asynchronous:true
@@ -37,20 +34,24 @@ Item {
             }
             Component.onCompleted: {
                 sleepWakeup()
-                SendFunc.setBuzControl(buzControlEnum.OPEN)
+                //                SendFunc.setBuzControl(buzControlEnum.OPEN)
             }
             Component.onDestruction: {
-                SendFunc.setBuzControl(buzControlEnum.STOP)
+                //                SendFunc.setBuzControl(buzControlEnum.STOP)
             }
         }
     }
-    function showAlarm(){
-        if(loader_main.status == Loader.Null || loader_main.status == Loader.Error)
-            loader_main.sourceComponent = component_alarm
+    function loaderAlarmShow(){
+        if(loaderAuto.sourceComponent === component_autoPopup)
+        {
+            if(loaderAuto.item.closeVisible===false)
+                return
+        }
+        loaderAuto.sourceComponent = component_alarm
     }
-    function closeAlarm(){
-        if(loader_main.sourceComponent === component_alarm)
-            loader_main.sourceComponent = undefined
+    function loaderAlarmHide(){
+        if(loaderAuto.sourceComponent === component_alarm)
+            loaderAuto.sourceComponent = undefined
     }
 
     Component{
@@ -61,17 +62,15 @@ Item {
             confirmText:"升级"
             hintHeight:360
             onCancel: {
-                closeLoaderMain()
+                loaderAuto.sourceComponent = undefined
             }
             onConfirm: {
-                //               closeLoaderMain()
                 SendFunc.otaRquest(1)
             }
         }
     }
-    function showUpdateConfirm(){
-        if(loader_main.status == Loader.Null || loader_main.status == Loader.Error)
-            loader_main.sourceComponent = component_updateConfirm
+    function loaderUpdateConfirmShow(){
+        loaderAuto.sourceComponent = component_updateConfirm
     }
 
     Component{
@@ -136,28 +135,16 @@ Item {
             }
         }
     }
-    function showUpdate(){
-        loader_main.sourceComponent = component_update
+    function loaderUpdateShow(){
+        loaderAuto.sourceComponent = component_update
     }
-    function showUpdateProgress(value){
-        loader_main.item.updateProgress=value
+    function loaderUpdateProgress(value){
+        if(loaderAuto.sourceComponent === component_update)
+            loaderAuto.item.updateProgress=value
     }
-    Component{
-        id:component_updateSuccess
-        PageFaultPopup {
-            hintTopText:""
-            hintTopImgSrc:""
-            hintCenterText:""
-            hintBottomText:""
-            hintHeight:275
-            onCancel:{
-                closeLoaderMain()
-            }
-        }
-    }
-    function showUpdateResult(text){
-        loader_main.sourceComponent = component_updateSuccess
-        loader_main.item.hintCenterText=text
+
+    function loaderUpdateResultShow(text){
+        loaderAutoPopupShow("",text,275)
     }
     //    Connections { // 将目标对象信号与槽函数进行连接
     //        target: MNetwork
@@ -183,7 +170,7 @@ Item {
             console.log("page home onLocalConnectedChanged",value)
             if(value > 0)
             {
-                closeLoaderFault()
+                loaderErrorHide()
 
                 SendFunc.permitSteamStartStatus(0)
                 if(systemSettings.firstStartup===true)
@@ -197,14 +184,13 @@ Item {
 
                 //                else if(systemSettings.wifiEnable==false)
                 //                    SendFunc.enableWifi(false)
+                //                                loaderErrorShow("右腔干烧检测电路故障！","请拨打售后电话<font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员")
 
-                //                                showLoaderFault("右腔干烧检测电路故障！","请拨打售后电话<font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员")
-                //                showLoaderFault("","网络连接失败，请重试",true,"","qrc:/x50/icon/icon_pop_error.png",false)
                 //                load_page("pageTestFront")
             }
             else
             {
-                showLoaderFault("通讯板故障！","请拨打售后电话<font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员",false)
+                loaderErrorShow("通讯板故障！","请拨打售后电话<font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员",false)
                 standbyWakeup()
             }
         }
@@ -213,18 +199,22 @@ Item {
             console.log("page home onStateChanged",key,value)
             if("SysPower"==key)
             {
-                systemPower(value)
-                if(value==1 && QmlDevState.state.ErrorCodeShow===6)
+                if(sysPower<0 && value==0)
                 {
-                    showFaultPopup(6)
+                    SendFunc.setSysPower(1)
                 }
+                else if(value==1 && QmlDevState.state.ErrorCodeShow===6)
+                {
+                    loaderErrorCodeShow(6)
+                }
+                systemPower(value)
             }
             else if("ComSWVersion"==key)
             {
                 if(systemSettings.otaSuccess==true)
                 {
                     systemSettings.otaSuccess=false
-                    showUpdateResult("系统已更新至最新版本 "+value)
+                    loaderUpdateResultShow("系统已更新至最新版本 "+value)
                 }
             }
             else if("LStOvState"==key)
@@ -254,12 +244,12 @@ Item {
                     if(value==5)
                     {
                         if(QmlDevState.state.LStOvDoorState==1)
-                            showLoaderPopup("","左腔门开启，工作暂停",275)
+                            loaderAutoPopupShow("","左腔门开启，工作暂停",275)
                     }
                     else
                     {
                         if(QmlDevState.state.LStOvDoorState==0)
-                            closeLoaderDoorPopup("左腔")
+                            loaderDoorAutoPopupHide("左腔")
                     }
                 }
                 lastLStOvState=value
@@ -290,12 +280,12 @@ Item {
                     if(value==5)
                     {
                         if(QmlDevState.state.RStOvDoorState==1)
-                            showLoaderPopup("","右腔门开启，工作暂停",275)
+                            loaderAutoPopupShow("","右腔门开启，工作暂停",275)
                     }
                     else
                     {
                         if(QmlDevState.state.RStOvDoorState==0)
-                            closeLoaderDoorPopup("右腔")
+                            loaderDoorAutoPopupHide("右腔")
                     }
                 }
                 lastRStOvState=value
@@ -319,28 +309,20 @@ Item {
                     var LStOvState=QmlDevState.state.LStOvState
                     var RStOvState=QmlDevState.state.LStOvState
                     if(LStOvState == workStateEnum.WORKSTATE_PREHEAT || LStOvState == workStateEnum.WORKSTATE_RUN || LStOvState == workStateEnum.WORKSTATE_PAUSE || RStOvState == workStateEnum.WORKSTATE_PREHEAT || RStOvState == workStateEnum.WORKSTATE_RUN|| RStOvState == workStateEnum.WORKSTATE_PAUSE)
-                        showLoaderPopup("蒸烤箱工作中，\n需散热，烟机最低一档","",306,"知道了",closeLoaderPopup)
+                        loaderAutoPopupShow("蒸烤箱工作中，\n需散热，烟机最低一档","",306,"知道了",loaderAutoPopupHide)
                 }
                 else if(value==3)
                 {
                     var LStOvState=QmlDevState.state.LStOvState
                     if(LStOvState == workStateEnum.WORKSTATE_PREHEAT || LStOvState == workStateEnum.WORKSTATE_RUN|| LStOvState == workStateEnum.WORKSTATE_PAUSE)
-                        showLoaderPopup("烤模式运行中，\n需散热，烟机最低二档","",306,"知道了",closeLoaderPopup)
+                        loaderAutoPopupShow("烤模式运行中，\n需散热，烟机最低二档","",306,"知道了",loaderAutoPopupHide)
                 }
                 else if(value==4)
                 {
                     if(QmlDevState.state.LStoveStatus > 0 || QmlDevState.state.RStoveStatus > 0)
-                        showLoaderPopup("灶具工作中，\n需散热，烟机最低一档","",306,"知道了",closeLoaderPopup)
+                        loaderAutoPopupShow("灶具工作中，\n需散热，烟机最低一档","",306,"知道了",loaderAutoPopupHide)
                 }
             }
-            //            else if("ErrorCode"==key)
-            //            {
-            //                console.log("ErrorCode:",value)
-            //                if(value==0)
-            //                {
-            //                    closeLoaderFault()
-            //                }
-            //            }
             else if("ErrorCodeShow"==key)
             {
                 console.log("ErrorCodeShow:",value)
@@ -349,11 +331,11 @@ Item {
                     if(value>0)
                     {
                         SendFunc.setSysPower(1)
-                        showFaultPopup(value)
+                        loaderErrorCodeShow(value)
                     }
                     else
                     {
-                        closeLoaderFault()
+                        loaderErrorHide()
                     }
                     lastErrorCodeShow=value
                 }
@@ -390,8 +372,10 @@ Item {
                     else if(value==4)
                     {
                         wifiConnected=true
-                        if(isExistView("PageWifi")==null)
-                            SendFunc.getCurWifi()
+                    }
+                    if(isExistView("PageWifi")==null)
+                    {
+                        SendFunc.getCurWifi()
                     }
                 }
                 console.log("WifiState",value,wifiConnected,wifiConnecting)
@@ -416,9 +400,25 @@ Item {
             else if("Alarm"==key)
             {
                 if(value > 0)
-                    showAlarm()
+                    loaderAlarmShow()
                 else
-                    closeAlarm()
+                    loaderAlarmHide()
+            }
+            else if("RStoveStatus"==key)
+            {
+                if(value === 0)
+                    loaderStoveAutoPopupHide()
+            }
+            else if("RStoveTimingState"==key)
+            {
+                if(value === timingStateEnum.CONFIRM)
+                    loaderAutoPopupShow("","右灶定时结束，\n请将右灶旋钮复位",300,"",null,false)
+                else if(value === timingStateEnum.STOP)
+                    loaderStoveAutoPopupHide()
+            }
+            else if("HoodSpeed"==key||"HoodLight"==key)
+            {
+                sleepWakeup()
             }
             else if("OTAState"==key)
             {
@@ -427,26 +427,26 @@ Item {
                 }
                 else if(value==2)
                 {
-                    showUpdateConfirm()
+                    loaderUpdateConfirmShow()
                 }
                 else if(value==3)
                 {
-                    showUpdate()
+                    loaderUpdateShow()
                 }
                 else if(value==4)
                 {
-                    showUpdateResult("系统下载失败")
+                    loaderUpdateResultShow("系统下载失败")
                 }
                 else if(value==8)
                 {
                     systemSettings.otaSuccess=true
-                    //                    showUpdateResult("系统已更新至最新版本 "+QmlDevState.state.OTANewVersion)
+                    //                    loaderUpdateResultShow("系统已更新至最新版本 "+QmlDevState.state.OTANewVersion)
                 }
             }
             else if(("OTAProgress"==key))
             {
                 console.log("OTAProgress:",value)
-                showUpdateProgress(value);
+                loaderUpdateProgress(value);
                 if(value==100)
                 {
                 }
@@ -484,11 +484,11 @@ Item {
     function setWifiList(sanR)
     {
         var root=JSON.parse(sanR)
-        //        console.log("setWifiList:" ,sanR,root.length)
         root.sort(function(a, b){return b.rssi - a.rssi})
         wifiModel.clear()
         var result={}
         var element
+        var bssid=QmlDevState.state.bssid
         for(var i = 0; i < root.length; ++i) {
             element=root[i]
             if(element.ssid==="")
@@ -499,7 +499,7 @@ Item {
             result.level=WifiFunc.signalLevel(element.rssi)
             result.flags=WifiFunc.encrypType(element.flags)
 
-            if(element.bssid===QmlDevState.state.bssid && wifiConnected==true)
+            if(element.bssid===bssid && wifiConnected==true)
             {
                 result.connected=1
                 wifiModel.insert(0,result)
@@ -508,9 +508,11 @@ Item {
                 wifiModel.append(result)
             //            console.log("result:",QmlDevState.state.bssid,element.bssid,element.rssi,result.connected,result.ssid,result.level,result.flags)
         }
-        if(QmlDevState.state.bssid=="")
+
+        if(bssid==="")
         {
-            wifiConnected=false
+            console.log("setWifiList:",wifiConnected,bssid)
+            //            wifiConnected=false
         }
     }
 
@@ -533,13 +535,12 @@ Item {
             MouseArea{
                 anchors.fill: parent
                 onPressed: {
-                    closeLoaderMain()
+                    loaderMainHide()
                 }
             }
         }
     }
     function showBurnWifi(){
-        console.log("showBurnWifi...")
         if(loader_main.status == Loader.Null || loader_main.status == Loader.Error)
             loader_main.sourceComponent = component_burn_wifi
     }
@@ -594,12 +595,14 @@ Item {
         QmlDevState.startLocalConnect()
         //        MNetwork.locationRequest();
 
-        //        showAlarm()
-        //        showLoaderFault("左腔蒸箱加热异常！","请拨打售后电话 <font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员");
-        //                        showLoaderPopup("","左腔门开启，工作暂停",275)
-        //                showLoaderPopup("","右灶未开启\n开启后才可定时关火",275)
-        // showLoaderFault("右腔干烧检测电路故障！","请拨打售后电话<font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员")
-        //        showLoaderFault("","网络连接失败，请重试",true,"","qrc:/x50/icon/icon_pop_error.png",false)
+        //        loaderAlarmShow()
+        //        loaderErrorShow("左腔蒸箱加热异常！","请拨打售后电话 <font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员");
+        //                        loaderAutoPopupShow("","左腔门开启，工作暂停",275)
+        //                        loaderPopupShow("","右灶未开启\n开启后才可定时关火",275)
+        //        loaderErrorShow("右腔干烧检测电路故障！","请拨打售后电话<font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员")
+        //        loaderImagePopupShow("网络连接失败，请重试","/x50/icon/icon_pop_error.png")
+        //        loaderAutoPopupShow("","右灶定时关火结束，\n请将旋钮复位",300,"",null,false)
+//        loaderPopupShow("恢复出厂设置成功","",275,"确定")
     }
     StackView.onActivated:{
         console.log("page home onActivated")
@@ -626,7 +629,6 @@ Item {
 
             Component.onCompleted:{
                 //                contentItem.highlightFollowsCurrentItem=true
-
                 //                contentItem.highlightRangeMode=istView.StrictlyEnforceRange
                 //                contentItem.highlightResizeDuration= 0
                 //                contentItem.highlightResizeVelocity=-1

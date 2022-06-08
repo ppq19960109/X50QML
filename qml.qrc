@@ -33,7 +33,7 @@
         <file>PageHomeBar.qml</file>
         <file>pageCook/PageLeftCook.qml</file>
         <file>pageCook/PageRightCook.qml</file>
-        <file>PageFaultPopup.qml</file>
+        <file>PageErrorPopup.qml</file>
         <file>x50/wifi/kai.png</file>
         <file>x50/wifi/WIFI.png</file>
         <file>x50/wifi/yousuowifi 1.png</file>
@@ -111,5 +111,6 @@
         <file>x50/test/image10.png</file>
         <file>x50/icon/icon_alarm.png</file>
         <file>x50/icon/icon_pop_error.png</file>
+        <file>PageImagePopup.qml</file>
     </qresource>
 </RCC>

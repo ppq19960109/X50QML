@@ -80,6 +80,7 @@ Item {
         }
         Button {
             id:cancelBtn
+            visible: confirmBtnText.text!=""
             width: 176+15
             height: 64+15
             anchors.bottom:parent.bottom
@@ -110,6 +111,7 @@ Item {
 
         Button {
             id:confirmBtn
+            visible: confirmBtnText.text!=""
             width:176+15
             height:64+15
             anchors.bottom:parent.bottom

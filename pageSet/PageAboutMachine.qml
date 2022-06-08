@@ -11,7 +11,7 @@ Item {
         interval: 20*60000
         triggeredOnStart: false
         onTriggered: {
-            closeLoaderQrcode()
+            loaderQrcodeHide()
         }
     }
 
@@ -26,7 +26,7 @@ Item {
                 if(value==4 && timer_qrcode.running==false)
                 {
                     timer_qrcode.restart()
-                    showQrcodeBind("此二维码可以")
+                    loaderQrcodeShow("此二维码可以")
                 }
             }
         }
@@ -143,7 +143,7 @@ Item {
                     id:qrcodeImg
                     asynchronous:true
                     smooth:false
-//                    cache:false
+                    //                    cache:false
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.right: parent.right
                     source: "qrc:/x50/set/gengduo.png"
@@ -155,6 +155,7 @@ Item {
                     {
                         if(systemSettings.wifiEnable && wifiConnected==true)
                         {
+                            loaderRefreshShow()
                             wifiConnected=false
                             var Data={}
                             Data.BackOnline = null
@@ -162,16 +163,35 @@ Item {
                         }
                         else
                         {
-                            showLoaderFault("","未连网，请连接网络后再试",true,"","/x50/icon/icon_pop_error.png",false)
+                            loaderImagePopupShow("未连网，请连接网络后再试","/x50/icon/icon_pop_error.png")
                         }
                     }
                     else
                     {
-                        showQrcodeBind("此二维码可以")
+                        loaderQrcodeShow("此二维码可以")
                     }
                 }
             }
         }
+    }
+    Component{
+        id:component_refresh
+
+        PageImagePopup{
+            hintTopImgSrc:""
+            hintCenterText:"二维码刷新中..."
+            onCancel: {
+                loader_main.sourceComponent = undefined
+            }
+            PageRotationImg {
+                anchors.centerIn: parent
+                anchors.verticalCenterOffset: -60
+                source: "/x50/wifi/icon_sx.png"
+            }
+        }
+    }
+    function loaderRefreshShow(){
+        loader_main.sourceComponent = component_refresh
     }
 
 }

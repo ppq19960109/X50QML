@@ -121,6 +121,12 @@ function getCurWifi()
     Data.WifiCurConnected = null
     getToServer(Data)
 }
+function getWifiState()
+{
+    var Data={}
+    Data.WifiState = null
+    getToServer(Data)
+}
 function scanWifi()
 {
     var Data={}
@@ -131,8 +137,7 @@ function scanRWifi()
 {
     var Data={}
     Data.WifiScanR = null
-    //    Data.WifiState = null
-    Data.WifiCurConnected = null
+//    Data.WifiCurConnected = null
     getToServer(Data)
 }
 

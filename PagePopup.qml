@@ -2,6 +2,8 @@ import QtQuick 2.7
 import QtQuick.Controls 2.2
 
 Item {
+    //    property int priority:0
+    property alias closeVisible: closeBtn.visible
     property alias hintTopText: hintTop.text
     property alias hintCenterText: hintCenter.text
     property alias confirmText: confirmBtnText.text
@@ -18,20 +20,16 @@ Item {
         id:hint
         anchors.centerIn: parent
         implicitWidth: 600
-        implicitHeight: 305
+        implicitHeight: 300
         color: themesPopupWindowColor
         radius: 16
-        //        PageGradient{
-        //            anchors.fill: parent
-        //        }
+
         Button {
+            id:closeBtn
             width:closeImg.width+60
             height:closeImg.height+60
             anchors.top:parent.top
-            //            anchors.topMargin: 33
             anchors.right:parent.right
-            //            anchors.rightMargin: 33
-
             Image {
                 id:closeImg
                 asynchronous:true
@@ -70,7 +68,7 @@ Item {
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
 
-            wrapMode:Text.Wrap
+            wrapMode:Text.WrapAnywhere
         }
 
         Button {
@@ -87,7 +85,6 @@ Item {
                 anchors.centerIn: parent
                 color:"#000"
                 font.pixelSize: 30
-
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
             }
@@ -99,9 +96,10 @@ Item {
                 radius: 32
             }
             onClicked: {
-                confirm()
                 if(confirmFunc!=null)
                     confirmFunc()
+                else
+                    confirm()
             }
         }
     }

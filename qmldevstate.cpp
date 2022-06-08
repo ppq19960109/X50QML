@@ -15,16 +15,16 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     stateType.append(QPair<QString,int>("SteamStart",LINK_VALUE_TYPE_NULL));
     stateType.append(QPair<QString,int>("ProductionTest",LINK_VALUE_TYPE_NULL));
 
+    stateType.append(QPair<QString,int>("WifiCurConnected",LINK_VALUE_TYPE_STRUCT));
+    stateType.append(QPair<QString,int>("WifiState",LINK_VALUE_TYPE_NUM));
+    stateType.append(QPair<QString,int>("WifiEnable",LINK_VALUE_TYPE_NUM));
+    stateType.append(QPair<QString,int>("WifiScanR",LINK_VALUE_TYPE_STRING));
+
     stateType.append(QPair<QString,int>("ElcSWVersion",LINK_VALUE_TYPE_STRING));
     stateType.append(QPair<QString,int>("ComSWVersion",LINK_VALUE_TYPE_STRING));
     stateType.append(QPair<QString,int>("SysPower",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("ErrorCode",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("ErrorCodeShow",LINK_VALUE_TYPE_NUM));
-
-    stateType.append(QPair<QString,int>("WifiCurConnected",LINK_VALUE_TYPE_STRUCT));
-    stateType.append(QPair<QString,int>("WifiState",LINK_VALUE_TYPE_NUM));
-    stateType.append(QPair<QString,int>("WifiEnable",LINK_VALUE_TYPE_NUM));
-    stateType.append(QPair<QString,int>("WifiScanR",LINK_VALUE_TYPE_STRING));
 
     stateType.append(QPair<QString,int>("CookRecipe",LINK_VALUE_TYPE_STRUCT));
     stateType.append(QPair<QString,int>("CookHistory",LINK_VALUE_TYPE_STRUCT));
@@ -67,6 +67,8 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
 
     stateType.append(QPair<QString,int>("LStoveStatus",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("RStoveStatus",LINK_VALUE_TYPE_NUM));
+    //    stateType.append(QPair<QString,int>("LStoveFireStatus",LINK_VALUE_TYPE_NUM));
+    //    stateType.append(QPair<QString,int>("RStoveFireStatus",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("RStoveTimingOpera",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("RStoveTimingSet",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("RStoveTimingLeft",LINK_VALUE_TYPE_NUM));
@@ -77,6 +79,7 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     stateType.append(QPair<QString,int>("HoodOffTimer",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("HoodOffLeftTime",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("HoodSpeed",LINK_VALUE_TYPE_NUM));
+    stateType.append(QPair<QString,int>("HoodLight",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("HoodOffRemind",LINK_VALUE_TYPE_NUM));
 
     stateType.append(QPair<QString,int>("ProductCategory",LINK_VALUE_TYPE_STRING));

@@ -22,9 +22,9 @@ Item {
                     if(systemSettings.cookDialog[5]>0)
                     {
                         if(CookFunc.isSteam(cookSteps))
-                            showLoaderSteam1(358,"请将食物放入左腔\n将水箱加满水","开始烹饪",root,5)
+                            loaderSteamShow(358,"请将食物放入左腔\n将水箱加满水","开始烹饪",root,5)
                         else
-                            showLoaderSteam1(306,"请将食物放入左腔","开始烹饪",root,5)
+                            loaderSteamShow(306,"请将食物放入左腔","开始烹饪",root,5)
                         return
                     }
                 }
@@ -160,7 +160,7 @@ Item {
                 id: details
                 width: parent.width
                 anchors.top: cookTime.bottom
-                anchors.topMargin: 10
+                anchors.topMargin: 15
                 anchors.bottom: parent.bottom
                 scrollBarLeftMargin:5
             }

@@ -14,8 +14,8 @@ Flickable {
         id: details
         width: flick.width
         //                    height: flick.height
-        font.pixelSize: 30
-        lineHeight: 1.1
+        font.pixelSize: 32
+        lineHeight: 1.2
         color:"#fff"
         //                                        clip :true
         wrapMode: Text.WordWrap
