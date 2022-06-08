@@ -2,6 +2,7 @@ import QtQuick 2.7
 import QtQuick.Controls 2.2
 
 Item {
+    property bool buzzer:false
     property alias closeVisible: closeBtn.visible
     property alias hintTopText: hintTop.text
     property alias hintTopImgSrc:hintTopImg.source
