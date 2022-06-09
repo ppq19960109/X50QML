@@ -383,7 +383,10 @@ Item {
             else if("ssid"==key)
             {
                 if(wifiConnected==true && value==wifiConnectInfo.ssid)
+                {
                     WifiFunc.addWifiInfo(wifiConnectInfo)
+                    QmlDevState.executeShell("(wpa_cli list_networks | tail -n +3 | grep "+value+" | grep -v 'CURRENT' | awk '{system(\"wpa_cli remove_network \" $1)}' && wpa_cli save_config) &")
+                }
                 if(isExistView("PageWifi")==null)
                 {
                     wifiConnectInfo.ssid=""
@@ -412,7 +415,7 @@ Item {
             else if("RStoveTimingState"==key)
             {
                 if(value === timingStateEnum.CONFIRM)
-                    loaderAutoPopupShow("","右灶定时结束，\n请将右灶旋钮复位",300,"",null,false)
+                    loaderAutoPopupShow("","右灶定时结束，\n请将右灶旋钮复位",300)
                 else if(value === timingStateEnum.STOP)
                     loaderStoveAutoPopupHide()
             }

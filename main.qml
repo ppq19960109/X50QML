@@ -208,7 +208,7 @@ ApplicationWindow {
             }
             else
             {
-                if(sleepState==true && QmlDevState.state.LStoveStatus == 0 && QmlDevState.state.RStoveStatus == 0 && QmlDevState.state.HoodSpeed == 0 && QmlDevState.state.RStoveTimingState==timingStateEnum.STOP)
+                if(sleepState==true && QmlDevState.state.LStoveStatus == 0 && QmlDevState.state.RStoveStatus == 0 && QmlDevState.state.HoodSpeed == 0 && QmlDevState.state.RStoveTimingState==timingStateEnum.STOP&& QmlDevState.state.AlarmStatus != 1 && QmlDevState.state.Alarm != 1)
                 {
                     SendFunc.setSysPower(0)
                 }
@@ -389,9 +389,9 @@ ApplicationWindow {
         else
             loader_main.sourceComponent = component_popup
 
-        loader_main.item.hintTopText=hintTopText
-        loader_main.item.hintCenterText=hintCenterText
-        loader_main.item.hintHeight=hintHeight
+        loader_main.item.hintTopText=hintTopText==null?"":hintTopText
+        loader_main.item.hintCenterText=hintCenterText==null?"":hintCenterText
+        loader_main.item.hintHeight=hintHeight==null?300:hintHeight
         loader_main.item.confirmText=confirmText==null?"":confirmText
         loader_main.item.confirmFunc=confirmFunc
         loader_main.item.closeVisible=closeVisible==null?true:closeVisible
@@ -431,9 +431,9 @@ ApplicationWindow {
         else
             loaderAuto.sourceComponent = component_autoPopup
 
-        loaderAuto.item.hintTopText=hintTopText
-        loaderAuto.item.hintCenterText=hintCenterText
-        loaderAuto.item.hintHeight=hintHeight
+        loaderAuto.item.hintTopText=hintTopText==null?"":hintTopText
+        loaderAuto.item.hintCenterText=hintCenterText==null?"":hintCenterText
+        loaderAuto.item.hintHeight=hintHeight==null?300:hintHeight
         loaderAuto.item.confirmText=confirmText==null?"":confirmText
         loaderAuto.item.confirmFunc=confirmFunc
         loaderAuto.item.closeVisible=closeVisible==null?true:closeVisible

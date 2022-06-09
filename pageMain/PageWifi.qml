@@ -77,7 +77,7 @@ Item {
                     else if(value==4)
                     {
                         dismissWifiInput()
-                        if(scan_count>=4)
+                        if(scan_count>=3)
                             wifi_scan_timer_reset()
                     }
                     //                    wifi_scan_timer_reset()
@@ -136,14 +136,14 @@ Item {
         onTriggered: {
             //            console.log("timer_wifi_scan",timer_wifi_scan.interval,scan_count,wifiConnecting)
             ++scan_count
-            if(scan_count <= 4)
+            if(scan_count <= 3)
             {
                 if(scan_count==1)
                 {
                     if(wifiConnectInfo.ssid==="")
                         getWifiInfo()
                 }
-                else if(scan_count==4)
+                else if(scan_count==3)
                 {
                     timer_wifi_scan.interval=10000
                 }
@@ -300,7 +300,7 @@ Item {
                 text: ssid
 
                 font.pixelSize: 40
-                color:connected==1? themesTextColor:"#FFF"
+                color:connected>0? themesTextColor:"#FFF"
                 elide: Text.ElideRight
                 anchors.left: indicator.right
                 anchors.leftMargin: 20
@@ -360,7 +360,6 @@ Item {
                                 wifiModel.setProperty(0,"connected",0)
                                 wifiModel.move(index,0,1)
                             }
-                            //                            wifiModel.setProperty(0,"connected",2)
                             listView.positionViewAtBeginning()
                         }
                         else

@@ -11,6 +11,7 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     readRecipeDetails();
 
     stateType.append(QPair<QString,int>("Reset",LINK_VALUE_TYPE_NUM));
+    stateType.append(QPair<QString,int>("AlarmStatus",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("Alarm",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("SteamStart",LINK_VALUE_TYPE_NULL));
     stateType.append(QPair<QString,int>("ProductionTest",LINK_VALUE_TYPE_NULL));
