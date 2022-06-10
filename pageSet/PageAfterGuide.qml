@@ -20,18 +20,17 @@ Item {
         anchors.bottom:topBar.top
         anchors.top: parent.top
         Image{
-            width: 218
-            height: 218
-            sourceSize.width: 218
-            sourceSize.height: 218
-            id:qrCodeImg
+            width: 240
+            height: 240
+//            sourceSize.width: 218
+//            sourceSize.height: 218
             anchors.top: parent.top
-            anchors.topMargin: 40
+            anchors.topMargin: 30
             anchors.horizontalCenter: parent.horizontalCenter
             asynchronous:true
             smooth:false
             cache:false
-            source: "file:AfterSalesQrCode.png"
+            source: themesImagesPath+"AfterSalesQrCode.png"
         }
 
         Text{

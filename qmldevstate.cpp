@@ -38,7 +38,7 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     stateType.append(QPair<QString,int>("OTANewVersion",LINK_VALUE_TYPE_STRING));
 
     stateType.append(QPair<QString,int>("AfterSalesPhone",LINK_VALUE_TYPE_STRING));
-    stateType.append(QPair<QString,int>("AfterSalesQrCode",LINK_VALUE_TYPE_STRING));
+//    stateType.append(QPair<QString,int>("AfterSalesQrCode",LINK_VALUE_TYPE_STRING));
 
     stateType.append(QPair<QString,int>("LStOvMode",LINK_VALUE_TYPE_NUM));
     //    stateType.append(QPair<QString,int>("LStOvOperation",LINK_VALUE_TYPE_NUM));
@@ -393,10 +393,10 @@ void QmlDevState::readData(const QJsonValue &data)
                 {
                     QrcodeEn::encodeImage(value.toString(),6,key+".png");
                 }
-                else if("AfterSalesQrCode"==key)
-                {
-                    QrcodeEn::encodeImage(value.toString(),6,key+".png");
-                }
+//                else if("AfterSalesQrCode"==key)
+//                {
+//                    QrcodeEn::encodeImage(value.toString(),6,key+".png");
+//                }
             }
             else if(LINK_VALUE_TYPE_STRUCT==value_type)
             {

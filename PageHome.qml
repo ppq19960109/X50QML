@@ -238,6 +238,8 @@ Item {
                         }
                     }
                 }
+                if(value==workStateEnum.WORKSTATE_RUN)
+                    sleepWakeup()
 
                 if(lastLStOvState!=value && lastLStOvState>=0)
                 {
@@ -275,6 +277,9 @@ Item {
                         }
                     }
                 }
+                if(value==workStateEnum.WORKSTATE_RUN)
+                    sleepWakeup()
+
                 if(lastRStOvState!=value && lastRStOvState>=0)
                 {
                     if(value==5)
@@ -605,7 +610,7 @@ Item {
         //        loaderErrorShow("右腔干烧检测电路故障！","请拨打售后电话<font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员")
         //        loaderImagePopupShow("网络连接失败，请重试","/x50/icon/icon_pop_error.png")
         //        loaderAutoPopupShow("","右灶定时关火结束，\n请将旋钮复位",300,"",null,false)
-//        loaderPopupShow("恢复出厂设置成功","",275,"确定")
+        //        loaderPopupShow("恢复出厂设置成功","",275,"确定")
     }
     StackView.onActivated:{
         console.log("page home onActivated")
