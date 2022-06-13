@@ -21,9 +21,9 @@ Item {
             if(systemSettings.cookDialog[2]>0)
             {
                 if(CookFunc.isSteam(cookSteps))
-                    loaderSteamShow(358,"请将食物放入左腔\n将水箱加满水","开始预约",root,2)
+                    loaderSteamShow(360,"请将食物放入左腔\n将水箱加满水","开始预约",root,2)
                 else
-                    loaderSteamShow(306,"请将食物放入左腔","开始预约",root,2)
+                    loaderSteamShow(292,"请将食物放入左腔","开始预约",root,2)
                 return
             }
         }
@@ -31,7 +31,7 @@ Item {
         {
             if(systemSettings.cookDialog[4]>0)
             {
-                loaderSteamShow(358,"请将食物放入右腔\n将水箱加满水","开始预约",root,3)
+                loaderSteamShow(360,"请将食物放入右腔\n将水箱加满水","开始预约",root,3)
                 return
             }
         }

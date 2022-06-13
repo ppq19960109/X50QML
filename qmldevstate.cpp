@@ -99,6 +99,7 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     connect(&client, &LocalClient::sendConnected, this,&QmlDevState::setLocalConnected);
 
     setState("HoodSpeed",0);
+    setState("HoodLight",0);
     setState("RStoveStatus",0);
 #ifndef USE_RK3308
     setState("SysPower",1);

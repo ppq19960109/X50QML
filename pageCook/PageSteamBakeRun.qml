@@ -39,8 +39,10 @@ Rectangle {
 
     Component.onCompleted: {
         console.log("PageSteamBakeRun onCompleted")
+        SendFunc.permitSteamStartStatus(0)
         leftProgressBar.updatePaint()
         rightProgressBar.updatePaint()
+        sleepWakeup()
     }
     Component.onDestruction: {
         closeCancelRun()
@@ -216,7 +218,7 @@ Rectangle {
                     {
                         if(QmlDevState.state.LStOvDoorState==1)
                         {
-                            loaderAutoPopupShow("","左腔门开启，工作暂停",275)
+                            loaderAutoPopupShow("","左腔门开启，工作暂停",292)
                         }
                     }
                     else
@@ -385,7 +387,7 @@ Rectangle {
                     {
                         if(QmlDevState.state.RStOvDoorState==1)
                         {
-                            loaderAutoPopupShow("","右腔门开启，工作暂停",275)
+                            loaderAutoPopupShow("","右腔门开启，工作暂停",292)
                         }
                     }
                     else

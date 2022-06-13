@@ -16,7 +16,7 @@ Item {
 
             if("Reset"==key)
             {
-                loaderPopupShow("恢复出厂设置成功","",275,"确定")
+                loaderPopupShow("恢复出厂设置成功","",292,"确定")
                 //                if(value==0)
                 //                {
 
@@ -92,25 +92,13 @@ Item {
             hintTopText:"操作确认"
             hintBottomText:"该操作将会清除您的个人数据\n包括烹饪记录、设备预设等\n请确认是否重置？"
             confirmText:"重置设备"
-            hintHeight:410
+            hintHeight:412
             onCancel: {
                 loaderMainHide()
             }
             onConfirm: {
                 systemReset()
-
-                hintTopText=""
-                hintBottomText="恢复出厂设置中..."
-                confirmText=""
-                hintHeight=300
-                rotImg.visible=true
-            }
-            PageRotationImg {
-                id:rotImg
-                visible: false
-                anchors.centerIn: parent
-                anchors.verticalCenterOffset: -50
-                source: "/x50/wifi/icon_sx.png"
+                loaderLoadingShow("恢复出厂设置中...")
             }
         }
     }

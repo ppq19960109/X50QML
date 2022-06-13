@@ -3,7 +3,7 @@ import QtQuick 2.7
 
 Item{
     width: 600
-    height:358
+    height:360
 //    Rectangle {
 //        width: 600
 //        height: 600

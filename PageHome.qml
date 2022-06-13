@@ -8,6 +8,8 @@ Item {
     property int lastLStOvState:-1
     property int lastRStOvState:-1
     property int lastErrorCodeShow:0
+    property int lastHoodSpeed:0
+    property int lastHoodLight:0
 
     enabled: sysPower > 0
     //    anchors.fill: parent
@@ -144,7 +146,7 @@ Item {
     }
 
     function loaderUpdateResultShow(text){
-        loaderAutoPopupShow("",text,275)
+        loaderAutoPopupShow("",text,292)
     }
     //    Connections { // 将目标对象信号与槽函数进行连接
     //        target: MNetwork
@@ -217,6 +219,10 @@ Item {
                     loaderUpdateResultShow("系统已更新至最新版本 "+value)
                 }
             }
+            else if("SteamStart"==key)
+            {
+                sleepWakeup()
+            }
             else if("LStOvState"==key)
             {
                 console.log("LStOvState",value,QmlDevState.state.LStOvState)
@@ -246,7 +252,7 @@ Item {
                     if(value==5)
                     {
                         if(QmlDevState.state.LStOvDoorState==1)
-                            loaderAutoPopupShow("","左腔门开启，工作暂停",275)
+                            loaderAutoPopupShow("","左腔门开启，工作暂停",292)
                     }
                     else
                     {
@@ -285,7 +291,7 @@ Item {
                     if(value==5)
                     {
                         if(QmlDevState.state.RStOvDoorState==1)
-                            loaderAutoPopupShow("","右腔门开启，工作暂停",275)
+                            loaderAutoPopupShow("","右腔门开启，工作暂停",292)
                     }
                     else
                     {
@@ -314,18 +320,18 @@ Item {
                     var LStOvState=QmlDevState.state.LStOvState
                     var RStOvState=QmlDevState.state.LStOvState
                     if(LStOvState == workStateEnum.WORKSTATE_PREHEAT || LStOvState == workStateEnum.WORKSTATE_RUN || LStOvState == workStateEnum.WORKSTATE_PAUSE || RStOvState == workStateEnum.WORKSTATE_PREHEAT || RStOvState == workStateEnum.WORKSTATE_RUN|| RStOvState == workStateEnum.WORKSTATE_PAUSE)
-                        loaderAutoPopupShow("蒸烤箱工作中，\n需散热，烟机最低一档","",306,"知道了",loaderAutoPopupHide)
+                        loaderAutoPopupShow("蒸烤箱工作中，\n需散热，烟机最低一档","",292,"知道了",loaderAutoPopupHide)
                 }
                 else if(value==3)
                 {
                     var LStOvState=QmlDevState.state.LStOvState
                     if(LStOvState == workStateEnum.WORKSTATE_PREHEAT || LStOvState == workStateEnum.WORKSTATE_RUN|| LStOvState == workStateEnum.WORKSTATE_PAUSE)
-                        loaderAutoPopupShow("烤模式运行中，\n需散热，烟机最低二档","",306,"知道了",loaderAutoPopupHide)
+                        loaderAutoPopupShow("烤模式运行中，\n需散热，烟机最低二档","",292,"知道了",loaderAutoPopupHide)
                 }
                 else if(value==4)
                 {
                     if(QmlDevState.state.LStoveStatus > 0 || QmlDevState.state.RStoveStatus > 0)
-                        loaderAutoPopupShow("灶具工作中，\n需散热，烟机最低一档","",306,"知道了",loaderAutoPopupHide)
+                        loaderAutoPopupShow("灶具工作中，\n需散热，烟机最低一档","",292,"知道了",loaderAutoPopupHide)
                 }
             }
             else if("ErrorCodeShow"==key)
@@ -420,13 +426,21 @@ Item {
             else if("RStoveTimingState"==key)
             {
                 if(value === timingStateEnum.CONFIRM)
-                    loaderAutoPopupShow("","右灶定时结束，\n请将右灶旋钮复位",300)
+                    loaderAutoPopupShow("","右灶定时结束，\n请将右灶旋钮复位",292)
                 else if(value === timingStateEnum.STOP)
                     loaderStoveAutoPopupHide()
             }
-            else if("HoodSpeed"==key||"HoodLight"==key)
+            else if("HoodSpeed"==key)
             {
-                sleepWakeup()
+                if(lastHoodSpeed!=value)
+                    sleepWakeup()
+                lastHoodSpeed=value
+            }
+            else if("HoodLight"==key)
+            {
+                if(lastHoodLight!=value)
+                    sleepWakeup()
+                lastHoodLight=value
             }
             else if("OTAState"==key)
             {
@@ -605,12 +619,13 @@ Item {
 
         //        loaderAlarmShow()
         //        loaderErrorShow("左腔蒸箱加热异常！","请拨打售后电话 <font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员");
-        //                        loaderAutoPopupShow("","左腔门开启，工作暂停",275)
-        //                        loaderPopupShow("","右灶未开启\n开启后才可定时关火",275)
+        //                        loaderAutoPopupShow("","左腔门开启，工作暂停",292)
+        //                        loaderPopupShow("","右灶未开启\n开启后才可定时关火",292)
         //        loaderErrorShow("右腔干烧检测电路故障！","请拨打售后电话<font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员")
         //        loaderImagePopupShow("网络连接失败，请重试","/x50/icon/icon_pop_error.png")
-        //        loaderAutoPopupShow("","右灶定时关火结束，\n请将旋钮复位",300,"",null,false)
-        //        loaderPopupShow("恢复出厂设置成功","",275,"确定")
+        //        loaderAutoPopupShow("","右灶定时关火结束，\n请将旋钮复位",292,"",null,false)
+        //        loaderPopupShow("恢复出厂设置成功","",292,"确定")
+        //        loaderUpdateConfirmShow()
     }
     StackView.onActivated:{
         console.log("page home onActivated")

@@ -20,7 +20,7 @@ Item {
         id:hint
         anchors.centerIn: parent
         implicitWidth: 600
-        implicitHeight: 300
+        implicitHeight: 292
         color: themesPopupWindowColor
         radius: 16
 

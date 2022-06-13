@@ -14,7 +14,7 @@ ApplicationWindow {
     id: window
     width: 800
     height: 480
-    //    visible: true
+    //        visible: true
     property int sysPower:-1
     property int permitStartStatus:0
     property int productionTestStatus:0
@@ -139,7 +139,9 @@ ApplicationWindow {
     function systemPower(power){
         console.log("systemPower",power)
         if(sysPower==power || sysPower==0xff)
+        {
             return
+        }
         if(power)
         {
             Backlight.backlightSet(systemSettings.brightness)
@@ -200,7 +202,7 @@ ApplicationWindow {
             if(productionTestFlag>0)
             {
                 productionTestFlag=0
-                if(sleepState==true)
+                if(sysPower > 0 && sleepState==true)
                 {
                     timer_standby.interval=9*60000
                     timer_standby.restart()
@@ -208,8 +210,9 @@ ApplicationWindow {
             }
             else
             {
-                if(sleepState==true && QmlDevState.state.RStOvState == 0 && QmlDevState.state.LStOvState == 0 && QmlDevState.state.LStoveStatus == 0 && QmlDevState.state.RStoveStatus == 0 && QmlDevState.state.HoodSpeed == 0 && QmlDevState.state.RStoveTimingState==timingStateEnum.STOP&& QmlDevState.state.AlarmStatus != 1 && QmlDevState.state.Alarm != 1)
+                if(sleepState==true && QmlDevState.state.RStOvState == 0 && QmlDevState.state.LStOvState == 0 && QmlDevState.state.LStoveStatus == 0 && QmlDevState.state.RStoveStatus == 0 && QmlDevState.state.HoodSpeed == 0 && QmlDevState.state.HoodLight == 0 && QmlDevState.state.RStoveTimingState==timingStateEnum.STOP&& QmlDevState.state.AlarmStatus != 1 && QmlDevState.state.Alarm != 1)
                 {
+                    SendFunc.setBuzControl(buzControlEnum.SHORT)
                     SendFunc.setSysPower(0)
                 }
                 else
@@ -356,17 +359,38 @@ ApplicationWindow {
         id:component_imagePopup
         PageImagePopup{
             hintTopImgSrc:""
-            hintCenterText:""
+            hintBottomText:""
             onCancel: {
                 loader_main.sourceComponent = undefined
             }
         }
     }
-    function loaderImagePopupShow(hintCenterText,hintTopImgSrc){
+    function loaderImagePopupShow(hintBottomText,hintTopImgSrc){
         loader_main.sourceComponent = component_imagePopup
         loader_main.item.hintTopImgSrc=hintTopImgSrc
-        loader_main.item.hintCenterText=hintCenterText
+        loader_main.item.hintBottomText=hintBottomText
     }
+    Component{
+        id:component_loading
+
+        PageImagePopup{
+            hintTopImgSrc:""
+            hintBottomText:""
+            onCancel: {
+                loader_main.sourceComponent = undefined
+            }
+            PageRotationImg {
+                anchors.centerIn: parent
+                anchors.verticalCenterOffset: -50
+                source: "qrc:/x50/set/jiazaizhong.png"
+            }
+        }
+    }
+    function loaderLoadingShow(text){
+        loader_main.sourceComponent = component_loading
+        loader_main.item.hintBottomText=text
+    }
+
     Component{
         id:component_popup
         PagePopup{
@@ -393,7 +417,7 @@ ApplicationWindow {
 
         loader_main.item.hintTopText=hintTopText==null?"":hintTopText
         loader_main.item.hintCenterText=hintCenterText==null?"":hintCenterText
-        loader_main.item.hintHeight=hintHeight==null?300:hintHeight
+        loader_main.item.hintHeight=hintHeight==null?292:hintHeight
         loader_main.item.confirmText=confirmText==null?"":confirmText
         loader_main.item.confirmFunc=confirmFunc
         loader_main.item.closeVisible=closeVisible==null?true:closeVisible
@@ -435,7 +459,7 @@ ApplicationWindow {
 
         loaderAuto.item.hintTopText=hintTopText==null?"":hintTopText
         loaderAuto.item.hintCenterText=hintCenterText==null?"":hintCenterText
-        loaderAuto.item.hintHeight=hintHeight==null?300:hintHeight
+        loaderAuto.item.hintHeight=hintHeight==null?292:hintHeight
         loaderAuto.item.confirmText=confirmText==null?"":confirmText
         loaderAuto.item.confirmFunc=confirmFunc
         loaderAuto.item.closeVisible=closeVisible==null?true:closeVisible
@@ -558,10 +582,10 @@ ApplicationWindow {
     function sleepWakeup(){
         if(sysPower > 0 && sleepState==true)
         {
+            sleepState=false
             if(productionTestFlag==0 && timer_standby.running==true)
                 timer_standby.stop()
 
-            sleepState=false
             Backlight.backlightSet(systemSettings.brightness)
             timer_window.restart()
         }
@@ -903,7 +927,8 @@ ApplicationWindow {
 
     function loaderErrorCodeShow(value,dir)
     {
-        sleepWakeup()
+        if(value!=0)
+            sleepWakeup()
         switch (value) {
         case 1:
             if(dir==null||dir==cookWorkPosEnum.LEFT)

@@ -22,9 +22,9 @@ Item {
                 if(systemSettings.cookDialog[5]>0)
                 {
                     if(CookFunc.isSteam(cookSteps))
-                        loaderSteamShow(358,"请将食物放入左腔\n将水箱加满水","开始烹饪",root,5)
+                        loaderSteamShow(360,"请将食物放入左腔\n将水箱加满水","开始烹饪",root,5)
                     else
-                        loaderSteamShow(306,"请将食物放入左腔","开始烹饪",root,5)
+                        loaderSteamShow(292,"请将食物放入左腔","开始烹饪",root,5)
                     return
                 }
                 startCooking(root,cookSteps)

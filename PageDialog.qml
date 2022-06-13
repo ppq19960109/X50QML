@@ -29,7 +29,7 @@ Item {
         id:hint
         anchors.centerIn: parent
         implicitWidth: 600
-        implicitHeight: 358
+        implicitHeight: 360
         color: themesPopupWindowColor
 //         border.color: "#fff"
         radius: 16

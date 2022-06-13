@@ -14,7 +14,7 @@ Item {
             cancelText:"取消定时"
             confirmText:"重新定时"
             hintWidth:600
-            hintHeight:280
+            hintHeight:292
             closeBtnVisible:false
             onCancel: {
                 var Data={}
@@ -167,7 +167,7 @@ Item {
         }
         Timer {
             id: longPressTimer
-            interval: 300
+            interval: 292
             repeat: false
             running: false
 

@@ -417,7 +417,7 @@ Item {
             interactive: true
             delegate: wifiDelegate
             model: wifiModel
-            cacheBuffer:20
+            cacheBuffer:10
             header: headerView
             clip: true
             //            highlightRangeMode: ListView.ApplyRange

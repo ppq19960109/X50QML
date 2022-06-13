@@ -75,7 +75,7 @@ Item {
             anchors.horizontalCenter: parent.horizontalCenter
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
-
+            lineHeight :1.1
             wrapMode:Text.WrapAnywhere
         }
         Button {

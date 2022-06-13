@@ -153,9 +153,14 @@ Item {
 
                     if( timer_qrcode.running==false)
                     {
+                        if(QmlDevState.state.DeviceSecret=="")
+                        {
+                            loaderImagePopupShow("四元组不存在","/x50/icon/icon_pop_error.png")
+                            return
+                        }
                         if(systemSettings.wifiEnable && wifiConnected==true)
                         {
-                            loaderRefreshShow()
+                            loaderLoadingShow("二维码刷新中...")
                             wifiConnected=false
                             var Data={}
                             Data.BackOnline = null
@@ -173,25 +178,6 @@ Item {
                 }
             }
         }
-    }
-    Component{
-        id:component_refresh
-
-        PageImagePopup{
-            hintTopImgSrc:""
-            hintCenterText:"二维码刷新中..."
-            onCancel: {
-                loader_main.sourceComponent = undefined
-            }
-            PageRotationImg {
-                anchors.centerIn: parent
-                anchors.verticalCenterOffset: -60
-                source: "/x50/wifi/icon_sx.png"
-            }
-        }
-    }
-    function loaderRefreshShow(){
-        loader_main.sourceComponent = component_refresh
     }
 
 }

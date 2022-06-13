@@ -131,7 +131,7 @@ Item {
             width: 176+15
             height: 64+15
             anchors.bottom: parent.bottom
-            anchors.bottomMargin: 40
+            anchors.bottomMargin: 30
             anchors.horizontalCenter: parent.horizontalCenter
             background:Rectangle{
                 width:176

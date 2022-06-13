@@ -3,7 +3,7 @@ import QtQuick.Controls 2.2
 
 Item {
     property alias hintTopImgSrc: hintTopImg.source
-    property alias hintCenterText: hintCenter.text
+    property alias hintBottomText: hintBottom.text
     property alias hintHeight: hint.height
     signal cancel()
     MouseArea{
@@ -15,7 +15,7 @@ Item {
         id:hint
         anchors.centerIn: parent
         implicitWidth: 600
-        implicitHeight: 300
+        implicitHeight: 292
         color: themesPopupWindowColor
         radius: 16
 
@@ -49,15 +49,15 @@ Item {
             anchors.horizontalCenter: parent.horizontalCenter
         }
         Text{
-            id:hintCenter
-            visible: hintCenter.text!=""
+            id:hintBottom
+            visible: hintBottom.text!=""
             width:parent.width
             color:"white"
             font.pixelSize: 40
-            anchors.centerIn: parent
+            anchors.top: parent.top
+            anchors.topMargin: 160
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
-
             wrapMode:Text.Wrap
         }
     }
