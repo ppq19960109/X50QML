@@ -40,6 +40,7 @@ Rectangle {
     Component.onCompleted: {
         console.log("PageSteamBakeRun onCompleted")
         SendFunc.permitSteamStartStatus(0)
+        loaderSteamHide()
         leftProgressBar.updatePaint()
         rightProgressBar.updatePaint()
         sleepWakeup()

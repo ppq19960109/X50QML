@@ -38,9 +38,9 @@ Item {
                 sleepWakeup()
                 //                SendFunc.setBuzControl(buzControlEnum.OPEN)
             }
-            Component.onDestruction: {
-                //                SendFunc.setBuzControl(buzControlEnum.STOP)
-            }
+            //            Component.onDestruction: {
+            //                SendFunc.setBuzControl(buzControlEnum.STOP)
+            //            }
         }
     }
     function loaderAlarmShow(){
@@ -318,7 +318,7 @@ Item {
                 else if(value==2)
                 {
                     var LStOvState=QmlDevState.state.LStOvState
-                    var RStOvState=QmlDevState.state.LStOvState
+                    var RStOvState=QmlDevState.state.RStOvState
                     if(LStOvState == workStateEnum.WORKSTATE_PREHEAT || LStOvState == workStateEnum.WORKSTATE_RUN || LStOvState == workStateEnum.WORKSTATE_PAUSE || RStOvState == workStateEnum.WORKSTATE_PREHEAT || RStOvState == workStateEnum.WORKSTATE_RUN|| RStOvState == workStateEnum.WORKSTATE_PAUSE)
                         loaderAutoPopupShow("蒸烤箱工作中，\n需散热，烟机最低一档","",292,"知道了",loaderAutoPopupHide)
                 }
@@ -332,6 +332,20 @@ Item {
                 {
                     if(QmlDevState.state.LStoveStatus > 0 || QmlDevState.state.RStoveStatus > 0)
                         loaderAutoPopupShow("灶具工作中，\n需散热，烟机最低一档","",292,"知道了",loaderAutoPopupHide)
+                }
+                else if(value==5)
+                {
+                    if(QmlDevState.state.ErrorCodeShow == 0 && QmlDevState.localConnected > 0 && productionTestStatus==0 && sysPower==1 && wifiConnecting==false)
+                    {
+                        if(QmlDevState.state.LStoveStatus == 0 && QmlDevState.state.RStoveStatus == 0 && QmlDevState.state.HoodSpeed == 0 && QmlDevState.state.HoodLight == 0 && QmlDevState.state.RStoveTimingState==timingStateEnum.STOP&& QmlDevState.state.AlarmStatus != 1 && QmlDevState.state.Alarm != 1)
+                        {
+                            if((QmlDevState.state.RStOvState == workStateEnum.WORKSTATE_STOP || QmlDevState.state.RStOvState == workStateEnum.WORKSTATE_FINISH) && (QmlDevState.state.LStOvState == workStateEnum.WORKSTATE_STOP || QmlDevState.state.LStOvState == workStateEnum.WORKSTATE_FINISH))
+                            {
+                                SendFunc.setBuzControl(buzControlEnum.SHORTTWO)
+                                SendFunc.setSysPower(0)
+                            }
+                        }
+                    }
                 }
             }
             else if("ErrorCodeShow"==key)

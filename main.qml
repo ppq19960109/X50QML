@@ -204,22 +204,24 @@ ApplicationWindow {
                 productionTestFlag=0
                 if(sysPower > 0 && sleepState==true)
                 {
-                    timer_standby.interval=9*60000
+                    timer_standby.interval=8*60000
                     timer_standby.restart()
                 }
             }
             else
             {
-                if(sleepState==true && QmlDevState.state.RStOvState == 0 && QmlDevState.state.LStOvState == 0 && QmlDevState.state.LStoveStatus == 0 && QmlDevState.state.RStoveStatus == 0 && QmlDevState.state.HoodSpeed == 0 && QmlDevState.state.HoodLight == 0 && QmlDevState.state.RStoveTimingState==timingStateEnum.STOP&& QmlDevState.state.AlarmStatus != 1 && QmlDevState.state.Alarm != 1)
+                if(sleepState==true && QmlDevState.state.LStoveStatus == 0 && QmlDevState.state.RStoveStatus == 0 && QmlDevState.state.HoodSpeed == 0 && QmlDevState.state.HoodLight == 0 && QmlDevState.state.RStoveTimingState==timingStateEnum.STOP&& QmlDevState.state.AlarmStatus != 1 && QmlDevState.state.Alarm != 1)
                 {
-                    SendFunc.setBuzControl(buzControlEnum.SHORT)
-                    SendFunc.setSysPower(0)
+                    if((QmlDevState.state.RStOvState == workStateEnum.WORKSTATE_STOP || QmlDevState.state.RStOvState == workStateEnum.WORKSTATE_FINISH) && (QmlDevState.state.LStOvState == workStateEnum.WORKSTATE_STOP || QmlDevState.state.LStOvState == workStateEnum.WORKSTATE_FINISH))
+                    {
+                        SendFunc.setBuzControl(buzControlEnum.SHORTTWO)
+                        SendFunc.setSysPower(0)
+                        return
+                    }
                 }
-                else
-                {
-                    timer_standby.interval=9*60000
-                    timer_standby.restart()
-                }
+
+                timer_standby.interval=8*60000
+                timer_standby.restart()
             }
         }
     }
@@ -252,20 +254,20 @@ ApplicationWindow {
             //            console.log("timer_window sleep:",QmlDevState.state.HoodSpeed,QmlDevState.state.RStOvState,QmlDevState.state.LStOvState,QmlDevState.state.ErrorCodeShow,QmlDevState.localConnected)
             if(QmlDevState.state.ErrorCodeShow == 0 && QmlDevState.localConnected > 0 && productionTestStatus==0 && sysPower==1 && wifiConnecting==false)
             {
-                if((QmlDevState.state.RStOvState == workStateEnum.WORKSTATE_PREHEAT || QmlDevState.state.RStOvState == workStateEnum.WORKSTATE_RUN || QmlDevState.state.RStOvState == workStateEnum.WORKSTATE_PAUSE ) || (QmlDevState.state.LStOvState == workStateEnum.WORKSTATE_PREHEAT || QmlDevState.state.LStOvState == workStateEnum.WORKSTATE_RUN || QmlDevState.state.LStOvState == workStateEnum.WORKSTATE_PAUSE ))
-                    return
-                //                Backlight.backlightDisable()
-                sleepState=true
-                Backlight.backlightSet(0)
+                if(!((QmlDevState.state.RStOvState == workStateEnum.WORKSTATE_PREHEAT || QmlDevState.state.RStOvState == workStateEnum.WORKSTATE_RUN || QmlDevState.state.RStOvState == workStateEnum.WORKSTATE_PAUSE ) || (QmlDevState.state.LStOvState == workStateEnum.WORKSTATE_PREHEAT || QmlDevState.state.LStOvState == workStateEnum.WORKSTATE_RUN || QmlDevState.state.LStOvState == workStateEnum.WORKSTATE_PAUSE )))
+                {
+                    //                Backlight.backlightDisable()
+                    sleepState=true
+                    Backlight.backlightSet(0)
 
-                timer_standby.interval=10*60000
-                timer_standby.restart()
+                    timer_standby.interval=10*60000
+                    timer_standby.restart()
+                    return
+                }
             }
-            else
-            {
-                sleepState=false
-                timer_window.restart()
-            }
+
+            sleepState=false
+            timer_window.restart()
         }
     }
     signal sleepTimerRestart()
@@ -301,7 +303,7 @@ ApplicationWindow {
             checkboxVisible:true
             onCancel:{
                 console.info("component_steam onCancel")
-                loaderMainHide()
+                loaderSteamHide()
             }
             onConfirm:{
                 console.info("component_steam onConfirm")
@@ -313,7 +315,7 @@ ApplicationWindow {
                     systemSettings.cookDialog=dialog
                 }
                 startCooking(steamDialog.para,JSON.parse(steamDialog.para.cookSteps))
-                loaderMainHide()
+                loaderSteamHide()
             }
         }
     }
@@ -324,6 +326,10 @@ ApplicationWindow {
         loader_main.item.confirmText=confirmText
         loader_main.item.para=para
         loader_main.item.cookDialog=cookDialog
+    }
+    function loaderSteamHide(){
+        if(loader_main.sourceComponent===component_steam)
+            loader_main.sourceComponent = undefined
     }
     Component{
         id:component_qrcode

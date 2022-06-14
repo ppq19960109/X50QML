@@ -115,7 +115,6 @@ Rectangle {
                 modeListModel.append(workModeModelEnum[i])
             }
         }
-
     }
 
     //    PageGradient{
