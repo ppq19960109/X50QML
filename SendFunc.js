@@ -154,6 +154,7 @@ function setCooking(list,orderTime,cookPos)
             Data.RStOvMode=list.mode
             Data.RStOvSetTimer=list.time
             Data.RStOvSetTemp=list.temp
+//            Data.HoodSpeed=3
         }
         Data.RStOvOperation=workOperationEnum.START
 
@@ -191,9 +192,9 @@ function setMultiIceCooking(list,orderTime)
             iceWorkStep.state=iceWorkOperaEnum.LEFT_ICE
             iceWorkStep.cookStep=JSON.parse(JSON.stringify(list[1]))
             if(list[0].time<=30)
-                setCooking(list[0],0,list[0].pos)
-            else
                 setCooking(list[0],10,list[0].pos)
+            else
+                setCooking(list[0],0,list[0].pos)
             list[1].time=960
             setIceCooking(list[1],orderTime)
         }

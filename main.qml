@@ -256,6 +256,8 @@ ApplicationWindow {
     }
     function sendIceConfirmCmd(){
         SendFunc.setIceCooking(iceWorkStep.cookStep,0)
+        iceWorkStep.state=iceWorkOperaEnum.STOP
+        closeLoaderPopup()
     }
     Component{
         id:component_hoodoff

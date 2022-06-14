@@ -406,7 +406,10 @@ Rectangle {
                 }
                 else
                 {
-                    return QmlDevState.state.IceStOvSetTimerLeft
+                    if(workMode=="冷凝风机")
+                        return ""
+                    else
+                        return QmlDevState.state.IceStOvSetTimerLeft
                 }
             }
             workTemp:qsTr(QmlDevState.state.IceStOvSetTemp+"℃")

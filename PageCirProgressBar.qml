@@ -144,7 +144,23 @@ Item {
             anchors.horizontalCenter: parent.horizontalCenter
             //            horizontalAlignment :Text.AlignHCenter
             //            verticalAlignment :Text.AlignHCenter
-            text: (device==2 && workState==workStateEnum.WORKSTATE_PREHEAT)?"预冷中":(workStateArray[workState]+((workState === workStateEnum.WORKSTATE_PAUSE && orderTimeLeft!=0)?"预约":""))
+            text: {
+                if(device==2 && workState==workStateEnum.WORKSTATE_PREHEAT)
+                {
+                    return "预冷中"
+                }
+                else if(workState==workStateEnum.WORKSTATE_FINISH)
+                {
+                    if(device==2)
+                        return "制冷完成"
+                    else if(device==1)
+                        return "蒸完成"
+                    else
+                        return "烹饪完成"
+                }
+                else
+                    return workStateArray[workState]+((workState === workStateEnum.WORKSTATE_PAUSE && orderTimeLeft!=0)?"预约":"")
+            }
         }
         Item
         {
@@ -155,6 +171,7 @@ Item {
 
             Text{
                 id:time
+                visible: text!=""
                 textFormat: Text.RichText
                 anchors.top:parent.top
                 anchors.horizontalCenter: parent.horizontalCenter
@@ -164,7 +181,7 @@ Item {
                 font.bold: workState === workStateEnum.WORKSTATE_RUN?true:false
             }
             Text{
-                visible: !(workState === workStateEnum.WORKSTATE_RESERVE || (workState === workStateEnum.WORKSTATE_PAUSE && orderTimeLeft!=0))
+                visible: (!(workState === workStateEnum.WORKSTATE_RESERVE || (workState === workStateEnum.WORKSTATE_PAUSE && orderTimeLeft!=0)) && time.text!="")
                 anchors.left: time.right
                 anchors.leftMargin: 5
                 anchors.bottom: time.bottom
