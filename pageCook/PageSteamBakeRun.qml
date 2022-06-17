@@ -9,10 +9,11 @@ Rectangle {
     property string name: "pageSteamBakeRun"
 
     Timer{
+        property int count:0
         id:timer_run
         repeat: true
-        running: leftProgressBar.workState === workStateEnum.WORKSTATE_PREHEAT||rightProgressBar.workState === workStateEnum.WORKSTATE_PREHEAT
-        interval: 200
+        running: leftProgressBar.workState === workStateEnum.WORKSTATE_PREHEAT||rightProgressBar.workState === workStateEnum.WORKSTATE_PREHEAT||leftProgressBar.workState === workStateEnum.WORKSTATE_RESERVE||rightProgressBar.workState === workStateEnum.WORKSTATE_RESERVE||leftProgressBar.workState === workStateEnum.WORKSTATE_PAUSE_RESERVE||rightProgressBar.workState === workStateEnum.WORKSTATE_PAUSE_RESERVE||leftProgressBar.workState === workStateEnum.WORKSTATE_PAUSE||rightProgressBar.workState === workStateEnum.WORKSTATE_PAUSE
+        interval: 350
         triggeredOnStart: false
         onTriggered: {
             //            console.log("timer_run onTriggered");
@@ -25,6 +26,7 @@ Rectangle {
                 }
                 leftProgressBar.updatePaint()
             }
+
             if(rightProgressBar.workState === workStateEnum.WORKSTATE_PREHEAT)
             {
                 rightProgressBar.roate+=10
@@ -33,6 +35,16 @@ Rectangle {
                     rightProgressBar.roate=10
                 }
                 rightProgressBar.updatePaint()
+            }
+
+            if(leftProgressBar.workState === workStateEnum.WORKSTATE_RESERVE||leftProgressBar.workState === workStateEnum.WORKSTATE_PAUSE_RESERVE||rightProgressBar.workState === workStateEnum.WORKSTATE_RESERVE||rightProgressBar.workState === workStateEnum.WORKSTATE_PAUSE_RESERVE || leftProgressBar.workState === workStateEnum.WORKSTATE_PAUSE||rightProgressBar.workState === workStateEnum.WORKSTATE_PAUSE)
+            {
+                if(++count>2)
+                {
+                    count=0
+                    leftProgressBar.reserveFlash=!leftProgressBar.reserveFlash
+                    rightProgressBar.reserveFlash=!rightProgressBar.reserveFlash
+                }
             }
         }
     }
@@ -47,30 +59,27 @@ Rectangle {
     }
     Component.onDestruction: {
         closeCancelRun()
+        loaderNewCookHide()
     }
 
     StackView.onActivated:{
         SendFunc.permitSteamStartStatus(0)
     }
     Component{
-        id:pageLeftCook
-        PageLeftCook{}
-    }
-    Component{
-        id:pageRightCook
-        PageRightCook{}
-    }
-    function showNewCook(device){
-        if(device===cookWorkPosEnum.LEFT)
-        {
-            loader_main.sourceComponent = pageLeftCook
-        }
-        else
-        {
-            loader_main.sourceComponent = pageRightCook
-        }
+        id:component_newCook
+        PageNewCook{}
     }
 
+    function loaderPageNewCook(device){
+        loader_main.sourceComponent = component_newCook
+        loader_main.item.cookDir=device
+    }
+
+    function loaderNewCookHide()
+    {
+        if(loader_main.sourceComponent===component_newCook)
+            loader_main.sourceComponent = undefined
+    }
     function cookConfirm(){
         if(leftProgressBar.workState===workStateEnum.WORKSTATE_FINISH)
         {
@@ -87,6 +96,34 @@ Rectangle {
         anchors.top:parent.top
         anchors.bottom: statusBar.top
         anchors.left: parent.left
+        Item{
+            visible: leftProgressBar.workState!==workStateEnum.WORKSTATE_STOP && rightProgressBar.workState!==workStateEnum.WORKSTATE_STOP
+            width: 80
+            height:80
+            anchors.top:parent.top
+            anchors.topMargin: 20
+            anchors.left:parent.left
+            anchors.leftMargin: 15
+            Image {
+                anchors.top:parent.top
+                anchors.left:parent.left
+                asynchronous:true
+                smooth:false
+                source: themesImagesPath+"icon-cookstatus-left.png"
+            }
+            Text {
+                width: 70
+                height:70
+                anchors.top:parent.top
+                anchors.right:parent.right
+                font.pixelSize: 30
+                color:"#878787"
+                text:"左腔\n状态"
+//                wrapMode: Text.WordWrap
+                horizontalAlignment:Text.AlignHCenter
+                verticalAlignment:Text.AlignVCenter
+            }
+        }
 
         PageCirProgressBar{
             id:leftProgressBar
@@ -112,7 +149,7 @@ Rectangle {
                 else if(workState === workStateEnum.WORKSTATE_RESERVE || workState === workStateEnum.WORKSTATE_PAUSE_RESERVE)
                 {
                     var time=orderTimeLeft
-                    return (time<600?"0":"")+ Math.floor(time/60)+":"+(time%60<10?"0":"")+time%60//
+                    return (time<600?"0":"")+ Math.floor(time/60)+qsTr(" ")+(time%60<10?"0":"")+time%60
                 }
                 else
                 {
@@ -126,18 +163,19 @@ Rectangle {
                 onClicked: {
                     if(leftProgressBar.workState === workStateEnum.WORKSTATE_STOP)
                     {
-                        showNewCook(leftProgressBar.device)
+                        loaderPageNewCook(leftProgressBar.device)
                     }
-                    else if( QmlDevState.state.MultiMode==0)
+                    if(leftProgressBar.workState === workStateEnum.WORKSTATE_PAUSE && QmlDevState.state.MultiMode==0)
                     {
-                        if(leftProgressBar.workState === workStateEnum.WORKSTATE_PAUSE)
+                        load_page("pageSteamBakeBase",JSON.stringify({"device":cookWorkPosEnum.LEFT,"reserve":0}))
+                    }
+                    else if(leftProgressBar.workState === workStateEnum.WORKSTATE_PAUSE_RESERVE)
+                    {
+                        var para =CookFunc.getDefHistory()
+                        para.cookPos=cookWorkPosEnum.LEFT
+                        var mode=QmlDevState.state.MultiMode
+                        if(mode==0)
                         {
-                            load_page("pageSteamBakeBase",JSON.stringify({"device":cookWorkPosEnum.LEFT,"reserve":0}))
-                        }
-                        else if(leftProgressBar.workState === workStateEnum.WORKSTATE_PAUSE_RESERVE)
-                        {
-                            var para =CookFunc.getDefHistory()
-                            para.cookPos=cookWorkPosEnum.LEFT
                             var list = []
                             var steps={}
                             steps.mode=QmlDevState.state.LStOvMode
@@ -145,13 +183,17 @@ Rectangle {
                             steps.time=QmlDevState.state.LStOvSetTimer
                             list.push(steps)
                             para.dishName=CookFunc.getDishName(list)
-                            load_page("pageSteamBakeReserve",JSON.stringify(para))
-                            para=undefined
+                        }
+                        else if(mode==1)
+                        {
+                            para.dishName=leftProgressBar.workMode
                         }
                         else
                         {
-                            mouse.accepted = false
+                            para.dishName="多段烹饪"
                         }
+                        load_page("pageSteamBakeReserve",JSON.stringify(para))
+                        para=undefined
                     }
                     else
                     {
@@ -263,6 +305,34 @@ Rectangle {
         anchors.bottom: statusBar.top
         anchors.right: parent.right
 
+        Item{
+            visible: leftProgressBar.workState!==workStateEnum.WORKSTATE_STOP && rightProgressBar.workState!==workStateEnum.WORKSTATE_STOP
+            width: 80
+            height:80
+            anchors.top:parent.top
+            anchors.topMargin: 20
+            anchors.right:parent.right
+            anchors.rightMargin: 15
+            Image {
+                anchors.top:parent.top
+                anchors.right:parent.right
+                asynchronous:true
+                smooth:false
+                source: themesImagesPath+"icon-cookstatus-right.png"
+            }
+            Text {
+                width: 70
+                height:70
+                anchors.top:parent.top
+                anchors.left:parent.left
+                font.pixelSize: 30
+                color:"#878787"
+                text:"右腔\n状态"
+                horizontalAlignment:Text.AlignHCenter
+                verticalAlignment:Text.AlignVCenter
+            }
+        }
+
         PageCirProgressBar{
             id:rightProgressBar
             device:1
@@ -287,7 +357,7 @@ Rectangle {
                 else if(workState === workStateEnum.WORKSTATE_RESERVE || workState === workStateEnum.WORKSTATE_PAUSE_RESERVE)
                 {
                     var time=orderTimeLeft
-                    return (time<600?"0":"")+ Math.floor(time/60)+":"+(time%60<10?"0":"")+time%60//
+                    return (time<600?"0":"")+ Math.floor(time/60)+qsTr(" ")+(time%60<10?"0":"")+time%60
                 }
                 else
                 {
@@ -301,7 +371,7 @@ Rectangle {
                 onClicked: {
                     if(rightProgressBar.workState === workStateEnum.WORKSTATE_STOP)
                     {
-                        showNewCook(rightProgressBar.device)
+                        loaderPageNewCook(rightProgressBar.device)
                     }
                     else if(rightProgressBar.workState === workStateEnum.WORKSTATE_PAUSE)
                     {

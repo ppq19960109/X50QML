@@ -8,16 +8,18 @@ import "qrc:/WifiFunc.js" as WifiFunc
 import "qrc:/SendFunc.js" as SendFunc
 import "../"
 Item {
+    property string name: "pageWifi"
+
     property int scan_count: 0
     property bool wifiInputConnecting:false
-    property string name: "PageWifi"
     property int qrcode_display: 0
+
     function wifi_scan_timer_reset()
     {
         console.log("wifi_scan_timer_reset")
         SendFunc.getCurWifi()
         SendFunc.scanRWifi()
-//        SendFunc.scanWifi()
+        //        SendFunc.scanWifi()
         scan_count=0
         timer_wifi_scan.interval=3000
         timer_wifi_scan.restart()
@@ -112,7 +114,10 @@ Item {
         else
             SendFunc.getCurWifi()
     }
-
+    Component.onDestruction: {
+        if(loader_main.sourceComponent===component_wifiInput)
+            loader_main.sourceComponent = undefined
+    }
     Component.onCompleted: {
         //        VirtualKeyboardSettings.styleName = "retro"
         //        VirtualKeyboardSettings.fullScreenMode=true
@@ -594,7 +599,7 @@ Item {
         console.log("showWifiInput:" , wifiInfo.ssid,wifiInfo.flags)
     }
     function dismissWifiInput(){
-        if(loader_main.sourceComponent==component_wifiInput)
+        if(loader_main.sourceComponent===component_wifiInput)
             loader_main.sourceComponent = undefined
         timer_wifi_scan.start()
         listView.positionViewAtBeginning()

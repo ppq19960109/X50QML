@@ -38,9 +38,8 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     stateType.append(QPair<QString,int>("OTANewVersion",LINK_VALUE_TYPE_STRING));
 
     stateType.append(QPair<QString,int>("AfterSalesPhone",LINK_VALUE_TYPE_STRING));
-//    stateType.append(QPair<QString,int>("AfterSalesQrCode",LINK_VALUE_TYPE_STRING));
+    //    stateType.append(QPair<QString,int>("AfterSalesQrCode",LINK_VALUE_TYPE_STRING));
 
-    stateType.append(QPair<QString,int>("LStOvMode",LINK_VALUE_TYPE_NUM));
     //    stateType.append(QPair<QString,int>("LStOvOperation",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("LStOvSetTimer",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("LStOvSetTimerLeft",LINK_VALUE_TYPE_NUM));
@@ -50,8 +49,8 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     stateType.append(QPair<QString,int>("LStOvOrderTimerLeft",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("LStOvDoorState",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("LStOvState",LINK_VALUE_TYPE_NUM));
+    stateType.append(QPair<QString,int>("LStOvMode",LINK_VALUE_TYPE_NUM));
 
-    stateType.append(QPair<QString,int>("RStOvMode",LINK_VALUE_TYPE_NUM));
     //    stateType.append(QPair<QString,int>("RStOvOperation",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("RStOvSetTimer",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("RStOvSetTimerLeft",LINK_VALUE_TYPE_NUM));
@@ -61,6 +60,7 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     stateType.append(QPair<QString,int>("RStOvOrderTimerLeft",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("RStOvDoorState",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("RStOvState",LINK_VALUE_TYPE_NUM));
+    stateType.append(QPair<QString,int>("RStOvMode",LINK_VALUE_TYPE_NUM));
 
     stateType.append(QPair<QString,int>("MultiMode",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("MultiStageState",LINK_VALUE_TYPE_STRUCT));
@@ -94,6 +94,9 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     stateType.append(QPair<QString,int>("BindTokenState",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("QuadInfo",LINK_VALUE_TYPE_STRING));
 
+    stateType.append(QPair<QString,int>("LoadPowerState",LINK_VALUE_TYPE_NUM));
+    stateType.append(QPair<QString,int>("PCBInput",LINK_VALUE_TYPE_ARRAY));
+
     localConnected=0;
     connect(&client, SIGNAL(sendData(const QJsonValue&)), this,SLOT(readData(const QJsonValue&)));
     connect(&client, &LocalClient::sendConnected, this,&QmlDevState::setLocalConnected);
@@ -103,6 +106,7 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     setState("RStoveStatus",0);
 #ifndef USE_RK3308
     setState("SysPower",1);
+    setState("LoadPowerState",7);
 
     setState("RStoveStatus",1);
     setState("RStoveTimingLeft",50);
@@ -381,6 +385,8 @@ void QmlDevState::readData(const QJsonValue &data)
 #ifdef SYSPOWER_RK3308
                 if(key=="SysPower")
                     setState(key,1);
+                else if(key=="ErrorCodeShow")
+                    setState(key,0);
                 else
 #endif    
                     setState(key,value.toInt());
@@ -394,10 +400,10 @@ void QmlDevState::readData(const QJsonValue &data)
                 {
                     QrcodeEn::encodeImage(value.toString(),6,key+".png");
                 }
-//                else if("AfterSalesQrCode"==key)
-//                {
-//                    QrcodeEn::encodeImage(value.toString(),6,key+".png");
-//                }
+                //                else if("AfterSalesQrCode"==key)
+                //                {
+                //                    QrcodeEn::encodeImage(value.toString(),6,key+".png");
+                //                }
             }
             else if(LINK_VALUE_TYPE_STRUCT==value_type)
             {
@@ -515,6 +521,11 @@ void QmlDevState::readData(const QJsonValue &data)
             {
                 setState(key,-1);
             }
+            else if(LINK_VALUE_TYPE_ARRAY==value_type)
+            {
+                QJsonArray array=value.toArray();
+                setState(key,array);
+            }
         }
         else
         {
@@ -547,8 +558,9 @@ void QmlDevState::setState(const QString& name,const QVariant& value)
     //    qDebug()<<"setState name:"<<name << "new value:" << value;
     //    if(stateMap.contains(name))
     //        qDebug()<< "old value:" << stateMap[name];
-    stateMap[name]=value;
+
     emit stateChanged(name,value);
+    stateMap[name]=value;
     //    }
 }
 

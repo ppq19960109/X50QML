@@ -5,6 +5,7 @@ Item {
     property int device
     property real percent:0
     property int roate:0
+    property bool reserveFlash:true
 
     property int workState
     property color workColor
@@ -110,7 +111,21 @@ Item {
                     }
                 }
                 ctx.stroke()
+
+//                var rad=(1.5-2*percent/100)*Math.PI
+//                console.log("radian:",rad,"r:",r,"Angle",360*percent/100)
+//                var x = Math.cos(rad)*r
+//                var y = Math.sin(rad)*r
+
+//                ctx.beginPath()
+//                ctx.fillStyle = '#E68855'
+//                ctx.arc(x, y, lineWidth, 0, 2*Math.PI)
+//                ctx.closePath()
+//                ctx.fill()
             }
+
+
+            //            var rad=(2*percent/100-0.5)*Math.PI
             //            console.log("radian:",rad,"r:",r,"Angle",360*percent/100)
             //                var x = Math.cos(rad)*r
             //                var y = Math.sin(rad)*r
@@ -151,7 +166,7 @@ Item {
         {
             visible: !(workState === workStateEnum.WORKSTATE_FINISH||workState === workStateEnum.WORKSTATE_STOP)
             anchors.top:parent.top
-            anchors.topMargin:120
+            anchors.topMargin:115
             anchors.horizontalCenter: parent.horizontalCenter
 
             Text{
@@ -162,16 +177,25 @@ Item {
                 anchors.horizontalCenterOffset:(workState === workStateEnum.WORKSTATE_PREHEAT||workState === workStateEnum.WORKSTATE_RUN||workState === workStateEnum.WORKSTATE_PAUSE)?-20:0
                 color:workColor
                 font.pixelSize: 70
-                font.bold: (workState === workStateEnum.WORKSTATE_RUN|| workState === workStateEnum.WORKSTATE_PAUSE)?true:false
+//                font.bold: (workState === workStateEnum.WORKSTATE_RUN|| workState === workStateEnum.WORKSTATE_PAUSE)?true:false
+                visible: !((workState === workStateEnum.WORKSTATE_PAUSE_RESERVE||workState === workStateEnum.WORKSTATE_PAUSE) && reserveFlash==false)
             }
             Text{
-                visible: !(workState === workStateEnum.WORKSTATE_RESERVE || workState === workStateEnum.WORKSTATE_PAUSE_RESERVE)
+                visible: (workState === workStateEnum.WORKSTATE_RESERVE && reserveFlash) || (workState === workStateEnum.WORKSTATE_PAUSE_RESERVE && reserveFlash==true)
+                anchors.top:parent.top
+                anchors.horizontalCenter: parent.horizontalCenter
+                color:workColor
+                font.pixelSize: 70
+                text: qsTr("：")
+            }
+            Text{
+                visible: !(workState === workStateEnum.WORKSTATE_RESERVE || workState === workStateEnum.WORKSTATE_PAUSE_RESERVE || (workState === workStateEnum.WORKSTATE_PAUSE && reserveFlash==false))
                 anchors.left: time.right
                 anchors.leftMargin: 5
                 anchors.bottom: time.bottom
-                anchors.bottomMargin: 5
+                anchors.bottomMargin: 7
                 color:"#D7D7D7"
-                font.pixelSize: workState === workStateEnum.WORKSTATE_PREHEAT?44:26
+                font.pixelSize: workState === workStateEnum.WORKSTATE_PREHEAT?44:30
                 text: workState === workStateEnum.WORKSTATE_PREHEAT?qsTr("℃"):qsTr("分钟")
             }
         }

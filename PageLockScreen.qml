@@ -22,20 +22,22 @@ Item {
         asynchronous:true
         smooth:false
         anchors.right: parent.right
-        anchors.rightMargin: 40
+        anchors.rightMargin: 45
         anchors.bottom: lockBtn.top
         source:themesImagesPath+"icon-lockscreen-hint.png"
     }
     Button{
         id:lockBtn
         anchors.right: parent.right
+        anchors.rightMargin: 20
         anchors.bottom: parent.bottom
-        width: img.width
-        height: img.height
+        anchors.bottomMargin: 10
+        width: 100
+        height: 80
 
         background:Item {}
         Image{
-            id:img
+            anchors.centerIn: parent
             asynchronous:true
             smooth:false
             source:themesImagesPath+"icon_childlockscreen_close.png"
@@ -62,7 +64,7 @@ Item {
         onPressed: {
             console.warn("PageLockScreen onPressed",mouse.x,mouse.y)
             mouse.accepted = true
-            if(mouse.x<660||mouse.y<400)
+            if(mouse.x<660||mouse.y<390)
             {
                 return
             }
@@ -86,7 +88,7 @@ Item {
 
     Timer {
         id: longPressTimer
-        interval: 900
+        interval: 1000
         repeat: true
         running: false
 

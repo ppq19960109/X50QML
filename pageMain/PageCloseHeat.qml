@@ -80,7 +80,7 @@ Item {
             var Data={}
             Data.RStoveTimingOpera = timingOperationEnum.START
             Data.RStoveTimingSet = hourPathView.currentIndex*60+minutePathView.currentIndex
-            Data.CtrlSrc=0
+            Data.DataReportReason=0
             SendFunc.setToServer(Data)
 
             //                            QmlDevState.setState("RStoveTimingLeft",hourPathView.currentIndex*60+minutePathView.currentIndex)

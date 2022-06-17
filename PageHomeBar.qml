@@ -19,7 +19,7 @@ Item {
             onCancel: {
                 var Data={}
                 Data.RStoveTimingOpera = timingOperationEnum.CANCEL
-                Data.CtrlSrc=0
+                Data.DataReportReason=0
                 SendFunc.setToServer(Data)
                 //                QmlDevState.setState("RStoveTimingState",timingStateEnum.STOP)
                 loaderMainHide()
@@ -140,10 +140,10 @@ Item {
         //童锁按钮
         TabButton{
             id:childLockBtn
-            width:120
+            width:100
             height:parent.height
             anchors.right:parent.right
-
+            anchors.rightMargin: 20
             background:Item{
             }
             Image{
@@ -153,33 +153,41 @@ Item {
                 anchors.centerIn: parent
                 source: themesImagesPath+ "icon_childlock_open.png"
             }
-
-            onPressedChanged: {
-
-                if (pressed) {
-                    longPressTimer.running = true
-                }
-                else
-                {
-                    longPressTimer.running = false
-                }
-            }
-        }
-        Timer {
-            id: longPressTimer
-            interval: 292
-            repeat: false
-            running: false
-
-            onTriggered: {
+            onPressAndHold:{
                 if(systemSettings.childLock==false)
                 {
                     console.log("启用童锁")
                     systemSettings.childLock=true
                     loaderLockScreen.source="PageLockScreen.qml"
                 }
-
             }
+
+//            onPressedChanged: {
+
+//                if (pressed) {
+//                    longPressTimer.running = true
+//                }
+//                else
+//                {
+//                    longPressTimer.running = false
+//                }
+//            }
         }
+//        Timer {
+//            id: longPressTimer
+//            interval: 350
+//            repeat: false
+//            running: false
+
+//            onTriggered: {
+//                if(systemSettings.childLock==false)
+//                {
+//                    console.log("启用童锁")
+//                    systemSettings.childLock=true
+//                    loaderLockScreen.source="PageLockScreen.qml"
+//                }
+
+//            }
+//        }
     }
 }

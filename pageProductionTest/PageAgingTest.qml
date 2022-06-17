@@ -29,9 +29,10 @@ Item {
             {
                 rect_bg.color="blue"
             }
+
+            ++time_count
             var total_time=time_count*2
             cumulative_time.text="累计测试时间: "+Math.floor(total_time/3600)+"时"+Math.floor((total_time%3600)/60)+"分"+Math.floor(total_time%60)+"秒"
-            ++time_count
 
             if(time_count>=7200)//7200
             {
@@ -61,19 +62,20 @@ Item {
     Text {
         id: cumulative_time
         visible: timer_aging.running
-        anchors.left: parent.left
-        anchors.leftMargin: 40
+        anchors.horizontalCenter: parent.horizontalCenter
         anchors.bottom: parent.bottom
         anchors.bottomMargin: 20
         color:"#FFF"
         font.pixelSize: 40
-        text: qsTr("累计测试时间:")
+        text: qsTr("累计测试时间:0时0分0秒")
     }
     Button{
-        width:100+50
-        height:50+50
-        anchors.right: parent.right
+        width:100
+        height:50
+        anchors.left: parent.left
+        anchors.leftMargin: 20
         anchors.bottom: parent.bottom
+        anchors.bottomMargin: 20
         background:Rectangle{
             width:100
             height:50

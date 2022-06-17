@@ -4,12 +4,12 @@ import QtQuick.Layouts 1.3
 
 import "../"
 Rectangle {
+    property int cookDir: -1
     color: themesWindowBackgroundColor
-    Component.onCompleted: {
-    }
-    Component.onDestruction: {
-        console.log("PageLeftCook onDestruction")
-    }
+//    Component.onCompleted: {
+//    }
+//    Component.onDestruction: {
+//    }
     PageBackBar{
         id:topBar
         anchors.bottom:parent.bottom
@@ -17,11 +17,13 @@ Rectangle {
         leftBtnText:qsTr("")
         rightBtnText:qsTr("")
         onClose:{
-            loaderMainHide()
+            loaderNewCookHide()
         }
     }
     //内容
     Item{
+        id:left
+        visible: cookDir===cookWorkPosEnum.LEFT
         width:parent.width
         anchors.bottom:topBar.top
         anchors.top: parent.top
@@ -59,7 +61,7 @@ Rectangle {
             }
             onClicked: {
                 load_page("pageSteamBakeBase",JSON.stringify({"device":cookWorkPosEnum.LEFT}))
-                loaderMainHide()
+                loaderNewCookHide()
             }
         }
 
@@ -93,7 +95,7 @@ Rectangle {
                 }
 
                 onClicked: {
-                    loaderMainHide()
+                    loaderNewCookHide()
                     load_page("pageSmartRecipes")
                 }
             }
@@ -116,7 +118,7 @@ Rectangle {
 
                 onClicked: {
                     load_page("pageCookHistory",JSON.stringify({"device":cookWorkPosEnum.LEFT}))
-                    loaderMainHide()
+                    loaderNewCookHide()
                 }
             }
             Button{
@@ -138,7 +140,72 @@ Rectangle {
 
                 onClicked: {
                     load_page("pageMultistageSet")
-                    loaderMainHide()
+                    loaderNewCookHide()
+                }
+            }
+
+        }
+    }
+    //内容
+    Item{
+        id:right
+        visible: cookDir===cookWorkPosEnum.RIGHT
+        width:parent.width
+        anchors.bottom:topBar.top
+        anchors.top: parent.top
+
+        GridLayout{
+            width:parent.width-160
+            height: parent.height
+            anchors.centerIn: parent
+            rows: 1
+            columns: 2
+            rowSpacing: 0
+            columnSpacing: 40
+
+            Button{
+                Layout.preferredWidth: 300
+                Layout.preferredHeight:160
+                Layout.alignment: Qt.AlignHCenter|Qt.AlignVCenter
+                background:Image{
+                    asynchronous:true
+                    smooth:false
+                    cache:false
+                    source: "qrc:/x50/steam/right-cook-background.png"
+                }
+                Text{
+                    text:"右腔速蒸"
+                    color:"#FFF"
+                    font.pixelSize: 35
+                    anchors.centerIn: parent
+                }
+
+                onClicked: {
+                    load_page("pageSteamBakeBase",JSON.stringify({"device":cookWorkPosEnum.RIGHT}))
+                    loaderNewCookHide()
+                }
+            }
+            Button{
+                Layout.preferredWidth: 300
+                Layout.preferredHeight:160
+                Layout.alignment: Qt.AlignHCenter|Qt.AlignVCenter
+
+                background:Image{
+                    asynchronous:true
+                    smooth:false
+                    cache:false
+                    source: "qrc:/x50/steam/right-cook-background.png"
+                }
+                Text{
+                    text:"烹饪历史"
+                    color:"#FFF"
+                    font.pixelSize: 35
+                    anchors.centerIn: parent
+                }
+
+                onClicked: {
+                    load_page("pageCookHistory",JSON.stringify({"device":cookWorkPosEnum.RIGHT}))
+                    loaderNewCookHide()
                 }
             }
 

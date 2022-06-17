@@ -94,6 +94,12 @@ function getAllToServer()
     json=undefined
     root=undefined
 }
+function loadPowerSet(value)
+{
+    var Data={}
+    Data.LoadPowerSet = value
+    setToServer(Data)
+}
 function otaRquest(request)
 {
     var Data={}
@@ -172,21 +178,21 @@ function setHoodSpeed(speed)
 {
     var Data={}
     Data.HoodSpeed=speed
-    Data.CtrlSrc=0
+    Data.DataReportReason=0
     setToServer(Data)
 }
 function setBuzControl(operation)
 {
     var Data={}
     Data.BuzControl=operation
-    Data.CtrlSrc=0
+    Data.DataReportReason=0
     setToServer(Data)
 }
 function setSysPower(operation)
 {
     var Data={}
     Data.SysPower=operation
-    Data.CtrlSrc=0
+    Data.DataReportReason=0
     setToServer(Data)
 }
 
@@ -201,7 +207,7 @@ function setCookOperation(device,operation)
     {
         Data.RStOvOperation=operation
     }
-    Data.CtrlSrc=0
+    Data.DataReportReason=0
     setToServer(Data)
 }
 
@@ -240,7 +246,7 @@ function setCooking(list,orderTime,cookPos)
             Data.RStOvOrderTimer=orderTime
         }
     }
-    Data.CtrlSrc=0
+    Data.DataReportReason=0
     setToServer(Data)
 }
 
@@ -260,7 +266,7 @@ function setMultiCooking(list,orderTime,dishName,cookbookID)
         MultiStageContent.push(buf)
     }
 
-    if(undefined === dishName || null === dishName)
+    if(null == cookbookID || null == dishName)
     {
         Data.MultiMode=multiModeEnum.MULTISTAGE
         Data.MultiStageContent=MultiStageContent
@@ -278,6 +284,6 @@ function setMultiCooking(list,orderTime,dishName,cookbookID)
     {
         Data.LStOvOrderTimer=orderTime
     }
-    Data.CtrlSrc=0
+    Data.DataReportReason=0
     setToServer(Data)
 }

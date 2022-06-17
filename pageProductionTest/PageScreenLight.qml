@@ -55,15 +55,13 @@ Item{
         }
     }
     Button{
-        width:100+40
-        height:50+40
+        width:100
+        height:50
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.horizontalCenterOffset: -150
         anchors.bottom: parent.bottom
+        anchors.bottomMargin: 20
         background:Rectangle{
-            width:100
-            height:50
-            anchors.centerIn: parent
             radius: 8
             color:themesTextColor2
         }
@@ -80,15 +78,13 @@ Item{
         }
     }
     Button{
-        width:100+40
-        height:50+40
+        width:100
+        height:50
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.horizontalCenterOffset: 150
         anchors.bottom: parent.bottom
+        anchors.bottomMargin: 20
         background:Rectangle{
-            width:100
-            height:50
-            anchors.centerIn: parent
             radius: 8
             color:themesTextColor2
         }

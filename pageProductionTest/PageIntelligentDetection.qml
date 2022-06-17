@@ -168,14 +168,13 @@ Item {
             text: qsTr("智能模块检测")
         }
         Button{
-            width:100+50
-            height:parent.height
+            width:100
+            height:50
             anchors.right: parent.right
-            anchors.bottom: parent.bottom
+            anchors.rightMargin: 20
+            anchors.top: parent.top
+            anchors.topMargin: 20
             background:Rectangle{
-                width:100
-                height:50
-                anchors.centerIn: parent
                 radius: 8
                 color:themesTextColor2
             }
@@ -196,7 +195,7 @@ Item {
         anchors.top: topBar.bottom
         anchors.bottom: parent.bottom
         GridLayout{
-            width:parent.width -100
+            width:parent.width - 100
             height: parent.height - 20
             anchors.horizontalCenter: parent.horizontalCenter
             rows: 5

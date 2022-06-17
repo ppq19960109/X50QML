@@ -14,7 +14,7 @@ ApplicationWindow {
     id: window
     width: 800
     height: 480
-    //        visible: true
+//        visible: true
     property int sysPower:-1
     property int permitStartStatus:0
     property int productionTestStatus:0
@@ -35,7 +35,7 @@ ApplicationWindow {
         ,{"modelData":8,"temp":60,"time":30,"minTemp":50,"maxTemp":120},{"modelData":9,"temp":100,"time":30,"minTemp":40,"maxTemp":100}]
 
     readonly property var workStateEnum:{"WORKSTATE_STOP":0,"WORKSTATE_RESERVE":1,"WORKSTATE_PREHEAT":2,"WORKSTATE_RUN":3,"WORKSTATE_FINISH":4,"WORKSTATE_PAUSE":5,"WORKSTATE_PAUSE_RESERVE":6}
-    readonly property var workStateArray:["停止","预约中","预热中","运行中","烹饪完成","暂停","暂停预约"]
+    readonly property var workStateArray:["停止","预约中","预热中","运行中","烹饪完成","暂停中","预约暂停中"]
 
     readonly property var workOperationEnum:{"START":0,"PAUSE":1,"CANCEL":2,"CONFIRM":3,"RUN_NOW":4}
 
@@ -167,6 +167,7 @@ ApplicationWindow {
     Component.onCompleted: {
         console.warn("Window onCompleted: ",Qt.fontFamilies())
         load_page("pageHome")
+//                load_page("pageTestFront")
         if(systemSettings.wifiPasswdArray!=null)
         {
             console.log("systemSettings.wifiPasswdArray",systemSettings.wifiPasswdArray.length)
@@ -191,6 +192,20 @@ ApplicationWindow {
         color: themesWindowBackgroundColor
     }
 
+    function sleepStandby()
+    {
+        if(sleepState==true && QmlDevState.state.LStoveStatus == 0 && QmlDevState.state.RStoveStatus == 0 && QmlDevState.state.HoodSpeed == 0 && QmlDevState.state.HoodLight == 0 && QmlDevState.state.RStoveTimingState==timingStateEnum.STOP&& QmlDevState.state.AlarmStatus != 1 && QmlDevState.state.Alarm != 1)
+        {
+            if((QmlDevState.state.RStOvState == workStateEnum.WORKSTATE_STOP || QmlDevState.state.RStOvState == workStateEnum.WORKSTATE_FINISH) && (QmlDevState.state.LStOvState == workStateEnum.WORKSTATE_STOP || QmlDevState.state.LStOvState == workStateEnum.WORKSTATE_FINISH))
+            {
+                SendFunc.setBuzControl(buzControlEnum.SHORTTWO)
+                SendFunc.setSysPower(0)
+                return 0
+            }
+        }
+        return -1
+    }
+
     Timer{
         id:timer_standby
         repeat: false
@@ -198,7 +213,7 @@ ApplicationWindow {
         interval: 180000
         triggeredOnStart: false
         onTriggered: {
-            console.log("timer_standby onTriggered",productionTestFlag);
+            console.log("timer_standby onTriggered",productionTestFlag)
             if(productionTestFlag>0)
             {
                 productionTestFlag=0
@@ -210,16 +225,9 @@ ApplicationWindow {
             }
             else
             {
-                if(sleepState==true && QmlDevState.state.LStoveStatus == 0 && QmlDevState.state.RStoveStatus == 0 && QmlDevState.state.HoodSpeed == 0 && QmlDevState.state.HoodLight == 0 && QmlDevState.state.RStoveTimingState==timingStateEnum.STOP&& QmlDevState.state.AlarmStatus != 1 && QmlDevState.state.Alarm != 1)
-                {
-                    if((QmlDevState.state.RStOvState == workStateEnum.WORKSTATE_STOP || QmlDevState.state.RStOvState == workStateEnum.WORKSTATE_FINISH) && (QmlDevState.state.LStOvState == workStateEnum.WORKSTATE_STOP || QmlDevState.state.LStOvState == workStateEnum.WORKSTATE_FINISH))
-                    {
-                        SendFunc.setBuzControl(buzControlEnum.SHORTTWO)
-                        SendFunc.setSysPower(0)
-                        return
-                    }
-                }
-
+                if(sleepStandby()===0)
+                    return
+                console.log("timer_standby fail,restart")
                 timer_standby.interval=8*60000
                 timer_standby.restart()
             }
@@ -251,8 +259,13 @@ ApplicationWindow {
         triggeredOnStart: false
         onTriggered: {
             console.log("timer_window sleep:")
+            if(isExistView("pageWifi")==null)
+                loaderMainHide()
+            var page=isExistView("pageSteamBakeRun")
+            if(page!==null)
+                backPage(page)
             //            console.log("timer_window sleep:",QmlDevState.state.HoodSpeed,QmlDevState.state.RStOvState,QmlDevState.state.LStOvState,QmlDevState.state.ErrorCodeShow,QmlDevState.localConnected)
-            if(QmlDevState.state.ErrorCodeShow == 0 && QmlDevState.localConnected > 0 && productionTestStatus==0 && sysPower==1 && wifiConnecting==false)
+            if(QmlDevState.state.ErrorCodeShow == 0 && QmlDevState.localConnected > 0 && productionTestStatus==0 && sysPower==1)
             {
                 if(!((QmlDevState.state.RStOvState == workStateEnum.WORKSTATE_PREHEAT || QmlDevState.state.RStOvState == workStateEnum.WORKSTATE_RUN || QmlDevState.state.RStOvState == workStateEnum.WORKSTATE_PAUSE ) || (QmlDevState.state.LStOvState == workStateEnum.WORKSTATE_PREHEAT || QmlDevState.state.LStOvState == workStateEnum.WORKSTATE_RUN || QmlDevState.state.LStOvState == workStateEnum.WORKSTATE_PAUSE )))
                 {
@@ -293,6 +306,7 @@ ApplicationWindow {
     function loaderMainHide(){
         loader_main.sourceComponent = undefined
     }
+
     Component{
         id:component_steam
         PageDialog{
@@ -307,7 +321,6 @@ ApplicationWindow {
             }
             onConfirm:{
                 console.info("component_steam onConfirm")
-
                 if(steamDialog.checkboxState)
                 {
                     var dialog=systemSettings.cookDialog
@@ -753,7 +766,22 @@ ApplicationWindow {
         id: pageGetQuad
         PageGetQuad {}
     }
-
+    Component {
+        id: pageLoadPower
+        PageLoadPower {}
+    }
+    Component {
+        id: pagePowerBoard
+        PagePowerBoard {}
+    }
+    Component {
+        id: pagePowerOut
+        PagePowerOut {}
+    }
+    Component {
+        id: pagePowerInput
+        PagePowerInput {}
+    }
     function isExistView(pageName) {
         console.log("isExistView:",pageName)
         return stackView.find(function(item,index){
@@ -864,6 +892,18 @@ ApplicationWindow {
         case "pageGetQuad":
             stackView.push(pageGetQuad,StackView.Immediate)
             break;
+        case "pageLoadPower":
+            stackView.push(pageLoadPower,StackView.Immediate)
+            break;
+        case "pagePowerBoard":
+            stackView.push(pagePowerBoard,StackView.Immediate)
+            break;
+        case "pagePowerOut":
+            stackView.push(pagePowerOut,StackView.Immediate)
+            break;
+        case "pagePowerInput":
+            stackView.push(pagePowerInput,StackView.Immediate)
+            break;
         }
 
         console.log("stackView depth:"+stackView.depth)
@@ -886,30 +926,30 @@ ApplicationWindow {
             if(cookSteps.length===1 && (undefined === cookSteps[0].number || 0 === cookSteps[0].number))
             {
                 SendFunc.setCooking(cookSteps,root.orderTime,root.cookPos)
-                //            if(cookWorkPosEnum.LEFT===root.cookPos)
-                //            {
-                //                QmlDevState.setState("LStOvState",1)
-                //                QmlDevState.setState("LStOvMode",cookSteps[0].mode)
-                //                QmlDevState.setState("LStOvSetTemp",cookSteps[0].temp)
-                //                QmlDevState.setState("LStOvRealTemp",cookSteps[0].temp)
-                //                QmlDevState.setState("LStOvSetTimer",cookSteps[0].time)
-                //                QmlDevState.setState("LStOvSetTimerLeft",cookSteps[0].time)
-                //                QmlDevState.setState("LStOvOrderTimer",cookSteps[0].time)
-                //                QmlDevState.setState("LStOvOrderTimerLeft",cookSteps[0].time)
-                //            }
-                //            else
-                //            {
-                //                QmlDevState.setState("RStOvState",1)
-                //                QmlDevState.setState("RStOvRealTemp",cookSteps[0].temp)
-                //                QmlDevState.setState("RStOvSetTimerLeft",cookSteps[0].time)
-                //                QmlDevState.setState("RStOvSetTimer",cookSteps[0].time)
-                //                QmlDevState.setState("RStOvOrderTimer",cookSteps[0].time)
-                //                QmlDevState.setState("RStOvOrderTimerLeft",cookSteps[0].time/2)
-                //            }
+                //                if(cookWorkPosEnum.LEFT===root.cookPos)
+                //                {
+                //                    QmlDevState.setState("LStOvState",5)
+                //                    QmlDevState.setState("LStOvMode",cookSteps[0].mode)
+                //                    QmlDevState.setState("LStOvSetTemp",cookSteps[0].temp)
+                //                    QmlDevState.setState("LStOvRealTemp",cookSteps[0].temp)
+                //                    QmlDevState.setState("LStOvSetTimer",cookSteps[0].time)
+                //                    QmlDevState.setState("LStOvSetTimerLeft",cookSteps[0].time/4)
+                //                    QmlDevState.setState("LStOvOrderTimer",cookSteps[0].time)
+                //                    QmlDevState.setState("LStOvOrderTimerLeft",cookSteps[0].time)
+                //                }
+                //                else
+                //                {
+                //                    QmlDevState.setState("RStOvState",1)
+                //                    QmlDevState.setState("RStOvRealTemp",cookSteps[0].temp)
+                //                    QmlDevState.setState("RStOvSetTimerLeft",cookSteps[0].time)
+                //                    QmlDevState.setState("RStOvSetTimer",cookSteps[0].time)
+                //                    QmlDevState.setState("RStOvOrderTimer",cookSteps[0].time)
+                //                    QmlDevState.setState("RStOvOrderTimerLeft",cookSteps[0].time/2)
+                //                }
             }
             else
             {
-                if(root.recipeType>0)
+                if(root.recipeType>0 || root.recipeid>0)
                 {
                     SendFunc.setMultiCooking(cookSteps,root.orderTime,root.dishName,root.recipeid)
                 }
@@ -966,7 +1006,7 @@ ApplicationWindow {
             loaderErrorShow("燃气泄漏","燃气有泄露风险\n请立即关闭灶具旋钮\n关闭总阀并开窗通气",false)
             break
         case 9:
-            if(dir==null && productionTestStatus==0)
+            if(dir==null && productionTestStatus!=1)
             {
                 loaderErrorShow("电源板串口故障！","请拨打售后电话<font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员",false);
                 standbyWakeup()

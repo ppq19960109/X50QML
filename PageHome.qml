@@ -5,11 +5,13 @@ import "pageMain"
 import "WifiFunc.js" as WifiFunc
 import "qrc:/SendFunc.js" as SendFunc
 Item {
-    property int lastLStOvState:-1
-    property int lastRStOvState:-1
-    property int lastErrorCodeShow:0
-    property int lastHoodSpeed:0
-    property int lastHoodLight:0
+    //    property int lastLStOvState:-1
+    //    property int lastRStOvState:-1
+    //    property int lastErrorCodeShow:0
+    //    property int lastHoodSpeed:0
+    //    property int lastHoodLight:0
+
+    property var lastState:0
 
     enabled: sysPower > 0
     //    anchors.fill: parent
@@ -188,7 +190,7 @@ Item {
                 //                    SendFunc.enableWifi(false)
                 //                                loaderErrorShow("右腔干烧检测电路故障！","请拨打售后电话<font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员")
 
-                //                load_page("pageTestFront")
+//                load_page("pageTestFront")
             }
             else
             {
@@ -225,7 +227,8 @@ Item {
             }
             else if("LStOvState"==key)
             {
-                console.log("LStOvState",value,QmlDevState.state.LStOvState)
+                lastState=QmlDevState.state.LStOvState
+                console.log("LStOvState",value,lastState)
                 ret=isExistView("pageSteamBakeRun")
                 if(value > 0)
                 {
@@ -247,9 +250,10 @@ Item {
                 if(value==workStateEnum.WORKSTATE_RUN)
                     sleepWakeup()
 
-                if(lastLStOvState!=value && lastLStOvState>=0)
+                //                if(lastLStOvState!=value && lastLStOvState>=0)
+                if(lastState!=value)
                 {
-                    if(value==5)
+                    if(value==workStateEnum.WORKSTATE_PAUSE||value==workStateEnum.WORKSTATE_PAUSE_RESERVE)
                     {
                         if(QmlDevState.state.LStOvDoorState==1)
                             loaderAutoPopupShow("","左腔门开启，工作暂停",292)
@@ -260,11 +264,12 @@ Item {
                             loaderDoorAutoPopupHide("左腔")
                     }
                 }
-                lastLStOvState=value
+                //                lastLStOvState=value
             }
             else if("RStOvState"==key)
             {
-                console.log("RStOvState",value,QmlDevState.state.RStOvState)
+                lastState=QmlDevState.state.RStOvState
+                console.log("RStOvState",value,lastState)
                 ret=isExistView("pageSteamBakeRun")
                 if(value > 0)
                 {
@@ -286,9 +291,10 @@ Item {
                 if(value==workStateEnum.WORKSTATE_RUN)
                     sleepWakeup()
 
-                if(lastRStOvState!=value && lastRStOvState>=0)
+                //                if(lastRStOvState!=value && lastRStOvState>=0)
+                if(lastState!=value)
                 {
-                    if(value==5)
+                    if(value==workStateEnum.WORKSTATE_PAUSE||value==workStateEnum.WORKSTATE_PAUSE_RESERVE)
                     {
                         if(QmlDevState.state.RStOvDoorState==1)
                             loaderAutoPopupShow("","右腔门开启，工作暂停",292)
@@ -299,7 +305,7 @@ Item {
                             loaderDoorAutoPopupHide("右腔")
                     }
                 }
-                lastRStOvState=value
+                //                lastRStOvState=value
             }
             else if("HoodOffLeftTime"==key)
             {
@@ -335,23 +341,15 @@ Item {
                 }
                 else if(value==5)
                 {
-                    if(QmlDevState.state.ErrorCodeShow == 0 && QmlDevState.localConnected > 0 && productionTestStatus==0 && sysPower==1 && wifiConnecting==false)
-                    {
-                        if(QmlDevState.state.LStoveStatus == 0 && QmlDevState.state.RStoveStatus == 0 && QmlDevState.state.HoodSpeed == 0 && QmlDevState.state.HoodLight == 0 && QmlDevState.state.RStoveTimingState==timingStateEnum.STOP&& QmlDevState.state.AlarmStatus != 1 && QmlDevState.state.Alarm != 1)
-                        {
-                            if((QmlDevState.state.RStOvState == workStateEnum.WORKSTATE_STOP || QmlDevState.state.RStOvState == workStateEnum.WORKSTATE_FINISH) && (QmlDevState.state.LStOvState == workStateEnum.WORKSTATE_STOP || QmlDevState.state.LStOvState == workStateEnum.WORKSTATE_FINISH))
-                            {
-                                SendFunc.setBuzControl(buzControlEnum.SHORTTWO)
-                                SendFunc.setSysPower(0)
-                            }
-                        }
-                    }
+                    sleepStandby()
                 }
             }
             else if("ErrorCodeShow"==key)
             {
-                console.log("ErrorCodeShow:",value)
-                if(lastErrorCodeShow!=value)
+                lastState=QmlDevState.state.ErrorCodeShow
+                console.log("ErrorCodeShow:",value,lastState)
+                //                if(lastErrorCodeShow!=value)
+                if(lastState!=value)
                 {
                     if(value>0)
                     {
@@ -362,8 +360,8 @@ Item {
                     {
                         loaderErrorHide()
                     }
-                    lastErrorCodeShow=value
                 }
+                //                lastErrorCodeShow=value
             }
             else if("WifiEnable"==key)
             {
@@ -398,7 +396,7 @@ Item {
                     {
                         wifiConnected=true
                     }
-                    if(isExistView("PageWifi")==null)
+                    if(isExistView("pageWifi")==null)
                     {
                         SendFunc.getCurWifi()
                     }
@@ -412,7 +410,7 @@ Item {
                     WifiFunc.addWifiInfo(wifiConnectInfo)
                     QmlDevState.executeShell("(wpa_cli list_networks | tail -n +3 | grep "+value+" | grep -v 'CURRENT' | awk '{system(\"wpa_cli remove_network \" $1)}' && wpa_cli save_config) &")
                 }
-                if(isExistView("PageWifi")==null)
+                if(isExistView("pageWifi")==null)
                 {
                     wifiConnectInfo.ssid=""
                 }
@@ -446,15 +444,26 @@ Item {
             }
             else if("HoodSpeed"==key)
             {
-                if(lastHoodSpeed!=value)
-                    sleepWakeup()
-                lastHoodSpeed=value
+                if(value!=0)
+                {
+                    lastState=QmlDevState.state.HoodSpeed
+                    //                if(lastHoodSpeed!=value)
+                    if(value!=0 && lastState!=value)
+                        sleepWakeup()
+                }
+                //                lastHoodSpeed=value
+
             }
             else if("HoodLight"==key)
             {
-                if(lastHoodLight!=value)
-                    sleepWakeup()
-                lastHoodLight=value
+                if(value!=0)
+                {
+                    lastState=QmlDevState.state.HoodLight
+                    //                if(lastHoodLight!=value)
+                    if(lastState!=value)
+                        sleepWakeup()
+                }
+                //                lastHoodLight=value
             }
             else if("OTAState"==key)
             {
@@ -573,6 +582,9 @@ Item {
                 onPressed: {
                     loaderMainHide()
                 }
+            }
+            Component.onCompleted: {
+                SendFunc.setBuzControl(buzControlEnum.SHORT)
             }
         }
     }

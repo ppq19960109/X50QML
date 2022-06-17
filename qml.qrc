@@ -31,8 +31,7 @@
         <file>pageCook/PageMultistageDelegate.qml</file>
         <file>pageSet/PageUpdateProgressBar.qml</file>
         <file>PageHomeBar.qml</file>
-        <file>pageCook/PageLeftCook.qml</file>
-        <file>pageCook/PageRightCook.qml</file>
+        <file>pageCook/PageNewCook.qml</file>
         <file>PageErrorPopup.qml</file>
         <file>x50/wifi/kai.png</file>
         <file>x50/wifi/WIFI.png</file>
@@ -112,5 +111,9 @@
         <file>x50/icon/icon_alarm.png</file>
         <file>x50/icon/icon_pop_error.png</file>
         <file>PageImagePopup.qml</file>
+        <file>pageProductionTest/PageLoadPower.qml</file>
+        <file>pageProductionTest/PagePowerBoard.qml</file>
+        <file>pageProductionTest/PagePowerOut.qml</file>
+        <file>pageProductionTest/PagePowerInput.qml</file>
     </qresource>
 </RCC>

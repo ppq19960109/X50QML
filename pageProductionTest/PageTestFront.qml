@@ -4,7 +4,6 @@ import QtQuick.Layouts 1.3
 
 import "qrc:/SendFunc.js" as SendFunc
 Item {
-    property string name: "PageTestFront"
     Component.onCompleted: {
         productionTestStatus=1
         SendFunc.setBuzControl(buzControlEnum.SHORT)
@@ -34,14 +33,15 @@ Item {
         GridLayout{
             width:parent.width
             height: parent.height-100
-            rows: 1
+            anchors.top: parent.top
+            rows: 2
             columns: 2
-            rowSpacing: 0
-            columnSpacing: 0
+            rowSpacing: 20
+            columnSpacing: 50
 
             Button{
-                Layout.preferredWidth: 250
-                Layout.preferredHeight:250
+                Layout.preferredWidth: 300
+                Layout.preferredHeight:120
                 Layout.alignment: Qt.AlignHCenter|Qt.AlignVCenter
                 background:Rectangle{
                     radius: 16
@@ -58,8 +58,8 @@ Item {
                 }
             }
             Button{
-                Layout.preferredWidth: 250
-                Layout.preferredHeight:250
+                Layout.preferredWidth: 300
+                Layout.preferredHeight:120
                 Layout.alignment: Qt.AlignHCenter|Qt.AlignVCenter
                 background:Rectangle{
                     radius: 16
@@ -76,16 +76,55 @@ Item {
                     load_page("pageIntelligentDetection")
                 }
             }
+            Button{
+                Layout.preferredWidth: 300
+                Layout.preferredHeight:120
+                Layout.alignment: Qt.AlignHCenter|Qt.AlignVCenter
+                background:Rectangle{
+                    radius: 16
+                    color:themesTextColor2
+                }
+                Text{
+                    text:"负载功率检测"
+                    color:"#FFF"
+                    font.pixelSize: 40
+                    anchors.centerIn: parent
+                    wrapMode: Text.WordWrap
+                }
+
+                onClicked: {
+                    load_page("pageLoadPower")
+                }
+            }
+            Button{
+                Layout.preferredWidth: 300
+                Layout.preferredHeight:120
+                Layout.alignment: Qt.AlignHCenter|Qt.AlignVCenter
+                background:Rectangle{
+                    radius: 16
+                    color:themesTextColor2
+                }
+                Text{
+                    text:"输入输出检测"
+                    color:"#FFF"
+                    font.pixelSize: 40
+                    anchors.centerIn: parent
+                    wrapMode: Text.WordWrap
+                }
+
+                onClicked: {
+                    load_page("pagePowerBoard")
+                }
+            }
         }
         Button{
-            width:100+50
-            height:50+50
+            width:100
+            height:50
             anchors.right: parent.right
+            anchors.rightMargin: 20
             anchors.bottom: parent.bottom
+            anchors.bottomMargin: 20
             background:Rectangle{
-                width:100
-                height:50
-                anchors.centerIn: parent
                 radius: 8
                 color:themesTextColor2
             }

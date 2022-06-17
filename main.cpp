@@ -14,7 +14,8 @@
 
 int main(int argc, char *argv[])
 {
-
+//    QByteArray array=QString("123456F3").toUtf8();
+//    qDebug() << "stringto16: " << array.toHex();
     qputenv("QT_IM_MODULE", QByteArray("qtvirtualkeyboard"));
     qputenv("QT_VIRTUALKEYBOARD_STYLE", "light");
 

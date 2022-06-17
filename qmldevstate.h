@@ -34,6 +34,7 @@ public:
         LINK_VALUE_TYPE_STRING,
         LINK_VALUE_TYPE_STRUCT,
         LINK_VALUE_TYPE_NULL,
+        LINK_VALUE_TYPE_ARRAY,
     };
 //    QProcess process;
     void setLocalConnected(const int connected);

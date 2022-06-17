@@ -170,18 +170,13 @@ Item {
         }
     }
 
-
-
-
     Button{
-        width:100+50
-        height:50+50
+        width:100
+        height:50
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.bottom: parent.bottom
+        anchors.bottomMargin: 20
         background:Rectangle{
-            width:100
-            height:50
-            anchors.centerIn: parent
             radius: 8
             color:themesTextColor2
         }

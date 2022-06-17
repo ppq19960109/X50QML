@@ -29,7 +29,7 @@ Item {
         }
         else
         {
-            if(systemSettings.cookDialog[4]>0)
+            if(systemSettings.cookDialog[3]>0)
             {
                 loaderSteamShow(360,"请将食物放入右腔\n将水箱加满水","开始预约",root,3)
                 return

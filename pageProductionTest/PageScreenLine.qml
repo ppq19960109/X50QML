@@ -10,7 +10,6 @@ Item {
     property int touchExited:0
     Component.onCompleted: {
 
-
     }
 
     Rectangle{
@@ -22,8 +21,6 @@ Item {
         Canvas{
             property real lastX
             property real lastY
-            x:0
-            y:0
             id:rowCanvas
             anchors.fill:parent
             contextType: "2d"
@@ -48,7 +45,7 @@ Item {
             propagateComposedEvents: true
 
             onPressed: {
-                console.warn("row onPressed.....")
+                console.warn("row onPressed.....",mouse.x,mouse.y)
                 row.z=1
                 col.z=0
                 rowCanvas.lastX = mouseX//鼠标位置
@@ -58,11 +55,12 @@ Item {
                 touchExited=0
             }
             onReleased: {
-                console.warn("row onReleased......",pressedX,mouse.x)
+                console.warn("row onReleased......",mouse.x,mouse.y)
                 rowCanvas.context.reset()
-//                rowCanvas.requestPaint()
-                if(touchExited<3 && rowPos>0 && Math.abs(mouse.x-pressedX)>600)
+                //                rowCanvas.requestPaint()
+                if(touchExited<3 && rowPos>0 && Math.abs(mouse.x-pressedX)>=600)
                     ++rowCount
+                rowPos=0
             }
             onPositionChanged:{
                 console.warn("row onPositionChanged....",mouse.x,mouse.y)
@@ -101,8 +99,6 @@ Item {
         Canvas{
             property real lastX
             property real lastY
-            x:0
-            y:0
             id:colCanvas
             anchors.fill:parent
             contextType: "2d"
@@ -127,7 +123,7 @@ Item {
             propagateComposedEvents: true
 
             onPressed: {
-                console.warn("col onPressed.....")
+                console.warn("col onPressed.....",mouse.x,mouse.y)
                 row.z=0
                 col.z=1
                 colCanvas.lastX = mouseX//鼠标位置
@@ -137,11 +133,12 @@ Item {
                 touchExited=0
             }
             onReleased: {
-                console.warn("col onReleased......",pressedY,mouse.y)
+                console.warn("col onReleased......",mouse.x,mouse.y)
                 colCanvas.context.reset()
-//                colCanvas.requestPaint()
-                if( touchExited<3 && colPos>0&& Math.abs(mouse.y-pressedY)>400)
+                //                colCanvas.requestPaint()
+                if( touchExited<3 && colPos>0&& Math.abs(mouse.y-pressedY)>=360)
                     ++colCount
+                colPos=0
             }
             onPositionChanged:{
                 console.warn("col onPositionChanged....",mouse.x,mouse.y)
@@ -172,14 +169,13 @@ Item {
     }
 
     Button{
-        width:100+50
-        height:50+50
-        anchors.right: parent.right
+        width:100
+        height:50
+        anchors.left: parent.left
+        anchors.leftMargin: 20
         anchors.bottom: parent.bottom
+        anchors.bottomMargin: 20
         background:Rectangle{
-            width:100
-            height:50
-            anchors.centerIn: parent
             radius: 8
             color:themesTextColor2
         }
@@ -190,7 +186,8 @@ Item {
             anchors.centerIn: parent
         }
         onClicked: {
-            backPrePage()
+            if(rowPos==0 && colPos==0)
+                backPrePage()
         }
     }
 
