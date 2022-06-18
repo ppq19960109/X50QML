@@ -11,14 +11,14 @@ Item {
         id:timer_wifi
         repeat: false
         running: false
-        interval: 3000
+        interval: 4000
         triggeredOnStart: false
         onTriggered: {
             if(step==0)
             {
                 versionText.visible=true
                 version.color="red"
-                versionText.text="通讯异常"
+                versionText.text="电源串口通讯异常"
             }
             else if(step==1)
             {
@@ -44,7 +44,7 @@ Item {
             if(element.ssid===productionTestWIFISSID)
             {
                 wifiSignalText.visible=true
-                if(element.rssi < -75)
+                if(element.rssi <= -75)
                 {
                     wifiSignal.color="red"
                 }
@@ -67,14 +67,29 @@ Item {
             }
             wifiSignalText.visible=true
             wifiSignal.color="red"
-            wifiSignalText.text="获取信号值失败"
+            wifiSignalText.text="WIFI "+productionTestWIFISSID+"不存在"
             return
         }
 
         if(root[i].rssi > -75)
         {
-            step=2
-            SendFunc.connectWiFi(productionTestWIFISSID,productionTestWIFIPWD,1)
+//            step=2
+//            SendFunc.connectWiFi(productionTestWIFISSID,productionTestWIFIPWD,1)
+
+            step=3
+
+            quadText.visible=true
+            if(QmlDevState.state.ProductKey=="" || QmlDevState.state.DeviceName==""|| QmlDevState.state.ProductSecret==""|| QmlDevState.state.DeviceSecret=="")
+            {
+                quad.color="red"
+                quadText.text="四元组缺失"
+            }
+            else
+            {
+                quad.color="green"
+                quadText.text="四元组正常"
+                systemReset()
+            }
         }
     }
 
@@ -96,48 +111,34 @@ Item {
             {
                 parseWifiList(value)
             }
-            else if("WifiState"==key && step==2)
-            {
-                wifiConnectText.visible=true
-                if(value==2 || value==3|| value==5)
-                {
-                    wifiConnect.color="red"
-                    wifiConnectText.text="失败"
-                }
-                else if(value==4)
-                {
-                    step=3
-                    wifiConnect.color="green"
-                    wifiConnectText.text="成功"
+//            else if("WifiState"==key && step==2)
+//            {
+//                wifiConnectText.visible=true
+//                if(value==2 || value==3|| value==5)
+//                {
+//                    wifiConnect.color="red"
+//                    wifiConnectText.text="失败"
+//                }
+//                else if(value==4)
+//                {
+//                    step=3
+//                    wifiConnect.color="green"
+//                    wifiConnectText.text="成功"
 
-                    quadText.visible=true
-                    if(QmlDevState.state.ProductKey=="" || QmlDevState.state.DeviceName==""|| QmlDevState.state.ProductSecret==""|| QmlDevState.state.DeviceSecret=="")
-                    {
-                        quad.color="red"
-                        quadText.text="四元组缺失"
-                    }
-                    else
-                    {
-                        quad.color="green"
-                        quadText.text="四元组正常"
-                        systemReset()
-                    }
-                }
-            }
-            //            else if("ssid"==key && step==3)
-            //            {
-
-            //                if(wifiConnected==true && value==wifiConnectInfo.ssid)
-            //                {
-            //                    step=3
-
-            //                }
-            //                else
-            //                {
-            //                    wifiConnect.color="red"
-            //                    wifiConnectText.text="失败"
-            //                }
-            //            }
+//                    quadText.visible=true
+//                    if(QmlDevState.state.ProductKey=="" || QmlDevState.state.DeviceName==""|| QmlDevState.state.ProductSecret==""|| QmlDevState.state.DeviceSecret=="")
+//                    {
+//                        quad.color="red"
+//                        quadText.text="四元组缺失"
+//                    }
+//                    else
+//                    {
+//                        quad.color="green"
+//                        quadText.text="四元组正常"
+//                        systemReset()
+//                    }
+//                }
+//            }
             else if("Reset"==key && step==3)
             {
                 step=0xff
@@ -197,32 +198,30 @@ Item {
         GridLayout{
             width:parent.width - 100
             height: parent.height - 20
-            anchors.horizontalCenter: parent.horizontalCenter
-            rows: 5
+            anchors.centerIn: parent
+            rows: 4
             columns: 2
-            rowSpacing: 5
-            columnSpacing: 5
+            rowSpacing: 1
+            columnSpacing: 1
 
             Text{
-                Layout.preferredWidth: 220
+                Layout.preferredWidth: 250
                 Layout.preferredHeight:50
-                Layout.alignment: Qt.AlignVCenter
                 text:"通讯及版本检测:"
                 color:"#FFF"
                 font.pixelSize: 30
             }
             Rectangle{
                 id:version
-                Layout.preferredWidth: 400
-                Layout.preferredHeight:100
-                Layout.alignment: Qt.AlignVCenter
+                Layout.preferredWidth: 450
+                Layout.preferredHeight:80
                 radius: 8
                 color:"transparent"
 
                 Text{
                     id:versionText
                     visible: false
-                    text:""
+                    text:"检测中"
                     color:"#FFF"
                     font.pixelSize: 30
                     anchors.centerIn: parent
@@ -230,9 +229,8 @@ Item {
             }
 
             Text{
-                Layout.preferredWidth: 220
+                Layout.preferredWidth: 250
                 Layout.preferredHeight:50
-                Layout.alignment: Qt.AlignVCenter
 
                 text:"wifi信号检测:"
                 color:"#FFF"
@@ -241,53 +239,49 @@ Item {
             Rectangle{
                 id:wifiSignal
 
-                Layout.preferredWidth: 400
+                Layout.preferredWidth: 450
                 Layout.preferredHeight:50
-                Layout.alignment: Qt.AlignVCenter
                 radius: 8
                 color:"transparent"
 
                 Text{
                     id:wifiSignalText
                     visible: false
-                    text:""
+                    text:"检测中"
                     color:"#FFF"
                     font.pixelSize: 30
                     anchors.centerIn: parent
                 }
             }
 
-            Text{
-                Layout.preferredWidth: 220
-                Layout.preferredHeight:50
-                Layout.alignment: Qt.AlignVCenter
+//            Text{
+//                Layout.preferredWidth: 250
+//                Layout.preferredHeight:50
 
-                text:"wifi连接:"
-                color:"#FFF"
-                font.pixelSize: 30
-            }
-            Rectangle{
-                id:wifiConnect
+//                text:"wifi连接:"
+//                color:"#FFF"
+//                font.pixelSize: 30
+//            }
+//            Rectangle{
+//                id:wifiConnect
+//                Layout.preferredWidth: 450
+//                Layout.preferredHeight:50
 
-                Layout.preferredWidth: 400
-                Layout.preferredHeight:50
-                Layout.alignment: Qt.AlignVCenter
-                radius: 8
-                color:"transparent"
-                Text{
-                    visible: false
-                    id:wifiConnectText
-                    text:"成功"
-                    color:"#FFF"
-                    font.pixelSize: 30
-                    anchors.centerIn: parent
-                }
-            }
+//                radius: 8
+//                color:"transparent"
+//                Text{
+//                    visible: false
+//                    id:wifiConnectText
+//                    text:"检测中"
+//                    color:"#FFF"
+//                    font.pixelSize: 30
+//                    anchors.centerIn: parent
+//                }
+//            }
 
             Text{
-                Layout.preferredWidth: 220
-                Layout.preferredHeight:60
-                Layout.alignment: Qt.AlignVCenter
+                Layout.preferredWidth: 250
+                Layout.preferredHeight:50
 
                 text:"四元组检测:"
                 color:"#FFF"
@@ -295,25 +289,23 @@ Item {
             }
             Rectangle{
                 id:quad
-                Layout.preferredWidth: 400
+                Layout.preferredWidth: 450
                 Layout.preferredHeight:50
-                Layout.alignment: Qt.AlignVCenter
                 radius: 8
                 color:"transparent"
 
                 Text{
                     visible: false
                     id:quadText
-                    text:"四元组正常"
+                    text:"检测中"
                     color:"#FFF"
                     font.pixelSize: 30
                     anchors.centerIn: parent
                 }
             }
             Text{
-                Layout.preferredWidth: 220
+                Layout.preferredWidth: 250
                 Layout.preferredHeight:50
-                Layout.alignment: Qt.AlignVCenter
 
                 text:"恢复出厂设置:"
                 color:"#FFF"
@@ -321,15 +313,14 @@ Item {
             }
             Rectangle{
                 id:reset
-                Layout.preferredWidth: 400
+                Layout.preferredWidth: 450
                 Layout.preferredHeight:50
-                Layout.alignment: Qt.AlignVCenter
                 radius: 8
                 color:"transparent"
                 Text{
                     visible: false
                     id:resetText
-                    text:"成功"
+                    text:"恢复出厂中"
                     color:"#FFF"
                     font.pixelSize: 30
                     anchors.centerIn: parent
