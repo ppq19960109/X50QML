@@ -26,7 +26,7 @@ Item {
                 var i
                 for(i=0;i<22;i+=2)
                 {
-                    twobytes[i/2].text=value[i]<<8 + value[i+i]
+                    twobytes[i/2].text=(value[i]<<8) + value[i+1]
                 }
                 for(;i<29;++i)
                 {

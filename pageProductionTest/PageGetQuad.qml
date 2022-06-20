@@ -1,11 +1,10 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
-import QtTest 1.1
+//import QtTest 1.1
 
 import "qrc:/SendFunc.js" as SendFunc
 Item {
-    property string name: "PageGetQuad"
     property int step: 0
 
     Component.onCompleted: {
@@ -19,7 +18,7 @@ Item {
     function connectTestWiFi()
     {
         SendFunc.connectWiFi(productionTestWIFISSID,productionTestWIFIPWD,1)
-//        SendFunc.connectWiFi("IoT-Test","12345678",1)
+        //        SendFunc.connectWiFi("IoT-Test","12345678",1)
     }
 
     function getQuad()
@@ -38,12 +37,12 @@ Item {
             {
                 if(value==4)
                 {
-                    step=1
-                    wifiConnect.color="green"
-                    wifiConnectText.text="成功"
+                    //                    step=1
+                    //                    wifiConnect.color="green"
+                    //                    wifiConnectText.text="成功"
 
-                    quadText.visible=true
-                    getQuad()
+                    //                    quadText.visible=true
+                    //                    getQuad()
                 }
                 else
                 {
@@ -51,6 +50,28 @@ Item {
                     wifiConnect.color="red"
                     wifiConnectText.text="失败"
                     retry.visible=true
+                }
+            }
+            else if(step==0 && "ssid"==key)
+            {
+                if(wifiConnected==true)
+                {
+                    if(value==productionTestWIFISSID)
+                    {
+                        step=1
+                        wifiConnect.color="green"
+                        wifiConnectText.text="成功"
+
+                        quadText.visible=true
+                        getQuad()
+                    }
+                    else
+                    {
+                        step=0xff
+                        wifiConnect.color="red"
+                        wifiConnectText.text="失败"
+                        retry.visible=true
+                    }
                 }
             }
             else if(step==1 && "DeviceSecret"==key)
@@ -160,15 +181,13 @@ Item {
         Button{
             id:retry
             visible: false
-            width:100+40
-            height:50+40
-            anchors.right: quit.left
+            width:100
+            height:50
+            anchors.right: productionTest.left
             anchors.rightMargin: 40
             anchors.bottom: parent.bottom
+            anchors.bottomMargin: 20
             background:Rectangle{
-                width:100
-                height:50
-                anchors.centerIn: parent
                 radius: 8
                 color:"green"
             }
@@ -184,6 +203,28 @@ Item {
                 quadText.text=""
                 step=0
                 connectTestWiFi()
+            }
+        }
+        Button{
+            id:productionTest
+            width:100
+            height:50
+            anchors.right: quit.left
+            anchors.rightMargin: 40
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: 20
+            background:Rectangle{
+                radius: 8
+                color:"green"
+            }
+            Text{
+                text:"产测"
+                color:"#fff"
+                font.pixelSize: 40
+                anchors.centerIn: parent
+            }
+            onClicked: {
+                load_page("pageTestFront")
             }
         }
         Button{
@@ -205,7 +246,7 @@ Item {
                 anchors.centerIn: parent
             }
             onClicked: {
-                backPrePage()
+                backTopPage()
             }
         }
     }

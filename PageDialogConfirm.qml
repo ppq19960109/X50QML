@@ -9,7 +9,7 @@ Item {
     property alias hintWidth: hint.width
     property alias hintHeight: hint.height
     property alias closeBtnVisible: closeBtn.visible
-    signal cancel()
+    signal cancel(var flag)
     signal confirm()
     MouseArea{
         anchors.fill: parent
@@ -45,7 +45,7 @@ Item {
             }
             background: Item {}
             onClicked: {
-                cancel()
+                cancel(0)
             }
         }
 
@@ -105,7 +105,7 @@ Item {
                 radius: 32
             }
             onClicked: {
-                cancel()
+                cancel(1)
             }
         }
 

@@ -119,7 +119,7 @@ Rectangle {
                 font.pixelSize: 30
                 color:"#878787"
                 text:"左腔\n状态"
-//                wrapMode: Text.WordWrap
+                //                wrapMode: Text.WordWrap
                 horizontalAlignment:Text.AlignHCenter
                 verticalAlignment:Text.AlignVCenter
             }
@@ -519,15 +519,18 @@ Rectangle {
             confirmText:"继续工作"
             hintWidth:600
             hintHeight:280
-            closeBtnVisible:false
+            //            closeBtnVisible:false
             onCancel: {
-                if(hintTopText.indexOf("左腔")!=-1)
+                if(flag>0)
                 {
-                    SendFunc.setCookOperation(cookWorkPosEnum.LEFT,workOperationEnum.CANCEL)
-                }
-                else
-                {
-                    SendFunc.setCookOperation(cookWorkPosEnum.RIGHT,workOperationEnum.CANCEL)
+                    if(hintTopText.indexOf("左腔")!=-1)
+                    {
+                        SendFunc.setCookOperation(cookWorkPosEnum.LEFT,workOperationEnum.CANCEL)
+                    }
+                    else
+                    {
+                        SendFunc.setCookOperation(cookWorkPosEnum.RIGHT,workOperationEnum.CANCEL)
+                    }
                 }
                 closeCancelRun()
             }

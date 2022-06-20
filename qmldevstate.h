@@ -118,7 +118,6 @@ private slots:
 //stateTypeMap.insert("OTAProgress",LINK_VALUE_TYPE_NUM);
 //stateTypeMap.insert("OTANewVersion",LINK_VALUE_TYPE_STRING);
 
-//stateTypeMap.insert("AfterSalesPhone",LINK_VALUE_TYPE_STRING);
 //stateTypeMap.insert("AfterSalesQrCode",LINK_VALUE_TYPE_STRING);
 
 //stateTypeMap.insert("LStOvMode",LINK_VALUE_TYPE_NUM);

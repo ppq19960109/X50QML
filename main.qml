@@ -14,7 +14,7 @@ ApplicationWindow {
     id: window
     width: 800
     height: 480
-//        visible: true
+    //        visible: true
     property int sysPower:-1
     property int permitStartStatus:0
     property int productionTestStatus:0
@@ -54,6 +54,7 @@ ApplicationWindow {
     readonly property string themesTextColor:"#E68855"
     readonly property string themesTextColor2:"#A2A2A2"
 
+    property var pattern: new RegExp("[\u4E00-\u9FA5]+")
     Settings {
         id: testSettings
         category: "test"
@@ -121,6 +122,7 @@ ApplicationWindow {
     {
         var Data={}
         Data.reset = null
+        Data.LocalOperate = 0xa4
         SendFunc.setToServer(Data)
 
         systemSettings.sleepTime=3
@@ -166,8 +168,14 @@ ApplicationWindow {
 
     Component.onCompleted: {
         console.warn("Window onCompleted: ",Qt.fontFamilies())
+
+        //        var pattern = new RegExp("[\u4E00-\u9FA5]+")
+        //        var str='\\xE6\\x95\\xB0\\xE6\\x8D\\xae'
+        //        console.warn("Window onCompleted1: ",str,str.replace('\\x','%'),decodeURI(str.replace(/\\x/g,'%')))
+        //                console.warn("Window onCompleted test: ",encodeURI("a1数b2据C3"),encodeURIComponent("a1数b2据C3"),decodeURI("a1%E6%95%B0b2%E6%8D%AEC3"),decodeURIComponent("a1%E6%95%B0b2%E6%8D%AEC3"),pattern.test("数据a1"),pattern.test("adwe445-._"))
+
         load_page("pageHome")
-//                load_page("pageTestFront")
+        //                load_page("pageTestFront")
         if(systemSettings.wifiPasswdArray!=null)
         {
             console.log("systemSettings.wifiPasswdArray",systemSettings.wifiPasswdArray.length)
@@ -1029,7 +1037,7 @@ ApplicationWindow {
                 loaderErrorShow("右腔干烧检测电路故障！","请拨打售后电话<font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员")
             break
         case 15:
-            if(dir==null)
+            if(dir==null && productionTestStatus==0)
                 loaderErrorShow("手势板故障！","请拨打售后电话<font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员");
             break
         default:

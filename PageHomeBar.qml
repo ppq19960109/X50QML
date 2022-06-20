@@ -15,13 +15,16 @@ Item {
             confirmText:"重新定时"
             hintWidth:600
             hintHeight:292
-            closeBtnVisible:false
+
             onCancel: {
-                var Data={}
-                Data.RStoveTimingOpera = timingOperationEnum.CANCEL
-                Data.DataReportReason=0
-                SendFunc.setToServer(Data)
-                //                QmlDevState.setState("RStoveTimingState",timingStateEnum.STOP)
+                if(flag>0)
+                {
+                    var Data={}
+                    Data.RStoveTimingOpera = timingOperationEnum.CANCEL
+                    Data.DataReportReason=0
+                    SendFunc.setToServer(Data)
+                    //                QmlDevState.setState("RStoveTimingState",timingStateEnum.STOP)
+                }
                 loaderMainHide()
             }
             onConfirm: {
@@ -162,32 +165,32 @@ Item {
                 }
             }
 
-//            onPressedChanged: {
+            //            onPressedChanged: {
 
-//                if (pressed) {
-//                    longPressTimer.running = true
-//                }
-//                else
-//                {
-//                    longPressTimer.running = false
-//                }
-//            }
+            //                if (pressed) {
+            //                    longPressTimer.running = true
+            //                }
+            //                else
+            //                {
+            //                    longPressTimer.running = false
+            //                }
+            //            }
         }
-//        Timer {
-//            id: longPressTimer
-//            interval: 350
-//            repeat: false
-//            running: false
+        //        Timer {
+        //            id: longPressTimer
+        //            interval: 350
+        //            repeat: false
+        //            running: false
 
-//            onTriggered: {
-//                if(systemSettings.childLock==false)
-//                {
-//                    console.log("启用童锁")
-//                    systemSettings.childLock=true
-//                    loaderLockScreen.source="PageLockScreen.qml"
-//                }
+        //            onTriggered: {
+        //                if(systemSettings.childLock==false)
+        //                {
+        //                    console.log("启用童锁")
+        //                    systemSettings.childLock=true
+        //                    loaderLockScreen.source="PageLockScreen.qml"
+        //                }
 
-//            }
-//        }
+        //            }
+        //        }
     }
 }

@@ -190,7 +190,7 @@ Item {
                 //                    SendFunc.enableWifi(false)
                 //                                loaderErrorShow("右腔干烧检测电路故障！","请拨打售后电话<font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员")
 
-//                load_page("pageTestFront")
+                //                load_page("pageTestFront")
             }
             else
             {
@@ -405,10 +405,22 @@ Item {
             }
             else if("ssid"==key)
             {
-                if(wifiConnected==true && value==wifiConnectInfo.ssid)
+                if(wifiConnected==true && wifiConnectInfo.ssid!="")
                 {
-                    WifiFunc.addWifiInfo(wifiConnectInfo)
-                    QmlDevState.executeShell("(wpa_cli list_networks | tail -n +3 | grep "+value+" | grep -v 'CURRENT' | awk '{system(\"wpa_cli remove_network \" $1)}' && wpa_cli save_config) &")
+                    var real_ssid
+                    if(pattern.test(wifiConnectInfo.ssid))
+                    {
+                        real_ssid=decodeURI(value.replace(/\\x/g,'%'))
+                    }
+                    else
+                    {
+                        real_ssid=value
+                    }
+                    if(real_ssid==wifiConnectInfo.ssid)
+                    {
+                        WifiFunc.addWifiInfo(wifiConnectInfo)
+                        QmlDevState.executeShell("(wpa_cli list_networks | tail -n +3 | grep "+value+" | grep -v 'CURRENT' | awk '{system(\"wpa_cli remove_network \" $1)}' && wpa_cli save_config) &")
+                    }
                 }
                 if(isExistView("pageWifi")==null)
                 {
@@ -419,6 +431,7 @@ Item {
             {
                 if(productionTestFlag > 0)
                 {
+                    systemPower(2)
                     SendFunc.setSysPower(1)
                     load_page("pageTestFront")
                 }

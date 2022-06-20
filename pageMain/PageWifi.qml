@@ -92,11 +92,24 @@ Item {
             }
             else if("ssid"==key)
             {
-                if(wifiConnected==true && value!="" && value==wifiConnectInfo.ssid)
+                if(wifiConnected==true && wifiConnectInfo.ssid!="")
                 {
-                    qrcode_display=20
-                    wifiConnectInfo.ssid=""
-                    loaderQrcodeShow("连接成功！")
+                    var real_ssid
+                    if(pattern.test(wifiConnectInfo.ssid))
+                    {
+                        real_ssid=decodeURI(value.replace(/\\x/g,'%'))
+                        console.log("real_ssid",real_ssid,wifiConnectInfo.ssid)
+                    }
+                    else
+                    {
+                        real_ssid=value
+                    }
+                    if(real_ssid==wifiConnectInfo.ssid)
+                    {
+                        qrcode_display=20
+                        wifiConnectInfo.ssid=""
+                        loaderQrcodeShow("连接成功！")
+                    }
                 }
             }
             else if("WifiEnable"==key)

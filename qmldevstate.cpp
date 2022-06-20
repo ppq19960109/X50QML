@@ -37,7 +37,6 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     stateType.append(QPair<QString,int>("OTAProgress",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("OTANewVersion",LINK_VALUE_TYPE_STRING));
 
-    stateType.append(QPair<QString,int>("AfterSalesPhone",LINK_VALUE_TYPE_STRING));
     //    stateType.append(QPair<QString,int>("AfterSalesQrCode",LINK_VALUE_TYPE_STRING));
 
     //    stateType.append(QPair<QString,int>("LStOvOperation",LINK_VALUE_TYPE_NUM));

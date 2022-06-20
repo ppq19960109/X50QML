@@ -7,6 +7,9 @@ Item {
     Component.onCompleted: {
         productionTestStatus=1
         SendFunc.setBuzControl(buzControlEnum.SHORT)
+        var errorcode=QmlDevState.state.ErrorCodeShow
+        if(errorcode==9||errorcode==15)
+            loaderErrorHide()
     }
     Component.onDestruction: {
         productionTestStatus=0
@@ -135,7 +138,7 @@ Item {
                 anchors.centerIn: parent
             }
             onClicked: {
-                backPrePage()
+                backTopPage()
             }
         }
     }
