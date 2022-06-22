@@ -17,7 +17,7 @@ Item {
             if("SteamStart"==key)
             {
                 var root=recipeListView.model[recipeListView.currentIndex]
-//                console.log("SteamStart:",JSON.stringify(root))
+                console.log("SteamStart:",JSON.stringify(root),recipeListView.currentIndex)
                 var cookSteps=JSON.parse(root.cookSteps)
                 if(systemSettings.cookDialog[5]>0)
                 {
@@ -81,7 +81,7 @@ Item {
                 cacheBuffer:6
                 orientation:ListView.Vertical
                 currentIndex:0
-                highlightMoveDuration:50
+                highlightMoveDuration:40
                 highlightMoveVelocity:-1
                 delegate: Item{
                     height: 100
@@ -137,7 +137,7 @@ Item {
 //                boundsBehavior:Flickable.StopAtBounds
                 clip: true
                 currentIndex:0
-                highlightMoveDuration:50
+                highlightMoveDuration:40
                 highlightMoveVelocity:-1
                 delegate: Item{
                     readonly property int cookType:CookFunc.getCookType(modelData.cookSteps)

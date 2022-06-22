@@ -173,8 +173,8 @@ Item {
             height:50
             anchors.right: parent.right
             anchors.rightMargin: 20
-            anchors.top: parent.top
-            anchors.topMargin: 20
+            anchors.bottom: parent.bottom
+
             background:Rectangle{
                 radius: 8
                 color:themesTextColor2
@@ -186,6 +186,7 @@ Item {
                 anchors.centerIn: parent
             }
             onClicked: {
+                console.log("onClicked")
                 backPrePage()
             }
         }

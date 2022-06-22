@@ -4,15 +4,22 @@ import QtQuick.Layouts 1.3
 
 import "qrc:/SendFunc.js" as SendFunc
 Item {
+    property string name: "pageTestFront"
     Component.onCompleted: {
         productionTestStatus=1
+        systemPower(1)
+        SendFunc.setSysPower(1)
         SendFunc.setBuzControl(buzControlEnum.SHORT)
-        var errorcode=QmlDevState.state.ErrorCodeShow
-        if(errorcode==9||errorcode==15)
-            loaderErrorHide()
     }
     Component.onDestruction: {
         productionTestStatus=0
+        systemPower(QmlDevState.state.SysPower)
+        loaderErrorCodeShow(QmlDevState.state.ErrorCodeShow)
+    }
+    StackView.onActivated:{
+        var errorcode=QmlDevState.state.ErrorCodeShow
+        if(errorcode===9||errorcode===15)
+            loaderErrorHide()
     }
 
     Item{

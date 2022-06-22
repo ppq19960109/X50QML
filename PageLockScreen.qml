@@ -32,7 +32,7 @@ Item {
         anchors.rightMargin: 20
         anchors.bottom: parent.bottom
         anchors.bottomMargin: 10
-        width: 100
+        width: 110
         height: 80
 
         background:Item {}

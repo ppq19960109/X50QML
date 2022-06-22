@@ -5,16 +5,26 @@ import "pageMain"
 import "WifiFunc.js" as WifiFunc
 import "qrc:/SendFunc.js" as SendFunc
 Item {
-    //    property int lastLStOvState:-1
-    //    property int lastRStOvState:-1
-    //    property int lastErrorCodeShow:0
-    //    property int lastHoodSpeed:0
-    //    property int lastHoodLight:0
-
-    property var lastState:0
+    property int lastLStOvState:-1
+    property int lastRStOvState:-1
+    property int lastErrorCodeShow:0
+    property int lastHoodSpeed:0
+    property int lastHoodLight:0
 
     enabled: sysPower > 0
     //    anchors.fill: parent
+
+    function remindConfirmFunc(){
+        SendFunc.setCookOperation(cookWorkPosEnum.LEFT,workOperationEnum.START)
+        loaderRemindHide()
+    }
+    function loaderRemindHide(){
+        if(loaderAuto.sourceComponent === component_autoPopup)
+        {
+            if(loaderAuto.item.confirmText=="继续烹饪")
+                loaderAuto.sourceComponent = undefined
+        }
+    }
     Component{
         id:component_alarm
         PagePopup{
@@ -36,10 +46,9 @@ Item {
                 anchors.rightMargin:100+160
                 source: "qrc:/x50/icon/icon_alarm.png"
             }
-            Component.onCompleted: {
-                sleepWakeup()
-                //                SendFunc.setBuzControl(buzControlEnum.OPEN)
-            }
+            //            Component.onCompleted: {
+            //                SendFunc.setBuzControl(buzControlEnum.OPEN)
+            //            }
             //            Component.onDestruction: {
             //                SendFunc.setBuzControl(buzControlEnum.STOP)
             //            }
@@ -227,8 +236,7 @@ Item {
             }
             else if("LStOvState"==key)
             {
-                lastState=QmlDevState.state.LStOvState
-                console.log("LStOvState",value,lastState)
+                console.log("LStOvState",value)
                 ret=isExistView("pageSteamBakeRun")
                 if(value > 0)
                 {
@@ -250,8 +258,7 @@ Item {
                 if(value==workStateEnum.WORKSTATE_RUN)
                     sleepWakeup()
 
-                //                if(lastLStOvState!=value && lastLStOvState>=0)
-                if(lastState!=value)
+                if(lastLStOvState!=value && lastLStOvState>=0)
                 {
                     if(value==workStateEnum.WORKSTATE_PAUSE||value==workStateEnum.WORKSTATE_PAUSE_RESERVE)
                     {
@@ -264,12 +271,11 @@ Item {
                             loaderDoorAutoPopupHide("左腔")
                     }
                 }
-                //                lastLStOvState=value
+                lastLStOvState=value
             }
             else if("RStOvState"==key)
             {
-                lastState=QmlDevState.state.RStOvState
-                console.log("RStOvState",value,lastState)
+                console.log("RStOvState",value)
                 ret=isExistView("pageSteamBakeRun")
                 if(value > 0)
                 {
@@ -291,8 +297,7 @@ Item {
                 if(value==workStateEnum.WORKSTATE_RUN)
                     sleepWakeup()
 
-                //                if(lastRStOvState!=value && lastRStOvState>=0)
-                if(lastState!=value)
+                if(lastRStOvState!=value && lastRStOvState>=0)
                 {
                     if(value==workStateEnum.WORKSTATE_PAUSE||value==workStateEnum.WORKSTATE_PAUSE_RESERVE)
                     {
@@ -305,7 +310,7 @@ Item {
                             loaderDoorAutoPopupHide("右腔")
                     }
                 }
-                //                lastRStOvState=value
+                lastRStOvState=value
             }
             else if("HoodOffLeftTime"==key)
             {
@@ -346,10 +351,8 @@ Item {
             }
             else if("ErrorCodeShow"==key)
             {
-                lastState=QmlDevState.state.ErrorCodeShow
-                console.log("ErrorCodeShow:",value,lastState)
-                //                if(lastErrorCodeShow!=value)
-                if(lastState!=value)
+                console.log("ErrorCodeShow:",value)
+                if(lastErrorCodeShow!=value)
                 {
                     if(value>0)
                     {
@@ -361,7 +364,7 @@ Item {
                         loaderErrorHide()
                     }
                 }
-                //                lastErrorCodeShow=value
+                lastErrorCodeShow=value
             }
             else if("WifiEnable"==key)
             {
@@ -429,11 +432,15 @@ Item {
             }
             else if("ProductionTest"==key)
             {
-                if(productionTestFlag > 0)
+                if(productionTestFlag > 0 && productionTestStatus==0)
                 {
-                    systemPower(2)
-                    SendFunc.setSysPower(1)
                     load_page("pageTestFront")
+                }
+                else
+                {
+                    var page=isExistView("pageTestFront")
+                    if(page!==null)
+                        backPage(page)
                 }
             }
             else if("Alarm"==key)
@@ -459,24 +466,19 @@ Item {
             {
                 if(value!=0)
                 {
-                    lastState=QmlDevState.state.HoodSpeed
-                    //                if(lastHoodSpeed!=value)
-                    if(value!=0 && lastState!=value)
+                    if(lastHoodSpeed!=value)
                         sleepWakeup()
                 }
-                //                lastHoodSpeed=value
-
+                lastHoodSpeed=value
             }
             else if("HoodLight"==key)
             {
                 if(value!=0)
                 {
-                    lastState=QmlDevState.state.HoodLight
-                    //                if(lastHoodLight!=value)
-                    if(lastState!=value)
+                    if(lastHoodLight!=value)
                         sleepWakeup()
                 }
-                //                lastHoodLight=value
+                lastHoodLight=value
             }
             else if("OTAState"==key)
             {
@@ -513,7 +515,8 @@ Item {
             {
                 if(value==""||value==null)
                 {
-                    systemPower(0xff)
+                    productionTestStatus=0xff
+                    systemPower(1)
                     SendFunc.setSysPower(1)
                     productionTestFlag=2
                     if(systemSettings.wifiEnable==false)
@@ -534,6 +537,17 @@ Item {
                 if( productionTestFlag>=2 && productionTestFlag<=5 && QmlDevState.state.DeviceSecret==="")
                 {
                     parseWifiList()
+                }
+            }
+            else if("remind"==key)
+            {
+                if(value>0)
+                {
+                    loaderAutoPopupShow(QmlDevState.state.RemindText,"",null,"继续烹饪",remindConfirmFunc)
+                }
+                else
+                {
+                    loaderRemindHide()
                 }
             }
         }
@@ -592,18 +606,22 @@ Item {
             }
             MouseArea{
                 anchors.fill: parent
-                onPressed: {
+                onClicked: {
                     loaderMainHide()
                 }
             }
             Component.onCompleted: {
                 SendFunc.setBuzControl(buzControlEnum.SHORT)
             }
+            Component.onDestruction: {
+                productionTestStatus=0
+                systemPower(QmlDevState.state.SysPower)
+                loaderErrorCodeShow(QmlDevState.state.ErrorCodeShow)
+            }
         }
     }
     function showBurnWifi(){
-        if(loader_main.status == Loader.Null || loader_main.status == Loader.Error)
-            loader_main.sourceComponent = component_burn_wifi
+        loader_main.sourceComponent = component_burn_wifi
     }
     function getQuadScanWifi()
     {

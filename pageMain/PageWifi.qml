@@ -441,7 +441,7 @@ Item {
             //            highlightRangeMode: ListView.ApplyRange
             //            snapMode: ListView.SnapToItem
             //            boundsBehavior:Flickable.StopAtBounds
-            highlightMoveDuration:50
+            highlightMoveDuration:40
             highlightMoveVelocity:-1
             footer: footerView
         }

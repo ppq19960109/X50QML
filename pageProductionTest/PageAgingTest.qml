@@ -16,7 +16,7 @@ Item {
         interval: 2000
         triggeredOnStart: false
         onTriggered: {
-
+            ++time_count
             if(time_count%3==0)
             {
                 rect_bg.color="red"
@@ -30,7 +30,6 @@ Item {
                 rect_bg.color="blue"
             }
 
-            ++time_count
             var total_time=time_count*2
             cumulative_time.text="累计测试时间: "+Math.floor(total_time/3600)+"时"+Math.floor((total_time%3600)/60)+"分"+Math.floor(total_time%60)+"秒"
 

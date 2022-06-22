@@ -169,7 +169,7 @@ Item {
             cacheBuffer:10
             clip: true
             currentIndex:0
-            highlightMoveDuration:50
+            highlightMoveDuration:40
             highlightMoveVelocity:-1
             onCurrentIndexChanged:{
                 console.log("ListView onCurrentIndexChanged",currentIndex)

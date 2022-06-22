@@ -140,7 +140,8 @@ ApplicationWindow {
 
     function systemPower(power){
         console.log("systemPower",power)
-        if(sysPower==power || sysPower==0xff)
+
+        if(sysPower===power || (productionTestStatus>0 && power===0))
         {
             return
         }
@@ -156,10 +157,7 @@ ApplicationWindow {
             loaderMainHide()
             if(productionTestFlag==0 && timer_standby.running==true)
                 timer_standby.stop()
-            if(productionTestStatus==0)
-            {
-                backTopPage()
-            }
+            backTopPage()
         }
         if(window.visible===false)
             window.visible=true
@@ -267,26 +265,28 @@ ApplicationWindow {
         triggeredOnStart: false
         onTriggered: {
             console.log("timer_window sleep:")
-            if(isExistView("pageWifi")==null)
-                loaderMainHide()
-            var page=isExistView("pageSteamBakeRun")
-            if(page!==null)
-                backPage(page)
             //            console.log("timer_window sleep:",QmlDevState.state.HoodSpeed,QmlDevState.state.RStOvState,QmlDevState.state.LStOvState,QmlDevState.state.ErrorCodeShow,QmlDevState.localConnected)
-            if(QmlDevState.state.ErrorCodeShow == 0 && QmlDevState.localConnected > 0 && productionTestStatus==0 && sysPower==1)
+            if(productionTestStatus==0 && QmlDevState.localConnected > 0 && sysPower > 0)
             {
-                if(!((QmlDevState.state.RStOvState == workStateEnum.WORKSTATE_PREHEAT || QmlDevState.state.RStOvState == workStateEnum.WORKSTATE_RUN || QmlDevState.state.RStOvState == workStateEnum.WORKSTATE_PAUSE ) || (QmlDevState.state.LStOvState == workStateEnum.WORKSTATE_PREHEAT || QmlDevState.state.LStOvState == workStateEnum.WORKSTATE_RUN || QmlDevState.state.LStOvState == workStateEnum.WORKSTATE_PAUSE )))
-                {
-                    //                Backlight.backlightDisable()
-                    sleepState=true
-                    Backlight.backlightSet(0)
+                if(isExistView("pageWifi")==null)
+                    loaderMainHide()
+                var page=isExistView("pageSteamBakeRun")
+                if(page!==null)
+                    backPage(page)
 
-                    timer_standby.interval=10*60000
-                    timer_standby.restart()
-                    return
+                if(QmlDevState.state.ErrorCodeShow == 0)
+                {
+                    if(!((QmlDevState.state.RStOvState == workStateEnum.WORKSTATE_PREHEAT || QmlDevState.state.RStOvState == workStateEnum.WORKSTATE_RUN || QmlDevState.state.RStOvState == workStateEnum.WORKSTATE_PAUSE ) || (QmlDevState.state.LStOvState == workStateEnum.WORKSTATE_PREHEAT || QmlDevState.state.LStOvState == workStateEnum.WORKSTATE_RUN || QmlDevState.state.LStOvState == workStateEnum.WORKSTATE_PAUSE )))
+                    {
+                        sleepState=true
+                        Backlight.backlightSet(0)
+
+                        timer_standby.interval=10*60000
+                        timer_standby.restart()
+                        return
+                    }
                 }
             }
-
             sleepState=false
             timer_window.restart()
         }
@@ -556,8 +556,7 @@ ApplicationWindow {
     }
 
     function loaderErrorShow(hintTopText,hintBottomText,closeVisible){
-        if(sysPower==0xff)
-            return
+
         if(loader_error.source !== "PageErrorPopup.qml")
         {
             loader_error.source = "PageErrorPopup.qml"
@@ -983,6 +982,8 @@ ApplicationWindow {
     {
         if(value!=0)
             sleepWakeup()
+        if(productionTestStatus==0xff)
+            return
         switch (value) {
         case 1:
             if(dir==null||dir==cookWorkPosEnum.LEFT)

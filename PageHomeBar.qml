@@ -98,7 +98,7 @@ Item {
         TabButton {
             id:closeHeat
             visible: QmlDevState.state.RStoveStatus
-            width:closeHeatImg.width+10+time.width
+            width:closeHeatImg.width+20+time.width
             height:parent.height
             anchors.right:childLockBtn.left
             anchors.rightMargin: 20
@@ -109,7 +109,7 @@ Item {
                 asynchronous:true
                 smooth:false
                 anchors.right: time.left
-                anchors.rightMargin: 15
+                anchors.rightMargin: 10
                 anchors.verticalCenter: parent.verticalCenter
                 source: themesImagesPath+"icon_heat.png"
             }
@@ -129,21 +129,34 @@ Item {
                 //                horizontalAlignment:Text.AlignHCenter
                 //                verticalAlignment:Text.AlignVCenter
             }
-            onClicked: {
-                if(QmlDevState.state.RStoveTimingState==timingStateEnum.RUN)
-                    showCloseHeat()
-                else
-                    load_page("pageCloseHeat")
-            }
-            Component.onCompleted: {
-                console.log("TabButton:",time.width)
+            //            onClicked: {
+            //                if(QmlDevState.state.RStoveTimingState==timingStateEnum.RUN)
+            //                    showCloseHeat()
+            //                else
+            //                    load_page("pageCloseHeat")
+            //            }
+            MouseArea{
+                anchors.fill: parent
+
+                onClicked: {
+                    console.warn("closeHeat onClicked",mouse.x,mouse.y)
+                    if(time.visible==false)
+                    {
+                        if(mouse.x>closeHeatImg.width+40)
+                            return
+                    }
+                    if(QmlDevState.state.RStoveTimingState==timingStateEnum.RUN)
+                        showCloseHeat()
+                    else
+                        load_page("pageCloseHeat")
+                }
             }
         }
         //---------------------------------------------------------------
         //童锁按钮
         TabButton{
             id:childLockBtn
-            width:100
+            width:110
             height:parent.height
             anchors.right:parent.right
             anchors.rightMargin: 20

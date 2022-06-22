@@ -8,12 +8,14 @@ Item {
     property int step: 0
 
     Component.onCompleted: {
+        loaderErrorHide()
         SendFunc.setBuzControl(buzControlEnum.SHORT)
         connectTestWiFi()
     }
     Component.onDestruction: {
-        sysPower=-1
+        productionTestStatus=0
         systemPower(QmlDevState.state.SysPower)
+        loaderErrorCodeShow(QmlDevState.state.ErrorCodeShow)
     }
     function connectTestWiFi()
     {
@@ -50,6 +52,7 @@ Item {
                     wifiConnect.color="red"
                     wifiConnectText.text="失败"
                     retry.visible=true
+                    productionTest.visible=true
                 }
             }
             else if(step==0 && "ssid"==key)
@@ -71,6 +74,7 @@ Item {
                         wifiConnect.color="red"
                         wifiConnectText.text="失败"
                         retry.visible=true
+                        productionTest.visible=true
                     }
                 }
             }
@@ -89,6 +93,7 @@ Item {
                 quad.color="red"
                 quadText.text=value
                 retry.visible=true
+                productionTest.visible=true
             }
         }
     }
@@ -199,6 +204,7 @@ Item {
             }
             onClicked: {
                 retry.visible=false
+                productionTest.visible=false
                 wifiConnectText.text="正在连接WIFI..."
                 quadText.text=""
                 step=0
@@ -207,6 +213,7 @@ Item {
         }
         Button{
             id:productionTest
+            visible: false
             width:100
             height:50
             anchors.right: quit.left

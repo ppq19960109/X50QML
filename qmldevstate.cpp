@@ -39,6 +39,10 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
 
     //    stateType.append(QPair<QString,int>("AfterSalesQrCode",LINK_VALUE_TYPE_STRING));
 
+    stateType.append(QPair<QString,int>("MultiMode",LINK_VALUE_TYPE_NUM));
+    stateType.append(QPair<QString,int>("MultiStageState",LINK_VALUE_TYPE_STRUCT));
+    stateType.append(QPair<QString,int>("CookbookName",LINK_VALUE_TYPE_STRING));
+
     //    stateType.append(QPair<QString,int>("LStOvOperation",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("LStOvSetTimer",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("LStOvSetTimerLeft",LINK_VALUE_TYPE_NUM));
@@ -47,8 +51,8 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     stateType.append(QPair<QString,int>("LStOvOrderTimer",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("LStOvOrderTimerLeft",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("LStOvDoorState",LINK_VALUE_TYPE_NUM));
-    stateType.append(QPair<QString,int>("LStOvState",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("LStOvMode",LINK_VALUE_TYPE_NUM));
+    stateType.append(QPair<QString,int>("LStOvState",LINK_VALUE_TYPE_NUM));
 
     //    stateType.append(QPair<QString,int>("RStOvOperation",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("RStOvSetTimer",LINK_VALUE_TYPE_NUM));
@@ -58,12 +62,8 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     stateType.append(QPair<QString,int>("RStOvOrderTimer",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("RStOvOrderTimerLeft",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("RStOvDoorState",LINK_VALUE_TYPE_NUM));
-    stateType.append(QPair<QString,int>("RStOvState",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("RStOvMode",LINK_VALUE_TYPE_NUM));
-
-    stateType.append(QPair<QString,int>("MultiMode",LINK_VALUE_TYPE_NUM));
-    stateType.append(QPair<QString,int>("MultiStageState",LINK_VALUE_TYPE_STRUCT));
-    stateType.append(QPair<QString,int>("CookbookName",LINK_VALUE_TYPE_STRING));
+    stateType.append(QPair<QString,int>("RStOvState",LINK_VALUE_TYPE_NUM));
 
     stateType.append(QPair<QString,int>("LStoveStatus",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("RStoveStatus",LINK_VALUE_TYPE_NUM));
@@ -423,9 +423,13 @@ void QmlDevState::readData(const QJsonValue &data)
                     QJsonObject object_struct =value.toObject();
                     QJsonValue cnt =object_struct.value("cnt");
                     QJsonValue current =object_struct.value("current");
+                    QJsonValue remind =object_struct.value("remind");
+                    QJsonValue RemindText =object_struct.value("RemindText");
 
                     setState("cnt",cnt.toInt());
                     setState("current",current.toInt());
+                    setState("RemindText",RemindText.toString());
+                    setState("remind",remind.toInt());
                 }
                 else if(key=="CookRecipe" || key=="CookHistory")
                 {
@@ -557,9 +561,8 @@ void QmlDevState::setState(const QString& name,const QVariant& value)
     //    qDebug()<<"setState name:"<<name << "new value:" << value;
     //    if(stateMap.contains(name))
     //        qDebug()<< "old value:" << stateMap[name];
-
-    emit stateChanged(name,value);
     stateMap[name]=value;
+    emit stateChanged(name,value);
     //    }
 }
 

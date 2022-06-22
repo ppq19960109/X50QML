@@ -16,6 +16,9 @@ Item {
     }
     anchors.fill: parent
 
+    Component.onCompleted: {
+        sleepWakeup()
+    }
     Rectangle {
         id:hint
         anchors.centerIn: parent
@@ -46,12 +49,12 @@ Item {
 
         Text{
             id:hintTop
-            width:parent.width
+            width:parent.width-100
             visible: hintTop.text!=""
             color:"white"
             font.pixelSize: 34
             anchors.top: parent.top
-            anchors.topMargin: 70
+            anchors.topMargin: 65
             anchors.horizontalCenter: parent.horizontalCenter
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
@@ -61,7 +64,7 @@ Item {
         Text{
             id:hintCenter
             visible: hintCenter.text!=""
-            width:parent.width
+            width:parent.width-100
             color:"white"
             font.pixelSize: 40
             anchors.centerIn: parent
@@ -74,10 +77,10 @@ Item {
         Button {
             id:confirmBtn
             visible: confirmBtnText.text!=""
-            width:176+15
-            height:64+15
+            width:176+10
+            height:64+10
             anchors.bottom:parent.bottom
-            anchors.bottomMargin: 45
+            anchors.bottomMargin: 30
             anchors.horizontalCenter: parent.horizontalCenter
 
             Text{
