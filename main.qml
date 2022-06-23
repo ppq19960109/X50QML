@@ -512,7 +512,7 @@ ApplicationWindow {
     Component{
         id:component_hoodoff
         PagePopup{
-            hintTopText:"灶具关闭后，烟机自动延时"+QmlDevState.state.HoodOffLeftTime+"分钟关\n闭，点击(立即关闭)可直接关闭烟机"
+            hintTopText:"烟机自动延时"+QmlDevState.state.HoodOffLeftTime+"分钟关\n闭，点击(立即关闭)可直接关闭烟机"
             confirmText:"立即关闭"
             onCancel: {
                 closeLoaderHoodOff()

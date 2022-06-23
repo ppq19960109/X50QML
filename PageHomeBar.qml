@@ -71,27 +71,39 @@ Item {
             }
         }
 
-        TabButton {
-            id:wind
-            width: wind_icon.width
-            height:parent.height
+        //        TabButton {
+        //            id:wind
+        //            width: wind_icon.width
+        //            height:parent.height
+        //            anchors.centerIn: parent
+
+        //            background: Item {
+        //            }
+        //            Image{
+        //                id:wind_icon
+        //                visible: source!=""
+        //                asynchronous:true
+        //                smooth:false
+        //                anchors.centerIn: parent
+        //                source: {
+        //                    var speed=QmlDevState.state.HoodSpeed
+        //                    return speed===0?"":(themesImagesPath+"icon_wind_"+speed+".png")
+        //                }
+        //            }
+        //            onClicked: {
+
+        //            }
+        //        }
+
+        PageRotationImg {
+            property int speed:QmlDevState.state.HoodSpeed
             anchors.centerIn: parent
-
-            background: Item {
+            visible: speed!=0
+            duration: {
+                return speed==0?0:(4-speed)*2000
             }
-            Image{
-                id:wind_icon
-                visible: source!=""
-                asynchronous:true
-                smooth:false
-                anchors.centerIn: parent
-                source: {
-                    var speed=QmlDevState.state.HoodSpeed
-                    return speed===0?"":(themesImagesPath+"icon_wind_"+speed+".png")
-                }
-            }
-            onClicked: {
-
+            source: {
+                return speed===0?"":(themesImagesPath+"icon_wind_"+speed+".png")
             }
         }
 
