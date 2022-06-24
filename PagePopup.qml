@@ -1,6 +1,7 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.2
 
+import "qrc:/SendFunc.js" as SendFunc
 Item {
     //    property int priority:0
     property alias closeVisible: closeBtn.visible
@@ -17,7 +18,10 @@ Item {
     anchors.fill: parent
 
     Component.onCompleted: {
-        sleepWakeup()
+        if(sysPower > 0)
+            sleepWakeup()
+        else
+            SendFunc.setSysPower(1)
     }
     Rectangle {
         id:hint
@@ -49,7 +53,7 @@ Item {
 
         Text{
             id:hintTop
-            width:parent.width-100
+            width:parent.width-80
             visible: hintTop.text!=""
             color:"white"
             font.pixelSize: 34
@@ -64,7 +68,7 @@ Item {
         Text{
             id:hintCenter
             visible: hintCenter.text!=""
-            width:parent.width-100
+            width:parent.width-80
             color:"white"
             font.pixelSize: 40
             anchors.centerIn: parent

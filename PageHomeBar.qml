@@ -168,7 +168,7 @@ Item {
         //童锁按钮
         TabButton{
             id:childLockBtn
-            width:110
+            width:120
             height:parent.height
             anchors.right:parent.right
             anchors.rightMargin: 20

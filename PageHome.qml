@@ -216,9 +216,11 @@ Item {
                 {
                     SendFunc.setSysPower(1)
                 }
-                else if(value==1 && QmlDevState.state.ErrorCodeShow===6)
+                else if(value==1)
                 {
-                    loaderErrorCodeShow(6)
+                    var errorCode=QmlDevState.state.ErrorCodeShow
+                    if(errorCode!==0)
+                        loaderErrorCodeShow(errorCode)
                 }
                 systemPower(value)
             }
@@ -227,7 +229,7 @@ Item {
                 if(systemSettings.otaSuccess==true)
                 {
                     systemSettings.otaSuccess=false
-                    loaderUpdateResultShow("系统已更新至最新版本 "+value)
+                    loaderUpdateResultShow("系统已更新至最新版本\n"+value)
                 }
             }
             else if("SteamStart"==key)
@@ -683,6 +685,7 @@ Item {
         //        loaderAutoPopupShow("","右灶定时关火结束，\n请将旋钮复位",292,"",null,false)
         //        loaderPopupShow("恢复出厂设置成功","",292,"确定")
         //        loaderUpdateConfirmShow()
+//       loaderUpdateResultShow("系统已更新至最新版本\n"+"1.2.0")
     }
     StackView.onActivated:{
         console.log("page home onActivated")
