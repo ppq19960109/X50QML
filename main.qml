@@ -694,9 +694,10 @@ ApplicationWindow {
         else
         {
             console.log("startCooking:",JSON.stringify(root),JSON.stringify(cookSteps))
-            iceWorkStep.state=iceWorkOperaEnum.STOP
+
             if(root.cookPos===iceDevice)
             {
+                iceWorkStep.state=iceWorkOperaEnum.STOP
                 SendFunc.setMultiIceCooking(cookSteps,0)
             }
             else if(cookSteps.length===1 && (undefined === cookSteps[0].number || 0 === cookSteps[0].number))
