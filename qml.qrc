@@ -115,5 +115,12 @@
         <file>pageProductionTest/PagePowerBoard.qml</file>
         <file>pageProductionTest/PagePowerOut.qml</file>
         <file>pageProductionTest/PagePowerInput.qml</file>
+        <file>pageMain/PageDemoMode.qml</file>
+        <file>x50/demo/demo5.png</file>
+        <file>x50/demo/demo4.png</file>
+        <file>x50/demo/demo3.png</file>
+        <file>x50/demo/demo2.png</file>
+        <file>x50/demo/demo1.png</file>
+        <file>x50/demo/demo6.png</file>
     </qresource>
 </RCC>

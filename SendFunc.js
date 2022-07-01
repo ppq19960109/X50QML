@@ -208,6 +208,7 @@ function setCookOperation(device,operation)
         Data.RStOvOperation=operation
     }
     Data.DataReportReason=0
+    Data.PermitSteamStartStatus = 0
     setToServer(Data)
 }
 
@@ -247,6 +248,7 @@ function setCooking(list,orderTime,cookPos)
         }
     }
     Data.DataReportReason=0
+//    Data.PermitSteamStartStatus = 0
     setToServer(Data)
 }
 
@@ -285,5 +287,6 @@ function setMultiCooking(list,orderTime,dishName,cookbookID)
         Data.LStOvOrderTimer=orderTime
     }
     Data.DataReportReason=0
+//    Data.PermitSteamStartStatus = 0
     setToServer(Data)
 }

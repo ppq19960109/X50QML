@@ -22,7 +22,7 @@ Item {
         asynchronous:true
         smooth:false
         anchors.right: parent.right
-        anchors.rightMargin: 45
+        anchors.rightMargin: 60
         anchors.bottom: lockBtn.top
         source:themesImagesPath+"icon-lockscreen-hint.png"
     }
@@ -32,7 +32,7 @@ Item {
         anchors.rightMargin: 20
         anchors.bottom: parent.bottom
         anchors.bottomMargin: 10
-        width: 120
+        width: 130
         height: 80
 
         background:Item {}
@@ -64,7 +64,7 @@ Item {
         onPressed: {
             console.warn("PageLockScreen onPressed",mouse.x,mouse.y)
             mouse.accepted = true
-            if(mouse.x<660||mouse.y<390)
+            if(mouse.x<650||mouse.y<390)
             {
                 return
             }

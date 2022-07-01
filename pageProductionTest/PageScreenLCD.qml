@@ -32,75 +32,65 @@ Item{
         Item{
             Text {
                 width: parent.width-100
-    //            height: 50
+                //            height: 50
                 anchors.centerIn: parent
                 color:"#FFF"
                 font.pixelSize: 40
                 text: qsTr("滑动屏幕,观察测试过程显示的一些图像上是否有黑点和亮点
 ")
-    wrapMode: Text.WordWrap
-    //            horizontalAlignment:Text.AlignHCenter
-    //            verticalAlignment:Text.AlignVCenter
+                wrapMode: Text.WordWrap
+                //            horizontalAlignment:Text.AlignHCenter
+                //            verticalAlignment:Text.AlignVCenter
             }
         }
         Image {
             asynchronous: true
             smooth:false
-            cache:false
             source:"qrc:/x50/test/image1.png"
         }
         Image {
             asynchronous: true
             smooth:false
-            cache:false
             source:"qrc:/x50/test/image2.png"
         }
         Image {
             asynchronous: true
             smooth:false
-            cache:false
             source:"qrc:/x50/test/image3.png"
         }
         Image {
             asynchronous: true
             smooth:false
-            cache:false
             source:"qrc:/x50/test/image4.png"
         }
         Image {
             asynchronous: true
             smooth:false
-            cache:false
             source:"qrc:/x50/test/image5.png"
         }
         Image {
             asynchronous: true
             smooth:false
-            cache:false
             source:"qrc:/x50/test/image6.png"
         }
         Image {
             asynchronous: true
             smooth:false
-            cache:false
             source:"qrc:/x50/test/image7.png"
         }
         Image {
             asynchronous: true
             smooth:false
-            cache:false
             source:"qrc:/x50/test/image8.png"
         }
         Image {
             asynchronous: true
             smooth:false
-            cache:false
             source:"qrc:/x50/test/image9.png"
         }
         Image {
             asynchronous: true
             smooth:false
-            cache:false
             source:"qrc:/x50/test/image10.png"
         }
         Item {
@@ -152,8 +142,8 @@ Item{
         }
         onCurrentIndexChanged:{
             console.log("onCurrentIndexChanged",currentIndex)
-//            if(currentIndex>=10)
-//                backPrePage()
+            //            if(currentIndex>=10)
+            //                backPrePage()
         }
 
     }

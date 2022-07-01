@@ -552,6 +552,13 @@ Item {
                     loaderRemindHide()
                 }
             }
+            else if("DemoStart"==key)
+            {
+                if(sysPower==0)
+                {
+                    load_page("pageDemoMode")
+                }
+            }
         }
     }
 
@@ -685,10 +692,10 @@ Item {
         //        loaderAutoPopupShow("","右灶定时关火结束，\n请将旋钮复位",292,"",null,false)
         //        loaderPopupShow("恢复出厂设置成功","",292,"确定")
         //        loaderUpdateConfirmShow()
-//       loaderUpdateResultShow("系统已更新至最新版本\n"+"1.2.0")
+        //       loaderUpdateResultShow("系统已更新至最新版本\n"+"1.2.0")
     }
-    StackView.onActivated:{
-        console.log("page home onActivated")
+    StackView.onActivating:{
+        console.log("PageHome StackView onActivating")
         SendFunc.permitSteamStartStatus(0)
     }
 
@@ -717,6 +724,8 @@ Item {
                 //                contentItem.highlightResizeVelocity=-1
                 contentItem.highlightMoveDuration = 10       //将移动时间设为0
                 contentItem.highlightMoveVelocity = -1
+                //                contentItem.snapMode=ListView.SnapOneItem
+                contentItem.boundsBehavior=Flickable.StopAtBounds
             }
         }
         PageIndicator {

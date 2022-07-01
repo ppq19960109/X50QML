@@ -51,7 +51,7 @@ Rectangle {
 
     Component.onCompleted: {
         console.log("PageSteamBakeRun onCompleted")
-        SendFunc.permitSteamStartStatus(0)
+
         loaderSteamHide()
         leftProgressBar.updatePaint()
         rightProgressBar.updatePaint()
@@ -61,10 +61,11 @@ Rectangle {
         closeCancelRun()
         loaderNewCookHide()
     }
-
-    StackView.onActivated:{
+    StackView.onActivating:{
+        console.log("PageSteamBakeRun StackView onActivating")
         SendFunc.permitSteamStartStatus(0)
     }
+
     Component{
         id:component_newCook
         PageNewCook{}

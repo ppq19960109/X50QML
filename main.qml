@@ -14,11 +14,12 @@ ApplicationWindow {
     id: window
     width: 800
     height: 480
-            visible: true
+//    visible: true
     property int sysPower:-1
     property int permitStartStatus:0
     property int productionTestStatus:0
     property int productionTestFlag:1
+//    property int demoModeStatus:0
 
     //    readonly property string uiVersion:"1.1"
     readonly property string productionTestWIFISSID:"moduletest"
@@ -174,6 +175,7 @@ ApplicationWindow {
 
         load_page("pageHome")
         //                load_page("pageTestFront")
+//        load_page("pageDemoMode")
         if(systemSettings.wifiPasswdArray!=null)
         {
             console.log("systemSettings.wifiPasswdArray",systemSettings.wifiPasswdArray.length)
@@ -789,6 +791,10 @@ ApplicationWindow {
         id: pagePowerInput
         PagePowerInput {}
     }
+    Component {
+        id: pageDemoMode
+        PageDemoMode {}
+    }
     function isExistView(pageName) {
         console.log("isExistView:",pageName)
         return stackView.find(function(item,index){
@@ -910,6 +916,9 @@ ApplicationWindow {
             break;
         case "pagePowerInput":
             stackView.push(pagePowerInput,StackView.Immediate)
+            break;
+        case "pageDemoMode":
+            stackView.push(pageDemoMode,StackView.Immediate)
             break;
         }
 

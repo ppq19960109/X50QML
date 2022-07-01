@@ -439,8 +439,8 @@ Item {
             header: headerView
             clip: true
             //            highlightRangeMode: ListView.ApplyRange
-            //            snapMode: ListView.SnapToItem
-            //            boundsBehavior:Flickable.StopAtBounds
+                        snapMode: ListView.SnapToItem
+            boundsBehavior:Flickable.StopAtBounds
             highlightMoveDuration:40
             highlightMoveVelocity:-1
             footer: footerView
@@ -571,7 +571,7 @@ Item {
                         vkb.visible = true //当选择输入框的时候才显示键盘
                     }
                     onTextEdited:{
-                        if(length>=8)
+                        if(length>=8 && length<=30)
                         {
                             permit_connect=true
                         }

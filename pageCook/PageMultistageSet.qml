@@ -67,7 +67,7 @@ Item {
         id:topBar
         anchors.bottom:parent.bottom
         name:qsTr("多段烹饪 <font size='30px'>(最多可添加三段烹饪)</font>")
-//                leftBtnText:qsTr("启动")
+        //                leftBtnText:qsTr("启动")
         rightBtnText:qsTr("预约")
         onLeftClick:{
             steamStart()
@@ -81,7 +81,7 @@ Item {
             {
                 step=listModel.get(i)
                 var steps={}
-//                steps.device=0
+                //                steps.device=0
                 steps.mode=step.mode
                 steps.temp=step.temp
                 steps.time=step.time
@@ -173,9 +173,9 @@ Item {
 
             footer: footerView
             focus: true
+//            boundsBehavior:Flickable.StopAtBounds
             //            highlightRangeMode: ListView.StrictlyEnforceRange
-            //            highlightFollowsCurrentItem: true
-            //            snapMode: ListView.SnapToItem
+//            snapMode: ListView.SnapToItem
         }
     }
     Component{

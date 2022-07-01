@@ -100,7 +100,7 @@ Item {
             anchors.centerIn: parent
             visible: speed!=0
             duration: {
-                return speed==0?0:(4-speed)*2000
+                return speed==0?0:(4-speed)*1500
             }
             source: {
                 return speed===0?"":(themesImagesPath+"icon_wind_"+speed+".png")
@@ -168,7 +168,7 @@ Item {
         //童锁按钮
         TabButton{
             id:childLockBtn
-            width:120
+            width:130
             height:parent.height
             anchors.right:parent.right
             anchors.rightMargin: 20

@@ -107,7 +107,6 @@ Item {
                 anchors.horizontalCenter: parent.horizontalCenter
                 interactive: false
                 delegate: infoDelegate
-
                 focus: true
             }
             Button{

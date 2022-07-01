@@ -165,8 +165,9 @@ Item {
             anchors.top: parent.top
             anchors.topMargin: 20
             //            highlightRangeMode: ListView.ApplyRange//StrictlyEnforceRange ApplyRange
-//            boundsBehavior:Flickable.StopAtBounds
-            cacheBuffer:10
+            boundsBehavior:Flickable.StopAtBounds
+            snapMode: ListView.SnapToItem
+            cacheBuffer:2
             clip: true
             currentIndex:0
             highlightMoveDuration:40
