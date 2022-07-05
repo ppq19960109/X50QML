@@ -14,12 +14,12 @@ ApplicationWindow {
     id: window
     width: 800
     height: 480
-//    visible: true
+    //    visible: true
     property int sysPower:-1
     property int permitStartStatus:0
     property int productionTestStatus:0
     property int productionTestFlag:1
-//    property int demoModeStatus:0
+    //    property int demoModeStatus:0
 
     //    readonly property string uiVersion:"1.1"
     readonly property string productionTestWIFISSID:"moduletest"
@@ -175,7 +175,7 @@ ApplicationWindow {
 
         load_page("pageHome")
         //                load_page("pageTestFront")
-//        load_page("pageDemoMode")
+        //        load_page("pageDemoMode")
         if(systemSettings.wifiPasswdArray!=null)
         {
             console.log("systemSettings.wifiPasswdArray",systemSettings.wifiPasswdArray.length)
@@ -504,10 +504,34 @@ ApplicationWindow {
                 loaderAuto.sourceComponent = undefined
         }
     }
-    function loaderDoorAutoPopupHide(dirText){
-        if(loaderAuto.sourceComponent === component_autoPopup)
+    Component{
+        id:component_autoPopupDoor
+        PagePopup{
+            hintTopText:""
+            hintCenterText:""
+            confirmText:""
+            onCancel: {
+                loaderAutoPopupHide()
+            }
+            Component.onCompleted: {
+                SendFunc.setBuzControl(buzControlEnum.OPEN)
+            }
+            Component.onDestruction: {
+                SendFunc.setBuzControl(buzControlEnum.STOP)
+            }
+        }
+    }
+    function loaderDoorAutoPopupShow(text){
+        if(loaderAuto.sourceComponent !== component_autoPopupDoor)
         {
-            if(loaderAuto.item.hintCenterText.indexOf("门开启")!=-1 &&  loaderAuto.item.hintCenterText.indexOf(dirText)!=-1)
+            loaderAuto.sourceComponent = component_autoPopupDoor
+        }
+        loaderAuto.item.hintCenterText=text
+    }
+    function loaderDoorAutoPopupHide(dirText){
+        if(loaderAuto.sourceComponent === component_autoPopupDoor)
+        {
+            if(loaderAuto.item.hintCenterText.indexOf("门开启")!=-1 && loaderAuto.item.hintCenterText.indexOf(dirText)!=-1)
                 loaderAuto.sourceComponent = undefined
         }
     }

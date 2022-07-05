@@ -3,9 +3,10 @@ import QtQuick.Controls 2.2
 
 import "qrc:/SendFunc.js" as SendFunc
 Item{
+    property string name: "pageDemoMode"
     Component.onCompleted: {
         SendFunc.loadPowerSet(4)
-        SendFunc.setBuzControl(buzControlEnum.SHORT)
+        //        SendFunc.setBuzControl(buzControlEnum.SHORT)
     }
     Component.onDestruction: {
         SendFunc.loadPowerSet(0)
@@ -13,16 +14,15 @@ Item{
     Timer{
         repeat: true
         running: true
-        interval: 2000
+        interval: 4000
         triggeredOnStart: false
         onTriggered: {
             console.log("onTriggered")
-            if(swipeview.currentIndex < swipeview.count){
-                swipeview.currentIndex+=1
-            }
-            else{
+            if(swipeview.currentIndex==swipeview.count-1)
                 swipeview.currentIndex=0
-            }
+            else
+                swipeview.currentIndex+=1
+
         }
     }
     SwipeView {
@@ -57,11 +57,11 @@ Item{
             source:"qrc:/x50/demo/demo5.png"
         }
 
-        Component.onCompleted:{
-            contentItem.highlightMoveDuration = 10       //将移动时间设为0
-            contentItem.highlightMoveVelocity = -1
-            contentItem.boundsBehavior=Flickable.StopAtBounds
-        }
+        //        Component.onCompleted:{
+        //            contentItem.highlightMoveDuration = 10       //将移动时间设为0
+        //            contentItem.highlightMoveVelocity = -1
+        //            contentItem.boundsBehavior=Flickable.StopAtBounds
+        //        }
         onCurrentIndexChanged:{
             console.log("onCurrentIndexChanged",currentIndex)
         }

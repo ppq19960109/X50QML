@@ -265,7 +265,8 @@ Item {
                     if(value==workStateEnum.WORKSTATE_PAUSE||value==workStateEnum.WORKSTATE_PAUSE_RESERVE)
                     {
                         if(QmlDevState.state.LStOvDoorState==1)
-                            loaderAutoPopupShow("","左腔门开启，工作暂停",292)
+                            loaderDoorAutoPopupShow("左腔门开启，工作暂停")
+                        //                            loaderAutoPopupShow("","左腔门开启，工作暂停",292)
                     }
                     else
                     {
@@ -304,7 +305,8 @@ Item {
                     if(value==workStateEnum.WORKSTATE_PAUSE||value==workStateEnum.WORKSTATE_PAUSE_RESERVE)
                     {
                         if(QmlDevState.state.RStOvDoorState==1)
-                            loaderAutoPopupShow("","右腔门开启，工作暂停",292)
+                            loaderDoorAutoPopupShow("右腔门开启，工作暂停")
+                        //                            loaderAutoPopupShow("","右腔门开启，工作暂停",292)
                     }
                     else
                     {
@@ -556,7 +558,8 @@ Item {
             {
                 if(sysPower==0)
                 {
-                    load_page("pageDemoMode")
+                    if(isExistView("pageDemoMode")==null)
+                        load_page("pageDemoMode")
                 }
             }
         }
