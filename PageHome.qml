@@ -619,7 +619,7 @@ Item {
             MouseArea{
                 anchors.fill: parent
                 onClicked: {
-                    loaderMainHide()
+                    loaderAuto.sourceComponent = undefined
                 }
             }
             Component.onCompleted: {
@@ -633,7 +633,7 @@ Item {
         }
     }
     function showBurnWifi(){
-        loader_main.sourceComponent = component_burn_wifi
+        loaderAuto.sourceComponent = component_burn_wifi
     }
     function getQuadScanWifi()
     {
