@@ -400,7 +400,7 @@ Rectangle {
             workState:QmlDevState.state.IceStOvState
             workMode:workState===workStateEnum.WORKSTATE_STOP?qsTr("右腔冰蒸"):CookFunc.leftWorkModeName(QmlDevState.state.IceStOvMode)
             canvasDiameter:width
-            percent:workMode=="冷凝风机"?0:(100-100*QmlDevState.state.IceStOvSetTimerLeft/QmlDevState.state.IceStOvSetTimer)
+            percent:0//workMode=="冷凝风机"?0:(100-100*QmlDevState.state.IceStOvSetTimerLeft/QmlDevState.state.IceStOvSetTimer)
 
             //            orderTimeLeft:QmlDevState.state.IceStOvOrderTimerLeft
             workTime:

@@ -161,7 +161,7 @@ ApplicationWindow {
         onTriggered: {
             console.log("timer_window sleep:")
             //            console.log("timer_window sleep:",QmlDevState.state.HoodSpeed,QmlDevState.state.RStOvState,QmlDevState.state.LStOvState,QmlDevState.state.ErrorCodeShow,QmlDevState.localConnected)
-            if(QmlDevState.state.HoodSpeed == 0  &&QmlDevState.state.RStOvState == 0 && QmlDevState.state.LStOvState == 0 && QmlDevState.state.ErrorCodeShow == 0 && QmlDevState.localConnected > 0 && isExistView("PageTestFront")==null)
+            if(QmlDevState.state.HoodSpeed == 0  &&QmlDevState.state.RStOvState == 0 && QmlDevState.state.LStOvState == 0 && QmlDevState.state.IceStOvState == 0 && QmlDevState.state.ErrorCodeShow == 0 && QmlDevState.localConnected > 0 && isExistView("PageTestFront")==null)
             {
                 //                Backlight.backlightDisable()
                 sleepState=true
