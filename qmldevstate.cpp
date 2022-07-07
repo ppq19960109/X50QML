@@ -22,7 +22,7 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     stateType.append(QPair<QString,int>("WifiEnable",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("WifiScanR",LINK_VALUE_TYPE_STRING));
 
-    stateType.append(QPair<QString,int>("ElcSWVersion",LINK_VALUE_TYPE_STRING));
+    stateType.append(QPair<QString,int>("PwrSWVersion",LINK_VALUE_TYPE_STRING));
     stateType.append(QPair<QString,int>("ComSWVersion",LINK_VALUE_TYPE_STRING));
     stateType.append(QPair<QString,int>("SysPower",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("ErrorCode",LINK_VALUE_TYPE_NUM));

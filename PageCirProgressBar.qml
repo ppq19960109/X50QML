@@ -201,8 +201,8 @@ Item {
         }
         Button{
             visible: workState === workStateEnum.WORKSTATE_FINISH
-            width:105
-            height: 50
+            width:120
+            height: 60
             anchors.top: parent.top
             anchors.topMargin: 185
             anchors.horizontalCenter: parent.horizontalCenter

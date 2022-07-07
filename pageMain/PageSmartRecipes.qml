@@ -137,7 +137,7 @@ Item {
                 orientation:ListView.Horizontal
 //                highlightRangeMode: ListView.ApplyRange//StrictlyEnforceRange
                 boundsBehavior:Flickable.StopAtBounds
-                snapMode: ListView.SnapToItem //SnapToItem SnapOneItem
+                //snapMode: ListView.SnapToItem //SnapToItem SnapOneItem
                 clip: true
                 currentIndex:0
                 highlightMoveDuration:40

@@ -88,7 +88,7 @@ private slots:
 //stateTypeMap.insert("SteamStart",LINK_VALUE_TYPE_NULL);
 
 //stateTypeMap.insert("ProductionTest",LINK_VALUE_TYPE_NULL);
-//stateTypeMap.insert("ElcSWVersion",LINK_VALUE_TYPE_STRING);
+//stateTypeMap.insert("PwrSWVersion",LINK_VALUE_TYPE_STRING);
 //stateTypeMap.insert("ComSWVersion",LINK_VALUE_TYPE_STRING);
 //stateTypeMap.insert("SysPower",LINK_VALUE_TYPE_NUM);
 //stateTypeMap.insert("ErrorCode",LINK_VALUE_TYPE_NUM);

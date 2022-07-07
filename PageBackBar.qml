@@ -24,7 +24,7 @@ Item {
             source: themesImagesPath+"homebar-background.png"
         }
         //back图标
-        TabButton {
+        ToolButton {
             id:backBtn
             width:90
             height:parent.height
@@ -67,7 +67,7 @@ Item {
             verticalAlignment:Text.AlignVCenter
         }
         //left
-        TabButton{
+        ToolButton{
             id:leftBtn
             width:120
             height:parent.height
@@ -100,7 +100,7 @@ Item {
             }
         }
         //right
-        TabButton{
+        ToolButton{
             id:rightBtn
             width:150
             height:parent.height

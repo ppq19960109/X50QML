@@ -50,7 +50,7 @@ Item {
         }
 
         //wifi图标
-        TabButton {
+        ToolButton {
             id:wifi
             width: wifi_icon.width+40
             height:parent.height
@@ -71,7 +71,7 @@ Item {
             }
         }
 
-        //        TabButton {
+        //        ToolButton {
         //            id:wind
         //            width: wind_icon.width
         //            height:parent.height
@@ -107,7 +107,7 @@ Item {
             }
         }
 
-        TabButton {
+        ToolButton {
             id:closeHeat
             visible: QmlDevState.state.RStoveStatus
             width:closeHeatImg.width+20+time.width
@@ -166,7 +166,7 @@ Item {
         }
         //---------------------------------------------------------------
         //童锁按钮
-        TabButton{
+        ToolButton{
             id:childLockBtn
             width:130
             height:parent.height

@@ -19,7 +19,7 @@ ApplicationWindow {
     property int permitStartStatus:0
     property int productionTestStatus:0
     property int productionTestFlag:1
-    //    property int demoModeStatus:0
+    property int demoModeStatus:0
 
     //    readonly property string uiVersion:"1.1"
     readonly property string productionTestWIFISSID:"moduletest"
@@ -153,6 +153,7 @@ ApplicationWindow {
         }
         else
         {
+            SendFunc.permitSteamStartStatus(0)
             Backlight.backlightSet(0)
             timer_window.stop()
             loaderMainHide()
@@ -268,7 +269,7 @@ ApplicationWindow {
         onTriggered: {
             console.log("timer_window sleep:")
             //            console.log("timer_window sleep:",QmlDevState.state.HoodSpeed,QmlDevState.state.RStOvState,QmlDevState.state.LStOvState,QmlDevState.state.ErrorCodeShow,QmlDevState.localConnected)
-            if(productionTestStatus==0 && QmlDevState.localConnected > 0 && sysPower > 0)
+            if(productionTestStatus==0 && demoModeStatus==0 && QmlDevState.localConnected > 0 && sysPower > 0)
             {
                 if(isExistView("pageWifi")==null)
                     loaderMainHide()
@@ -511,7 +512,7 @@ ApplicationWindow {
             hintCenterText:""
             confirmText:""
             onCancel: {
-                loaderAutoPopupHide()
+                loaderAuto.sourceComponent = undefined
             }
             Component.onCompleted: {
                 SendFunc.setBuzControl(buzControlEnum.OPEN)

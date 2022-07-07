@@ -98,11 +98,11 @@ Item {
 
         onStateChanged: { // 处理目标对象信号的槽函数
             console.log("page PageIntelligentDetection:",key,value,step)
-            if("ElcSWVersion"==key && step==0)
+            if("PwrSWVersion"==key && step==0)
             {
                 step=1
                 versionText.visible=true
-                versionText.text="电源板软件版本号:"+QmlDevState.state.ElcSWVersion+"\n屏幕模组软件版本号:"+QmlDevState.state.ComSWVersion
+                versionText.text="电源板软件版本号:"+QmlDevState.state.PwrSWVersion+"\n屏幕模组软件版本号:"+QmlDevState.state.ComSWVersion
                 version.color="green"
                 SendFunc.scanWifi()
                 timer_wifi.restart()

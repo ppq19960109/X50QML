@@ -270,7 +270,7 @@ Item {
                     }
                     else
                     {
-                        if(QmlDevState.state.LStOvDoorState==0)
+                        if(QmlDevState.state.LStOvDoorState==0 || value==workStateEnum.WORKSTATE_STOP)
                             loaderDoorAutoPopupHide("左腔")
                     }
                 }
@@ -310,7 +310,7 @@ Item {
                     }
                     else
                     {
-                        if(QmlDevState.state.RStOvDoorState==0)
+                        if(QmlDevState.state.RStOvDoorState==0 || value==workStateEnum.WORKSTATE_STOP)
                             loaderDoorAutoPopupHide("右腔")
                     }
                 }
@@ -558,7 +558,7 @@ Item {
             {
                 if(sysPower==0)
                 {
-                    if(isExistView("pageDemoMode")==null)
+                    if(demoModeStatus==0)
                         load_page("pageDemoMode")
                 }
             }

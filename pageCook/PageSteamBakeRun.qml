@@ -59,7 +59,7 @@ Rectangle {
     }
     Component.onDestruction: {
         closeCancelRun()
-        loaderNewCookHide()
+        loaderNewCookHide() 
     }
     StackView.onActivating:{
         console.log("PageSteamBakeRun StackView onActivating")
@@ -262,7 +262,8 @@ Rectangle {
                     {
                         if(QmlDevState.state.LStOvDoorState==1)
                         {
-                            loaderAutoPopupShow("","左腔门开启，工作暂停",292)
+                            //                            loaderAutoPopupShow("","左腔门开启，工作暂停",292)
+                            loaderDoorAutoPopupShow("左腔门开启，工作暂停")
                         }
                     }
                     else
@@ -459,7 +460,8 @@ Rectangle {
                     {
                         if(QmlDevState.state.RStOvDoorState==1)
                         {
-                            loaderAutoPopupShow("","右腔门开启，工作暂停",292)
+                            //                            loaderAutoPopupShow("","右腔门开启，工作暂停",292)
+                            loaderDoorAutoPopupShow("右腔门开启，工作暂停")
                         }
                     }
                     else

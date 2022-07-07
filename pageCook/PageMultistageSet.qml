@@ -175,7 +175,6 @@ Item {
             focus: true
 //            boundsBehavior:Flickable.StopAtBounds
             //            highlightRangeMode: ListView.StrictlyEnforceRange
-//            snapMode: ListView.SnapToItem
         }
     }
     Component{
