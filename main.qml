@@ -9,12 +9,12 @@ import "pageSet"
 import "pageProductionTest"
 
 import "qrc:/SendFunc.js" as SendFunc
-
+import "qrc:/WifiFunc.js" as WifiFunc
 ApplicationWindow {
     id: window
     width: 800
     height: 480
-    //    visible: true
+    //        visible: true
     property int sysPower:-1
     property int permitStartStatus:0
     property int productionTestStatus:0
@@ -45,7 +45,7 @@ ApplicationWindow {
     property bool wifiConnecting: false
     property bool wifiConnected:false
     property bool sleepState: false
-    property var wifiConnectInfo:{"ssid":"","psk":"","encryp":0}
+    property var wifiConnectInfo:{"encryp":1,"psk":"12345678","ssid":"moduletest"}//{"ssid":"","psk":"","encryp":0}
     readonly property var multiModeEnum:{"NONE":0,"RECIPE":1,"MULTISTAGE":2}
     readonly property var buzControlEnum:{"STOP":0,"SHORT":1,"SHORTTWO":2,"2SCECONDS":3,"OPEN":4}
 
@@ -56,6 +56,8 @@ ApplicationWindow {
     readonly property string themesTextColor2:"#A2A2A2"
 
     property var pattern: new RegExp("[\u4E00-\u9FA5]+")
+    property var patternSymbol: new RegExp("[^`~!@#$%^&*()-_+={}':;',\\[\\].<>/?￥……（）——；’‘：“'，。、？0-9]+")
+    property var decode_ssid:""
     Settings {
         id: testSettings
         category: "test"
@@ -108,6 +110,9 @@ ApplicationWindow {
         onWifiEnableChanged: {
             console.log("onWifiEnableChanged....",systemSettings.wifiEnable)
         }
+        onWifiPasswdArrayChanged: {
+            console.log("onWifiPasswdArrayChanged....",JSON.stringify(systemSettings.wifiPasswdArray))
+        }
         onSleepTimeChanged: {
             console.log("onSleepTimeChanged",systemSettings.sleepTime)
             timer_window.interval=systemSettings.sleepTime*60000
@@ -155,11 +160,14 @@ ApplicationWindow {
         {
             SendFunc.permitSteamStartStatus(0)
             Backlight.backlightSet(0)
+
             timer_window.stop()
             loaderMainHide()
+            loaderAutoHide()
             if(productionTestFlag==0 && timer_standby.running==true)
                 timer_standby.stop()
             backTopPage()
+            SendFunc.setBuzControl(buzControlEnum.STOP)
         }
         if(window.visible===false)
             window.visible=true
@@ -167,12 +175,21 @@ ApplicationWindow {
     }
 
     Component.onCompleted: {
-        console.warn("Window onCompleted: ",Qt.fontFamilies())
+        console.warn("Window onCompleted: ",Qt.fontFamilies(),JSON.stringify(systemSettings.wifiPasswdArray))
+        //        var value="\\xe6\\x95\\xb0\\xe6\\x8d\\xae" //'\\xe6\\x95\\xb0\\xe6\\x8d\\xae'
+        //        value=value.replace(/\\{1}x/g,"\\\\x")
+        //        console.warn("Window onCompleted: ",value)
+        //        value="wpa_cli list_networks | tail -n +3 | grep \'"+value+"\' > test.conf"
+        //        console.warn("Window onCompleted: ",value)
+        //        QmlDevState.executeShell(value)
 
+        //        QmlDevState.executeShell("wpa_cli list_networks | tail -n +3 | grep  \'\\\\xe6\\\\x95\\\\xb0\\\\xe6\\\\x8d\\\\xae\' > test.conf")
         //        var pattern = new RegExp("[\u4E00-\u9FA5]+")
-        //        var str='\\xE6\\x95\\xB0\\xE6\\x8D\\xae'
+        //        var str='\\xef\\xbc\\x81\\xef\\xbf\\xa5'
         //        console.warn("Window onCompleted1: ",str,str.replace('\\x','%'),decodeURI(str.replace(/\\x/g,'%')))
         //                console.warn("Window onCompleted test: ",encodeURI("a1数b2据C3"),encodeURIComponent("a1数b2据C3"),decodeURI("a1%E6%95%B0b2%E6%8D%AEC3"),decodeURIComponent("a1%E6%95%B0b2%E6%8D%AEC3"),pattern.test("数据a1"),pattern.test("adwe445-._"))
+        //console.warn("Window onCompleted test: ",encodeURI("数据？、。·、123"),encodeURIComponent("数据？、。·、123"))
+        //        console.warn("Window onCompleted test:",patternSymbol.test(str))
 
         load_page("pageHome")
         //                load_page("pageTestFront")
@@ -247,15 +264,17 @@ ApplicationWindow {
         id:timer_wifi_connecting
         repeat: false
         running: false
-        interval: 63000
+        interval: 62000
         triggeredOnStart: false
         onTriggered: {
+            console.log("timer_wifi_connecting...",wifiConnecting)
             if(wifiConnecting==true)
             {
-                console.log("timer_wifi_connecting...")
+//                WifiFunc.deleteWifiInfo(wifiConnectInfo)
                 wifiConnecting=false
                 QmlDevState.executeShell("(wpa_cli reconfigure) &")
                 //                QmlDevState.executeShell("(wpa_cli reconfigure && wpa_cli enable_network all && wpa_cli save_config) &")
+                console.log("timer_wifi_connecting...",JSON.stringify(systemSettings.wifiPasswdArray))
             }
         }
     }
@@ -390,6 +409,7 @@ ApplicationWindow {
         PageImagePopup{
             hintTopImgSrc:""
             hintBottomText:""
+            hintCenterText:""
             onCancel: {
                 loader_main.sourceComponent = undefined
             }
@@ -400,25 +420,36 @@ ApplicationWindow {
         loader_main.item.hintTopImgSrc=hintTopImgSrc
         loader_main.item.hintBottomText=hintBottomText
     }
+    function loaderAutoImagePopupShow(hintBottomText,hintTopImgSrc){
+        loaderAuto.sourceComponent = component_imagePopup
+        loaderAuto.item.hintTopImgSrc=hintTopImgSrc
+        loaderAuto.item.hintBottomText=hintBottomText
+        loaderAuto.item.cancelFunc=loaderAutoHide
+    }
     Component{
         id:component_loading
 
         PageImagePopup{
             hintTopImgSrc:""
             hintBottomText:""
+            hintCenterText:""
             onCancel: {
                 loader_main.sourceComponent = undefined
             }
             PageRotationImg {
+                width: 60
+                height: width
+                visible: parent.hintBottomText!=""
                 anchors.centerIn: parent
-                anchors.verticalCenterOffset: -50
-                source: "qrc:/x50/set/jiazaizhong.png"
+                anchors.verticalCenterOffset: -40
+                source: "qrc:/x50/wifi/icon_sx.png"
             }
         }
     }
-    function loaderLoadingShow(text){
+    function loaderLoadingShow(hintCenterText,hintBottomText){
         loader_main.sourceComponent = component_loading
-        loader_main.item.hintBottomText=text
+        loader_main.item.hintCenterText=hintCenterText==null?"":hintCenterText
+        loader_main.item.hintBottomText=hintBottomText==null?"":hintBottomText
     }
 
     Component{
@@ -462,6 +493,9 @@ ApplicationWindow {
         id:loaderAuto
         anchors.fill: parent
         sourceComponent:undefined
+    }
+    function loaderAutoHide(){
+        loaderAuto.sourceComponent = undefined
     }
     Component{
         id:component_autoPopup

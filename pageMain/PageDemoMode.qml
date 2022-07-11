@@ -12,7 +12,6 @@ Item{
     Component.onDestruction: {
         demoModeStatus=0
         SendFunc.loadPowerSet(0)
-        SendFunc.permitSteamStartStatus(0)
     }
     Timer{
         repeat: true

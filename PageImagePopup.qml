@@ -5,7 +5,9 @@ Item {
     property alias hintTopImgSrc: hintTopImg.source
     property alias hintBottomText: hintBottom.text
     property alias hintHeight: hint.height
+    property alias hintCenterText: hintCenter.text
     signal cancel()
+    property var cancelFunc:null
     MouseArea{
         anchors.fill: parent
     }
@@ -34,7 +36,10 @@ Item {
             }
             background: Item {}
             onClicked: {
-                cancel()
+                if(cancelFunc!=null)
+                    cancelFunc()
+                else
+                    cancel()
             }
         }
 
@@ -47,6 +52,18 @@ Item {
             anchors.top: parent.top
             anchors.topMargin: 65
             anchors.horizontalCenter: parent.horizontalCenter
+        }
+        Text{
+            id:hintCenter
+            visible: hintCenter.text!=""
+            width:parent.width-100
+            color:"white"
+            font.pixelSize: 40
+            anchors.centerIn: parent
+            horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignVCenter
+            lineHeight:1.2
+            wrapMode:Text.Wrap
         }
         Text{
             id:hintBottom

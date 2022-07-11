@@ -18,8 +18,8 @@ Item {
     {
         console.log("wifi_scan_timer_reset")
         SendFunc.getCurWifi()
-        SendFunc.scanRWifi()
-        //        SendFunc.scanWifi()
+        //        SendFunc.scanRWifi()
+        SendFunc.scanWifi()
         scan_count=0
         timer_wifi_scan.interval=3000
         timer_wifi_scan.restart()
@@ -28,24 +28,29 @@ Item {
     Connections { // 将目标对象信号与槽函数进行连接
         target: window
         onWifiConnectingChanged:{
-            console.log("onWifiConnectingChanged:",wifiConnecting,timer_wifi_connecting.running)
+            console.log("onWifiConnectingChanged1:",wifiConnecting,wifiConnected,timer_wifi_connecting.running)
             if(wifiConnecting==true)
                 timer_wifi_connecting.restart()
             else
             {
                 if(timer_wifi_connecting.running)
+                {
                     timer_wifi_connecting.stop()
+                    if(wifiConnected==true && wifiInputConnecting==true)
+                        dismissWifiInput()
+                }
                 else
                 {
                     if(systemSettings.wifiEnable && wifiConnected==false && wifiConnectInfo.ssid!="")
                     {
                         wifiConnectInfo.ssid=""
-                        loaderImagePopupShow("网络连接失败，请重试","/x50/icon/icon_pop_error.png")
+                        loaderAutoImagePopupShow("网络连接失败，请重试","/x50/icon/icon_pop_error.png")
                     }
                 }
                 wifi_scan_timer_reset()
                 wifiInputConnecting=false
             }
+            console.log("onWifiConnectingChanged2:",wifiConnecting,timer_wifi_connecting.running)
         }
     }
 
@@ -65,7 +70,7 @@ Item {
                         if(systemSettings.wifiEnable && wifiConnected==false && wifiConnectInfo.ssid!="")
                         {
                             wifiConnectInfo.ssid=""
-                            loaderImagePopupShow("网络连接失败，请重试","/x50/icon/icon_pop_error.png")
+                            loaderAutoImagePopupShow("网络连接失败，请重试","/x50/icon/icon_pop_error.png")
                         }
                     }
                     else if(value==3)
@@ -73,12 +78,13 @@ Item {
                         if(systemSettings.wifiEnable && wifiConnected==false && wifiConnectInfo.ssid!="")
                         {
                             wifiConnectInfo.ssid=""
-                            loaderImagePopupShow("密码错误，连接失败","/x50/icon/icon_pop_error.png")
+                            loaderAutoImagePopupShow("密码错误，连接失败","/x50/icon/icon_pop_error.png")
                         }
                     }
                     else if(value==4)
                     {
-                        dismissWifiInput()
+                        if(wifiInputConnecting==true)
+                            dismissWifiInput()
                         if(scan_count>=3)
                             wifi_scan_timer_reset()
                     }
@@ -94,17 +100,7 @@ Item {
             {
                 if(wifiConnected==true && wifiConnectInfo.ssid!="")
                 {
-                    var real_ssid
-                    if(pattern.test(wifiConnectInfo.ssid))
-                    {
-                        real_ssid=decodeURI(value.replace(/\\x/g,'%'))
-                        console.log("real_ssid",real_ssid,wifiConnectInfo.ssid)
-                    }
-                    else
-                    {
-                        real_ssid=value
-                    }
-                    if(real_ssid==wifiConnectInfo.ssid)
+                    if(decode_ssid==wifiConnectInfo.ssid)
                     {
                         qrcode_display=20
                         wifiConnectInfo.ssid=""
@@ -163,7 +159,7 @@ Item {
                 }
                 else if(scan_count==3)
                 {
-                    timer_wifi_scan.interval=10000
+                    timer_wifi_scan.interval=7000
                 }
                 if(wifiConnecting==false)
                 {
@@ -177,9 +173,9 @@ Item {
                     getWifiInfo()
 
                     if(scan_count%2==0)
-                        SendFunc.scanRWifi()
-                    else
                         SendFunc.scanWifi()
+                    else
+                        SendFunc.scanRWifi()
                 }
                 if(qrcode_display>0)
                 {
@@ -435,15 +431,21 @@ Item {
             interactive: true
             delegate: wifiDelegate
             model: wifiModel
-            cacheBuffer:10
+            cacheBuffer:3
             header: headerView
             clip: true
             //            highlightRangeMode: ListView.ApplyRange
-                        snapMode: ListView.SnapToItem
-            boundsBehavior:Flickable.StopAtBounds
+            snapMode: ListView.SnapToItem
+            //            boundsBehavior:Flickable.StopAtBounds
             highlightMoveDuration:40
             highlightMoveVelocity:-1
             footer: footerView
+//            onFlickEnded:{
+//                console.log("onFlickEnded")
+//            }
+//            onMovementEnded:{
+//                console.log("onMovementEnded")
+//            }
         }
     }
     Component{
@@ -596,10 +598,13 @@ Item {
                 }
             }
             Component.onCompleted: {
+                timer_wifi_scan.stop()
                 textField.forceActiveFocus()
             }
             Component.onDestruction: {
                 wifiInputConnecting=false
+                timer_wifi_scan.start()
+                listView.positionViewAtBeginning()
             }
         }
     }
@@ -608,14 +613,11 @@ Item {
         loader_main.item.wifi_ssid=wifiInfo.ssid
         loader_main.item.wifi_flags=wifiInfo.flags
         loader_main.item.index=index
-        timer_wifi_scan.stop()
         console.log("showWifiInput:" , wifiInfo.ssid,wifiInfo.flags)
     }
     function dismissWifiInput(){
         if(loader_main.sourceComponent===component_wifiInput)
             loader_main.sourceComponent = undefined
-        timer_wifi_scan.start()
-        listView.positionViewAtBeginning()
     }
 
     //    Loader{

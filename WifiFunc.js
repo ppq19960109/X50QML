@@ -39,14 +39,16 @@ function deleteWifiInfo(wifiInfo)
 {
     if(wifiInfo==null || wifiInfo.ssid=="" ||wifiInfo.psk=="" || wifiInfo.encryp===0)
         return
+    console.log("deleteWifiInfo:",wifiInfo.ssid,wifiInfo.psk)
     var wifiPasswdArray=systemSettings.wifiPasswdArray
     if(typeof wifiPasswdArray!="object")
     {
         console.log("wifiPasswdArray not Object")
         return
     }
+    var array_len=wifiPasswdArray.length
     var i,element
-    for( i = 0; i < wifiPasswdArray.length; ++i)
+    for( i = 0; i < array_len; ++i)
     {
         element=wifiPasswdArray[i]
         if(element.ssid===wifiInfo.ssid)
@@ -57,10 +59,11 @@ function deleteWifiInfo(wifiInfo)
         }
     }
 
-    if(i===wifiPasswdArray.length)
+    if(i==array_len)
     {
         return
     }
+    console.log("deleteWifiInfo:",JSON.stringify(wifiPasswdArray))
     systemSettings.wifiPasswdArray=wifiPasswdArray
     wifiConnectInfo.psk=""
 }
@@ -69,6 +72,7 @@ function addWifiInfo(wifiInfo)
 {
     if(wifiInfo==null || wifiInfo.ssid=="" ||wifiInfo.psk=="" || wifiInfo.encryp===0)
         return
+    console.log("addWifiInfo:",wifiInfo.ssid,wifiInfo.psk)
     var wifiPasswdArray=systemSettings.wifiPasswdArray
 
     if(typeof wifiPasswdArray!="object")
@@ -76,9 +80,9 @@ function addWifiInfo(wifiInfo)
         console.log("wifiPasswdArray not Object")
         wifiPasswdArray=new Array
     }
-
+    var array_len=wifiPasswdArray.length
     var i,element
-    for(i = 0; i < wifiPasswdArray.length; ++i)
+    for(i = 0; i < array_len; ++i)
     {
         element=wifiPasswdArray[i]
         if(element.ssid===wifiInfo.ssid)
@@ -93,7 +97,7 @@ function addWifiInfo(wifiInfo)
             break;
         }
     }
-    if(i===wifiPasswdArray.length)
+    if(i==array_len)
     {
         var newWifiInfo={}
         newWifiInfo.ssid=wifiInfo.ssid
@@ -102,6 +106,7 @@ function addWifiInfo(wifiInfo)
         console.log("add ssid:",newWifiInfo.ssid)
         wifiPasswdArray.push(newWifiInfo)
     }
+    console.log("addWifiInfo:",JSON.stringify(wifiPasswdArray))
     systemSettings.wifiPasswdArray=wifiPasswdArray
     wifiConnectInfo.psk=""
 }

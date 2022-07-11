@@ -3,7 +3,7 @@ import QtQuick.Controls 2.2
 import "../"
 import "qrc:/SendFunc.js" as SendFunc
 Item {
-
+    property int step: 0
     Timer{
         id:timer_qrcode
         repeat: false
@@ -11,7 +11,13 @@ Item {
         interval: 20*60000
         triggeredOnStart: false
         onTriggered: {
-            loaderQrcodeHide()
+            if(step==0)
+                loaderLoadingShow("二维码获取失败，请检查网络后重试","")
+            else
+            {
+                step=0
+                loaderQrcodeHide()
+            }
         }
     }
 
@@ -23,8 +29,10 @@ Item {
 
             if("WifiState"==key)
             {
-                if(value==4 && timer_qrcode.running==false)
+                if(value==4 && step==0)
                 {
+                    step=1
+                    timer_qrcode.interval=20*60000
                     timer_qrcode.restart()
                     loaderQrcodeShow("此二维码可以")
                 }
@@ -150,7 +158,7 @@ Item {
 
                 onClicked: {
 
-                    if( timer_qrcode.running==false)
+                    if(step==0)
                     {
                         if(QmlDevState.state.DeviceSecret=="")
                         {
@@ -159,11 +167,14 @@ Item {
                         }
                         if(systemSettings.wifiEnable && wifiConnected==true)
                         {
-                            loaderLoadingShow("二维码刷新中...")
+                            loaderLoadingShow("","二维码刷新中...")
                             wifiConnected=false
                             var Data={}
                             Data.BackOnline = null
                             SendFunc.setToServer(Data)
+
+                            timer_qrcode.interval=30000
+                            timer_qrcode.restart()
                         }
                         else
                         {

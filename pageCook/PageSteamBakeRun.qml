@@ -65,7 +65,11 @@ Rectangle {
         console.log("PageSteamBakeRun StackView onActivating")
         SendFunc.permitSteamStartStatus(0)
     }
-
+    StackView.onActivated:{
+        console.log("PageSteamBakeRun StackView onActivated")
+        if(permitStartStatus>0)
+            SendFunc.permitSteamStartStatus(0)
+    }
     Component{
         id:component_newCook
         PageNewCook{}

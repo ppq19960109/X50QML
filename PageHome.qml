@@ -394,10 +394,13 @@ Item {
                 }
                 else
                 {
-                    wifiConnecting=false
                     if(value==2 || value==3||value==5)
                     {
-                        WifiFunc.deleteWifiInfo(wifiConnectInfo)
+//                        WifiFunc.deleteWifiInfo(wifiConnectInfo)
+                        if(isExistView("pageWifi")==null)
+                        {
+                            wifiConnectInfo.ssid=""
+                        }
                     }
                     else if(value==4)
                     {
@@ -407,6 +410,7 @@ Item {
                     {
                         SendFunc.getCurWifi()
                     }
+                    wifiConnecting=false
                 }
                 console.log("WifiState",value,wifiConnected,wifiConnecting)
             }
@@ -414,19 +418,20 @@ Item {
             {
                 if(wifiConnected==true && wifiConnectInfo.ssid!="")
                 {
-                    var real_ssid
-                    if(pattern.test(wifiConnectInfo.ssid))
-                    {
-                        real_ssid=decodeURI(value.replace(/\\x/g,'%'))
-                    }
-                    else
-                    {
-                        real_ssid=value
-                    }
-                    if(real_ssid==wifiConnectInfo.ssid)
+//                    if(pattern.test(wifiConnectInfo.ssid))
+//                    {
+                        decode_ssid=decodeURI(value.replace(/\\x/g,'%'))
+//                    }
+//                    else
+//                    {
+//                        decode_ssid=value
+//                    }
+                    console.log("decode_ssid",decode_ssid,wifiConnectInfo.ssid)
+                    if(decode_ssid==wifiConnectInfo.ssid)
                     {
                         WifiFunc.addWifiInfo(wifiConnectInfo)
-                        QmlDevState.executeShell("(wpa_cli list_networks | tail -n +3 | grep "+value+" | grep -v 'CURRENT' | awk '{system(\"wpa_cli remove_network \" $1)}' && wpa_cli save_config) &")
+                        var real_value=value.replace(/\\{1}x/g,"\\\\x")
+                        QmlDevState.executeShell("(wpa_cli list_networks | tail -n +3 | grep \'"+real_value+"\' | grep -v 'CURRENT' | awk '{system(\"wpa_cli remove_network \" $1)}' && wpa_cli save_config) &")
                     }
                 }
                 if(isExistView("pageWifi")==null)
@@ -700,6 +705,11 @@ Item {
     StackView.onActivating:{
         console.log("PageHome StackView onActivating")
         SendFunc.permitSteamStartStatus(0)
+    }
+    StackView.onActivated:{
+        console.log("PageHome StackView onActivated")
+        if(permitStartStatus>0)
+            SendFunc.permitSteamStartStatus(0)
     }
 
     Item{

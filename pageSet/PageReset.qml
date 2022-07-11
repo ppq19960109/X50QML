@@ -98,7 +98,7 @@ Item {
             }
             onConfirm: {
                 systemReset()
-                loaderLoadingShow("恢复出厂设置中...")
+                loaderLoadingShow("","恢复出厂设置中...")
             }
         }
     }
