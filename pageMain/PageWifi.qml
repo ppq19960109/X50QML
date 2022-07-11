@@ -17,11 +17,12 @@ Item {
     function wifi_scan_timer_reset()
     {
         console.log("wifi_scan_timer_reset")
+
         SendFunc.getCurWifi()
-        //        SendFunc.scanRWifi()
-        SendFunc.scanWifi()
+        SendFunc.scanRWifi()
+        //        SendFunc.scanWifi()
         scan_count=0
-        timer_wifi_scan.interval=3000
+        timer_wifi_scan.interval=2500
         timer_wifi_scan.restart()
     }
 
@@ -83,6 +84,10 @@ Item {
                     }
                     else if(value==4)
                     {
+                        if(wifiConnected==true)
+                        {
+                            QmlDevState.executeShell("(wpa_cli list_networks | tail -n +3 | grep -v 'CURRENT' | awk '{system(\"wpa_cli disable_network \" $1)}') &")
+                        }
                         if(wifiInputConnecting==true)
                             dismissWifiInput()
                         if(scan_count>=3)
@@ -124,6 +129,10 @@ Item {
             SendFunc.getCurWifi()
     }
     Component.onDestruction: {
+        if(wifiConnecting==false)
+        {
+            QmlDevState.executeShell("(wpa_cli enable_network all) &")
+        }
         if(loader_main.sourceComponent===component_wifiInput)
             loader_main.sourceComponent = undefined
     }
@@ -131,12 +140,16 @@ Item {
         //        VirtualKeyboardSettings.styleName = "retro"
         //        VirtualKeyboardSettings.fullScreenMode=true
         //        console.info("VirtualKeyboardSettings",VirtualKeyboardSettings.availableLocales)
-
         if(systemSettings.wifiEnable && wifiConnecting==false)
         {
+            if(wifiConnected==true)
+            {
+                QmlDevState.executeShell("(wpa_cli list_networks | tail -n +3 | grep -v 'CURRENT' | awk '{system(\"wpa_cli disable_network \" $1)}') &")
+
+                //                QmlDevState.executeShell("(wpa_cli list_networks | tail -n +3 | grep 'TEMP-DISABLED' | awk '{system(\"wpa_cli remove_network \" $1)}' && wpa_cli save_config) &")
+            }
             getWifiInfo()
             SendFunc.scanRWifi()
-            SendFunc.scanWifi()
         }
         listView.positionViewAtBeginning()
     }
@@ -145,7 +158,7 @@ Item {
         id:timer_wifi_scan
         repeat: true
         running: (systemSettings.wifiEnable && sleepState==false)
-        interval: 3000
+        interval: 2500
         triggeredOnStart: false
         onTriggered: {
             //            console.log("timer_wifi_scan",timer_wifi_scan.interval,scan_count,wifiConnecting)
@@ -154,16 +167,22 @@ Item {
             {
                 if(scan_count==1)
                 {
-                    if(wifiConnectInfo.ssid==="")
+                    if(wifiConnecting==false)
+                    {
                         getWifiInfo()
+                        SendFunc.scanWifi()
+                    }
                 }
-                else if(scan_count==3)
+                else
                 {
-                    timer_wifi_scan.interval=7000
-                }
-                if(wifiConnecting==false)
-                {
-                    SendFunc.scanRWifi()
+                    if(scan_count==3)
+                    {
+                        timer_wifi_scan.interval=8000
+                    }
+                    if(wifiConnecting==false)
+                    {
+                        SendFunc.scanRWifi()
+                    }
                 }
             }
             else
@@ -171,7 +190,6 @@ Item {
                 if(wifiConnecting==false)
                 {
                     getWifiInfo()
-
                     if(scan_count%2==0)
                         SendFunc.scanWifi()
                     else
@@ -440,12 +458,12 @@ Item {
             highlightMoveDuration:40
             highlightMoveVelocity:-1
             footer: footerView
-//            onFlickEnded:{
-//                console.log("onFlickEnded")
-//            }
-//            onMovementEnded:{
-//                console.log("onMovementEnded")
-//            }
+            //            onFlickEnded:{
+            //                console.log("onFlickEnded")
+            //            }
+            //            onMovementEnded:{
+            //                console.log("onMovementEnded")
+            //            }
         }
     }
     Component{

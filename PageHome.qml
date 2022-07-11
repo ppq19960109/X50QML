@@ -396,7 +396,7 @@ Item {
                 {
                     if(value==2 || value==3||value==5)
                     {
-//                        WifiFunc.deleteWifiInfo(wifiConnectInfo)
+                        //                        WifiFunc.deleteWifiInfo(wifiConnectInfo)
                         if(isExistView("pageWifi")==null)
                         {
                             wifiConnectInfo.ssid=""
@@ -418,14 +418,14 @@ Item {
             {
                 if(wifiConnected==true && wifiConnectInfo.ssid!="")
                 {
-//                    if(pattern.test(wifiConnectInfo.ssid))
-//                    {
-                        decode_ssid=decodeURI(value.replace(/\\x/g,'%'))
-//                    }
-//                    else
-//                    {
-//                        decode_ssid=value
-//                    }
+                    //                    if(pattern.test(wifiConnectInfo.ssid))
+                    //                    {
+                    decode_ssid=decodeURI(value.replace(/\\x/g,'%'))
+                    //                    }
+                    //                    else
+                    //                    {
+                    //                        decode_ssid=value
+                    //                    }
                     console.log("decode_ssid",decode_ssid,wifiConnectInfo.ssid)
                     if(decode_ssid==wifiConnectInfo.ssid)
                     {
