@@ -449,13 +449,13 @@ Item {
             interactive: true
             delegate: wifiDelegate
             model: wifiModel
-            cacheBuffer:3
+            cacheBuffer:2
             header: headerView
             clip: true
             //            highlightRangeMode: ListView.ApplyRange
             snapMode: ListView.SnapToItem
             //            boundsBehavior:Flickable.StopAtBounds
-            highlightMoveDuration:40
+            highlightMoveDuration:80
             highlightMoveVelocity:-1
             footer: footerView
             //            onFlickEnded:{

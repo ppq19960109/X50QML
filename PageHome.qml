@@ -735,7 +735,7 @@ Item {
                 //                contentItem.highlightRangeMode=istView.StrictlyEnforceRange
                 //                contentItem.highlightResizeDuration= 0
                 //                contentItem.highlightResizeVelocity=-1
-                contentItem.highlightMoveDuration = 10       //将移动时间设为0
+                contentItem.highlightMoveDuration = 40       //将移动时间设为0
                 contentItem.highlightMoveVelocity = -1
                 //                contentItem.snapMode=ListView.SnapOneItem
                 contentItem.boundsBehavior=Flickable.StopAtBounds

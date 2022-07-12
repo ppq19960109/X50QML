@@ -59,11 +59,6 @@ Item{
             source:"qrc:/x50/demo/demo5.png"
         }
 
-        //        Component.onCompleted:{
-        //            contentItem.highlightMoveDuration = 10       //将移动时间设为0
-        //            contentItem.highlightMoveVelocity = -1
-        //            contentItem.boundsBehavior=Flickable.StopAtBounds
-        //        }
         onCurrentIndexChanged:{
             console.log("onCurrentIndexChanged",currentIndex)
         }

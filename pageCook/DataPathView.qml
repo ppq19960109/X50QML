@@ -69,9 +69,9 @@ Item {
 //        focus: true
         preferredHighlightBegin: 0.5;
         preferredHighlightEnd: 0.5;
-        highlightMoveDuration:150
+        highlightMoveDuration:160
         highlightRangeMode: PathView.StrictlyEnforceRange
-        maximumFlickVelocity:2800
+        maximumFlickVelocity:2400
 //        model:textModel
         delegate:delegateIndex==0?rectDelegate:modeDelegate
 

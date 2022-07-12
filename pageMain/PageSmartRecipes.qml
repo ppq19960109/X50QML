@@ -81,7 +81,7 @@ Item {
                 cacheBuffer:2
                 orientation:ListView.Vertical
                 currentIndex:0
-                highlightMoveDuration:40
+                highlightMoveDuration:80
                 highlightMoveVelocity:-1
                 boundsBehavior:Flickable.StopAtBounds
                 snapMode: ListView.SnapToItem
@@ -130,8 +130,9 @@ Item {
             ListView{
                 id: recipeListView
                 model:listModel
-                width:parent.width
+                width:parent.width-20
                 height:parent.height
+                anchors.left: parent.left
                 anchors.top:parent.top
                 cacheBuffer:2
                 orientation:ListView.Horizontal
@@ -140,7 +141,7 @@ Item {
                 //snapMode: ListView.SnapToItem //SnapToItem SnapOneItem
                 clip: true
                 currentIndex:0
-                highlightMoveDuration:40
+                highlightMoveDuration:80
                 highlightMoveVelocity:-1
                 delegate: Item{
                     readonly property int cookType:CookFunc.getCookType(modelData.cookSteps)
@@ -155,8 +156,6 @@ Item {
                         asynchronous:true
                         smooth:false
                         //                        anchors.margins: 0
-                        width: 220
-                        height: 330
                         sourceSize.width: 220
                         sourceSize.height: 330
                         //                            fillMode:Image.PreserveAspectFit
