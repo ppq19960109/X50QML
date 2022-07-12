@@ -115,9 +115,7 @@ Item {
         anchors.bottom:parent.bottom
         name:qsTr("烹饪历史")
         leftBtnText:edit?qsTr("完成"):qsTr("管理")
-        leftBtnOpacity:noHistory.visible==true?0.6:1
         rightBtnText:qsTr("详情")
-        rightBtnOpacity:noHistory.visible==true?0.6:edit===true?0.6:1
         onLeftClick:{
             if(noHistory.visible==false)
             {
@@ -131,7 +129,7 @@ Item {
         }
         onRightClick:{
             if(noHistory.visible==false && edit===false)
-                load_page("pageCookDetails",JSON.stringify(recipeListView.model.get(recipeListView.currentIndex)))
+                push_page("pageCookDetails",JSON.stringify(recipeListView.model.get(recipeListView.currentIndex)))
         }
         onClose:{
             backPrePage()

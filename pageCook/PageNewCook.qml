@@ -60,7 +60,7 @@ Rectangle {
                 source: themesImagesPath+"icon-cookadd.png"
             }
             onClicked: {
-                load_page("pageSteamBakeBase",JSON.stringify({"device":cookWorkPosEnum.LEFT}))
+                push_page("pageSteamBakeBase",JSON.stringify({"device":cookWorkPosEnum.LEFT}))
                 loaderNewCookHide()
             }
         }
@@ -96,7 +96,7 @@ Rectangle {
 
                 onClicked: {
                     loaderNewCookHide()
-                    load_page("pageSmartRecipes")
+                    push_page("pageSmartRecipes")
                 }
             }
             Button{
@@ -117,7 +117,7 @@ Rectangle {
                 }
 
                 onClicked: {
-                    load_page("pageCookHistory",JSON.stringify({"device":cookWorkPosEnum.LEFT}))
+                    push_page("pageCookHistory",JSON.stringify({"device":cookWorkPosEnum.LEFT}))
                     loaderNewCookHide()
                 }
             }
@@ -139,7 +139,7 @@ Rectangle {
                 }
 
                 onClicked: {
-                    load_page("pageMultistageSet")
+                    push_page("pageMultistageSet")
                     loaderNewCookHide()
                 }
             }
@@ -181,7 +181,7 @@ Rectangle {
                 }
 
                 onClicked: {
-                    load_page("pageSteamBakeBase",JSON.stringify({"device":cookWorkPosEnum.RIGHT}))
+                    push_page("pageSteamBakeBase",JSON.stringify({"device":cookWorkPosEnum.RIGHT}))
                     loaderNewCookHide()
                 }
             }
@@ -204,7 +204,7 @@ Rectangle {
                 }
 
                 onClicked: {
-                    load_page("pageCookHistory",JSON.stringify({"device":cookWorkPosEnum.RIGHT}))
+                    push_page("pageCookHistory",JSON.stringify({"device":cookWorkPosEnum.RIGHT}))
                     loaderNewCookHide()
                 }
             }

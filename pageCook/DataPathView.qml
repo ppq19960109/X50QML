@@ -7,9 +7,8 @@ Item {
     property int delegateIndex:0
     property alias currentIndex:pathView.currentIndex
     property alias moving:pathView.moving
-    signal valueChanged(int index,string valueName)
+    signal valueChanged(int index)
     id:root
-    //        anchors.fill: parent
 
     Component {
         id: rectDelegate
@@ -18,7 +17,6 @@ Item {
             property color textColor:PathView.isCurrentItem ?themesTextColor:themesTextColor2
             width:parent.width
             height:parent.height/parent.pathItemCount
-//            opacity: PathView.isCurrentItem ? 1 : 0.5
 
             Text {
                 id:text
@@ -37,7 +35,6 @@ Item {
             property url imgUrl:PathView.isCurrentItem ?leftWorkBigImg[modelData]:leftWorkSmallImg[modelData]
             width:parent.width
             height:parent.height/parent.pathItemCount
-//            opacity: PathView.isCurrentItem ? 1 : 0.5
 
             Image {
                 asynchronous:true
@@ -49,8 +46,6 @@ Item {
             }
             Text {
                 id:text
-//                anchors.verticalCenter:  parent.verticalCenter
-//                anchors.horizontalCenter: parent.horizontalCenter
                 anchors.centerIn: parent
                 anchors.horizontalCenterOffset: 30
                 color:textColor
@@ -66,12 +61,12 @@ Item {
 //        currentIndex:0
         pathItemCount:3
         interactive: true
-//        focus: true
+
         preferredHighlightBegin: 0.5;
         preferredHighlightEnd: 0.5;
         highlightMoveDuration:150
         highlightRangeMode: PathView.StrictlyEnforceRange
-        maximumFlickVelocity:2800
+        maximumFlickVelocity:2400
 //        model:textModel
         delegate:delegateIndex==0?rectDelegate:modeDelegate
 
@@ -82,16 +77,10 @@ Item {
                 x :root.width/2
                 y:root.height
             }
-
         }
         onMovementEnded: {
             console.log("currentIndex:",currentIndex);
-            valueChanged(currentIndex,"model");
+            valueChanged(currentIndex);
         }
-
-//        Component.onCompleted: {
-//            console.log("parent.x:"+parent.x,"parent.y:"+parent.y,"parent.width:"+parent.width,"parent.height:"+parent.height)
-//            console.log("x:"+root.x,"y:"+root.y,"width:"+root.width,"height:"+root.height)
-//        }
     }
 }

@@ -97,7 +97,7 @@ Item {
                 source: "qrc:/x50/set/gengduo.png"
             }
             onClicked: {
-                load_page("pageReleaseNotes")
+                push_page("pageReleaseNotes")
             }
         }
         Item{

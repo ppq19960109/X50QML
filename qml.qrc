@@ -2,8 +2,8 @@
     <qresource prefix="/">
         <file>main.qml</file>
         <file>PageHome.qml</file>
-        <file>pageMain/PageHomeFirst.qml</file>
-        <file>pageMain/PageHomeSecond.qml</file>
+        <file>pageMain/PageHood.qml</file>
+        <file>pageMain/PageSteamOven.qml</file>
         <file>pageMain/PageHomeThird.qml</file>
         <file>pageCook/PageSteamBakeBase.qml</file>
         <file>pageCook/DataPathView.qml</file>
@@ -122,5 +122,7 @@
         <file>x50/demo/demo2.png</file>
         <file>x50/demo/demo1.png</file>
         <file>x50/demo/demo6.png</file>
+        <file>PageTabBar.qml</file>
+        <file>PageLaunchBtn.qml</file>
     </qresource>
 </RCC>

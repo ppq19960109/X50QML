@@ -147,6 +147,37 @@ function scanRWifi()
     getToServer(Data)
 }
 
+function deleteWifissid(ssid)
+{
+    if(ssid==""||ssid==null)
+        return
+    console.log("deleteWifissid:",ssid)
+    var wifiPasswdArray=systemSettings.wifiPasswdArray
+    if(typeof wifiPasswdArray!="object")
+    {
+        console.log("wifiPasswdArray not Object")
+        return
+    }
+    var array_len=wifiPasswdArray.length
+    var i,element
+    for( i = 0; i < array_len; ++i)
+    {
+        element=wifiPasswdArray[i]
+        if(element.ssid===ssid)
+        {
+            console.log("remove ssid:",i,element.ssid)
+            wifiPasswdArray.splice(i,1)
+            break;
+        }
+    }
+
+    if(i==array_len)
+    {
+        return
+    }
+    console.log("deleteWifissid:",JSON.stringify(wifiPasswdArray))
+    systemSettings.wifiPasswdArray=wifiPasswdArray
+}
 function connectWiFi(ssid,psk,encryp)
 {
     var Data={}
@@ -159,6 +190,7 @@ function connectWiFi(ssid,psk,encryp)
     wifiConnecting=true
     wifiConnected=false
     setToServer(Data)
+    deleteWifissid(ssid)
 }
 function getWifiState()
 {

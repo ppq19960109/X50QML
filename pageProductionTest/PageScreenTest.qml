@@ -69,7 +69,7 @@ Item {
                     anchors.centerIn: parent
                 }
                 onClicked: {
-                    load_page("pageScreenLCD",{containerqml:root})
+                    push_page("pageScreenLCD",{containerqml:root})
                 }
             }
             Button{
@@ -87,7 +87,7 @@ Item {
                     anchors.centerIn: parent
                 }
                 onClicked: {
-                    load_page("pageScreenTouch",{containerqml:root})
+                    push_page("pageScreenTouch",{containerqml:root})
                 }
             }
             Button{
@@ -105,7 +105,7 @@ Item {
                     anchors.centerIn: parent
                 }
                 onClicked: {
-                    load_page("pageScreenLight",{containerqml:root})
+                    push_page("pageScreenLight",{containerqml:root})
                 }
             }
             Button{
@@ -123,7 +123,7 @@ Item {
                     anchors.centerIn: parent
                 }
                 onClicked: {
-                    load_page("pageScreenLine")
+                    push_page("pageScreenLine")
                 }
             }
             Button{
@@ -142,7 +142,7 @@ Item {
                 }
 
                 onClicked: {
-                    load_page("pageScreenClick")
+                    push_page("pageScreenClick")
                 }
             }
             Button{
@@ -161,7 +161,7 @@ Item {
                 }
 
                 onClicked: {
-                    load_page("pageAgingTest",{containerqml:root})
+                    push_page("pageAgingTest",{containerqml:root})
                 }
             }
         }

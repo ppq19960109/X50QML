@@ -168,7 +168,7 @@ Rectangle {
                 para.dishName=CookFunc.getDishName(list)
                 para.cookSteps=JSON.stringify(list)
 
-                load_page("pageSteamBakeReserve",JSON.stringify(para))
+                push_page("pageSteamBakeReserve",JSON.stringify(para))
                 para=undefined
             }
         }

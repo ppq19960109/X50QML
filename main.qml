@@ -1,5 +1,6 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.2
+import QtQuick.Layouts 1.3
 import Qt.labs.settings 1.0
 //import QtQuick.Window 2.2
 
@@ -12,21 +13,22 @@ import "qrc:/SendFunc.js" as SendFunc
 
 ApplicationWindow {
     id: window
-    width: 800
-    height: 480
-        visible: true
+    width: 1280
+    height: 400
+    visible: true
     property int sysPower:1
     property int permitStartStatus:0
     property int productionTestStatus:0
     property int productionTestFlag:1
-    //    property int demoModeStatus:0
+    property int demoModeStatus:0
 
     //    readonly property string uiVersion:"1.1"
     readonly property string productionTestWIFISSID:"moduletest"
     readonly property string productionTestWIFIPWD:"58185818"
 
     readonly property var cookWorkPosEnum:{"LEFT":0,"RIGHT":1,"ALL":2}
-    readonly property var  cookModeImg: ["icon-steamed.png","icon-bake.png","icon-multistage.png"]
+    readonly property var cookModeUncheckedImg: ["icon_steame_unchecked.png","icon_bake_unchecked.png","icon_multistage_unchecked.png"]
+    readonly property var cookModecheckedImg: ["icon_steame_checked.png","icon_bake_checked.png","icon_multistage_checked.png"]
     readonly property var workModeEnum: ["未设定", "经典蒸", "高温蒸", "热风烧烤", "上下加热", "立体热风", "蒸汽烤", "空气炸", "保温烘干","便捷蒸"]
     readonly property var workModeNumberEnum:[0,1,2,35,36,38,40,42,72,100]
     readonly property int rightWorkModeIndex:8
@@ -37,7 +39,6 @@ ApplicationWindow {
 
     readonly property var workStateEnum:{"WORKSTATE_STOP":0,"WORKSTATE_RESERVE":1,"WORKSTATE_PREHEAT":2,"WORKSTATE_RUN":3,"WORKSTATE_FINISH":4,"WORKSTATE_PAUSE":5,"WORKSTATE_PAUSE_RESERVE":6}
     readonly property var workStateArray:["停止","预约中","预热中","运行中","烹饪完成","暂停中","预约暂停中"]
-
     readonly property var workOperationEnum:{"START":0,"PAUSE":1,"CANCEL":2,"CONFIRM":3,"RUN_NOW":4}
 
     readonly property var timingStateEnum:{"STOP":0,"RUN":1,"PAUSE":2,"CONFIRM":3}
@@ -49,7 +50,8 @@ ApplicationWindow {
     readonly property var multiModeEnum:{"NONE":0,"RECIPE":1,"MULTISTAGE":2}
     readonly property var buzControlEnum:{"STOP":0,"SHORT":1,"SHORTTWO":2,"2SCECONDS":3,"OPEN":4}
 
-    property string themesImagesPath:"file:themes/default/"
+    readonly property string themesPicturesPath:"file:themes/X8GCZ/"
+    readonly property string themesImagesPath:"file:themes/default/"
     readonly property string themesWindowBackgroundColor:"#1A1A1A"
     readonly property string themesPopupWindowColor:"#333333"
     readonly property string themesTextColor:"#E68855"
@@ -173,9 +175,9 @@ ApplicationWindow {
         //        console.warn("Window onCompleted1: ",str,str.replace('\\x','%'),decodeURI(str.replace(/\\x/g,'%')))
         //                console.warn("Window onCompleted test: ",encodeURI("a1数b2据C3"),encodeURIComponent("a1数b2据C3"),decodeURI("a1%E6%95%B0b2%E6%8D%AEC3"),decodeURIComponent("a1%E6%95%B0b2%E6%8D%AEC3"),pattern.test("数据a1"),pattern.test("adwe445-._"))
 
-        load_page("pageHome")
-        //                load_page("pageTestFront")
-        //        load_page("pageDemoMode")
+        push_page(pageHome)
+        //                push_page(pageTestFront)
+        //        push_page(pageDemoMode)
         if(systemSettings.wifiPasswdArray!=null)
         {
             console.log("systemSettings.wifiPasswdArray",systemSettings.wifiPasswdArray.length)
@@ -195,9 +197,6 @@ ApplicationWindow {
         }
         //        SendFunc.makeRequest()
         //        SendFunc.weatherRequest("杭州")
-    }
-    background:Rectangle {
-        color: themesWindowBackgroundColor
     }
 
     function sleepStandby()
@@ -268,7 +267,7 @@ ApplicationWindow {
         onTriggered: {
             console.log("timer_window sleep:")
             //            console.log("timer_window sleep:",QmlDevState.state.HoodSpeed,QmlDevState.state.RStOvState,QmlDevState.state.LStOvState,QmlDevState.state.ErrorCodeShow,QmlDevState.localConnected)
-            if(productionTestStatus==0 && QmlDevState.localConnected > 0 && sysPower > 0)
+            if(productionTestStatus==0 && demoModeStatus==0 && QmlDevState.localConnected > 0 && sysPower > 0)
             {
                 if(isExistView("pageWifi")==null)
                     loaderMainHide()
@@ -298,11 +297,22 @@ ApplicationWindow {
         //        console.log("onSleepTimerRestart")
         timer_window.restart()
     }
-
+    background:Image {
+        asynchronous:true
+        smooth:false
+        source: themesPicturesPath+"window-background.png"
+    }
     StackView {
         id: stackView
         //initialItem: pageTestFront // pageHome pageTestFront pageTest pageGetQuad
-        anchors.fill: parent
+        width: 1160
+        height: parent.height
+        anchors.left: parent.left
+    }
+    PageHomeBar{
+
+        anchors.left: stackView.right
+        anchors.right: parent.right
     }
 
     //---------------------------------------------------------------
@@ -644,24 +654,24 @@ ApplicationWindow {
     }
     ListModel {
         id: wifiModel
-        //        ListElement {
-        //            connected: 1
-        //            ssid: "qwertyuio"
-        //            level:2
-        //            flags:2
-        //        }
-        //        ListElement {
-        //            connected: 0
-        //            ssid: "123456789123456789123456789"
-        //            level:2
-        //            flags:1
-        //        }
-        //        ListElement {
-        //            connected: 0
-        //            ssid: "456"
-        //            level:2
-        //            flags:0
-        //        }
+        ListElement {
+            connected: 1
+            ssid: "qwertyuio"
+            level:2
+            flags:2
+        }
+        ListElement {
+            connected: 0
+            ssid: "123456789123456789123456789"
+            level:2
+            flags:1
+        }
+        ListElement {
+            connected: 0
+            ssid: "456"
+            level:2
+            flags:0
+        }
     }
     //    Component {
     //        id: pageTest
@@ -677,7 +687,7 @@ ApplicationWindow {
     //                //                Item {Image{source: "/test/x5/上下排版/1.png" }}
     //                Repeater {
     //                    id: repeater
-    //                    model: Backlight.getAllFileName("X50Test")
+    //                    model: Backlight.getAllFileName("testPictures")
     //                    Item {
     //                        Image{asynchronous:true
     //                            source: "file:"+modelData }
@@ -694,6 +704,14 @@ ApplicationWindow {
     Component {
         id: pageHome
         PageHome {}
+    }
+    Component {
+        id: pageHood
+        PageHood {}
+    }
+    Component {
+        id: pageSteamOven
+        PageSteamOven {}
     }
     Component {
         id: pageWifi
@@ -829,13 +847,13 @@ ApplicationWindow {
     function backPrePage() {
         if(stackView.depth>0)
             stackView.pop(StackView.Immediate)
-        console.log("stackView depth:"+stackView.depth)
+        console.log("backPrePage stackView depth:"+stackView.depth)
     }
 
     function backTopPage() {
         if(stackView.depth>0)
             stackView.pop(null,StackView.Immediate)
-        console.log("stackView depth:"+stackView.depth)
+        console.log("backTopPage stackView depth:"+stackView.depth)
     }
 
     function backPage(page) {
@@ -843,110 +861,16 @@ ApplicationWindow {
             stackView.pop(page,StackView.Immediate)
         console.log("backPage stackView depth:"+stackView.depth)
     }
+    function replace_page(page,args) {
+        if(stackView.depth>0)
+            stackView.replace(page,args,StackView.Immediate)
+        console.log("replace_page stackView depth:"+stackView.depth)
+    }
 
-    function load_page(page,args) {
-        //        console.log("load_page:"+page,"args:"+args)
-
-        switch (page) {
-        case "pageHome":
-            stackView.push(pageHome,StackView.Immediate)
-            break;
-        case "pageWifi":
-            stackView.push(pageWifi,StackView.Immediate)
-            break;
-        case "pageSteamBakeBase": //蒸烤设置页面
-            stackView.push(pageSteamBakeBase, {"state":args},StackView.Immediate)
-            break;
-        case "pageMultistageSet":
-            stackView.push(pageMultistageSet,StackView.Immediate)
-            break;
-        case "pageSteamBakeRun": //蒸烤页面
-            stackView.push(pageSteamBakeRun, {"state":args},StackView.Immediate)
-            break;
-        case "pageSteamBakeReserve": //页面
-            stackView.push(pageSteamBakeReserve, {"state":args},StackView.Immediate)
-            break;
-        case "pageSmartRecipes": //页面
-            stackView.push(pageSmartRecipes,StackView.Immediate)
-            break;
-        case "pageCookDetails":
-            stackView.push(pageCookDetails, {"state":args},StackView.Immediate)
-            break;
-        case "pageCookHistory":
-            stackView.push(pageCookHistory, {"state":args},StackView.Immediate)
-            break;
-        case "pageCloseHeat":
-            stackView.push(pageCloseHeat,StackView.Immediate)
-            break;
-        case "pageSet":
-            stackView.push(pageSet,StackView.Immediate)
-            break;
-        case "pageLocalSettings":
-            stackView.push(pageLocalSettings,StackView.Immediate)
-            break;
-        case "pageReset":
-            stackView.push(pageReset,StackView.Immediate)
-            break;
-        case "pageSystemUpdate":
-            stackView.push(pageSystemUpdate,StackView.Immediate)
-            break;
-        case "pageAboutMachine":
-            stackView.push(pageAboutMachine,StackView.Immediate)
-            break;
-        case "pageAfterGuide":
-            stackView.push(pageAfterGuide,StackView.Immediate)
-            break;
-        case "pageReleaseNotes":
-            stackView.push(pageReleaseNotes,StackView.Immediate)
-            break;
-        case "pageTestFront":
-            stackView.push(pageTestFront,StackView.Immediate)
-            break;
-        case "pageIntelligentDetection":
-            stackView.push(pageIntelligentDetection,StackView.Immediate)
-            break;
-        case "pageScreenTest":
-            stackView.push(pageScreenTest,StackView.Immediate)
-            break;
-        case "pageScreenLine":
-            stackView.push(pageScreenLine,StackView.Immediate)
-            break;
-        case "pageScreenClick":
-            stackView.push(pageScreenClick,StackView.Immediate)
-            break;
-        case "pageScreenLCD":
-            stackView.push(pageScreenLCD,args,StackView.Immediate)
-            break;
-        case "pageScreenLight":
-            stackView.push(pageScreenLight,args,StackView.Immediate)
-            break;
-        case "pageScreenTouch":
-            stackView.push(pageScreenTouch,args,StackView.Immediate)
-            break;
-        case "pageAgingTest":
-            stackView.push(pageAgingTest,args,StackView.Immediate)
-            break;
-        case "pageGetQuad":
-            stackView.push(pageGetQuad,StackView.Immediate)
-            break;
-        case "pageLoadPower":
-            stackView.push(pageLoadPower,StackView.Immediate)
-            break;
-        case "pagePowerBoard":
-            stackView.push(pagePowerBoard,StackView.Immediate)
-            break;
-        case "pagePowerOut":
-            stackView.push(pagePowerOut,StackView.Immediate)
-            break;
-        case "pagePowerInput":
-            stackView.push(pagePowerInput,StackView.Immediate)
-            break;
-        case "pageDemoMode":
-            stackView.push(pageDemoMode,StackView.Immediate)
-            break;
-        }
-
-        console.log("stackView depth:"+stackView.depth)
+    function push_page(page,args) {
+        //        console.log("args:"+args)
+        stackView.push(page,args,StackView.Immediate)
+        console.log("push_page stackView depth:"+stackView.depth)
     }
     //获取当前时间方法
     //    function getCurtime()

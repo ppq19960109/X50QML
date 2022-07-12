@@ -199,7 +199,7 @@ Item {
                 //                    SendFunc.enableWifi(false)
                 //                                loaderErrorShow("右腔干烧检测电路故障！","请拨打售后电话<font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员")
 
-                //                load_page("pageTestFront")
+                //                push_page("pageTestFront")
             }
             else
             {
@@ -244,7 +244,7 @@ Item {
                 {
                     if(ret==null)
                     {
-                        load_page("pageSteamBakeRun")
+                        push_page("pageSteamBakeRun")
                     }
                 }
                 else
@@ -270,7 +270,7 @@ Item {
                     }
                     else
                     {
-                        if(QmlDevState.state.LStOvDoorState==0)
+                        if(QmlDevState.state.LStOvDoorState==0||value==workStateEnum.WORKSTATE_STOP)
                             loaderDoorAutoPopupHide("左腔")
                     }
                 }
@@ -284,7 +284,7 @@ Item {
                 {
                     if(ret==null)
                     {
-                        load_page("pageSteamBakeRun")
+                        push_page("pageSteamBakeRun")
                     }
                 }
                 else
@@ -310,7 +310,7 @@ Item {
                     }
                     else
                     {
-                        if(QmlDevState.state.RStOvDoorState==0)
+                        if(QmlDevState.state.RStOvDoorState==0||value==workStateEnum.WORKSTATE_STOP)
                             loaderDoorAutoPopupHide("右腔")
                     }
                 }
@@ -397,7 +397,10 @@ Item {
                     wifiConnecting=false
                     if(value==2 || value==3||value==5)
                     {
-                        WifiFunc.deleteWifiInfo(wifiConnectInfo)
+                        if(isExistView("pageWifi")==null)
+                        {
+                            wifiConnectInfo.ssid=""
+                        }
                     }
                     else if(value==4)
                     {
@@ -438,7 +441,7 @@ Item {
             {
                 if(productionTestFlag > 0 && productionTestStatus==0)
                 {
-                    load_page("pageTestFront")
+                    push_page("pageTestFront")
                 }
                 else
                 {
@@ -558,8 +561,8 @@ Item {
             {
                 if(sysPower==0)
                 {
-                    if(isExistView("pageDemoMode")==null)
-                        load_page("pageDemoMode")
+                    if(demoModeStatus==0)
+                        push_page("pageDemoMode")
                 }
             }
         }
@@ -668,7 +671,7 @@ Item {
             return
         }
         productionTestFlag=0x0f
-        load_page("pageGetQuad")
+        push_page("pageGetQuad")
     }
     Timer{
         id:timer_scanwifi
@@ -699,112 +702,61 @@ Item {
     }
     StackView.onActivating:{
         console.log("PageHome StackView onActivating")
-        SendFunc.permitSteamStartStatus(0)
     }
 
     Item{
-        id:swipe
-        width:parent.width
-        anchors.top:parent.top
-        anchors.bottom: homeBar.top
-
-        SwipeView {
-            id: swipeview
-            currentIndex:1
-            width:parent.width
-            height:parent.height
-            //            focus: true
-            interactive:true //是否可以滑动
-
-            PageHomeSecond{}
-            PageHomeFirst{}
-            PageHomeThird{}
-
-            Component.onCompleted:{
-                //                contentItem.highlightFollowsCurrentItem=true
-                //                contentItem.highlightRangeMode=istView.StrictlyEnforceRange
-                //                contentItem.highlightResizeDuration= 0
-                //                contentItem.highlightResizeVelocity=-1
-                contentItem.highlightMoveDuration = 10       //将移动时间设为0
-                contentItem.highlightMoveVelocity = -1
-                //                contentItem.snapMode=ListView.SnapOneItem
-                contentItem.boundsBehavior=Flickable.StopAtBounds
-            }
-        }
-        PageIndicator {
-            count: swipeview.count
-            currentIndex: swipeview.currentIndex
-            anchors.bottom: parent.bottom
-            anchors.bottomMargin: 15
+        anchors.fill:parent
+        Row {
+            width: 292*3+100
+            height: 360
             anchors.horizontalCenter: parent.horizontalCenter
-            interactive: false
-            delegate: Rectangle {
-                color: index===swipeview.currentIndex?"#FFF":"#4C4C4C"
-                implicitWidth: 22
-                implicitHeight: 4
+            anchors.bottom: parent.bottom
+            spacing: 50
+            Repeater {
+                model: [{"background":"home_hood_background.png","text1":"烟机灶具","text2":"HOOD"}, {"background":"home_steamoven_background.png","text1":"蒸烤箱","text2":"STEAM OVEN"},{"background":"home_smartrecipes_background.png","text1":"智慧菜谱","text2":"SMART RECIPES"}]
+                Button{
+                    width: 292
+                    height:parent.height
+
+                    background:Image {
+                        asynchronous:true
+                        smooth:false
+                        source: themesPicturesPath+modelData.background
+                    }
+                    Text{
+                        text:modelData.text1
+                        color:"#fff"
+                        font.pixelSize: 40
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        anchors.top: parent.top
+                        anchors.topMargin: 45
+                        Text{
+                            text:modelData.text2
+                            color:"#C3C2C2"
+                            font.pixelSize: 16
+                            anchors.horizontalCenter: parent.horizontalCenter
+                            anchors.top: parent.bottom
+                            anchors.topMargin: 10
+                            anchors.left: parent.left
+                        }
+                    }
+                    onClicked: {
+                        switch (index){
+                        case 0:
+                            push_page(pageHood)
+                            break
+                        case 1:
+                            push_page(pageSteamOven)
+                            break
+                        case 2:
+                            push_page(pageSmartRecipes)
+                            break
+                        }
+                    }
+                }
             }
-        }
 
+        }
     }
 
-    Button{
-        id:preBtn
-        width:60
-        height:100
-        anchors.left:parent.left
-
-        anchors.verticalCenter: swipe.verticalCenter
-        visible:{
-            if(swipeview.contentItem.moving==true)
-                return false
-            return swipeview.currentIndex===0?false:true
-        }
-        background:Image{
-            asynchronous:true
-            smooth:false
-            anchors.centerIn: parent
-            source: themesImagesPath+"previouspage-background.png"
-        }
-        onClicked:{
-            console.log('preBtn',swipeview.currentIndex)
-            if(swipeview.currentIndex>0){
-                //                    swipeview.currentIndex-=1
-                //                    swipeview.setCurrentIndex(swipeview.currentIndex-1)
-                swipeview.decrementCurrentIndex()
-                swipeViewFocus=true
-            }
-        }
-    }
-    Button{
-        id:nextBtn
-        width:60
-        height:100
-        anchors.right:parent.right
-
-        anchors.verticalCenter: swipe.verticalCenter
-        visible: {
-            if(swipeview.contentItem.moving==true)
-                return false
-            return swipeview.currentIndex===(swipeview.count-1)?false:true
-        }
-        background:Image{
-            asynchronous:true
-            smooth:false
-            anchors.centerIn: parent
-            source: themesImagesPath+"nextpage-background.png"
-        }
-        onClicked:{
-            console.log('nextBtn',swipeview.currentIndex)
-            if(swipeview.currentIndex < swipeview.count){
-                //                    swipeview.currentIndex+=1
-                //                    swipeview.setCurrentIndex(swipeview.currentIndex+1)
-                swipeview.incrementCurrentIndex()
-                swipeViewFocus=true
-            }
-        }
-    }
-    PageHomeBar {
-        id:homeBar
-        anchors.bottom: parent.bottom
-    }
 }

@@ -1,32 +1,34 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.2
 
-Item {
+Rectangle {
     property alias name: name.text
     property alias centerText:centerText.text
     property alias leftBtnText:leftBtnText.text
-    property alias leftBtnOpacity:leftBtn.opacity
     property alias rightBtnText:rightBtnText.text
-    property alias rightBtnOpacity:rightBtn.opacity
+
     signal leftClick()
     signal rightClick()
     signal close()
     implicitWidth: parent.width
-    implicitHeight:90
-    ToolBar {
+    implicitHeight:55
+    color: "#141414"
+    Rectangle{
         width: parent.width
-        implicitHeight:80
-        anchors.top: parent.top
+        height: 1
+        anchors.bottom: parent.bottom
+        color: "#3A3A3A"
+    }
 
-        background:Image {
-            asynchronous:true
-            smooth:false
-            source: themesImagesPath+"homebar-background.png"
-        }
+    ToolBar {
+        implicitWidth: parent.width
+        implicitHeight:parent.height
+
+        background:null
         //back图标
-        TabButton {
+        ToolButton {
             id:backBtn
-            width:90
+            width:80
             height:parent.height
             anchors.left:parent.left
             anchors.verticalCenter: parent.verticalCenter
@@ -35,25 +37,24 @@ Item {
                 asynchronous:true
                 smooth:false
                 anchors.centerIn: parent
-                source: themesImagesPath+"back-button-background.png"
+                source: themesPicturesPath+"back_button_background.png"
             }
             onClicked: {
-                close()
+//                close()
+                backPrePage()
             }
         }
 
         Text{
             id:name
-//            width:180
-            height: 40
             anchors.left:backBtn.right
             anchors.verticalCenter: parent.verticalCenter
             color:themesTextColor2
-            font.pixelSize: 35
-            //        textFormat: Text.AutoText
-            textFormat: Text.RichText
-//            horizontalAlignment:Text.AlignHCenter
-//            verticalAlignment:Text.AlignVCenter
+            font.pixelSize: 24
+            //textFormat: Text.AutoText
+            //textFormat: Text.RichText
+            //                        horizontalAlignment:Text.AlignHCenter
+            //                        verticalAlignment:Text.AlignVCenter
         }
         Text{
             id:centerText
@@ -61,13 +62,13 @@ Item {
             visible: centerText.text!=""
             anchors.centerIn: parent
             color:themesTextColor2
-            font.pixelSize: 35
+            font.pixelSize: 30
             elide: Text.ElideRight
             horizontalAlignment:Text.AlignHCenter
             verticalAlignment:Text.AlignVCenter
         }
         //left
-        TabButton{
+        ToolButton{
             id:leftBtn
             width:120
             height:parent.height
@@ -94,19 +95,17 @@ Item {
                     //                verticalAlignment:Text.AlignVCenter
                 }
             }
-
             onClicked: {
                 leftClick()
             }
         }
         //right
-        TabButton{
+        ToolButton{
             id:rightBtn
             width:150
             height:parent.height
             visible: rightBtnText.text!=""
             anchors.right:parent.right
-            //        anchors.rightMargin: 40
             anchors.verticalCenter: parent.verticalCenter
 
             background:Rectangle{
@@ -128,7 +127,6 @@ Item {
                     //                verticalAlignment:Text.AlignVCenter
                 }
             }
-
             onClicked: {
                 rightClick()
             }

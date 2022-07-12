@@ -31,7 +31,7 @@ Item {
             }
 
             onClicked: {
-                load_page("pageCloseHeat")
+                push_page("pageCloseHeat")
             }
         }
 
@@ -53,7 +53,7 @@ Item {
             }
 
             onClicked: {
-                load_page("pageSet")
+                push_page("pageSet")
             }
         }
 

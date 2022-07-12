@@ -41,7 +41,7 @@ int main(int argc, char *argv[])
     // app qml settings
     app.setOrganizationName("Marssenger"); //1
     app.setOrganizationDomain("Marssenger.com"); //2
-    app.setApplicationName("X50BCZ"); //3
+    app.setApplicationName("X8GCZ01"); //3
 
     int fontId = QFontDatabase::addApplicationFont("SourceHanSansCN-Regular.ttf");
     //    int fontId = QFontDatabase::addApplicationFont("simfang.ttf");

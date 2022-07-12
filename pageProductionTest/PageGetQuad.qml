@@ -231,7 +231,7 @@ Item {
                 anchors.centerIn: parent
             }
             onClicked: {
-                load_page("pageTestFront")
+                push_page("pageTestFront")
             }
         }
         Button{

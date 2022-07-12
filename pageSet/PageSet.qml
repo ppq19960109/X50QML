@@ -52,7 +52,7 @@ Item {
                 }
 
                 onClicked: {
-                    load_page("pageWifi")
+                    push_page("pageWifi")
                 }
             }
             Button{
@@ -73,7 +73,7 @@ Item {
                 }
 
                 onClicked: {
-                    load_page("pageLocalSettings")
+                    push_page("pageLocalSettings")
                 }
             }
             Button{
@@ -94,7 +94,7 @@ Item {
                 }
 
                 onClicked: {
-                    load_page("pageReset")
+                    push_page("pageReset")
                 }
             }
             Button{
@@ -115,7 +115,7 @@ Item {
                 }
 
                 onClicked: {
-                    load_page("pageSystemUpdate")
+                    push_page("pageSystemUpdate")
                 }
             }
             Button{
@@ -136,7 +136,7 @@ Item {
                 }
 
                 onClicked: {
-                    load_page("pageAboutMachine")
+                    push_page("pageAboutMachine")
                 }
             }
             Button{
@@ -157,7 +157,7 @@ Item {
                 }
 
                 onClicked: {
-                    load_page("pageAfterGuide")
+                    push_page("pageAfterGuide")
                 }
             }
         }

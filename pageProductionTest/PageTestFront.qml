@@ -64,7 +64,7 @@ Item {
                     anchors.centerIn: parent
                 }
                 onClicked: {
-                    load_page("pageScreenTest")
+                    push_page("pageScreenTest")
                 }
             }
             Button{
@@ -83,7 +83,7 @@ Item {
                 }
 
                 onClicked: {
-                    load_page("pageIntelligentDetection")
+                    push_page("pageIntelligentDetection")
                 }
             }
             Button{
@@ -103,7 +103,7 @@ Item {
                 }
 
                 onClicked: {
-                    load_page("pageLoadPower")
+                    push_page("pageLoadPower")
                 }
             }
             Button{
@@ -123,7 +123,7 @@ Item {
                 }
 
                 onClicked: {
-                    load_page("pagePowerBoard")
+                    push_page("pagePowerBoard")
                 }
             }
         }

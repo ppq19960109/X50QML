@@ -132,7 +132,7 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     QVariantMap info;
     info.insert("id", 0);
     info.insert("seqid", 3);
-    info.insert("recipeid", 426);
+    info.insert("recipeid", 560);
     info.insert("cookPos", 0);
     info.insert("dishName", "清蒸鱼");
     info.insert("cookSteps", "[{\"device\":0,\"mode\":35,\"number\":1,\"temp\":100,\"time\":90}]");
@@ -141,19 +141,28 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     info.insert("recipeType", 1);
 
     recipe[0].append(info);
-    info["recipeid"]=427;
-    info["dishName"]="桂花蜂蜜烤南瓜";
+    info["recipeid"]=999;
+    info["dishName"]="桂花蜂蜜烤南瓜蜂蜜烤南";
     recipe[0].append(info);
-    info["recipeid"]=118;
+    info["recipeid"]=566;
     info["dishName"]="腊肉蒸芋艿";
     recipe[0].append(info);
-    info["recipeid"]=1;
-
+    info["recipeid"]=998;
+    info["dishName"]="蒜香茄子";
+    recipe[0].append(info);
+    info["recipeid"]=1006;
+    info["dishName"]="蒜香茄子";
+    recipe[0].append(info);
+    info["recipeid"]=427;
     info["dishName"]="蒜香茄子";
     recipe[0].append(info);
 
-    info["recipeid"]=427;
+    info["recipeid"]=637;
     info["dishName"]="蒜蓉粉丝娃娃菜";
+    recipe[1].append(info);
+
+    info["recipeid"]=427;
+    info["dishName"]="蒜蓉粉丝娃菜";
     recipe[1].append(info);
 
     history.append(info);

@@ -69,7 +69,7 @@ Item {
                     anchors.centerIn: parent
                 }
                 onClicked: {
-                    load_page("pagePowerInput")
+                    push_page("pagePowerInput")
                 }
             }
             Button{
@@ -87,7 +87,7 @@ Item {
                     anchors.centerIn: parent
                 }
                 onClicked: {
-                    load_page("pagePowerOut")
+                    push_page("pagePowerOut")
                 }
             }
         }

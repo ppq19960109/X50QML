@@ -168,7 +168,7 @@ Rectangle {
                     }
                     if(leftProgressBar.workState === workStateEnum.WORKSTATE_PAUSE && QmlDevState.state.MultiMode==0)
                     {
-                        load_page("pageSteamBakeBase",JSON.stringify({"device":cookWorkPosEnum.LEFT,"reserve":0}))
+                        push_page("pageSteamBakeBase",JSON.stringify({"device":cookWorkPosEnum.LEFT,"reserve":0}))
                     }
                     else if(leftProgressBar.workState === workStateEnum.WORKSTATE_PAUSE_RESERVE)
                     {
@@ -193,7 +193,7 @@ Rectangle {
                         {
                             para.dishName="多段烹饪"
                         }
-                        load_page("pageSteamBakeReserve",JSON.stringify(para))
+                        push_page("pageSteamBakeReserve",JSON.stringify(para))
                         para=undefined
                     }
                     else
@@ -376,7 +376,7 @@ Rectangle {
                     }
                     else if(rightProgressBar.workState === workStateEnum.WORKSTATE_PAUSE)
                     {
-                        load_page("pageSteamBakeBase",JSON.stringify({"device":cookWorkPosEnum.RIGHT,"reserve":0}))
+                        push_page("pageSteamBakeBase",JSON.stringify({"device":cookWorkPosEnum.RIGHT,"reserve":0}))
                     }
                     else if(rightProgressBar.workState === workStateEnum.WORKSTATE_PAUSE_RESERVE)
                     {
@@ -389,7 +389,7 @@ Rectangle {
                         steps.time=QmlDevState.state.RStOvSetTimer
                         list.push(steps)
                         para.dishName=CookFunc.getDishName(list)
-                        load_page("pageSteamBakeReserve",JSON.stringify(para))
+                        push_page("pageSteamBakeReserve",JSON.stringify(para))
                         para=undefined
                     }
                     else

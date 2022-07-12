@@ -78,7 +78,6 @@ Item {
                     }
                     else if(value==4)
                     {
-                        dismissWifiInput()
                         if(scan_count>=3)
                             wifi_scan_timer_reset()
                     }
@@ -163,7 +162,7 @@ Item {
                 }
                 else if(scan_count==3)
                 {
-                    timer_wifi_scan.interval=10000
+                    timer_wifi_scan.interval=7000
                 }
                 if(wifiConnecting==false)
                 {
@@ -177,9 +176,9 @@ Item {
                     getWifiInfo()
 
                     if(scan_count%2==0)
-                        SendFunc.scanRWifi()
-                    else
                         SendFunc.scanWifi()
+                    else
+                        SendFunc.scanRWifi()
                 }
                 if(qrcode_display>0)
                 {

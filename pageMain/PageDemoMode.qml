@@ -3,13 +3,16 @@ import QtQuick.Controls 2.2
 
 import "qrc:/SendFunc.js" as SendFunc
 Item{
-    property string name: "pageDemoMode"
     Component.onCompleted: {
+        demoModeStatus=1
         SendFunc.loadPowerSet(4)
         //        SendFunc.setBuzControl(buzControlEnum.SHORT)
+        SendFunc.permitSteamStartStatus(1)
     }
     Component.onDestruction: {
+        demoModeStatus=0
         SendFunc.loadPowerSet(0)
+        SendFunc.permitSteamStartStatus(0)
     }
     Timer{
         repeat: true
