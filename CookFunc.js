@@ -111,6 +111,16 @@ function getCookType(cookSteps)
         return 0
     return 1;
 }
+function getDefCookItem()
+{
+    var cookItem = {}
+    cookItem.dishName=""
+    cookItem.cookSteps=""
+    cookItem.recipeid=0
+    cookItem.cookPos=0
+    cookItem.orderTime=0
+    return cookItem
+}
 function getDefHistory()
 {
     var param = {}

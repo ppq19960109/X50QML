@@ -26,16 +26,20 @@ ApplicationWindow {
     readonly property string productionTestWIFISSID:"moduletest"
     readonly property string productionTestWIFIPWD:"58185818"
 
-    readonly property var cookWorkPosEnum:{"LEFT":0,"RIGHT":1,"ALL":2}
+    readonly property var cookWorkPosEnum:{"LEFT":0,"RIGHT":1,"ALL":2,"ASSIST":3}
     readonly property var cookModeUncheckedImg: ["icon_steame_unchecked.png","icon_bake_unchecked.png","icon_multistage_unchecked.png"]
     readonly property var cookModecheckedImg: ["icon_steame_checked.png","icon_bake_checked.png","icon_multistage_checked.png"]
-    readonly property var workModeEnum: ["未设定", "经典蒸", "高温蒸", "热风烧烤", "上下加热", "立体热风", "蒸汽烤", "空气炸", "保温烘干","便捷蒸"]
-    readonly property var workModeNumberEnum:[0,1,2,35,36,38,40,42,72,100]
+    readonly property var workModeEnum: ["未设定", "经典蒸", "鲜嫩蒸", "高温蒸", "热风烧烤", "上下加热", "立体热风", "蒸汽嫩烤", "空气炸", "解冻","发酵","保温"]
+    readonly property var workModeNumberEnum:[0,1,3,4,35,36,38,40,42,65,66,68]
     readonly property int rightWorkModeIndex:8
 
     readonly property var workModeModelEnum:[{"modelData":1,"temp":100,"time":30,"minTemp":40,"maxTemp":100},{"modelData":2,"temp":120,"time":20,"minTemp":101,"maxTemp":120},{"modelData":6,"temp":150,"time":60,"minTemp":50,"maxTemp":200},{"modelData":7,"temp":220,"time":15,"minTemp":200,"maxTemp":230,"maxTime":180},{"modelData":3,"temp":200,"time":60,"minTemp":50,"maxTemp":230}
         ,{"modelData":5,"temp":180,"time":120,"minTemp":50,"maxTemp":230},{"modelData":4,"temp":180,"time":120,"minTemp":50,"maxTemp":230}
         ,{"modelData":8,"temp":60,"time":30,"minTemp":50,"maxTemp":120},{"modelData":9,"temp":100,"time":30,"minTemp":40,"maxTemp":100}]
+    readonly property var leftWorkModeModelEnum:[{"modelData":7,"temp":150,"time":60,"minTemp":50,"maxTemp":200},{"modelData":4,"temp":200,"time":60,"minTemp":50,"maxTemp":230},{"modelData":8,"temp":220,"time":30,"minTemp":200,"maxTemp":230,"maxTime":180},{"modelData":3,"temp":120,"time":20,"minTemp":101,"maxTemp":120},{"modelData":5,"temp":180,"time":120,"minTemp":50,"maxTemp":230}
+        ,{"modelData":6,"temp":180,"time":120,"minTemp":50,"maxTemp":230}]
+    readonly property var rightWorkModeModelEnum:[{"modelData":1,"temp":100,"time":30,"minTemp":40,"maxTemp":100},{"modelData":3,"temp":120,"time":20,"minTemp":101,"maxTemp":120},{"modelData":2,"temp":90,"time":15,"minTemp":80,"maxTemp":100}]
+    readonly property var rightAssistWorkModeModelEnum:[{"modelData":10,"temp":35,"time":60,"minTemp":30,"maxTemp":50},{"modelData":9,"temp":40,"time":30,"minTemp":30,"maxTemp":50},{"modelData":11,"temp":60,"time":60,"minTemp":50,"maxTemp":105}]
 
     readonly property var workStateEnum:{"WORKSTATE_STOP":0,"WORKSTATE_RESERVE":1,"WORKSTATE_PREHEAT":2,"WORKSTATE_RUN":3,"WORKSTATE_FINISH":4,"WORKSTATE_PAUSE":5,"WORKSTATE_PAUSE_RESERVE":6}
     readonly property var workStateArray:["停止","预约中","预热中","运行中","烹饪完成","暂停中","预约暂停中"]
@@ -714,6 +718,10 @@ ApplicationWindow {
         PageSteamOven {}
     }
     Component {
+        id: pageLeftSteamOven
+        PageLeftSteamOven {}
+    }
+    Component {
         id: pageWifi
         PageWifi {}
     }
@@ -913,7 +921,7 @@ ApplicationWindow {
             }
             else
             {
-                if(root.recipeType>0 || root.recipeid>0)
+                if(root.recipeid>0)
                 {
                     SendFunc.setMultiCooking(cookSteps,root.orderTime,root.dishName,root.recipeid)
                 }

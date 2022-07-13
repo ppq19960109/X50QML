@@ -124,5 +124,9 @@
         <file>x50/demo/demo6.png</file>
         <file>PageTabBar.qml</file>
         <file>PageLaunchBtn.qml</file>
+        <file>pageCook/PageLeftSteamOven.qml</file>
+        <file>pageCook/PageCookPathView.qml</file>
+        <file>pageCook/PageCookPara.qml</file>
+        <file>pageCook/PageSteamOvenDelegate.qml</file>
     </qresource>
 </RCC>

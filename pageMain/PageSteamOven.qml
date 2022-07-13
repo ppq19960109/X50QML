@@ -44,11 +44,11 @@ Item {
                 onClicked: {
                     if(index==0)
                     {
-
+                        push_page(pageLeftSteamOven,{cookWorkPos:cookWorkPosEnum.LEFT})
                     }
                     else
                     {
-
+                        push_page(pageLeftSteamOven,{cookWorkPos:cookWorkPosEnum.RIGHT})
                     }
                 }
             }
@@ -76,7 +76,7 @@ Item {
                     onClicked: {
                         if(index==0)
                         {
-
+                            push_page(pageLeftSteamOven,{cookWorkPos:cookWorkPosEnum.ASSIST})
                         }
                         else
                         {

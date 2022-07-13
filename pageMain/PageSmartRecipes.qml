@@ -6,36 +6,6 @@ import "../"
 Item {
     //定义全局分类菜谱
     readonly property var  menuId: ['蔬菜','肉类','水产','面点','烘培']
-    //    readonly property var  cookModeColor: ["#19A582","#EC7A00","#298FD1"]
-
-    Connections { // 将目标对象信号与槽函数进行连接
-        id:connections
-        enabled:false
-        target: QmlDevState
-        onStateChanged: { // 处理目标对象信号的槽函数
-            if("SteamStart"==key)
-            {
-                var root=recipeListView.model[recipeListView.currentIndex]
-                console.log("SteamStart:",JSON.stringify(root),recipeListView.currentIndex)
-                var cookSteps=JSON.parse(root.cookSteps)
-                if(systemSettings.cookDialog[5]>0)
-                {
-                    if(CookFunc.isSteam(cookSteps))
-                        loaderSteamShow(360,"请将食物放入左腔\n将水箱加满水","开始烹饪",root,5)
-                    else
-                        loaderSteamShow(292,"请将食物放入左腔","开始烹饪",root,5)
-                    return
-                }
-                startCooking(root,cookSteps)
-            }
-        }
-    }
-    StackView.onActivated:{
-        connections.enabled=true
-    }
-    StackView.onDeactivated:{
-        connections.enabled=false
-    }
 
     Component.onCompleted: {
         getRecipe(menuList.currentIndex)
@@ -56,6 +26,7 @@ Item {
         anchors.bottom: parent.bottom
         currentIndex:2
     }
+
     Component {
         id: recipeDelegate
         Item{
@@ -126,6 +97,7 @@ Item {
             id:leftContent
             width:156
             height:parent.height
+
             Image {
                 asynchronous:true
                 smooth:false
@@ -227,18 +199,28 @@ Item {
                     }
                 }
             }
-        }
-    }
-    PageLaunchBtn {
-        anchors.top: parent.top
-        anchors.topMargin: 120
-        anchors.right: parent.right
-        anchors.rightMargin: 30
-        onStartUp:{
+            PageLaunchBtn {
+                anchors.verticalCenter: recipeListView.verticalCenter
+                anchors.right: parent.right
+                anchors.rightMargin: 30
+                onStartUp:{
+                    var cookItem=recipeListView.model[recipeListView.currentIndex]
+                    console.log("SteamStart:",JSON.stringify(cookItem),recipeListView.currentIndex)
+                    var cookSteps=JSON.parse(cookItem.cookSteps)
+                    if(systemSettings.cookDialog[5]>0)
+                    {
+                        if(CookFunc.isSteam(cookSteps))
+                            loaderSteamShow(360,"请将食物放入左腔\n将水箱加满水","开始烹饪",cookItem,5)
+                        else
+                            loaderSteamShow(292,"请将食物放入左腔","开始烹饪",cookItem,5)
+                        return
+                    }
+                    startCooking(cookItem,cookSteps)
+                }
+                onReserve:{
 
-        }
-        onReserve:{
-
+                }
+            }
         }
     }
 }
