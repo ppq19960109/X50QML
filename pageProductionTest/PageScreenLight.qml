@@ -40,7 +40,7 @@ Item{
             to: 255
             value: Backlight.backlightGet()
 
-            onValueSlider: {
+            onValueChanged: {
                 Backlight.backlightSet(value)
             }
         }

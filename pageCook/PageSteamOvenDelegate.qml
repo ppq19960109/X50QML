@@ -3,12 +3,13 @@ import QtQuick.Controls 2.2
 import "../"
 import "qrc:/CookFunc.js" as CookFunc
 Item {
-    property int multiMode:0
 
     property alias modeModel:modePathView.model
+    //    property alias tempModel:tempPathView.model
+    //    property alias timeModel:timePathView.model
     property alias modeItemCount:modePathView.pathItemCount
-//    property alias tempModel:tempPathView.model
-//    property alias timeModel:timePathView.model
+    property alias tempItemCount:tempPathView.pathItemCount
+    property alias timeItemCount:timePathView.pathItemCount
     property alias modeWidth:modePathView.width
     property alias tempWidth:tempPathView.width
     property alias timeWidth:timePathView.width
@@ -18,16 +19,87 @@ Item {
     property int timeIndex:-1
     property int steamGearIndex:-1
 
+    readonly property var workModeImg: ["", "icon_1", "icon_1","icon_4", "icon_35", "icon_36", "icon_38", "icon_40", "icon_42", "icon_68", "icon_1", "icon_68"]
+
     function getCurrentSteamOven()
     {
-        var list = []
         var steps={}
-        steps.mode=workModeNumberEnum[modePathView.model.get(modePathView.currentIndex).modelData]
-        steps.temp=parseInt(tempPathView.model[tempPathView.currentIndex])
-        steps.time=parseInt(timePathView.model[timePathView.currentIndex])
-        steps.time=parseInt(steamGearPathView.model[steamGearPathView.currentIndex])
-        list.push(steps)
-        return list
+        steps.mode=workModeNumberEnum[modePathView.model[modePathView.currentIndex].modelData]
+        steps.temp=tempPathView.model[tempPathView.currentIndex]
+        steps.time=timePathView.model[timePathView.currentIndex]
+        if(steamGearPathView.interactive)
+            steps.gear=steamGearPathView.currentIndex
+
+        return steps
+    }
+    function modeChange(index,tempIndex,timeIndex,steamGearIndex)
+    {
+        if(index===0)
+        {
+            steamGearPathView.model=["1档","2档","3档"]
+            steamGearPathView.interactive=true
+            if(steamGearIndex!=null)
+            {
+                steamGearPathView.currentIndex=steamGearIndex
+            }
+        }
+        else
+        {
+            steamGearPathView.model=["—"]
+            steamGearPathView.interactive=false
+        }
+        var modeItem=modePathView.model[index]
+
+        var minTemp=modeItem.minTemp
+        var maxTemp=modeItem.maxTemp
+        var tempArray=[]
+        for(var i=minTemp; i<= maxTemp; ++i) {
+            tempArray.push(i)
+        }
+        tempPathView.model=tempArray
+        if(tempIndex!=null)
+        {
+            tempPathView.currentIndex=tempIndex-modeItem.minTemp
+        }
+        else
+        {
+            tempPathView.currentIndex=modeItem.temp-modeItem.minTemp
+        }
+
+        var maxTime=modeItem.maxTime
+        if(maxTime==null)
+        {
+            maxTime=300
+        }
+        var timeArray = []
+        for(i=1; i<= 120; ++i) {
+            timeArray.push(i)
+        }
+        for(i=125; i<= maxTime; i+=5) {
+            timeArray.push(i)
+        }
+        timePathView.model=timeArray
+        if(timeIndex!=null)
+        {
+            timePathView.currentIndex=CookFunc.getCookTimeIndex(timeIndex)
+        }
+        else
+        {
+            timePathView.currentIndex=CookFunc.getCookTimeIndex(modeItem.time)
+        }
+    }
+    Component.onCompleted:{
+        console.log("PageSteamOvenDelegate onCompleted",modePathView.currentIndex,modeIndex)
+
+        if(modeIndex>=0)
+        {
+            modePathView.currentIndex=modeIndex
+            modeChange(modeIndex,tempIndex,timeIndex,steamGearIndex)
+        }
+        else
+        {
+            modeChange(modePathView.currentIndex)
+        }
     }
     PageDivider{
         anchors.top:parent.top
@@ -57,91 +129,8 @@ Item {
                 source: themesPicturesPath+"steamoven/"+"mode_roll_background.png"
             }
             onIndexChanged: {
-                console.log("model onValueChanged:",index,model.get(index).modelData)
-                if(index==0)
-                {
-                    steamGearPathView.model=["1档","2档","3档"]
-                    steamGearPathView.interactive=true
-                }
-                else
-                {
-                   steamGearPathView.model=["—"]
-                   steamGearPathView.interactive=false
-                }
-                var modeItem=model.get(index)
-
-                var minTemp=modeItem.minTemp
-                var maxTemp=modeItem.maxTemp
-                var tempArray=[]
-                for(var i=minTemp; i<= maxTemp; ++i) {
-                    tempArray.push(i)
-                }
-                tempPathView.model=tempArray
-                tempPathView.currentIndex=modeItem.temp-modeItem.minTemp
-
-                var maxTime=modeItem.maxTime
-                if(maxTime===null)
-                {
-                    maxTime=300
-                }
-                var timeArray = []
-                for(i=1; i<= 120; ++i) {
-                    timeArray.push(i)
-                }
-                for(i=125; i<= maxTime; i+=5) {
-                    timeArray.push(i)
-                }
-                timePathView.model=timeArray
-                timePathView.currentIndex=CookFunc.getCookTimeIndex(modeItem.time)
-            }
-            Component.onCompleted:{
-                console.log("modePathView",modePathView.currentIndex,modeIndex)
-                if(modeIndex>=0)
-                {
-                    modePathView.currentIndex=modeIndex
-                }
-
-                var modeItem=model.get(modePathView.currentIndex)
-
-                var minTemp=modeItem.minTemp
-                var maxTemp=modeItem.maxTemp
-                var tempArray=[]
-                for(var i=minTemp; i<= maxTemp; ++i) {
-                    tempArray.push(i)
-                }
-                tempPathView.model=tempArray
-
-
-                if(tempIndex<0)
-                {
-                    tempPathView.currentIndex=modeItem.temp-modeItem.minTemp
-                }
-                else
-                {
-                    tempPathView.currentIndex=tempIndex-modeItem.minTemp
-                }
-
-                var maxTime=modeItem.maxTime
-                if(maxTime===null)
-                {
-                    maxTime=300
-                }
-                var timeArray = []
-                for(i=1; i<= 120; ++i) {
-                    timeArray.push(i)
-                }
-                for(i=125; i<= maxTime; i+=5) {
-                    timeArray.push(i)
-                }
-                timePathView.model=timeArray
-                if(timeIndex<0)
-                {
-                    timePathView.currentIndex=CookFunc.getCookTimeIndex(modeItem.time)
-                }
-                else
-                {
-                    timePathView.currentIndex=CookFunc.getCookTimeIndex(timeIndex)
-                }
+                console.log("model onValueChanged:",index,model[index].modelData)
+                modeChange(index)
             }
         }
         PageCookPathView {
@@ -181,7 +170,7 @@ Item {
                 color:themesTextColor
                 font.pixelSize: 24
                 anchors.centerIn: parent
-                anchors.horizontalCenterOffset: 60
+                anchors.horizontalCenterOffset: 65
             }
         }
         PageCookPathView {

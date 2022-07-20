@@ -39,29 +39,20 @@ Item {
         listView.model=infoModel
         console.log("infoModel",listView.model.count)
     }
-    PageBackBar{
-        id:topBar
-        anchors.bottom:parent.bottom
-        name:qsTr("关于本机")
-        leftBtnText:qsTr("")
-        rightBtnText:qsTr("")
-        onClose:{
-            backPrePage()
-        }
-    }
+
     ListModel {
         id: infoModel
 
         ListElement {
-            key: "品类："
+            key: "设备品类："
             value: ""
         }
         ListElement {
-            key: "型号："
+            key: "设备型号："
             value: ""
         }
         ListElement {
-            key: "device ID："
+            key: "设备ID："
             value: ""
         }
     }
@@ -70,20 +61,20 @@ Item {
         id: infoDelegate
         Item{
             width: parent.width
-            height: 80
+            height: 75
             Text{
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.left: parent.left
                 text:key
                 color:"#fff"
-                font.pixelSize: 35
+                font.pixelSize: 30
             }
             Text{
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.right: parent.right
                 text:value
                 color:"#fff"
-                font.pixelSize: 35
+                font.pixelSize: 30
             }
             PageDivider{
                 anchors.bottom: parent.bottom
@@ -92,91 +83,75 @@ Item {
     }
     //内容
     Item{
-        width:parent.width
-        anchors.bottom:topBar.top
-        anchors.top: parent.top
-        Item{
-            width:parent.width-80
-            height: parent.height-80
-            anchors.centerIn: parent
-            ListView {
-                id: listView
-                width: parent.width
-                height: listView.model.count*80
-                anchors.top: parent.top
-                anchors.horizontalCenter: parent.horizontalCenter
-                interactive: false
-                delegate: infoDelegate
-                focus: true
+        anchors.fill: parent
+        anchors.leftMargin: 30
+        anchors.rightMargin: 30
+        ListView {
+            id: listView
+            width: parent.width
+            height: listView.model.count*75
+            anchors.top: parent.top
+            anchors.horizontalCenter: parent.horizontalCenter
+            interactive: false
+            delegate: infoDelegate
+        }
+        Button{
+            width: parent.width
+            height: 80
+            anchors.top: listView.bottom
+            PageDivider{
+                anchors.bottom: parent.bottom
             }
-            Button{
-                width: parent.width
-                height: 90
-                anchors.top: listView.bottom
+            background:Item{}
+            Text{
+                text:"绑定官方APP"
+                color:"#fff"
+                font.pixelSize: 30
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.left: parent.left
+                horizontalAlignment:Text.AlignHCenter
+                verticalAlignment:Text.AlignVCenter
+            }
+            Image {
+                id:qrcodeImg
+                asynchronous:true
+                smooth:false
+                //                    cache:false
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.right: parent.right
+                anchors.rightMargin: 10
+                source: themesPicturesPath+"icon_more.png"
+            }
 
-                PageDivider{
-                    anchors.bottom: parent.bottom
-                }
-                background:Item{}
-                Text{
-                    text:"绑定官方APP"
-                    color:"#fff"
-                    font.pixelSize: 35
-                    anchors.verticalCenter: parent.verticalCenter
-                    anchors.left: parent.left
-                    horizontalAlignment:Text.AlignHCenter
-                    verticalAlignment:Text.AlignVCenter
-                }
-                //                Text{
-                //                    text:" 已绑定火粉俱乐部"
-                //                    visible: QmlDevState.state.APPBind==1
-                //                    color:"#fff"
-                //                    font.pixelSize: 30
-                //                    anchors.verticalCenter: parent.verticalCenter
-                //                    anchors.right: qrcodeImg.left
-                //                    anchors.rightMargin: 20
-                //                    horizontalAlignment:Text.AlignHCenter
-                //                    verticalAlignment:Text.AlignVCenter
-                //                }
-                Image {
-                    id:qrcodeImg
-                    asynchronous:true
-                    smooth:false
-                    //                    cache:false
-                    anchors.verticalCenter: parent.verticalCenter
-                    anchors.right: parent.right
-                    source: "qrc:/x50/set/gengduo.png"
-                }
+            onClicked: {
 
-                onClicked: {
-
-                    if( timer_qrcode.running==false)
+                if( timer_qrcode.running==false)
+                {
+                    if(QmlDevState.state.DeviceSecret=="")
                     {
-                        if(QmlDevState.state.DeviceSecret=="")
-                        {
-                            loaderImagePopupShow("四元组不存在","/x50/icon/icon_pop_error.png")
-                            return
-                        }
-                        if(systemSettings.wifiEnable && wifiConnected==true)
-                        {
-                            loaderLoadingShow("二维码刷新中...")
-                            wifiConnected=false
-                            var Data={}
-                            Data.BackOnline = null
-                            SendFunc.setToServer(Data)
-                        }
-                        else
-                        {
-                            loaderImagePopupShow("未连网，请连接网络后再试","/x50/icon/icon_pop_error.png")
-                        }
+                        loaderImagePopupShow("四元组不存在","/x50/icon/icon_pop_error.png")
+                        return
+                    }
+                    if(systemSettings.wifiEnable && wifiConnected==true)
+                    {
+                        loaderLoadingShow("二维码刷新中...")
+                        wifiConnected=false
+                        var Data={}
+                        Data.BackOnline = null
+                        SendFunc.setToServer(Data)
                     }
                     else
                     {
-                        loaderQrcodeShow("此二维码可以")
+                        loaderImagePopupShow("未连网，请连接网络后再试","/x50/icon/icon_pop_error.png")
                     }
+                }
+                else
+                {
+                    loaderQrcodeShow("此二维码可以")
                 }
             }
         }
+
     }
 
 }

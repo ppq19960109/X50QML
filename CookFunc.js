@@ -8,34 +8,34 @@ function leftWorkModeName(mode)
     case 1:
         name=workModeEnum[1]
         break
-    case 2:
+    case 3:
         name=workModeEnum[2]
         break
-    case 35:
+    case 4:
         name=workModeEnum[3]
         break
-    case 36:
+    case 35:
         name=workModeEnum[4]
         break
-    case 38:
+    case 36:
         name=workModeEnum[5]
         break
-    case 40:
+    case 38:
         name=workModeEnum[6]
         break
-    case 42:
+    case 40:
         name=workModeEnum[7]
         break
-    case 72:
+    case 42:
         name=workModeEnum[8]
         break
-    case 100:
+    case 65:
         name=workModeEnum[9]
         break
-    case 120:
+    case 66:
         name=workModeEnum[10]
         break
-    case 121:
+    case 68:
         name=workModeEnum[11]
         break
     default:
@@ -50,41 +50,26 @@ function leftWorkModeToIndex(mode)
     var index
     switch(mode)
     {
-    case 1:
-        index=1
-        break
-    case 2:
-        index=2
-        break
     case 40:
-        index=3
-        break
-    case 42:
-        index=4
+        index=0
         break
     case 35:
-        index=5
+        index=1
         break
-    case 38:
-        index=6
+    case 42:
+        index=2
+        break
+    case 4:
+        index=3
         break
     case 36:
-        index=7
+        index=4
         break
-    case 72:
-        index=8
-        break
-    case 100:
-        index=9
-        break
-    case 120:
-        index=10
-        break
-    case 121:
-        index=11
+    case 38:
+        index=5
         break
     default:
-        index=0
+        index=mode
         break
     }
     return index

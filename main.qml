@@ -314,12 +314,18 @@ ApplicationWindow {
         anchors.left: parent.left
     }
     PageHomeBar{
-
         anchors.left: stackView.right
         anchors.right: parent.right
     }
 
     //---------------------------------------------------------------
+    Loader{
+        //加载弹窗组件
+        id:loaderStackView
+        //        asynchronous: true
+        anchors.fill: stackView
+        sourceComponent:undefined
+    }
     Loader{
         //加载弹窗组件
         id:loader_main
@@ -672,7 +678,19 @@ ApplicationWindow {
         }
         ListElement {
             connected: 0
-            ssid: "456"
+            ssid: "123"
+            level:2
+            flags:0
+        }
+        ListElement {
+            connected: 0
+            ssid: "gttr"
+            level:2
+            flags:1
+        }
+        ListElement {
+            connected: 0
+            ssid: "daaas"
             level:2
             flags:0
         }
@@ -718,8 +736,8 @@ ApplicationWindow {
         PageSteamOven {}
     }
     Component {
-        id: pageLeftSteamOven
-        PageLeftSteamOven {}
+        id: pageSteamOvenConfig
+        PageSteamOvenConfig {}
     }
     Component {
         id: pageWifi
@@ -734,8 +752,8 @@ ApplicationWindow {
         PageSteamBakeBase {}
     }
     Component {
-        id: pageMultistageSet
-        PageMultistageSet {}
+        id: pageMultistage
+        PageMultistage {}
     }
     Component {
         id: pageSteamBakeReserve
@@ -761,26 +779,26 @@ ApplicationWindow {
         id: pageSet
         PageSet {}
     }
-    Component {
-        id: pageLocalSettings
-        PageLocalSettings {}
-    }
-    Component {
-        id: pageReset
-        PageReset {}
-    }
-    Component {
-        id: pageSystemUpdate
-        PageSystemUpdate {}
-    }
-    Component {
-        id: pageAboutMachine
-        PageAboutMachine {}
-    }
-    Component {
-        id: pageAfterGuide
-        PageAfterGuide {}
-    }
+//    Component {
+//        id: pageLocalSettings
+//        PageLocalSettings {}
+//    }
+//    Component {
+//        id: pageReset
+//        PageReset {}
+//    }
+//    Component {
+//        id: pageSystemUpdate
+//        PageSystemUpdate {}
+//    }
+//    Component {
+//        id: pageAboutMachine
+//        PageAboutMachine {}
+//    }
+//    Component {
+//        id: pageAfterGuide
+//        PageAfterGuide {}
+//    }
     Component {
         id: pageReleaseNotes
         PageReleaseNotes {}
@@ -894,7 +912,7 @@ ApplicationWindow {
         }
         else
         {
-            console.log("startCooking:",JSON.stringify(root),JSON.stringify(cookSteps))
+            console.log("startCooking:",JSON.stringify(root))
             if(cookSteps.length===1 && (undefined === cookSteps[0].number || 0 === cookSteps[0].number))
             {
                 SendFunc.setCooking(cookSteps,root.orderTime,root.cookPos)

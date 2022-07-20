@@ -44,11 +44,11 @@ Item {
                 onClicked: {
                     if(index==0)
                     {
-                        push_page(pageLeftSteamOven,{cookWorkPos:cookWorkPosEnum.LEFT})
+                        push_page(pageSteamOvenConfig,{cookWorkPos:cookWorkPosEnum.LEFT})
                     }
                     else
                     {
-                        push_page(pageLeftSteamOven,{cookWorkPos:cookWorkPosEnum.RIGHT})
+                        push_page(pageSteamOvenConfig,{cookWorkPos:cookWorkPosEnum.RIGHT})
                     }
                 }
             }
@@ -76,11 +76,11 @@ Item {
                     onClicked: {
                         if(index==0)
                         {
-                            push_page(pageLeftSteamOven,{cookWorkPos:cookWorkPosEnum.ASSIST})
+                            push_page(pageSteamOvenConfig,{cookWorkPos:cookWorkPosEnum.ASSIST})
                         }
                         else
                         {
-
+                            push_page(pageMultistage)
                         }
                     }
                 }

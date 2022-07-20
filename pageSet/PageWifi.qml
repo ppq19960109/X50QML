@@ -191,91 +191,50 @@ Item {
             }
         }
     }
-
-    PageBackBar{
-        id:topBar
-        anchors.bottom:parent.bottom
-        name:qsTr("网络")
-        leftBtnText:qsTr("")
-        rightBtnText:qsTr("")
-        onLeftClick:{
-        }
-        onRightClick:{
-
-        }
-        onClose:{
-            backPrePage()
-        }
-    }
     Component {
         id: headerView
-
         Item{
-            id: headerViewItem
             width: parent.width
-            height: 180
+            height: 120
 
             PageDivider{
                 id:divider
-                anchors.top: parent.top
-                anchors.topMargin: 120
+                anchors.bottom: parent.bottom
+                anchors.bottomMargin: 45
             }
 
             Text {
                 text: qsTr("WiFi")
-                color: "white"
-                font.pixelSize: 40
+                color: "#fff"
+                font.pixelSize: 30
                 anchors.left: parent.left
-                anchors.leftMargin: 40
+                anchors.leftMargin: 30
                 anchors.verticalCenter: wifi_switch.verticalCenter
             }
-            Switch {
+            PageSwitch {
                 id: wifi_switch
-                //                width: indicatorImg.width
-                //                height:indicatorImg.height
                 checked:systemSettings.wifiEnable
-                width:implicitWidth+40
-                height:implicitHeight+20
+                width:implicitWidth+20
+                height:implicitHeight+10
                 anchors.right: parent.right
                 anchors.rightMargin: 20
                 anchors.bottom: divider.top
 
-                indicator: Item {
-                    id:indicator
-                    implicitWidth: indicatorImg.width
-                    implicitHeight: indicatorImg.height
-                    anchors.centerIn: parent
-                    Image{
-                        id:indicatorImg
-                        asynchronous:true
-                        smooth:false
-                        anchors.centerIn: parent
-                        source: wifi_switch.checked ?"/x50/wifi/kai.png":"/x50/wifi/guan.png"
-                    }
-                }
                 onCheckedChanged: {
-                    console.log("wifi_switch:" + wifi_switch.checked,wifi_switch.width,indicator.width)
-                    if(systemSettings.wifiEnable!=wifi_switch.checked)
-                        SendFunc.enableWifi(wifi_switch.checked)
-                    //                    if(wifi_switch.checked)
-                    //                    {
-
-                    //                    }
-                    //                    else
-                    //                    {
-                    //                        wifiModel.clear()
-                    //                    }
+                    console.log("wifi_switch:", checked,wifi_switch.width)
+                    if(systemSettings.wifiEnable!=checked)
+                        SendFunc.enableWifi(checked)
                 }
             }
             Text {
                 visible: systemSettings.wifiEnable
                 text: qsTr("可用WiFi列表")
-                color: Qt.rgba(255,255,255,0.35)
-                font.pixelSize: 32
+                color: Qt.rgba(255,255,255,0.45)
+                font.pixelSize: 24
                 anchors.top: divider.bottom
                 anchors.topMargin: 10
                 anchors.left: parent.left
-                anchors.leftMargin: 40
+                anchors.leftMargin: 30
             }
         }
     }
@@ -286,29 +245,28 @@ Item {
 
         Item {
             width: parent.width
-            height: 90
+            height: 76
 
             Item {
                 id:indicator
                 width: 40
                 height: 40
-                //                border.color: "#fff"
                 anchors.left: parent.left
-                anchors.leftMargin: 40
+                anchors.leftMargin: 30
                 anchors.bottom: parent.bottom
-                anchors.bottomMargin: 20
+                anchors.bottomMargin: 16
 
                 PageRotationImg {
                     visible: connected==2
                     anchors.centerIn: parent
-                    source: "/x50/wifi/icon_sx.png"
+                    source: themesPicturesPath+"wifi/"+"icon_loading.png"
                 }
                 Image{
                     asynchronous:true
                     smooth:false
                     visible: connected==1
                     anchors.centerIn: parent
-                    source: "/x50/wifi/icon_selected.png"
+                    source: themesPicturesPath+"wifi/"+"icon_selected.png"
                 }
             }
             Text {
@@ -316,14 +274,12 @@ Item {
                 width:500
                 text: ssid
 
-                font.pixelSize: 40
+                font.pixelSize: 30
                 color:connected>0? themesTextColor:"#FFF"
                 elide: Text.ElideRight
                 anchors.left: indicator.right
                 anchors.leftMargin: 20
-                //                anchors.bottom: parent.bottom
-                //                anchors.bottomMargin: 15
-                anchors.verticalCenter: parent.verticalCenter
+                anchors.verticalCenter: indicator.verticalCenter
                 //                horizontalAlignment:Text.AlignHCenter
                 //                verticalAlignment:Text.AlignVCenter
             }
@@ -339,17 +295,15 @@ Item {
                 anchors.bottom: parent.bottom
                 anchors.bottomMargin: 14
                 source: {
-                    var res
                     if(level === 0){
-                        res = "/x50/wifi/yousuowifi 1.png"
+                        return themesPicturesPath+"wifi/"+"wifi1.png"
                     }else if(level === 1){
-                        res = "/x50/wifi/yousuowifi 2.png"
+                        return themesPicturesPath+"wifi/"+"wifi2.png"
                     }else if(level === 2){
-                        res = "/x50/wifi/yousuowifi 3.png"
+                        return themesPicturesPath+"wifi/"+"wifi3.png"
                     }else if(level >= 3){
-                        res = "/x50/wifi/yousuowifi 4.png"
+                        return themesPicturesPath+"wifi/"+"wifi4.png"
                     }
-                    return res
                 }
                 Image{
                     asynchronous:true
@@ -357,14 +311,14 @@ Item {
                     anchors.fill: parent
                     anchors.centerIn: parent
                     visible: flags > 0
-                    source: "/x50/wifi/yousuowifi 5.png"
+                    source: themesPicturesPath+"wifi/"+"wifi_lock.png"
                 }
 
             }
             MouseArea{
                 anchors.fill: parent
                 onClicked: {
-                    console.log("WiFi name:" + wifi_name.text,wifiConnecting)
+                    console.log("WiFi name:" + wifi_name.text)
                     if(connected==0)
                     {
                         if(flags==0)
@@ -385,7 +339,7 @@ Item {
                             //                            console.log("wifiInfo",wifiInfo,typeof wifiInfo)
                             if(wifiInfo==null)
                             {
-                                showWifiInput(index,listView.model.get(index))
+                                loaderWifiInputShow(index,listView.model.get(index))
                             }
                             else
                             {
@@ -413,24 +367,24 @@ Item {
             visible: systemSettings.wifiEnable && listView.count<=1
 
             anchors.left: parent.left
-            anchors.leftMargin: 40
+            anchors.leftMargin: 30
 
             PageRotationImg {
                 anchors.centerIn: parent
-                source: "/x50/wifi/icon_sx.png"
+                source: themesPicturesPath+"wifi/"+"icon_loading.png"
             }
         }
     }
     //内容
     Item{
-
         width:parent.width
-        anchors.top:parent.top
-        anchors.bottom:topBar.top
+        height: parent.height
 
         ListView {
             id: listView
-            anchors.fill: parent
+            width:parent.width - 80
+            height: parent.height
+            anchors.horizontalCenter: parent.horizontalCenter
             interactive: true
             delegate: wifiDelegate
             model: wifiModel
@@ -438,18 +392,38 @@ Item {
             header: headerView
             clip: true
             //            highlightRangeMode: ListView.ApplyRange
-                        snapMode: ListView.SnapToItem
+            snapMode: ListView.SnapToItem
             boundsBehavior:Flickable.StopAtBounds
             highlightMoveDuration:40
             highlightMoveVelocity:-1
             footer: footerView
+
+            ScrollBar.vertical: ScrollBar {
+                parent: listView.parent
+                anchors.top: parent.top
+                anchors.topMargin: 60
+                anchors.bottom: parent.bottom
+                anchors.bottomMargin: 30
+                anchors.left: listView.right
+                anchors.leftMargin: 10
+
+                background:Rectangle{
+                    implicitWidth: 4
+                    color:"#313131"
+                    radius: implicitWidth / 2
+                }
+                contentItem: Rectangle {
+                    implicitWidth: 4
+                    radius: implicitWidth / 2
+                    color: themesTextColor
+                }
+            }
         }
     }
     Component{
         id:component_wifiInput
 
         Rectangle{
-            id:wifiInput
             anchors.fill: parent
             property string wifi_ssid
             property int wifi_flags
@@ -457,82 +431,61 @@ Item {
             property bool permit_connect:false
             color:themesWindowBackgroundColor
 
-            MouseArea{
-                anchors.fill: parent
-                onClicked: {
-                    textField.focus=false
-                }
-            }
-
-            PageBackBar{
-                id:topBar
-                anchors.bottom:parent.bottom
-                name:"网络"
-                centerText:wifi_ssid
-                leftBtnText:qsTr("")
-                rightBtnText:qsTr("")
-                onClose:{
-                    dismissWifiInput()
-                }
-            }
-
             Item{
-                id:inputtext
+                id:bar
                 width:parent.width
-                //                anchors.bottom:topBar.top
-                height: 100
+                height:65
                 anchors.top: parent.top
-
-                PageDivider{
-                    anchors.bottom: parent.bottom
+                Button {
+                    width:80
+                    height:parent.height
+                    anchors.left:parent.left
+                    anchors.leftMargin: 40
+                    background: null
+                    Text{
+                        anchors.centerIn: parent
+                        color:themesTextColor2
+                        font.pixelSize: 30
+                        text: qsTr("取消")
+                    }
+                    onClicked: {
+                        loaderWifiInputHide()
+                    }
                 }
-
-                //                    PageBusyIndicator{
-                //                        id:connectBusy
-                //                        anchors.right:connectBtn.left
-                //                        anchors.rightMargin: 15
-                //                        anchors.verticalCenter: parent.verticalCenter
-                //                        visible: false
-                //                        running: visible
-                //                    }
-
+                Text{
+                    width: parent.width/2
+                    anchors.centerIn: parent
+                    color:"#fff"
+                    font.pixelSize: 30
+                    elide: Text.ElideRight
+                    horizontalAlignment:Text.AlignHCenter
+                    text: wifi_ssid
+                }
                 PageRotationImg {
                     id: connectBusy
                     visible: wifiInputConnecting==true?true:false
                     anchors.right:connectBtn.left
                     anchors.rightMargin: 15
                     anchors.verticalCenter: parent.verticalCenter
-                    source: "/x50/wifi/icon_sx.png"
+                    source: themesPicturesPath+"wifi/"+"icon_loading.png"
                 }
                 Button {
                     id:connectBtn
-                    width:180
+                    width:120
                     height:parent.height
                     anchors.right:parent.right
                     anchors.rightMargin: 40
-                    anchors.verticalCenter: parent.verticalCenter
 
-                    //                    text: qsTr("连接")
-                    //                    font.pixelSize: 40
-
-                    //                    contentItem: Text{
-                    //                        color:"#9AABC2"
-                    //                        font.pixelSize: 40
-                    //                        text:connect.text
-                    //                        elide: Text.ElideRight
-                    //                        horizontalAlignment: Text.AlignHCenter
-                    //                        verticalAlignment: Text.AlignVCenter
-                    //                    }
                     Text{
                         id:connectText
                         color:permit_connect?themesTextColor:"white"
-                        font.pixelSize: 40
+                        font.pixelSize: 30
                         anchors.centerIn:parent
-                        text: wifiInputConnecting==true?"正在连接":qsTr("连接")
+                        text: qsTr(wifiInputConnecting==true?"正在连接":"连接")
                     }
-                    background: Item {}
+                    background: null
                     onClicked: {
-                        console.log("Button connect:" , wifi_ssid,textField.text,wifi_flags)
+                        console.log("connectBtn:" , wifi_ssid,textField.text,wifi_flags)
                         if(permit_connect)
                         {
                             SendFunc.connectWiFi(wifi_ssid,textField.text,wifi_flags)
@@ -546,53 +499,65 @@ Item {
                         }
                     }
                 }
-                TextField {
-                    id:textField
-                    height: parent.height
-                    anchors.left: parent.left
-                    anchors.right: connectBusy.left
-                    leftPadding: 40
-                    rightPadding: 20
-                    font.pixelSize: 40
-                    color: "#ECF4FC"
-                    echoMode: TextInput.Normal//TextInput.Password:TextInput.Normal
-                    placeholderText: qsTr("请输入密码")
-                    //                    overwriteMode: false
-                    inputMethodHints:Qt.ImhNoAutoUppercase //Qt.ImhNoAutoUppercase Qt.ImhMultiLine
-                    //                    onAccepted: {
-                    //                        console.log("onAccepted")
-                    //                            textField.focus = true    /* 结束输入操作行为 */
-                    //                    }
-                    focus: true
-                    background: Item {
-                    }
-                    onPressed: {
-                        vkb.visible = true //当选择输入框的时候才显示键盘
-                    }
-                    onTextEdited:{
-                        if(length>=8 && length<=30)
-                        {
-                            permit_connect=true
-                        }
-                        else
-                        {
-                            permit_connect=false
-                        }
-                    }
+                PageDivider{
+                    anchors.bottom: parent.bottom
                 }
             }
+
+            TextField {
+                id:textField
+                height: 35*5
+                anchors.left: parent.left
+                anchors.right: vkb.left
+                anchors.top: bar.bottom
+
+                padding: 20
+                leftPadding: 40
+                font.pixelSize: 35
+                color: "#ECF4FC"
+                echoMode: TextInput.Normal//TextInput.Password:TextInput.Normal
+                placeholderText: qsTr("请输入密码")
+                //                    overwriteMode: false
+                inputMethodHints:Qt.ImhNoAutoUppercase //Qt.ImhNoAutoUppercase Qt.ImhMultiLine
+                //                    onAccepted: {
+                //                        console.log("onAccepted")
+                //                            textField.focus = true    /* 结束输入操作行为 */
+                //                    }
+                maximumLength:36
+                wrapMode:TextInput.WrapAnywhere
+                verticalAlignment:Text.AlignTop
+//                text: "123456789012345678901234567890123456"
+                background: null
+//                onPressed: {
+//                    vkb.visible = true //当选择输入框的时候才显示键盘
+//                }
+                onTextEdited:{
+                    if(length>=8 && length<=36)
+                    {
+                        permit_connect=true
+                    }
+                    else
+                    {
+                        permit_connect=false
+                    }
+                }
+                PageDivider{
+                    anchors.bottom: parent.bottom
+                }
+            }
+
             InputPanel {
                 id: vkb
                 visible: true
-                width: parent.width
-                height: parent.height
+                width: 790
+                anchors.top: bar.bottom
                 anchors.bottom: parent.bottom
-
+                anchors.right:parent.right
                 //这种集成方式下点击隐藏键盘的按钮是没有效果的，
                 //只会改变active，因此我们自己处理一下
-                onActiveChanged: {
-                    if(!active) { visible = false }
-                }
+//                onActiveChanged: {
+//                    if(!active) { visible = false }
+//                }
             }
             Component.onCompleted: {
                 textField.forceActiveFocus()
@@ -602,30 +567,19 @@ Item {
             }
         }
     }
-    function showWifiInput(index,wifiInfo){
-        loader_main.sourceComponent = component_wifiInput
-        loader_main.item.wifi_ssid=wifiInfo.ssid
-        loader_main.item.wifi_flags=wifiInfo.flags
-        loader_main.item.index=index
+
+    function loaderWifiInputShow(index,wifiInfo){
+        loaderStackView.sourceComponent = component_wifiInput
+        loaderStackView.item.wifi_ssid=wifiInfo.ssid
+        loaderStackView.item.wifi_flags=wifiInfo.flags
+        loaderStackView.item.index=index
         timer_wifi_scan.stop()
-        console.log("showWifiInput:" , wifiInfo.ssid,wifiInfo.flags)
+        console.log("loaderWifiInputShow:", wifiInfo.ssid,wifiInfo.flags)
     }
-    function dismissWifiInput(){
-        if(loader_main.sourceComponent===component_wifiInput)
-            loader_main.sourceComponent = undefined
+    function loaderWifiInputHide(){
+        if(loaderStackView.sourceComponent===component_wifiInput)
+            loaderStackView.sourceComponent = undefined
         timer_wifi_scan.start()
         listView.positionViewAtBeginning()
     }
-
-    //    Loader{
-    //        //加载弹窗组件
-    //        id:loader_wifiInput
-    //        //        asynchronous: true
-    //        anchors.fill: parent
-    //        //        focus: true
-    //        //        onLoaded: {
-    //        //            loader_wifiInput.forceActiveFocus()
-    //        //        }
-    //    }
-
 }

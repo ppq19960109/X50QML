@@ -4,12 +4,9 @@ import "qrc:/CookFunc.js" as CookFunc
 import "qrc:/SendFunc.js" as SendFunc
 import "../"
 Item {
-    //定义全局分类菜谱
-    readonly property var  menuId: ['蔬菜','肉类','水产','面点','烘培']
 
     Component.onCompleted: {
         getRecipe(menuList.currentIndex)
-        SendFunc.permitSteamStartStatus(1)
     }
     function getRecipe(index)
     {
@@ -105,7 +102,7 @@ Item {
             }
             ListView{
                 id:menuList
-                model:menuId
+                model:['蔬菜','肉类','水产','面点','烘培']
                 width:parent.width
                 anchors.top:parent.top
                 anchors.topMargin: 15
@@ -113,34 +110,28 @@ Item {
                 orientation:ListView.Vertical
                 currentIndex:0
                 interactive:false
-                delegate: Item{
-                    height: 66
+                delegate:Button {
                     width:parent.width
-
-                    Button {
-                        width:parent.width
-                        height:parent.height
-                        anchors.top: parent.top
-                        background:Image {
-                            asynchronous:true
-                            smooth:false
-                            anchors.centerIn: parent
-                            source: menuList.currentIndex===index?(themesPicturesPath+"menulist_item_background.png"):""
-                        }
-                        Text{
-                            text: modelData
-                            font.pixelSize: menuList.currentIndex===index?30:24
-                            font.bold: menuList.currentIndex===index
-                            anchors.centerIn: parent
-                            color:"#fff"
-                        }
-                        onClicked: {
-                            console.log("menuList",index)
-                            if(menuList.currentIndex!=index)
-                            {
-                                menuList.currentIndex=index
-                                getRecipe(menuList.currentIndex)
-                            }
+                    height:62
+                    background:Image {
+                        asynchronous:true
+                        smooth:false
+                        anchors.fill: parent
+                        source: menuList.currentIndex===index?(themesPicturesPath+"menulist_item_background.png"):""
+                    }
+                    Text{
+                        text: modelData
+                        font.pixelSize: menuList.currentIndex===index?30:24
+                        font.bold: menuList.currentIndex===index
+                        anchors.centerIn: parent
+                        color:"#fff"
+                    }
+                    onClicked: {
+                        console.log("menuList",index)
+                        if(menuList.currentIndex!=index)
+                        {
+                            menuList.currentIndex=index
+                            getRecipe(index)
                         }
                     }
                 }

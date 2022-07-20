@@ -26,7 +26,7 @@ Item {
                 anchors.right: text.left
                 anchors.rightMargin: 10
                 anchors.verticalCenter: text.verticalCenter
-                source: delegateType==0?"":themesPicturesPath+"steamoven/"+(workModeImg[modelData]+(pathView.currentIndex==index ?"":"_small")+".png")
+                source: delegateType==0?"":themesPicturesPath+"steamoven/"+(workModeImg[modelData.modelData]+(pathView.currentIndex==index ?"":"_small")+".png")
             }
             Text {
                 id:text
@@ -34,7 +34,7 @@ Item {
                 anchors.horizontalCenterOffset: delegateType==0?0:20
                 color:pathView.currentIndex==index ? themesTextColor:"#fff"
                 font.pixelSize: pathView.currentIndex==index ? (delegateType==0?40:34) : 30
-                text: delegateType==0?modelData:workModeEnum[modelData]
+                text: delegateType==0?modelData:workModeEnum[modelData.modelData]
             }
         }
     }

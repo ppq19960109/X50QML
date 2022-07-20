@@ -4,75 +4,55 @@ import "../"
 import "qrc:/SendFunc.js" as SendFunc
 Item {
 
-    Component.onCompleted: {
-
-
-    }
     Connections { // 将目标对象信号与槽函数进行连接
         target: QmlDevState
 
         onStateChanged: { // 处理目标对象信号的槽函数
             console.log("PageReset:",key)
-
             if("Reset"==key)
             {
                 loaderPopupShow("恢复出厂设置成功","",292,"确定")
-                //                if(value==0)
-                //                {
-
-                //                }
-                //                else
-                //                {
-
-                //                }
-                //                backTopPage()
             }
-        }
-    }
-
-    PageBackBar{
-        id:topBar
-        anchors.bottom:parent.bottom
-        name:qsTr("恢复出厂设置")
-        leftBtnText:qsTr("")
-        rightBtnText:qsTr("")
-        onClose:{
-            backPrePage()
         }
     }
 
     //内容
     Item{
-        width:parent.width
-        anchors.bottom:topBar.top
-        anchors.top: parent.top
+        anchors.fill: parent
 
-        Text{
-            width: parent.width
+        Image {
+            asynchronous:true
+            smooth:false
             anchors.top: parent.top
-            anchors.topMargin: 110
+            anchors.topMargin: 60
             anchors.horizontalCenter: parent.horizontalCenter
-            text:"此操作会将设备初始化，\n清除内部空间中的数据 。"
+            source: themesPicturesPath+"icon_warn.png"
+        }
+        Text{
+            anchors.top: parent.top
+            anchors.topMargin: 120
+            anchors.horizontalCenter: parent.horizontalCenter
+            text:"此操作会将设备初始化\n清除内部空间中的数据"
             horizontalAlignment:Text.AlignHCenter
             verticalAlignment:Text.AlignVCenter
             color:"#fff"
-            font.pixelSize: 40
+            font.pixelSize: 30
             wrapMode:Text.WrapAnywhere
-            lineHeight:1.5
+            lineHeight:1.2
         }
 
         Button{
-            width: 176+15
-            height: 64+15
+            width: 176+10
+            height: 50+10
             anchors.bottom: parent.bottom
-            anchors.bottomMargin: 50
+            anchors.bottomMargin: 40
             anchors.horizontalCenter: parent.horizontalCenter
             background:Rectangle{
                 width:176
-                height:64
+                height:50
                 anchors.centerIn: parent
                 color:themesTextColor2
-                radius: 32
+                radius: height/2
             }
             Text{
                 text:"重置设备"

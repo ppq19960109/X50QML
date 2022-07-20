@@ -104,6 +104,9 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     setState("HoodSpeed",0);
     setState("HoodLight",0);
     setState("RStoveStatus",0);
+    setState("ProductCategory","集成灶");
+    setState("ProductModel","IIZ(T/Y)—X8GCZ01");
+
 #ifndef USE_RK3308
     setState("SysPower",1);
     setState("LoadPowerState",7);

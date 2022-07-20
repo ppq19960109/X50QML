@@ -25,18 +25,18 @@ Flickable {
     ScrollBar.vertical: ScrollBar {
         parent: flick.parent
         anchors.top: flick.top
+        anchors.bottom: flick.bottom
         anchors.left: flick.right
         anchors.leftMargin: scrollBarLeftMargin
-        anchors.bottom: flick.bottom
+
         background:Rectangle{
             implicitWidth: 4
             color:"#000"
-            radius: width / 2
+            radius: implicitWidth / 2
         }
         contentItem: Rectangle {
             implicitWidth: 4
-            implicitHeight: 100
-            radius: width / 2
+            radius: implicitWidth / 2
             color: themesTextColor
         }
     }

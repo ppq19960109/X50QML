@@ -8,8 +8,7 @@
         <file>pageCook/PageSteamBakeBase.qml</file>
         <file>pageCook/DataPathView.qml</file>
         <file>pageCook/PageMultistageRemind.qml</file>
-        <file>pageCook/PageMultistageSet.qml</file>
-        <file>pageMain/PageWifi.qml</file>
+        <file>pageCook/PageMultistage.qml</file>
         <file>pageCook/PageSteamBakeRun.qml</file>
         <file>PageCirProgressBar.qml</file>
         <file>PageCirWaveProgressBar.qml</file>
@@ -124,9 +123,11 @@
         <file>x50/demo/demo6.png</file>
         <file>PageTabBar.qml</file>
         <file>PageLaunchBtn.qml</file>
-        <file>pageCook/PageLeftSteamOven.qml</file>
+        <file>pageCook/PageSteamOvenConfig.qml</file>
         <file>pageCook/PageCookPathView.qml</file>
         <file>pageCook/PageCookPara.qml</file>
         <file>pageCook/PageSteamOvenDelegate.qml</file>
+        <file>pageSet/PageWifi.qml</file>
+        <file>pageSet/PageSwitch.qml</file>
     </qresource>
 </RCC>
