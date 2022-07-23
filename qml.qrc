@@ -13,7 +13,7 @@
         <file>PageCirProgressBar.qml</file>
         <file>PageCirWaveProgressBar.qml</file>
         <file>pageMain/PageCookDetails.qml</file>
-        <file>pageCook/PageSteamBakeReserve.qml</file>
+        <file>pageCook/PageReserve.qml</file>
         <file>pageMain/PageSmartRecipes.qml</file>
         <file>pageMain/PageCookHistory.qml</file>
         <file>pageMain/PageCloseHeat.qml</file>

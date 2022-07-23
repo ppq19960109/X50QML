@@ -100,7 +100,7 @@ ApplicationWindow {
 
         //判断儿童锁(true表示锁定，false表示未锁定)
         property bool childLock:false
-        property var cookDialog:[1,1,1,1,1,1]
+        property var cookDialog:[1,1,1,1,1,1,1]
         property bool multistageRemind:true
         property var wifiPasswdArray:[]
         property bool otaSuccess:false
@@ -335,6 +335,12 @@ ApplicationWindow {
     }
     function loaderMainHide(){
         loader_main.sourceComponent = undefined
+    }
+    function loaderCookReserve(cookWorkPos,cookItem)
+    {
+        loader_main.sourceComponent = pageReserve
+        loader_main.item.cookWorkPos=cookWorkPos
+        loader_main.item.cookItem=cookItem
     }
 
     Component{
@@ -755,10 +761,7 @@ ApplicationWindow {
         id: pageMultistage
         PageMultistage {}
     }
-    Component {
-        id: pageSteamBakeReserve
-        PageSteamBakeReserve {}
-    }
+
     Component {
         id: pageSmartRecipes
         PageSmartRecipes {}
@@ -795,10 +798,10 @@ ApplicationWindow {
 //        id: pageAboutMachine
 //        PageAboutMachine {}
 //    }
-//    Component {
-//        id: pageAfterGuide
-//        PageAfterGuide {}
-//    }
+    Component {
+        id: pageReserve
+        PageReserve {}
+    }
     Component {
         id: pageReleaseNotes
         PageReleaseNotes {}

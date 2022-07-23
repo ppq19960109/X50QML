@@ -24,17 +24,16 @@ Rectangle {
 
     function steamStart(reserve)
     {
-        var list = []
-        list.push(steamOvenDelegate.getCurrentSteamOven())
+        var cookSteps = []
+        cookSteps.push(steamOvenDelegate.getCurrentSteamOven())
 
         var cookItem =CookFunc.getDefCookItem()
         cookItem.cookPos=cookWorkPosEnum.LEFT
-        cookItem.dishName=CookFunc.getDishName(list)
-        cookItem.cookSteps=JSON.stringify(list)
-        console.log("cookItem:",JSON.stringify(cookItem))
+        cookItem.dishName=CookFunc.getDishName(cookSteps)
+        cookItem.cookSteps=JSON.stringify(cookSteps)
         if(reserve)
         {
-            push_page("pageSteamBakeReserve",JSON.stringify(cookItem))
+            loaderCookReserve(cookWorkPos,cookItem)
         }
         else
         {
@@ -43,7 +42,7 @@ Rectangle {
             case cookWorkPosEnum.LEFT:
                 if(systemSettings.cookDialog[0]>0)
                 {
-                    if(CookFunc.isSteam(list))
+                    if(CookFunc.isSteam(cookSteps))
                         loaderSteamShow(360,"请将食物放入左腔\n将水箱加满水","开始烹饪",cookItem,0)
                     else
                         loaderSteamShow(292,"请将食物放入左腔","开始烹饪",cookItem,0)
@@ -56,9 +55,9 @@ Rectangle {
                 break
 
             }
-            startCooking(cookItem,list)
+            startCooking(cookItem,cookSteps)
         }
-        list=undefined
+        cookSteps=undefined
         cookItem=undefined
     }
 

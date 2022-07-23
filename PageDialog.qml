@@ -14,45 +14,31 @@ Item {
 
     MouseArea{
         anchors.fill: parent
-//        hoverEnabled:true
-//        propagateComposedEvents: true
-//        onPressed: {
-//            mouse.accepted = true
-//        }
-    }
-    Component.onCompleted: {
-
     }
     anchors.fill: parent
 
     Rectangle {
         id:hint
         anchors.centerIn: parent
-        implicitWidth: 600
-        implicitHeight: 360
+        implicitWidth: 730
+        implicitHeight: 350
         color: themesPopupWindowColor
-//         border.color: "#fff"
-        radius: 16
-//        PageDialogGradient{
-//            anchors.fill: parent
-//        }
-        Button {
-            width:closeImg.width+60
-            height:closeImg.height+60
-            anchors.top:parent.top
-//            anchors.topMargin: 33
-            anchors.right:parent.right
-//            anchors.rightMargin: 33
 
+        radius: 10
+        Button {
+            width:closeImg.width+50
+            height:closeImg.height+50
+            anchors.top:parent.top
+            anchors.right:parent.right
             Image {
                 id:closeImg
                 asynchronous:true
                 smooth:false
                 cache:false
                 anchors.centerIn: parent
-                source: themesImagesPath+"icon-window-close.png"
+                source: themesPicturesPath+"icon_window_close.png"
             }
-            background: Item {}
+            background: null
             onClicked: {
                 cancel()
             }

@@ -11,7 +11,7 @@ Item {
     {
         if(listLastIndex==0)
             return
-        var list = []
+        var cookSteps = []
         var step
         for(var i = 0; i < listLastIndex; ++i)
         {
@@ -21,30 +21,31 @@ Item {
             steps.temp=step.temp
             steps.time=step.time
             steps.number=i+1
-            list.push(steps)
+            cookSteps.push(steps)
         }
 
         var cookItem =CookFunc.getDefCookItem()
         cookItem.cookPos=cookWorkPosEnum.LEFT
-        cookItem.dishName=CookFunc.getDishName(list)
-        cookItem.cookSteps=JSON.stringify(list)
+        cookItem.dishName=CookFunc.getDishName(cookSteps)
+        cookItem.cookSteps=JSON.stringify(cookSteps)
 
         if(reserve)
         {
-            push_page("pageSteamBakeReserve",JSON.stringify(cookItem))
+            loaderCookReserve(cookWorkPosEnum.LEFT,cookItem)
         }
         else
         {
             if(systemSettings.cookDialog[4]>0)
             {
-                if(CookFunc.isSteam(list))
+                if(CookFunc.isSteam(cookSteps))
                     loaderSteamShow(360,"请将食物放入左腔\n将水箱加满水","开始烹饪",cookItem,4)
                 else
                     loaderSteamShow(292,"请将食物放入左腔","开始烹饪",cookItem,4)
                 return
             }
-            startCooking(cookItem,list)
+            startCooking(cookItem,cookSteps)
         }
+        cookSteps=undefined
         cookItem=undefined
     }
 
@@ -238,6 +239,26 @@ Item {
                 anchors.centerIn: parent
                 color: "#333333"
                 radius: 4
+
+                Button {
+                    width:closeImg.width+50
+                    height:closeImg.height+50
+                    anchors.top:parent.top
+                    anchors.right:parent.right
+                    Image {
+                        id:closeImg
+                        asynchronous:true
+                        smooth:false
+                        cache:false
+                        anchors.centerIn: parent
+                        source: themesPicturesPath+"icon_window_close.png"
+                    }
+                    background: null
+                    onClicked: {
+                        loaderMultistageHide()
+                    }
+                }
+
                 PageSteamOvenDelegate {
                     id:steamOvenDelegate
                     width:291+180*3+20*3

@@ -12,7 +12,29 @@ Item {
     {
         recipeListView.model=QmlDevState.getRecipe(index);
     }
-
+    function steamStart(reserve)
+    {
+        var cookItem=recipeListView.model[recipeListView.currentIndex]
+        var cookSteps=JSON.parse(cookItem.cookSteps)
+        if(reserve)
+        {
+            loaderCookReserve(cookWorkPosEnum.LEFT,cookItem)
+        }
+        else
+        {
+            if(systemSettings.cookDialog[5]>0)
+            {
+                if(CookFunc.isSteam(cookSteps))
+                    loaderSteamShow(360,"请将食物放入左腔\n将水箱加满水","开始烹饪",cookItem,5)
+                else
+                    loaderSteamShow(292,"请将食物放入左腔","开始烹饪",cookItem,5)
+                return
+            }
+        }
+        startCooking(cookItem,cookSteps)
+        cookSteps=undefined
+        cookItem=undefined
+    }
     PageBackBar{
         id:topBar
         anchors.top:parent.top
@@ -195,23 +217,13 @@ Item {
                 anchors.right: parent.right
                 anchors.rightMargin: 30
                 onStartUp:{
-                    var cookItem=recipeListView.model[recipeListView.currentIndex]
-                    console.log("SteamStart:",JSON.stringify(cookItem),recipeListView.currentIndex)
-                    var cookSteps=JSON.parse(cookItem.cookSteps)
-                    if(systemSettings.cookDialog[5]>0)
-                    {
-                        if(CookFunc.isSteam(cookSteps))
-                            loaderSteamShow(360,"请将食物放入左腔\n将水箱加满水","开始烹饪",cookItem,5)
-                        else
-                            loaderSteamShow(292,"请将食物放入左腔","开始烹饪",cookItem,5)
-                        return
-                    }
-                    startCooking(cookItem,cookSteps)
+                    steamStart(false)
                 }
                 onReserve:{
-
+                    steamStart(true)
                 }
             }
+
         }
     }
 }
