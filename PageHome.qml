@@ -273,6 +273,8 @@ Item {
                         if(QmlDevState.state.LStOvDoorState==0 || value==workStateEnum.WORKSTATE_STOP)
                             loaderDoorAutoPopupHide("左腔")
                     }
+                    if(value==workStateEnum.WORKSTATE_STOP)
+                        loaderRemindHide()
                 }
                 lastLStOvState=value
             }
@@ -550,7 +552,7 @@ Item {
             }
             else if("remind"==key)
             {
-                if(value>0)
+                if(value>0 && QmlDevState.state.MultiMode === 1)
                 {
                     loaderAutoPopupShow(QmlDevState.state.RemindText,"",null,"继续烹饪",remindConfirmFunc)
                 }
