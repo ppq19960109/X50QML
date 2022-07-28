@@ -2,14 +2,19 @@ import QtQuick 2.7
 import QtQuick.Controls 2.2
 
 Item {
-    property var para
-    property int cookDialog:0
+    property var cookItem
+    property int cookDialogIndex
+
     property alias hintTopText: hintTop.text
+    property alias hintCenterText: hintCenter.text
+    property alias hintCenterTextAlign: hintCenter.horizontalAlignment
+    property alias cancelText: cancelBtnText.text
     property alias confirmText: confirmBtnText.text
-    property alias checkboxVisible: control.visible
-    property alias checkboxState: control.checked
+    property alias checkboxVisible: checkBox.visible
+    property alias checkboxChecked: checkBox.checked
+    property alias hintWidth: hint.width
     property alias hintHeight: hint.height
-    signal cancel()
+    signal cancel(int index)
     signal confirm()
 
     MouseArea{
@@ -22,9 +27,21 @@ Item {
         anchors.centerIn: parent
         implicitWidth: 730
         implicitHeight: 350
-        color: themesPopupWindowColor
 
+        color: themesPopupWindowColor
         radius: 10
+
+        Image {
+            visible: hintTop.text==""
+            anchors.top:parent.top
+            anchors.topMargin: 45
+            anchors.horizontalCenter: parent.horizontalCenter
+            asynchronous:true
+            smooth:false
+            cache:false
+            source: themesPicturesPath+"icon_warn.png"
+        }
+
         Button {
             width:closeImg.width+50
             height:closeImg.height+50
@@ -40,55 +57,88 @@ Item {
             }
             background: null
             onClicked: {
-                cancel()
+                cancel(0)
             }
         }
 
         Text{
             id:hintTop
+            visible: text!=""
             width:parent.width
-            color:"white"
-            font.pixelSize: 40
             anchors.top: parent.top
-            anchors.topMargin: 45
-            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.topMargin: 35
+            color:"#fff"
+            font.pixelSize: 30
             horizontalAlignment: Text.AlignHCenter
-            verticalAlignment: Text.AlignVCenter
-
-            wrapMode:Text.Wrap
+            wrapMode:Text.WrapAnywhere
+            text:""
         }
-
+        Text{
+            id:hintCenter
+            visible: text!=""
+            width:parent.width-60
+            anchors.centerIn: parent
+            anchors.verticalCenterOffset: -22
+            color:"#fff"
+            font.pixelSize: 30
+            horizontalAlignment: Text.AlignHCenter
+            wrapMode:Text.WrapAnywhere
+            text:""
+        }
         PageCheckBox {
-            id:control
-
-            anchors.bottom:confirmBtn.top
-            anchors.bottomMargin: 30
+            id:checkBox
+            anchors.top:parent.top
+            anchors.topMargin: 212
             anchors.horizontalCenter: parent.horizontalCenter
             checked: false
         }
         Button {
-            id:confirmBtn
-            width:176+15
-            height:64+15
+            id:cancelBtn
+            visible: cancelBtnText.text!=""
+            width:140+10
+            height:50+10
             anchors.bottom:parent.bottom
-            anchors.bottomMargin: 30
+            anchors.bottomMargin: 25
             anchors.horizontalCenter: parent.horizontalCenter
-
+            anchors.horizontalCenterOffset: -130
             Text{
-                id:confirmBtnText
+                id:cancelBtnText
+                anchors.centerIn: parent
                 color:"#000"
                 font.pixelSize: 30
-
-                anchors.centerIn: parent
-                horizontalAlignment: Text.AlignHCenter
-                verticalAlignment: Text.AlignVCenter
+                text:""
             }
             background: Rectangle {
-                width:176
-                height:64
+                width:140
+                height:50
                 anchors.centerIn: parent
                 color:themesTextColor2
-                radius: 32
+                radius: height/2
+            }
+            onClicked: {
+                cancel(1)
+            }
+        }
+        Button {
+            width:140+10
+            height:50+10
+            anchors.bottom:parent.bottom
+            anchors.bottomMargin: 20
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.horizontalCenterOffset: cancelBtn.visible ? 130 : 0
+            Text{
+                id:confirmBtnText
+                anchors.centerIn: parent
+                color:"#000"
+                font.pixelSize: 30
+                text:""
+            }
+            background: Rectangle {
+                width:140
+                height:50
+                anchors.centerIn: parent
+                color:themesTextColor2
+                radius: height/2
             }
             onClicked: {
                 confirm()

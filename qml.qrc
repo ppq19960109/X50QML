@@ -5,9 +5,7 @@
         <file>pageMain/PageHood.qml</file>
         <file>pageMain/PageSteamOven.qml</file>
         <file>pageMain/PageHomeThird.qml</file>
-        <file>pageCook/PageSteamBakeBase.qml</file>
         <file>pageCook/DataPathView.qml</file>
-        <file>pageCook/PageMultistageRemind.qml</file>
         <file>pageCook/PageMultistage.qml</file>
         <file>pageCook/PageSteamBakeRun.qml</file>
         <file>PageCirProgressBar.qml</file>
@@ -27,7 +25,6 @@
         <file>PageBusyIndicator.qml</file>
         <file>PageDialog.qml</file>
         <file>pageSet/PageReleaseNotes.qml</file>
-        <file>pageCook/PageMultistageDelegate.qml</file>
         <file>pageSet/PageUpdateProgressBar.qml</file>
         <file>PageHomeBar.qml</file>
         <file>pageCook/PageNewCook.qml</file>
@@ -76,7 +73,6 @@
         <file>pageProductionTest/PageScreenLine.qml</file>
         <file>pageProductionTest/PageScreenClick.qml</file>
         <file>pageProductionTest/PageScreenLCD.qml</file>
-        <file>PageGradient.qml</file>
         <file>PageDialogGradient.qml</file>
         <file>x50/main/icon_ts_g.png</file>
         <file>PageLockScreen.qml</file>
@@ -125,9 +121,9 @@
         <file>PageLaunchBtn.qml</file>
         <file>pageCook/PageSteamOvenConfig.qml</file>
         <file>pageCook/PageCookPathView.qml</file>
-        <file>pageCook/PageCookPara.qml</file>
         <file>pageCook/PageSteamOvenDelegate.qml</file>
         <file>pageSet/PageWifi.qml</file>
-        <file>pageSet/PageSwitch.qml</file>
+        <file>pageMain/PageSmartCook.qml</file>
+        <file>PageSwitch.qml</file>
     </qresource>
 </RCC>

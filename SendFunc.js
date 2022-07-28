@@ -66,7 +66,6 @@ function setToServer(Data)
     root.Type="SET"
     root.Data=Data
     var json=JSON.stringify(root)
-    console.info("setToServer:",json)
     QmlDevState.sendToServer(json)
     json=undefined
     root=undefined
@@ -78,7 +77,6 @@ function getToServer(Data)
     root.Type="GET"
     root.Data=Data
     var json=JSON.stringify(root)
-    console.info("getToServer:",json)
     QmlDevState.sendToServer(json)
     json=undefined
     root=undefined
@@ -89,7 +87,6 @@ function getAllToServer()
     root.Type="GETALL"
     root.Data=null
     var json=JSON.stringify(root)
-    console.info("getAllToServer:",json)
     QmlDevState.sendToServer(json)
     json=undefined
     root=undefined

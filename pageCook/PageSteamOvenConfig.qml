@@ -2,13 +2,12 @@ import QtQuick 2.7
 import QtQuick.Controls 2.2
 import "../"
 import "qrc:/CookFunc.js" as CookFunc
-import "qrc:/SendFunc.js" as SendFunc
+
 Rectangle {
     color:themesWindowBackgroundColor
     property int cookWorkPos:0
 
     Component.onCompleted: {
-        console.log("PageLeftSteamOven onCompleted")
         switch (cookWorkPos)
         {
         case cookWorkPosEnum.RIGHT:
@@ -40,18 +39,34 @@ Rectangle {
             switch (cookWorkPos)
             {
             case cookWorkPosEnum.LEFT:
-                if(systemSettings.cookDialog[0]>0)
+                if(systemSettings.cookDialog[0] === true)
                 {
                     if(CookFunc.isSteam(cookSteps))
-                        loaderSteamShow(360,"请将食物放入左腔\n将水箱加满水","开始烹饪",cookItem,0)
+                        loaderSteamShow("请将食物放入左腔，水箱中加满水","开始",cookItem,0)
                     else
-                        loaderSteamShow(292,"请将食物放入左腔","开始烹饪",cookItem,0)
+                        loaderSteamShow("当前模式需要预热\n请您在左腔预热完成后再放入食材","开始",cookItem,0)
                     return
                 }
                 break
             case cookWorkPosEnum.RIGHT:
+                if(systemSettings.cookDialog[1] === true)
+                {
+                    if(CookFunc.isSteam(cookSteps))
+                        loaderSteamShow("请将食物放入右腔，水箱中加满水","开始",cookItem,1)
+                    else
+                        loaderSteamShow("当前模式需要预热\n请您在右腔预热完成后再放入食材","开始",cookItem,1)
+                    return
+                }
                 break
             case cookWorkPosEnum.ASSIST:
+                if(systemSettings.cookDialog[2] === true)
+                {
+                    if(CookFunc.isSteam(cookSteps))
+                        loaderSteamShow("请将食物放入右腔，水箱中加满水","开始",cookItem,2)
+                    else
+                        loaderSteamShow("当前模式需要预热\n请您在右腔预热完成后再放入食材","开始",cookItem,2)
+                    return
+                }
                 break
 
             }

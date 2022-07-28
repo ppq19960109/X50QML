@@ -120,7 +120,7 @@ Rectangle {
                 font.pixelSize: 30
                 color:"#878787"
                 text:"左腔\n状态"
-                //                wrapMode: Text.WordWrap
+                //                wrapMode: Text.WrapAnywhere
                 horizontalAlignment:Text.AlignHCenter
                 verticalAlignment:Text.AlignVCenter
             }

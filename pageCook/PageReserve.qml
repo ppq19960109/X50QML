@@ -3,7 +3,7 @@ import QtQuick.Controls 2.2
 import "../"
 Item {
     property int cookWorkPos:0
-    property var cookItem
+    property var cookItem:null
     Component.onCompleted: {
         var i
         var hourArray = []
@@ -17,6 +17,10 @@ Item {
         }
         minutePathView.model=minuteArray
     }
+    Component.onDestruction: {
+        cookItem=null
+    }
+
     //内容
     Rectangle{
         width:730
@@ -171,7 +175,6 @@ Item {
                         startCooking(cookItem,cookSteps)
                     }
                     cookSteps=undefined
-                    cookItem=undefined
                     loaderMainHide()
                 }
             }

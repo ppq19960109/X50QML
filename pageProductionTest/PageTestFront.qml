@@ -99,7 +99,7 @@ Item {
                     color:"#FFF"
                     font.pixelSize: 40
                     anchors.centerIn: parent
-                    wrapMode: Text.WordWrap
+                    wrapMode: Text.WrapAnywhere
                 }
 
                 onClicked: {
@@ -119,7 +119,7 @@ Item {
                     color:"#FFF"
                     font.pixelSize: 40
                     anchors.centerIn: parent
-                    wrapMode: Text.WordWrap
+                    wrapMode: Text.WrapAnywhere
                 }
 
                 onClicked: {

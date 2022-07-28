@@ -135,7 +135,7 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     QVariantMap info;
     info.insert("id", 0);
     info.insert("seqid", 3);
-    info.insert("recipeid", 560);
+    info.insert("recipeid", 117);
     info.insert("cookPos", 0);
     info.insert("dishName", "清蒸鱼");
     info.insert("cookSteps", "[{\"device\":0,\"mode\":35,\"number\":1,\"temp\":100,\"time\":90}]");
@@ -144,13 +144,13 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     info.insert("recipeType", 1);
 
     recipe[0].append(info);
-    info["recipeid"]=999;
+    info["recipeid"]=426;
     info["dishName"]="桂花蜂蜜烤南瓜蜂蜜烤南";
     recipe[0].append(info);
-    info["recipeid"]=566;
+    info["recipeid"]=118;
     info["dishName"]="腊肉蒸芋艿";
     recipe[0].append(info);
-    info["recipeid"]=998;
+    info["recipeid"]=426;
     info["dishName"]="蒜香茄子";
     recipe[0].append(info);
     info["recipeid"]=1006;
@@ -160,7 +160,7 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     info["dishName"]="蒜香茄子";
     recipe[0].append(info);
 
-    info["recipeid"]=637;
+    info["recipeid"]=118;
     info["dishName"]="蒜蓉粉丝娃娃菜";
     recipe[1].append(info);
 
@@ -349,14 +349,23 @@ void QmlDevState::readRecipeDetails()
     {
         QJsonObject obj=recipes.at(i).toObject();
         QJsonValue imgUrl =obj.value("imgUrl");
-        QJsonValue details =obj.value("details");
+        QJsonValue ingredients =obj.value("ingredients");
+        QJsonArray details =obj.value("details").toArray();
         QJsonValue recipeid =obj.value("recipeid");
         QVariantList list;
         list.append(imgUrl.toString());
-        list.append(details.toString());
+        list.append(ingredients.toString());
+        list.append(details);
+//        QVariantList detailslist;
+//        for(int j=0;j<details.size();++j)
+//        {
+//            detailslist.append(details.at(j).toString());
+//        }
+//        list.append(detailslist);
+//         qDebug()<<"detailslist:"<<detailslist;
         recipeMap.insert(recipeid.toInt(),list);
     }
-    //    qDebug()<<"recipeMap:"<<recipeMap;
+//        qDebug()<<"recipeMap:"<<recipeMap;
 }
 
 int QmlDevState::sendToServer(const QString& data)

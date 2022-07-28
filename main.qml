@@ -22,7 +22,6 @@ ApplicationWindow {
     property int productionTestFlag:1
     property int demoModeStatus:0
 
-    //    readonly property string uiVersion:"1.1"
     readonly property string productionTestWIFISSID:"moduletest"
     readonly property string productionTestWIFIPWD:"58185818"
 
@@ -31,11 +30,7 @@ ApplicationWindow {
     readonly property var cookModecheckedImg: ["icon_steame_checked.png","icon_bake_checked.png","icon_multistage_checked.png"]
     readonly property var workModeEnum: ["未设定", "经典蒸", "鲜嫩蒸", "高温蒸", "热风烧烤", "上下加热", "立体热风", "蒸汽嫩烤", "空气炸", "解冻","发酵","保温"]
     readonly property var workModeNumberEnum:[0,1,3,4,35,36,38,40,42,65,66,68]
-    readonly property int rightWorkModeIndex:8
 
-    readonly property var workModeModelEnum:[{"modelData":1,"temp":100,"time":30,"minTemp":40,"maxTemp":100},{"modelData":2,"temp":120,"time":20,"minTemp":101,"maxTemp":120},{"modelData":6,"temp":150,"time":60,"minTemp":50,"maxTemp":200},{"modelData":7,"temp":220,"time":15,"minTemp":200,"maxTemp":230,"maxTime":180},{"modelData":3,"temp":200,"time":60,"minTemp":50,"maxTemp":230}
-        ,{"modelData":5,"temp":180,"time":120,"minTemp":50,"maxTemp":230},{"modelData":4,"temp":180,"time":120,"minTemp":50,"maxTemp":230}
-        ,{"modelData":8,"temp":60,"time":30,"minTemp":50,"maxTemp":120},{"modelData":9,"temp":100,"time":30,"minTemp":40,"maxTemp":100}]
     readonly property var leftWorkModeModelEnum:[{"modelData":7,"temp":150,"time":60,"minTemp":50,"maxTemp":200},{"modelData":4,"temp":200,"time":60,"minTemp":50,"maxTemp":230},{"modelData":8,"temp":220,"time":30,"minTemp":200,"maxTemp":230,"maxTime":180},{"modelData":3,"temp":120,"time":20,"minTemp":101,"maxTemp":120},{"modelData":5,"temp":180,"time":120,"minTemp":50,"maxTemp":230}
         ,{"modelData":6,"temp":180,"time":120,"minTemp":50,"maxTemp":230}]
     readonly property var rightWorkModeModelEnum:[{"modelData":1,"temp":100,"time":30,"minTemp":40,"maxTemp":100},{"modelData":3,"temp":120,"time":20,"minTemp":101,"maxTemp":120},{"modelData":2,"temp":90,"time":15,"minTemp":80,"maxTemp":100}]
@@ -65,7 +60,6 @@ ApplicationWindow {
     Settings {
         id: testSettings
         category: "test"
-
         property int productionTestLcd:0
         property int productionTestLight:0
         property int productionTestAging:0
@@ -100,13 +94,11 @@ ApplicationWindow {
 
         //判断儿童锁(true表示锁定，false表示未锁定)
         property bool childLock:false
-        property var cookDialog:[1,1,1,1,1,1,1]
+        property var cookDialog:[true,true,true,true,true,true,true]
         property bool multistageRemind:true
         property var wifiPasswdArray:[]
         property bool otaSuccess:false
-        //        onFirstStartupChanged: {
-        //            console.log("onFirstStartupChanged....",systemSettings.firstStartup)
-        //        }
+
         onBrightnessChanged: {
             console.log("onBrightnessChanged....",systemSettings.brightness)
             Backlight.backlightSet(systemSettings.brightness)
@@ -135,11 +127,10 @@ ApplicationWindow {
         systemSettings.sleepTime=3
         systemSettings.brightness=250
 
-        //        SendFunc.enableWifi(true)
         systemSettings.wifiEnable=true
 
         systemSettings.childLock=false
-        systemSettings.cookDialog=[1,1,1,1,1,1]
+        systemSettings.cookDialog=[true,true,true,true,true,true,true]
         systemSettings.multistageRemind=true
         systemSettings.wifiPasswdArray=[]
         systemSync()
@@ -257,7 +248,6 @@ ApplicationWindow {
                 console.log("timer_wifi_connecting...")
                 wifiConnecting=false
                 QmlDevState.executeShell("(wpa_cli reconfigure) &")
-                //                QmlDevState.executeShell("(wpa_cli reconfigure && wpa_cli enable_network all && wpa_cli save_config) &")
             }
         }
     }
@@ -346,35 +336,31 @@ ApplicationWindow {
     Component{
         id:component_steam
         PageDialog{
-            id:steamDialog
-            hintHeight: 360
-            hintTopText:"请将食物放入\n将水箱加满水"
-            confirmText:"开始烹饪"
+            cancelText:"取消"
             checkboxVisible:true
             onCancel:{
-                console.info("component_steam onCancel")
                 loaderSteamHide()
             }
             onConfirm:{
-                console.info("component_steam onConfirm")
-                if(steamDialog.checkboxState)
+                if(checkboxChecked)
                 {
                     var dialog=systemSettings.cookDialog
-                    dialog[steamDialog.cookDialog]=0
+                    dialog[cookDialogIndex]=false
                     systemSettings.cookDialog=dialog
                 }
-                startCooking(steamDialog.para,JSON.parse(steamDialog.para.cookSteps))
+                if(cookItem!=null)
+                    startCooking(cookItem,JSON.parse(cookItem.cookSteps))
                 loaderSteamHide()
             }
         }
     }
-    function loaderSteamShow(hintHeight,hintTopText,confirmText,para,cookDialog){
+    function loaderSteamShow(hintCenterText,confirmText,cookItem,cookDialogIndex){
         loader_main.sourceComponent = component_steam
-        loader_main.item.hintHeight=hintHeight
-        loader_main.item.hintTopText=hintTopText
+
+        loader_main.item.hintCenterText=hintCenterText
         loader_main.item.confirmText=confirmText
-        loader_main.item.para=para
-        loader_main.item.cookDialog=cookDialog
+        loader_main.item.cookItem=cookItem
+        loader_main.item.cookDialogIndex=cookDialogIndex
     }
     function loaderSteamHide(){
         if(loader_main.sourceComponent===component_steam)
@@ -754,10 +740,6 @@ ApplicationWindow {
         PageSteamBakeRun {}
     }
     Component {
-        id: pageSteamBakeBase
-        PageSteamBakeBase {}
-    }
-    Component {
         id: pageMultistage
         PageMultistage {}
     }
@@ -779,25 +761,13 @@ ApplicationWindow {
         PageCloseHeat {}
     }
     Component {
+        id: pageSmartCook
+        PageSmartCook {}
+    }
+    Component {
         id: pageSet
         PageSet {}
     }
-//    Component {
-//        id: pageLocalSettings
-//        PageLocalSettings {}
-//    }
-//    Component {
-//        id: pageReset
-//        PageReset {}
-//    }
-//    Component {
-//        id: pageSystemUpdate
-//        PageSystemUpdate {}
-//    }
-//    Component {
-//        id: pageAboutMachine
-//        PageAboutMachine {}
-//    }
     Component {
         id: pageReserve
         PageReserve {}

@@ -4,21 +4,21 @@ import QtQuick.Controls 2.2
 CheckBox {
     id:control
     width:240
-    height:60
+    height:40
     checked: false
-    text: qsTr("下次不再提醒")
+    text: qsTr("下次不再提示")
     leftPadding:0
+    spacing:10
     contentItem: Text {
         width:parent.width
         text: parent.text
         font.pixelSize: 30
-//        opacity: 1.0
         color: "#FFF"
         verticalAlignment: Text.AlignVCenter
         leftPadding: control.indicator.width + control.spacing
     }
     indicator: Item {
-        implicitWidth: 50
+        implicitWidth: 40
         implicitHeight: implicitWidth
         x: control.leftPadding
         y: parent.height / 2 - height / 2
@@ -35,13 +35,11 @@ CheckBox {
         //                    visible: control.checked
         //                }
         Image {
-            width: 30
-            height: width
             asynchronous:true
             smooth:false
             cache:false
             anchors.centerIn: parent
-            source: themesImagesPath+(control.checked ?"iocn_checked.png":"iocn_uncheck.png")
+            source: themesPicturesPath+(control.checked ?"icon_checked.png":"icon_unchecked.png")
             //                    visible: control.checked
         }
     }

@@ -63,7 +63,6 @@ Item {
             }
         }
         onMovementEnded: {
-            console.log("currentIndex:",currentIndex);
             indexChanged(currentIndex);
         }
     }

@@ -22,12 +22,12 @@ Item {
         }
         else
         {
-            if(systemSettings.cookDialog[5]>0)
+            if(systemSettings.cookDialog[4] === true)
             {
                 if(CookFunc.isSteam(cookSteps))
-                    loaderSteamShow(360,"请将食物放入左腔\n将水箱加满水","开始烹饪",cookItem,5)
+                    loaderSteamShow("请将食物放入左腔，水箱中加满水","开始",cookItem,4)
                 else
-                    loaderSteamShow(292,"请将食物放入左腔","开始烹饪",cookItem,5)
+                    loaderSteamShow("当前模式需要预热\n请您在左腔预热完成后再放入食材","开始",cookItem,4)
                 return
             }
         }
@@ -102,7 +102,13 @@ Item {
                     border.color: recipeListView.currentIndex===index?themesTextColor:"transparent"
                 }
                 onClicked: {
-                    recipeListView.currentIndex=index
+                    console.log("recipeDelegate onClicked",recipeListView.currentIndex,index)
+                    if(recipeListView.currentIndex!=index)
+                        recipeListView.currentIndex=index
+                    else
+                    {
+                        push_page(pageCookDetails,{cookItem:recipeListView.model[index]})
+                    }
                 }
             }
         }

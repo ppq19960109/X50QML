@@ -13,7 +13,7 @@ Item {
         anchors.top: parent.top
         background: Rectangle{
             color:themesTextColor2
-            radius: 25
+            radius: height/2
         }
         Text{
             text:qsTr("启动")
@@ -31,7 +31,7 @@ Item {
         anchors.bottom: parent.bottom
         background: Rectangle{
             color:themesTextColor2
-            radius: 25
+            radius: height/2
         }
         Text{
             text:qsTr("预约")

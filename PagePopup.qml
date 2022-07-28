@@ -23,6 +23,9 @@ Item {
         else
             SendFunc.setSysPower(1)
     }
+    Component.onDestruction: {
+        confirmFunc=null
+    }
     Rectangle {
         id:hint
         anchors.centerIn: parent

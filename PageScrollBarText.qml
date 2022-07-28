@@ -5,21 +5,19 @@ Flickable {
     id: flick
     property alias text:details.text
     property int scrollBarLeftMargin:20
-//    anchors.fill: parent
 
     contentWidth: details.width
     contentHeight: details.height
     clip: true
+    boundsBehavior:Flickable.StopAtBounds
     Text {
         id: details
         width: flick.width
         //                    height: flick.height
-        font.pixelSize: 32
-        lineHeight: 1.2
+        font.pixelSize: 30
+//        lineHeight: 1.1
         color:"#fff"
-        //                                        clip :true
-        wrapMode: Text.WordWrap
-        //                    elide: Text.ElideRight
+        wrapMode: Text.WrapAnywhere
     }
 
     ScrollBar.vertical: ScrollBar {

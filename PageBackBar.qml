@@ -53,8 +53,6 @@ Rectangle {
             font.pixelSize: 24
             //textFormat: Text.AutoText
             //textFormat: Text.RichText
-            //                        horizontalAlignment:Text.AlignHCenter
-            //                        verticalAlignment:Text.AlignVCenter
         }
         Text{
             id:centerText
@@ -91,8 +89,6 @@ Rectangle {
                     color:themesTextColor2
                     font.pixelSize: 30
                     anchors.centerIn:parent
-                    //                horizontalAlignment:Text.AlignHCenter
-                    //                verticalAlignment:Text.AlignVCenter
                 }
             }
             onClicked: {
@@ -123,8 +119,6 @@ Rectangle {
                     color:themesTextColor2
                     font.pixelSize: 30
                     anchors.centerIn:parent
-                    //                horizontalAlignment:Text.AlignHCenter
-                    //                verticalAlignment:Text.AlignVCenter
                 }
             }
             onClicked: {

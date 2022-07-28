@@ -38,7 +38,7 @@ Item{
                 font.pixelSize: 40
                 text: qsTr("滑动屏幕,观察测试过程显示的一些图像上是否有黑点和亮点
 ")
-                wrapMode: Text.WordWrap
+                wrapMode: Text.WrapAnywhere
                 //            horizontalAlignment:Text.AlignHCenter
                 //            verticalAlignment:Text.AlignVCenter
             }

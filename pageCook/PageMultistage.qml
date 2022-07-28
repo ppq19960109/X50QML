@@ -2,7 +2,7 @@ import QtQuick 2.7
 import QtQuick.Controls 2.2
 
 import "qrc:/CookFunc.js" as CookFunc
-import "qrc:/SendFunc.js" as SendFunc
+
 import "../"
 Item {
     property int listLastIndex:0
@@ -35,12 +35,12 @@ Item {
         }
         else
         {
-            if(systemSettings.cookDialog[4]>0)
+            if(systemSettings.cookDialog[3] === true)
             {
                 if(CookFunc.isSteam(cookSteps))
-                    loaderSteamShow(360,"请将食物放入左腔\n将水箱加满水","开始烹饪",cookItem,4)
+                    loaderSteamShow("请将食物放入左腔，水箱中加满水","开始",cookItem,3)
                 else
-                    loaderSteamShow(292,"请将食物放入左腔","开始烹饪",cookItem,4)
+                    loaderSteamShow("当前模式需要预热\n请您在左腔预热完成后再放入食材","开始",cookItem,3)
                 return
             }
             startCooking(cookItem,cookSteps)
@@ -48,9 +48,31 @@ Item {
         cookSteps=undefined
         cookItem=undefined
     }
-
+    Component{
+        id:component_remind
+        PageDialog{
+            hintWidth:850
+            hintTopText:"多段烹饪说明"
+            hintCenterText:"1、只有左腔具有多段烹饪功能。\n2、完成第一段设置后，可以增加下一段，或是删除该段。\n3、可设置1-3段。"
+            hintCenterTextAlign:Text.AlignLeft
+            confirmText:"知道了"
+            checkboxVisible:true
+            onCancel:{
+                loader_main.sourceComponent = undefined
+            }
+            onConfirm:{
+                if(checkboxChecked)
+                    systemSettings.multistageRemind=false
+                loader_main.sourceComponent = undefined
+            }
+        }
+    }
     Component.onCompleted: {
-        console.log("PageMultistage onCompleted",systemSettings.multistageRemind)
+        console.log("PageMultistage onCompleted")
+        if(systemSettings.multistageRemind === true)
+        {
+            loader_main.sourceComponent=component_remind
+        }
     }
 
     PageBackBar{

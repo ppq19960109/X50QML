@@ -78,7 +78,7 @@ Item {
             //            font.bold :true
             lineHeight: 1.5
 
-            wrapMode:Text.WordWrap
+            wrapMode:Text.WrapAnywhere
             text:"1、下载官方APP\n2、官方APP绑定设备"
         }
     }

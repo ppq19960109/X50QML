@@ -1,200 +1,228 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.2
-
+import QtQuick.Layouts 1.3
 import "qrc:/pageCook"
 import "../"
 import "qrc:/CookFunc.js" as CookFunc
-import "qrc:/SendFunc.js" as SendFunc
+
 Item {
-    property var root
-    property var cookSteps
-    property int cookPos:0
-
-    Connections { // 将目标对象信号与槽函数进行连接
-        id:connections
-        enabled:false
-        target: QmlDevState
-        onStateChanged: { // 处理目标对象信号的槽函数
-            if("SteamStart"==key)
-            {
-                if(recipe.visible==true)
-                {
-                    if(systemSettings.cookDialog[5]>0)
-                    {
-                        if(CookFunc.isSteam(cookSteps))
-                            loaderSteamShow(360,"请将食物放入左腔\n将水箱加满水","开始烹饪",root,5)
-                        else
-                            loaderSteamShow(292,"请将食物放入左腔","开始烹饪",root,5)
-                        return
-                    }
-                }
-                startCooking(root,cookSteps)
-            }
-        }
-    }
-    StackView.onActivated:{
-        connections.enabled=true
-    }
-    StackView.onDeactivated:{
-        connections.enabled=false
-    }
-    function getCookTime(cookSteps)
+    property var cookItem
+    property var recipeDetail
+    function steamStart(reserve)
     {
-        var cookTime=0;
-        for(var i = 0; i < cookSteps.length; ++i)
+        var cookSteps=JSON.parse(cookItem.cookSteps)
+        if(reserve)
         {
-            cookTime+=cookSteps[i].time
-        }
-        return cookTime;
-    }
-
-    Component.onCompleted: {
-        console.log("state",state,typeof state)
-        root=JSON.parse(state)
-
-        cookSteps=JSON.parse(root.cookSteps)
-
-        if(root.recipeType>0)
-        {
-            var recipeDetail=QmlDevState.getRecipeDetails(root.recipeid)
-            if(recipeDetail.length!=0)
-            {
-                recipeImg.source="file:"+recipeDetail[0]
-                details.text=recipeDetail[1]
-            }
-
-            recipe.visible=true
-            dishName.text="菜名："+root.dishName
-            cookTime.text="烹饪用时："+getCookTime(cookSteps)+"分钟"
-            //            cookSteps[0].dishName=root.dishName
+            loaderCookReserve(cookWorkPosEnum.LEFT,cookItem)
         }
         else
         {
-            noRecipe.visible=true
-            listView.model=cookSteps
-            listView.height=cookSteps.length*100
-            cookPos=root.cookPos
+            if(systemSettings.cookDialog[5] === true)
+            {
+                if(CookFunc.isSteam(cookSteps))
+                    loaderSteamShow("请将食物放入左腔，水箱中加满水","开始",cookItem,5)
+                else
+                    loaderSteamShow("当前模式需要预热\n请您在左腔预热完成后再放入食材","开始",cookItem,5)
+                return
+            }
         }
+        startCooking(cookItem,cookSteps)
+        cookSteps=undefined
+        //        cookItem=undefined
+    }
+
+    Component.onCompleted: {
+        recipeDetail=QmlDevState.getRecipeDetails(cookItem.recipeid)
+        recipeImg.source="file:"+recipeDetail[0]
+        dishName.text=cookItem.dishName
+        details.text=recipeDetail[1]
     }
 
     PageBackBar{
         id:topBar
-        anchors.bottom:parent.bottom
-        name:"详情"
-        //        leftBtnText:qsTr("启动")
-        rightBtnText:qsTr("预约")
-        onClose:{
-            backPrePage()
-        }
-
-        onLeftClick:{
-            startCooking(root,cookSteps)
-        }
-        onRightClick:{
-            push_page("pageSteamBakeReserve",JSON.stringify(root))
-        }
+        anchors.top:parent.top
+        name:qsTr("菜谱详情")
     }
 
     //内容
     Item{
-        id:recipe
-        visible:false
-        enabled: visible
         width:parent.width
-        anchors.bottom:topBar.top
-        anchors.top: parent.top
+        anchors.top:topBar.bottom
+        anchors.bottom: parent.bottom
 
         Item{
             id:leftContent
-            width:220+60
-            height:parent.height
+            width: 160
+            height: 250
+            anchors.top:parent.top
+            anchors.topMargin: 60
+            anchors.left:parent.left
+            anchors.leftMargin: 60
             Image{
                 id:recipeImg
-                width: 220
-                height: 330
-                sourceSize.width: 220
-                sourceSize.height: 330
-                anchors.centerIn: parent
-                cache:false
+                anchors.fill: parent
                 asynchronous:true
                 smooth:false
+                cache:false
             }
             Image{
                 asynchronous:true
                 smooth:false
-                anchors.top: recipeImg.top
-                anchors.left: recipeImg.left
-                sourceSize.width: 88
-                sourceSize.height: 48
-                source: themesImagesPath+cookModeImg[CookFunc.getCookType(root.cookSteps)]
+                cache:false
+                width: recipeImg.width
+                anchors.bottom: recipeImg.bottom
+                anchors.horizontalCenter: recipeImg.horizontalCenter
+                source: themesPicturesPath+"recipename_checked_background.png"
+
+                Text{
+                    id:dishName
+                    width:parent.width - 10
+                    font.pixelSize: 26
+                    anchors.centerIn: parent
+                    color:"#fff"
+                    horizontalAlignment:Text.AlignHCenter
+                    verticalAlignment:Text.AlignVCenter
+                    elide:Text.ElideRight
+                }
             }
         }
 
         Item{
-            //            height:parent.height
-            anchors.top:parent.top
-            anchors.topMargin: 20
-            anchors.bottom:parent.bottom
-            anchors.bottomMargin: 20
+            width:730
+            height:parent.height
             anchors.left: leftContent.right
+            anchors.leftMargin: 30
 
-            anchors.right: parent.right
-            anchors.rightMargin: 40
-            Text{
-                id:dishName
-                anchors.top:parent.top
-                anchors.left: parent.left
-                font.pixelSize: 40
-                color:"#fff"
-            }
-            Text{
-                id:cookTime
-                anchors.top:dishName.bottom
-                //                anchors.topMargin: 5
-                anchors.left: parent.left
-                font.pixelSize: 40
-                color:"#fff"
-            }
+            TabBar {
+                id:tabBar
+                contentWidth:180
+                contentHeight:40
+                anchors.top: parent.top
+                anchors.topMargin: 12
 
-            PageScrollBarText{
-                id: details
+                background:Rectangle {
+                    color: "#2C2C2C"
+                    radius: 20
+                }
+
+                Repeater {
+                    model: ["食材", "步骤"]
+                    TabButton {
+                        width: 90
+                        height: parent.height
+                        background:Rectangle {
+                            color: index==tabBar.currentIndex?themesTextColor2:"transparent"
+                            radius: 20
+                        }
+                        Text{
+                            anchors.fill: parent
+                            text:modelData
+                            color:index==tabBar.currentIndex?"#000":themesTextColor2
+                            font.pixelSize: 26
+                            horizontalAlignment:Text.AlignHCenter
+                            verticalAlignment:Text.AlignVCenter
+                        }
+                    }
+                }
+            }
+            Rectangle {
                 width: parent.width
-                anchors.top: cookTime.bottom
-                anchors.topMargin: 15
+                height: 250
+                anchors.top: parent.top
+                anchors.topMargin: 64
+                color:"#2C2C2C"
+                StackLayout {
+                    anchors.fill: parent
+                    anchors.margins: 20
+                    currentIndex: tabBar.currentIndex
+                    Item{
+                        PageScrollBarText{
+                            id: details
+                            anchors.fill: parent
+                            anchors.rightMargin: 30
+                            scrollBarLeftMargin:30
+                        }
+                    }
+                    Item{
+                        SwipeView {
+                            id:swipeview
+                            anchors.fill: parent
+                            clip: true
+                            Repeater {
+                                model:recipeDetail[2]
+                                Flickable {
+                                    id: flick
+                                    contentWidth: detail.width
+                                    contentHeight: detail.height
+                                    clip: true
+                                    boundsBehavior:Flickable.StopAtBounds
+                                    Text {
+                                        font.pixelSize: 24
+                                        color:"#fff"
+                                        text:"步骤"+(index+1)+"/"+swipeview.count
+                                    }
+                                    Text {
+                                        id:detail
+                                        width: flick.width-30
+                                        anchors.top: parent.top
+                                        anchors.topMargin: 35
+                                        font.pixelSize: 30
+                                        color:"#fff"
+                                        wrapMode: Text.WrapAnywhere
+                                        text:modelData
+                                    }
+                                    ScrollBar.vertical:ScrollBar {
+                                        anchors.right: parent.right
+                                        background:Rectangle{
+                                            implicitWidth: 4
+                                            color:"#000"
+                                            radius: implicitWidth / 2
+                                        }
+                                        contentItem: Rectangle {
+                                            implicitWidth: 4
+                                            radius: implicitWidth / 2
+                                            color: themesTextColor
+                                        }
+                                    }
+                                }
+
+                            }
+                            Component.onCompleted:{
+                                contentItem.highlightMoveDuration = 80
+                                contentItem.highlightMoveVelocity = -1
+                                contentItem.boundsBehavior=Flickable.StopAtBounds
+                            }
+                        }
+                    }
+                }
+            }
+            PageIndicator {
+                visible: tabBar.currentIndex==1
+                count: swipeview.count
+                currentIndex: swipeview.currentIndex
                 anchors.bottom: parent.bottom
-                scrollBarLeftMargin:5
+                anchors.bottomMargin: 10
+                anchors.horizontalCenter: parent.horizontalCenter
+                interactive: false
+                delegate: Rectangle {
+                    color: index===swipeview.currentIndex?"#FFF":"#6F6F6F"
+                    implicitWidth: 8
+                    implicitHeight: 8
+                    radius: 4
+                }
+            }
+
+        }
+        PageLaunchBtn {
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.right: parent.right
+            anchors.rightMargin: 30
+            onStartUp:{
+                steamStart(false)
+            }
+            onReserve:{
+                steamStart(true)
             }
         }
-    }
-
-    Item{
-        id:noRecipe
-        visible:false
-        enabled: visible
-        width:parent.width
-        anchors.bottom:topBar.top
-        anchors.top: parent.top
-
-        Component {
-            id: multiDelegate
-            PageMultistageDelegate {
-                nameText:CookFunc.leftWorkModeName(modelData.mode)+"-"+modelData.temp+"℃"+"-"+modelData.time+"分钟"
-                closeVisible:false
-            }
-        }
-        ListView {
-            id: listView
-            width: parent.width
-            //            anchors.fill: parent
-            //            anchors.topMargin: 50
-            //            height: listView.model.length*100
-            anchors.centerIn: parent
-            interactive: false
-            delegate: multiDelegate
-            //            model:
-
-            focus: true
-        }
-
     }
 }

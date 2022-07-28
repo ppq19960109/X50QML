@@ -46,7 +46,7 @@ Item{
         onCurrentIndexChanged: {
             if(completed_state==false)
                 return
-            console.log("onCurrentIndexChanged",currentIndex)
+
             switch (currentIndex){
             case 0:
                 replace_page(pageHood)

@@ -61,7 +61,7 @@ Item {
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
 
-            wrapMode:Text.Wrap
+            wrapMode:Text.WrapAnywhere
         }
 
         Text{

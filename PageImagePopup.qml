@@ -58,7 +58,7 @@ Item {
             anchors.topMargin: 160
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
-            wrapMode:Text.Wrap
+            wrapMode:Text.WrapAnywhere
         }
     }
 }

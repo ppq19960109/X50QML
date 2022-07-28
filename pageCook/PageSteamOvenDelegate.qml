@@ -89,7 +89,6 @@ Item {
         }
     }
     Component.onCompleted:{
-        console.log("PageSteamOvenDelegate onCompleted",modePathView.currentIndex,modeIndex)
 
         if(modeIndex>=0)
         {

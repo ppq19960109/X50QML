@@ -53,6 +53,18 @@ Item {
                     anchors.topMargin: 83
                     anchors.horizontalCenter: parent.horizontalCenter
                     source: themesPicturesPath+modelData.background
+                    Image {
+                        asynchronous:true
+                        smooth:false
+                        source: themesPicturesPath+"icon_runing.png"
+                        RotationAnimation on rotation {
+                            from: 0
+                            to: 360
+                            duration: 8000 //旋转速度，默认250
+                            loops: Animation.Infinite //一直旋转
+                            running:true
+                        }
+                    }
                 }
                 onClicked: {
                     if(index==0)
@@ -145,15 +157,36 @@ Item {
                     anchors.topMargin: 83
                     anchors.horizontalCenter: parent.horizontalCenter
                     source: themesPicturesPath+modelData.background
+                    Image {
+                        asynchronous:true
+                        smooth:false
+                        source: themesPicturesPath+"icon_runing.png"
+                        RotationAnimation on rotation {
+                            from: 0
+                            to: 360
+                            duration: 8000 //旋转速度，默认250
+                            loops: Animation.Infinite //一直旋转
+                            running:true
+                        }
+                    }
+                }
+                Text{
+                    visible: index==0
+                    text:"00:30"
+                    color:themesTextColor
+                    font.pixelSize: 28
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.top: parent.top
+                    anchors.topMargin: 220
                 }
                 onClicked: {
                     if(index==0)
                     {
-
+                        push_page(pageCloseHeat)
                     }
                     else
                     {
-
+                        push_page(pageSmartCook)
                     }
                 }
             }

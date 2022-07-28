@@ -5,67 +5,181 @@ import "qrc:/pageCook"
 import "../"
 import "qrc:/SendFunc.js" as SendFunc
 Item {
-    property var root
+
     Component.onCompleted: {
-        var i
-        var hourArray = new Array
-        for(i=0; i< 3; ++i) {
-            hourArray.push(i+"小时")
-        }
-        hourPathView.model=hourArray
-        var minuteArray = new Array
-        for( i=0; i< 60; ++i) {
-            minuteArray.push(i+"分钟")
-        }
-        minutePathView.model=minuteArray
-        //        if(QmlDevState.state.RStoveTimingState===timingStateEnum.RUN)
-        //        {
-        //            QmlDevState.setState("RStoveTimingState",2)
-        //            var Data={}
-        //            Data.RStoveTimingOpera =timingOperationEnum.CANCEL
-        //            SendFunc.setToServer(Data)
-        //        }
 
     }
-    Connections { // 将目标对象信号与槽函数进行连接
-        id:connections
-        enabled:false
-        target: QmlDevState
-        onStateChanged: { // 处理目标对象信号的槽函数
-            console.log("PageCloseHeat onStateChanged",key)
-            if("SteamStart"==key)
-            {
-                steamStart()
+    Component{
+        id:component_heat
+        Item {
+            property int cookWorkPos:0
+
+            Component.onCompleted: {
+                var i
+                var hourArray = []
+                for(i=0; i<= 2; ++i) {
+                    hourArray.push(i)
+                }
+                hourPathView.model=hourArray
+                var minuteArray = []
+                for(i=0; i<= 60; ++i) {
+                    minuteArray.push(i)
+                }
+                minutePathView.model=minuteArray
             }
-            else if("RStoveStatus"==key)
-            {
-                if(value)
-                    permitStart()
-                else
-                    SendFunc.permitSteamStartStatus(0)
-            }
-        }
-    }
-    StackView.onActivated:{
-        connections.enabled=true
-    }
-    StackView.onDeactivated:{
-        connections.enabled=false
-    }
-    function permitStart()
-    {
-        if(hourPathView.currentIndex==0 && minutePathView.currentIndex==0)
-        {
-            if(permitStartStatus!=0)
-            {
-                SendFunc.permitSteamStartStatus(0)
-            }
-        }
-        else
-        {
-            if(permitStartStatus==0)
-            {
-                SendFunc.permitSteamStartStatus(1)
+
+            //内容
+            Rectangle{
+                width:730
+                height: 350
+                anchors.centerIn: parent
+                color: "#333333"
+                radius: 10
+
+                Button {
+                    width:closeImg.width+50
+                    height:closeImg.height+50
+                    anchors.top:parent.top
+                    anchors.right:parent.right
+                    Image {
+                        id:closeImg
+                        asynchronous:true
+                        smooth:false
+                        cache:false
+                        anchors.centerIn: parent
+                        source: themesPicturesPath+"icon_window_close.png"
+                    }
+                    background: null
+                    onClicked: {
+                        loaderMainHide()
+                    }
+                }
+
+                PageDivider{
+                    anchors.verticalCenter:row.verticalCenter
+                    anchors.verticalCenterOffset:-30
+                }
+                PageDivider{
+                    anchors.verticalCenter:row.verticalCenter
+                    anchors.verticalCenterOffset:30
+                }
+
+                Row {
+                    id:row
+                    width: parent.width
+                    height:222
+                    anchors.top: parent.top
+                    anchors.topMargin: 50
+                    anchors.left:parent.left
+                    anchors.leftMargin: 30
+                    spacing: 10
+
+                    Text{
+                        width:130
+                        color:"#fff"
+                        font.pixelSize: 30
+                        anchors.verticalCenter: parent.verticalCenter
+                        horizontalAlignment:Text.AlignHCenter
+                        verticalAlignment:Text.AlignVCenter
+                        text:qsTr(cookWorkPos==0?"左灶将在 ":"右灶将在")
+                    }
+                    PageCookPathView {
+                        id:hourPathView
+                        width: 200
+                        height:parent.height
+                        pathItemCount:3
+                        currentIndex:0
+                        Image {
+                            anchors.fill: parent
+                            visible: hourPathView.moving
+                            asynchronous:true
+                            smooth:false
+                            anchors.centerIn: parent
+                            source: themesPicturesPath+"steamoven/"+"roll_background.png"
+                        }
+                        Text{
+                            text:qsTr("小时")
+                            color:themesTextColor
+                            font.pixelSize: 24
+                            anchors.centerIn: parent
+                            anchors.horizontalCenterOffset: 60
+                        }
+                    }
+                    PageCookPathView {
+                        id:minutePathView
+                        width: 200
+                        height:parent.height
+                        pathItemCount:3
+                        Image {
+                            anchors.fill: parent
+                            visible: minutePathView.moving
+                            asynchronous:true
+                            smooth:false
+                            anchors.centerIn: parent
+                            source: themesPicturesPath+"steamoven/"+"roll_background.png"
+                        }
+                        Text{
+                            text:qsTr("分钟")
+                            color:themesTextColor
+                            font.pixelSize: 24
+                            anchors.centerIn: parent
+                            anchors.horizontalCenterOffset: 60
+                        }
+                    }
+                    Text{
+                        width:100
+                        color:"#fff"
+                        font.pixelSize: 30
+                        anchors.verticalCenter: parent.verticalCenter
+                        horizontalAlignment:Text.AlignHCenter
+                        verticalAlignment:Text.AlignVCenter
+                        text:qsTr("后关火")
+                    }
+                }
+                Item {
+                    width:80+140*2
+                    height: 50
+                    anchors.bottom: parent.bottom
+                    anchors.bottomMargin: 20
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    Button {
+                        width:140
+                        height: 50
+                        anchors.left: parent.left
+                        background: Rectangle{
+                            color:themesTextColor2
+                            radius: 25
+                        }
+                        Text{
+                            text:qsTr("取消")
+                            color:"#000"
+                            font.pixelSize: 34
+                            anchors.centerIn: parent
+                        }
+                        onClicked: {
+                            loaderMainHide()
+                        }
+                    }
+                    Button {
+                        width:140
+                        height: 50
+                        anchors.right: parent.right
+                        background: Rectangle{
+                            color:themesTextColor2
+                            radius: 25
+                        }
+                        Text{
+                            text:qsTr("开始")
+                            color:"#000"
+                            font.pixelSize: 34
+                            anchors.centerIn: parent
+                        }
+                        onClicked: {
+
+                            loaderMainHide()
+                        }
+                    }
+                }
             }
         }
     }
@@ -95,97 +209,109 @@ Item {
 
     PageBackBar{
         id:topBar
-        anchors.bottom:parent.bottom
-        name:"定时关火  <font size='30px'>(右灶开启后才可定时关火)</font>"
-        leftBtnText:qsTr("")
-        //                rightBtnText:qsTr("启动")
-        onClose:{
-            backPrePage()
-        }
+        anchors.top:parent.top
+        name:"定时关火"
+    }
 
-        onLeftClick:{
+    Row {
+        width: 309*2+124
+        height: 309
+        anchors.top: topBar.bottom
+        anchors.topMargin: 20
+        anchors.horizontalCenter: parent.horizontalCenter
+        spacing: 124
 
-        }
-        onRightClick:{
-            steamStart()
+        Repeater {
+            model: ["左灶","右灶"]
+            Button{
+                width: 309
+                height: width
+
+                background:Image {
+                    asynchronous:true
+                    smooth:false
+                    source: themesPicturesPath+"icon_close_heat.png"
+                }
+                Item
+                {
+                    visible: {
+                        if(index==0)
+                        {
+                            return false
+                        }
+                        else
+                        {
+                            return true
+                        }
+                    }
+                    anchors.fill: parent
+                    Text{
+                        text:modelData
+                        color:"#fff"
+                        font.pixelSize: 40
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        anchors.top: parent.top
+                        anchors.topMargin: 105
+                    }
+                    Text{
+                        text:"定时关火"
+                        color:"#fff"
+                        font.pixelSize: 30
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        anchors.top: parent.top
+                        anchors.topMargin: 157
+                    }
+                }
+                Item
+                {
+                    visible: {
+                        if(index==0)
+                        {
+                            return true
+                        }
+                        else
+                        {
+                            return false
+                        }
+                    }
+                    anchors.fill: parent
+                    Text{
+                        text:modelData+"将在"
+                        color:"#fff"
+                        font.pixelSize: 30
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        anchors.top: parent.top
+                        anchors.topMargin: 90
+                    }
+                    Text{
+                        text:"10:11"
+                        color:themesTextColor
+                        font.pixelSize: 50
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        anchors.top: parent.top
+                        anchors.topMargin: 135
+                    }
+                    Text{
+                        text:"后关火"
+                        color:"#fff"
+                        font.pixelSize: 30
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        anchors.top: parent.top
+                        anchors.topMargin: 188
+                    }
+                }
+                onClicked: {
+                    if(index==0)
+                    {
+
+                    }
+                    else
+                    {
+
+                    }
+                }
+            }
         }
     }
 
-    //内容
-    Item{
-        width:parent.width
-        anchors.bottom:topBar.top
-        anchors.top: parent.top
-
-        PageDivider{
-            anchors.top:parent.top
-            anchors.topMargin:rowPathView.height/3+40
-        }
-        PageDivider{
-            anchors.top:parent.top
-            anchors.topMargin:rowPathView.height/3*2+40
-        }
-
-        Row {
-            id:rowPathView
-            width: parent.width-148
-            height:parent.height-71
-            anchors.top:parent.top
-            anchors.bottom: parent.bottom
-            anchors.centerIn: parent
-            spacing: 0
-
-            DataPathView {
-                id:hourPathView
-                width: 236
-                height:parent.height
-                currentIndex:0
-                Image {
-                    visible: hourPathView.moving
-                    asynchronous:true
-                    smooth:false
-                    anchors.centerIn: parent
-                    source: "qrc:/x50/steam/temp-time-change-background.png"
-                }
-                onValueChanged: {
-                    console.log(index,valueName)
-                    permitStart()
-                }
-                Component.onCompleted:{
-                    if(QmlDevState.state.RStoveTimingState===timingStateEnum.RUN)
-                        currentIndex=Math.floor(QmlDevState.state.RStoveTimingLeft/60)
-                }
-            }
-            DataPathView {
-                id:minutePathView
-                width: 236
-                height:parent.height
-                //                currentIndex:1
-                Image {
-                    visible: minutePathView.moving
-                    asynchronous:true
-                    smooth:false
-                    anchors.centerIn: parent
-                    source: "qrc:/x50/steam/temp-time-change-background.png"
-                }
-                onValueChanged: {
-                    console.log(index,valueName)
-                    permitStart()
-                }
-                Component.onCompleted:{
-                    if(QmlDevState.state.RStoveTimingState===timingStateEnum.RUN)
-                        currentIndex=QmlDevState.state.RStoveTimingLeft%60
-                }
-            }
-            Text{
-                width:180
-                color:themesTextColor2
-                font.pixelSize: 35
-                anchors.verticalCenter: parent.verticalCenter
-                horizontalAlignment:Text.AlignHCenter
-                verticalAlignment:Text.AlignVCenter
-                text:qsTr("后定时关火")
-            }
-        }
-    }
 }

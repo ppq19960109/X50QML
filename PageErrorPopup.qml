@@ -59,7 +59,7 @@ Item {
             anchors.horizontalCenter: parent.horizontalCenter
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
-            wrapMode:Text.Wrap
+            wrapMode:Text.WrapAnywhere
         }
 
         Text{

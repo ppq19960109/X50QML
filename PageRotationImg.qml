@@ -16,7 +16,6 @@ Image {
         loops: Animation.Infinite
         duration: 8000
         onDurationChanged: {
-            console.log("onDurationChanged",busyImg.visible,duration,running)
             if(duration>0)
                 restart()
         }

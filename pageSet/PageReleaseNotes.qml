@@ -32,7 +32,7 @@ Item {
         //            font.pixelSize: 35
         //            lineHeight:1.2
 
-        //            wrapMode:Text.Wrap
+        //            wrapMode:Text.WrapAnywhere
         //        }
 
         PageScrollBarText{

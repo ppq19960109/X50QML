@@ -46,7 +46,7 @@ Item {
             text:loadPowerState[QmlDevState.state.LoadPowerState]
             color:"#fff"
             font.pixelSize: 40
-            wrapMode: Text.WordWrap
+            wrapMode: Text.WrapAnywhere
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
         }
