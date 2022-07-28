@@ -8,7 +8,6 @@ Item {
 
     function updatePaint()
     {
-        console.log("updatePaint:")
         canvas.requestPaint()
     }
 

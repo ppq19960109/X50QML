@@ -33,7 +33,7 @@ Item {
         target: QmlDevState
 
         onStateChanged: { // 处理目标对象信号的槽函数
-            console.log("page PageGetQuad:",key)
+//            console.log("page PageGetQuad:",key)
 
             if(step==0 && "WifiState"==key)
             {
@@ -95,6 +95,8 @@ Item {
                 retry.visible=true
                 productionTest.visible=true
             }
+            key=null
+            value=null
         }
     }
     Item{

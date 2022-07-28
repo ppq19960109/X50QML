@@ -137,13 +137,8 @@ Item{
             }
         }
         Component.onCompleted:{
-            contentItem.highlightMoveDuration = 40       //将移动时间设为0
+            contentItem.highlightMoveDuration = 80       //将移动时间设为0
             contentItem.highlightMoveVelocity = -1
-        }
-        onCurrentIndexChanged:{
-            console.log("onCurrentIndexChanged",currentIndex)
-            //            if(currentIndex>=10)
-            //                backPrePage()
         }
 
     }

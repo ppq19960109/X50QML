@@ -45,7 +45,7 @@ Item {
             propagateComposedEvents: true
 
             onPressed: {
-                console.warn("row onPressed.....",mouse.x,mouse.y)
+//                console.log("row onPressed.....",mouse.x,mouse.y)
                 row.z=1
                 col.z=0
                 rowCanvas.lastX = mouseX//鼠标位置
@@ -55,7 +55,7 @@ Item {
                 touchExited=0
             }
             onReleased: {
-                console.warn("row onReleased......",mouse.x,mouse.y)
+//                console.log("row onReleased......",mouse.x,mouse.y)
                 rowCanvas.context.reset()
                 //                rowCanvas.requestPaint()
                 if(touchExited<3 && rowPos>0 && Math.abs(mouse.x-pressedX)>=600)
@@ -63,12 +63,11 @@ Item {
                 rowPos=0
             }
             onPositionChanged:{
-                console.warn("row onPositionChanged....",mouse.x,mouse.y)
+//                console.log("row onPositionChanged....",mouse.x,mouse.y)
                 rowPos=1
                 rowCanvas.requestPaint()//重绘
             }
             onExited:{
-                console.warn("onExited")
                 ++touchExited
             }
         }
@@ -123,7 +122,7 @@ Item {
             propagateComposedEvents: true
 
             onPressed: {
-                console.warn("col onPressed.....",mouse.x,mouse.y)
+//                console.log("col onPressed.....",mouse.x,mouse.y)
                 row.z=0
                 col.z=1
                 colCanvas.lastX = mouseX//鼠标位置
@@ -133,7 +132,7 @@ Item {
                 touchExited=0
             }
             onReleased: {
-                console.warn("col onReleased......",mouse.x,mouse.y)
+//                console.log("col onReleased......",mouse.x,mouse.y)
                 colCanvas.context.reset()
                 //                colCanvas.requestPaint()
                 if( touchExited<3 && colPos>0&& Math.abs(mouse.y-pressedY)>=360)
@@ -141,12 +140,11 @@ Item {
                 colPos=0
             }
             onPositionChanged:{
-                console.warn("col onPositionChanged....",mouse.x,mouse.y)
+//                console.log("col onPositionChanged....",mouse.x,mouse.y)
                 colPos=1
                 colCanvas.requestPaint()//重绘
             }
             onExited:{
-                console.warn("onExited")
                 ++touchExited
             }
         }

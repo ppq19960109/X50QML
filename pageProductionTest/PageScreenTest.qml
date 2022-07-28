@@ -9,22 +9,18 @@ Item {
     }
     function clickedAgingfunc(status)
     {
-        console.log("clickedAgingfunc:"+status);
         testSettings.productionTestAging=status
     }
     function clickedTouchFunc(status)
     {
-        console.log("clickedTouchFunc:"+status);
         testSettings.productionTestTouch=status
     }
     function clickedLcdFunc(status)
     {
-        console.log("clickedLcdFunc:"+status);
         testSettings.productionTestLcd=status
     }
     function clickedLightFunc(status)
     {
-        console.log("clickedLightFunc:"+status);
         testSettings.productionTestLight=status
     }
 

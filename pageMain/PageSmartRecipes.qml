@@ -17,7 +17,7 @@ Item {
             if("SteamStart"==key)
             {
                 var root=recipeListView.model[recipeListView.currentIndex]
-                console.log("SteamStart:",JSON.stringify(root),recipeListView.currentIndex)
+//                console.log("SteamStart:",JSON.stringify(root),recipeListView.currentIndex)
                 var cookSteps=JSON.parse(root.cookSteps)
                 if(systemSettings.cookDialog[5]>0)
                 {
@@ -29,6 +29,8 @@ Item {
                 }
                 startCooking(root,cookSteps)
             }
+            key=null
+            value=null
         }
     }
     StackView.onActivated:{
@@ -42,6 +44,10 @@ Item {
         getRecipe(menuList.currentIndex)
         SendFunc.permitSteamStartStatus(1)
     }
+//    Component.onDestruction: {
+//        menuList.model=null
+//        recipeListView.model=null
+//    }
     function getRecipe(index)
     {
         recipeListView.model=QmlDevState.getRecipe(index);
@@ -104,7 +110,6 @@ Item {
                             color:menuList.currentIndex===index?themesTextColor:themesTextColor2
                         }
                         onClicked: {
-                            console.log("menuList",index)
                             if(menuList.currentIndex!=index)
                             {
                                 menuList.currentIndex=index
@@ -129,7 +134,7 @@ Item {
             anchors.right: parent.right
             ListView{
                 id: recipeListView
-                model:listModel
+//                model:listModel
                 width:parent.width-20
                 height:parent.height
                 anchors.left: parent.left

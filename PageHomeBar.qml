@@ -151,7 +151,7 @@ Item {
                 anchors.fill: parent
 
                 onClicked: {
-                    console.warn("closeHeat onClicked",mouse.x,mouse.y)
+//                    console.log("closeHeat onClicked",mouse.x,mouse.y)
                     if(time.visible==false)
                     {
                         if(mouse.x>closeHeatImg.width+40)

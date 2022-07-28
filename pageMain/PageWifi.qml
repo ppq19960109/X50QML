@@ -16,8 +16,6 @@ Item {
 
     function wifi_scan_timer_reset()
     {
-        console.log("wifi_scan_timer_reset")
-
         SendFunc.getCurWifi()
         SendFunc.scanRWifi()
         //        SendFunc.scanWifi()
@@ -29,7 +27,7 @@ Item {
     Connections { // 将目标对象信号与槽函数进行连接
         target: window
         onWifiConnectingChanged:{
-            console.log("onWifiConnectingChanged1:",wifiConnecting,wifiConnected,timer_wifi_connecting.running)
+            //            console.log("onWifiConnectingChanged1:",wifiConnecting,wifiConnected,timer_wifi_connecting.running)
             if(wifiConnecting==true)
                 timer_wifi_connecting.restart()
             else
@@ -51,7 +49,7 @@ Item {
                 wifi_scan_timer_reset()
                 wifiInputConnecting=false
             }
-            console.log("onWifiConnectingChanged2:",wifiConnecting,timer_wifi_connecting.running)
+            //            console.log("onWifiConnectingChanged2:",wifiConnecting,timer_wifi_connecting.running)
         }
     }
 
@@ -59,11 +57,11 @@ Item {
         target: QmlDevState
 
         onStateChanged: { // 处理目标对象信号的槽函数
-            console.log("page wifi onStateChanged:",key)
+            //            console.log("page wifi onStateChanged:",key)
 
             if("WifiState"==key)
             {
-                console.log("page wifi WifiState:",value,wifiConnected,wifiConnectInfo.ssid)
+                //                console.log("page wifi WifiState:",value,wifiConnected,wifiConnectInfo.ssid)
                 if(value > 1)
                 {
                     if(value==2|| value==5) //
@@ -118,6 +116,8 @@ Item {
                 if(value==1)
                     wifi_scan_timer_reset()
             }
+            key=null
+            value=null
         }
     }
 
@@ -135,6 +135,7 @@ Item {
         }
         if(loader_main.sourceComponent===component_wifiInput)
             loader_main.sourceComponent = undefined
+//        listView.model=null
     }
     Component.onCompleted: {
         //        VirtualKeyboardSettings.styleName = "retro"
@@ -269,7 +270,7 @@ Item {
                     }
                 }
                 onCheckedChanged: {
-                    console.log("wifi_switch:" + wifi_switch.checked,wifi_switch.width,indicator.width)
+                    //                    console.log("wifi_switch:" + wifi_switch.checked,wifi_switch.width,indicator.width)
                     if(systemSettings.wifiEnable!=wifi_switch.checked)
                         SendFunc.enableWifi(wifi_switch.checked)
                     //                    if(wifi_switch.checked)
@@ -379,7 +380,7 @@ Item {
             MouseArea{
                 anchors.fill: parent
                 onClicked: {
-                    console.log("WiFi name:" + wifi_name.text,wifiConnecting)
+                    //                    console.log("WiFi name:" + wifi_name.text,wifiConnecting)
                     if(connected==0)
                     {
                         if(flags==0)
@@ -553,7 +554,7 @@ Item {
                     }
                     background: Item {}
                     onClicked: {
-                        console.log("Button connect:" , wifi_ssid,textField.text,wifi_flags)
+                        //                        console.log("Button connect:" , wifi_ssid,textField.text,wifi_flags)
                         if(permit_connect)
                         {
                             SendFunc.connectWiFi(wifi_ssid,textField.text,wifi_flags)
@@ -631,7 +632,6 @@ Item {
         loader_main.item.wifi_ssid=wifiInfo.ssid
         loader_main.item.wifi_flags=wifiInfo.flags
         loader_main.item.index=index
-        console.log("showWifiInput:" , wifiInfo.ssid,wifiInfo.flags)
     }
     function dismissWifiInput(){
         if(loader_main.sourceComponent===component_wifiInput)

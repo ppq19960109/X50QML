@@ -9,7 +9,7 @@ Item {
     property alias hintWidth: hint.width
     property alias hintHeight: hint.height
     property alias closeBtnVisible: closeBtn.visible
-    signal cancel(var flag)
+    signal cancel(int flag)
     signal confirm()
     MouseArea{
         anchors.fill: parent

@@ -8,7 +8,7 @@ QrcodeEn::QrcodeEn()
 
 QImage QrcodeEn::encodeImage(const QString& qrTxt, int bulk,const QString& saveName)
 {
-    qDebug() << "QrcodeEn encodeImage";
+//    qDebug() << "QrcodeEn encodeImage";
     QImage ret;
 #ifdef USE_RK3308
     QRcode* qr = QRcode_encodeString(qrTxt.toUtf8(), 0, QR_ECLEVEL_L, QR_MODE_8, 1);

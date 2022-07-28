@@ -21,7 +21,6 @@ Item {
     signal confirm()
     function updatePaint()
     {
-        //        console.log("updatePaint:",device,mode.text,percent,roate)
         canvas.requestPaint()
     }
     onWorkStateChanged: {
@@ -219,7 +218,6 @@ Item {
                 text: qsTr("返回")
             }
             onClicked:{
-                console.log("PageCirProgressBar device",device)
                 confirm()
             }
         }

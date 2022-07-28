@@ -128,6 +128,7 @@ QVariantList Backlight::getAllFileName(QString path)
             pathList.append(getAllFileName(path_tmp));
         }
     }
+    delete fileInfo;
     qDebug() << "getAllFileName:" <<pathList << "size:" << pathList.size() <<endl;
     return pathList;
 }

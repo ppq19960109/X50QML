@@ -30,6 +30,8 @@ Item {
                 }
                 startCooking(root,cookSteps)
             }
+            key=null
+            value=null
         }
     }
     StackView.onActivated:{
@@ -49,7 +51,7 @@ Item {
     }
 
     Component.onCompleted: {
-        console.log("state",state,typeof state)
+//        console.log("state",state,typeof state)
         root=JSON.parse(state)
 
         cookSteps=JSON.parse(root.cookSteps)
@@ -76,7 +78,9 @@ Item {
             cookPos=root.cookPos
         }
     }
-
+//    Component.onDestruction: {
+//        listView.model=null
+//    }
     PageBackBar{
         id:topBar
         anchors.bottom:parent.bottom

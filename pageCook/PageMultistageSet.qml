@@ -51,6 +51,8 @@ Item {
             {
                 steamStart()
             }
+            key=null
+            value=null
         }
     }
     StackView.onActivated:{
@@ -59,10 +61,10 @@ Item {
     StackView.onDeactivated:{
         connections.enabled=false
     }
-    Component.onCompleted: {
-        console.log("PageMultistage onCompleted",systemSettings.multistageRemind)
-    }
-
+//    Component.onDestruction: {
+//        listView.model=null
+//        listModel.clear()
+//    }
     PageBackBar{
         id:topBar
         anchors.bottom:parent.bottom
@@ -173,7 +175,7 @@ Item {
 
             footer: footerView
             focus: true
-//            boundsBehavior:Flickable.StopAtBounds
+            //            boundsBehavior:Flickable.StopAtBounds
             //            highlightRangeMode: ListView.StrictlyEnforceRange
         }
     }
@@ -206,12 +208,12 @@ Item {
         Connections {
             target: loader_tanchuang.item
             onShowListData:{
-                console.log("onShowListData",listData.mode,listData.temp,listData.time,listView.count)
+                //                console.log("onShowListData",listData.mode,listData.temp,listData.time,listView.count)
 
                 if(listClickIndex >= listView.count){
                     listView.model.append(listData)
                 }else{
-                    console.log("onShowListData listClickIndex",listClickIndex)
+                    //                    console.log("onShowListData listClickIndex",listClickIndex)
 
                     listView.model.get(listClickIndex).mode=listData.mode;
                     listView.model.get(listClickIndex).temp=listData.temp;

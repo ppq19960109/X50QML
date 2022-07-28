@@ -8,7 +8,7 @@ Item {
     property var root
     function steamStart()
     {
-        console.log("PageSteamBakeReserve",hourPathView.model[hourPathView.currentIndex],minutePathView.model[minutePathView.currentIndex])
+//        console.log("PageSteamBakeReserve",hourPathView.model[hourPathView.currentIndex],minutePathView.model[minutePathView.currentIndex])
         root.orderTime=hourPathView.currentIndex*60+minutePathView.currentIndex
         if(root.cookSteps=="")
         {
@@ -43,11 +43,12 @@ Item {
         enabled:false
         target: QmlDevState
         onStateChanged: { // 处理目标对象信号的槽函数
-            console.log("PageSteamBakeReserve onStateChanged",key)
             if("SteamStart"==key)
             {
                 steamStart()
             }
+            key=null
+            value=null
         }
     }
     StackView.onActivated:{
@@ -69,7 +70,7 @@ Item {
         }
         minutePathView.model=minuteArray
 
-        console.log("state",state,typeof state)
+//        console.log("state",state,typeof state)
         root=JSON.parse(state)
         SendFunc.permitSteamStartStatus(1)
     }
@@ -108,9 +109,6 @@ Item {
             anchors.topMargin:rowPathView.height/3*2+40
         }
 
-        ListModel {
-            id:modeListModel
-        }
         Row {
             id:rowPathView
             width: parent.width-148

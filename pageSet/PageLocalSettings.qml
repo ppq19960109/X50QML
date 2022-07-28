@@ -4,11 +4,6 @@ import "../"
 import "qrc:/SendFunc.js" as SendFunc
 Item {
 
-    Component.onCompleted: {
-        console.log("PageLocalSettings light",Backlight.backlightGet())
-        //        lightSlider.value=Backlight.backlightGet()
-    }
-
     PageBackBar{
         id:topBar
         anchors.bottom:parent.bottom
@@ -61,7 +56,7 @@ Item {
                 value: Backlight.backlightGet()
 
                 onValueSlider: {
-                    console.log("lightSlider:",value)
+//                    console.log("lightSlider:",value)
                     systemSettings.brightness=value
                 }
             }
@@ -107,7 +102,7 @@ Item {
                 value: systemSettings.sleepTime
                 displayText:value+"分钟"
                 onValueSlider: {
-                    console.log("dormantSlider:",value)
+//                    console.log("dormantSlider:",value)
                     systemSettings.sleepTime=value
                 }
             }

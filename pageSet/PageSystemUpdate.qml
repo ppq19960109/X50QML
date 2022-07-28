@@ -10,7 +10,7 @@ Item {
         target: QmlDevState
 
         onStateChanged: { // 处理目标对象信号的槽函数
-            console.log("PageSystemUpdate onStateChanged:",key)
+//            console.log("PageSystemUpdate onStateChanged:",key)
 
             if("OTAState"==key)
             {
@@ -39,6 +39,8 @@ Item {
             {
 
             }
+            key=null
+            value=null
         }
     }
     Component.onCompleted: {

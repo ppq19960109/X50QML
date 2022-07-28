@@ -69,7 +69,7 @@ Item {
 //        focus: true
         preferredHighlightBegin: 0.5;
         preferredHighlightEnd: 0.5;
-        highlightMoveDuration:160
+        highlightMoveDuration:200
         highlightRangeMode: PathView.StrictlyEnforceRange
         maximumFlickVelocity:2400
 //        model:textModel
@@ -85,7 +85,7 @@ Item {
 
         }
         onMovementEnded: {
-            console.log("currentIndex:",currentIndex);
+//            console.log("currentIndex:",currentIndex);
             valueChanged(currentIndex,"model");
         }
 

@@ -97,7 +97,7 @@ Item {
         target: QmlDevState
 
         onStateChanged: { // 处理目标对象信号的槽函数
-            console.log("page PageIntelligentDetection:",key,value,step)
+//            console.log("page PageIntelligentDetection:",key,value,step)
             if("PwrSWVersion"==key && step==0)
             {
                 step=1
@@ -154,6 +154,8 @@ Item {
                     resetText.text="成功"
                 }
             }
+            key=null
+            value=null
         }
     }
     Item{
@@ -186,7 +188,6 @@ Item {
                 anchors.centerIn: parent
             }
             onClicked: {
-                console.log("onClicked")
                 backPrePage()
             }
         }

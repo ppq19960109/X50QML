@@ -180,7 +180,6 @@ Item {
     Connections { // 将目标对象信号与槽函数进行连接
         target: QmlDevState
         onLocalConnectedChanged:{
-            console.log("page home onLocalConnectedChanged",value)
             if(value > 0)
             {
                 loaderErrorHide()
@@ -206,10 +205,11 @@ Item {
                 loaderErrorShow("通讯板故障！","请拨打售后电话<font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员",false)
                 standbyWakeup()
             }
+            value=null
         }
         onStateChanged: { // 处理目标对象信号的槽函数
             var ret
-            console.log("page home onStateChanged",key,value)
+            //            console.log("page home onStateChanged",key,value)
             if("SysPower"==key)
             {
                 if(sysPower<0 && value==0)
@@ -238,7 +238,6 @@ Item {
             }
             else if("LStOvState"==key)
             {
-                console.log("LStOvState",value)
                 ret=isExistView("pageSteamBakeRun")
                 if(value > 0)
                 {
@@ -280,7 +279,6 @@ Item {
             }
             else if("RStOvState"==key)
             {
-                console.log("RStOvState",value)
                 ret=isExistView("pageSteamBakeRun")
                 if(value > 0)
                 {
@@ -357,7 +355,6 @@ Item {
             }
             else if("ErrorCodeShow"==key)
             {
-                console.log("ErrorCodeShow:",value)
                 if(lastErrorCodeShow!=value)
                 {
                     if(value>0)
@@ -380,7 +377,6 @@ Item {
                     wifiConnected=false
                     wifiModel.clear()
                 }
-                console.log("WifiEnable",value)
                 if(productionTestFlag==2 && value > 0)
                 {
                     getQuadScanWifi()
@@ -414,7 +410,7 @@ Item {
                     }
                     wifiConnecting=false
                 }
-                console.log("WifiState",value,wifiConnected,wifiConnecting)
+                //                console.log("WifiState",value,wifiConnected,wifiConnecting)
             }
             else if("ssid"==key)
             {
@@ -428,7 +424,7 @@ Item {
                     //                    {
                     //                        decode_ssid=value
                     //                    }
-                    console.log("decode_ssid",decode_ssid,wifiConnectInfo.ssid)
+                    //                    console.log("decode_ssid",decode_ssid,wifiConnectInfo.ssid)
                     if(decode_ssid==wifiConnectInfo.ssid)
                     {
                         WifiFunc.addWifiInfo(wifiConnectInfo)
@@ -516,11 +512,10 @@ Item {
             }
             else if(("OTAProgress"==key))
             {
-                console.log("OTAProgress:",value)
                 loaderUpdateProgress(value);
-                if(value==100)
-                {
-                }
+                //                if(value==100)
+                //                {
+                //                }
             }
             else if( "DeviceSecret"==key && productionTestFlag==1)
             {
@@ -569,6 +564,9 @@ Item {
                         load_page("pageDemoMode")
                 }
             }
+            ret=null
+            key=null
+            value=null
         }
     }
 
@@ -597,14 +595,13 @@ Item {
             }
             else
                 wifiModel.append(result)
-            //            console.log("result:",QmlDevState.state.bssid,element.bssid,element.rssi,result.connected,result.ssid,result.level,result.flags)
         }
 
-        if(bssid==="")
-        {
-            console.log("setWifiList:",wifiConnected,bssid)
-            //            wifiConnected=false
-        }
+        //        if(bssid==="")
+        //        {
+        //            console.log("setWifiList:",wifiConnected,bssid)
+        //            wifiConnected=false
+        //        }
     }
 
     Component{
@@ -644,7 +641,6 @@ Item {
     }
     function getQuadScanWifi()
     {
-        console.log("getQuadScanWifi",productionTestFlag)
         SendFunc.scanWifi()
         timer_scanwifi.restart()
     }
@@ -705,11 +701,11 @@ Item {
         //       loaderUpdateResultShow("系统已更新至最新版本\n"+"1.2.0")
     }
     StackView.onActivating:{
-        console.log("PageHome StackView onActivating")
+//        console.log("PageHome StackView onActivating")
         SendFunc.permitSteamStartStatus(0)
     }
     StackView.onActivated:{
-        console.log("PageHome StackView onActivated")
+//        console.log("PageHome StackView onActivated")
         if(permitStartStatus>0)
             SendFunc.permitSteamStartStatus(0)
     }
@@ -737,7 +733,7 @@ Item {
                 //                contentItem.highlightRangeMode=istView.StrictlyEnforceRange
                 //                contentItem.highlightResizeDuration= 0
                 //                contentItem.highlightResizeVelocity=-1
-                contentItem.highlightMoveDuration = 40       //将移动时间设为0
+                contentItem.highlightMoveDuration = 80       //将移动时间设为0
                 contentItem.highlightMoveVelocity = -1
                 //                contentItem.snapMode=ListView.SnapOneItem
                 contentItem.boundsBehavior=Flickable.StopAtBounds
@@ -778,7 +774,7 @@ Item {
             source: themesImagesPath+"previouspage-background.png"
         }
         onClicked:{
-            console.log('preBtn',swipeview.currentIndex)
+//            console.log('preBtn',swipeview.currentIndex)
             if(swipeview.currentIndex>0){
                 //                    swipeview.currentIndex-=1
                 //                    swipeview.setCurrentIndex(swipeview.currentIndex-1)
@@ -806,7 +802,7 @@ Item {
             source: themesImagesPath+"nextpage-background.png"
         }
         onClicked:{
-            console.log('nextBtn',swipeview.currentIndex)
+//            console.log('nextBtn',swipeview.currentIndex)
             if(swipeview.currentIndex < swipeview.count){
                 //                    swipeview.currentIndex+=1
                 //                    swipeview.setCurrentIndex(swipeview.currentIndex+1)

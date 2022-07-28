@@ -21,10 +21,10 @@ Rectangle {
 
     function steamStart()
     {
-        console.log("PageSteamBakeBase",modePathView.currentIndex,modePathView.model.get(modePathView.currentIndex).modelData,tempPathView.model[tempPathView.currentIndex],timePathView.model[timePathView.currentIndex])
+        //        console.log("PageSteamBakeBase",modePathView.currentIndex,modePathView.model.get(modePathView.currentIndex).modelData,tempPathView.model[tempPathView.currentIndex],timePathView.model[timePathView.currentIndex])
         var list = []
         var steps={}
-//        steps.device=root.device
+        //        steps.device=root.device
         steps.mode=workModeNumberEnum[modePathView.model.get(modePathView.currentIndex).modelData]
         steps.temp=parseInt(tempPathView.model[tempPathView.currentIndex])
         steps.time=parseInt(timePathView.model[timePathView.currentIndex])
@@ -34,7 +34,7 @@ Rectangle {
         para.cookPos=root.device
         para.dishName=CookFunc.getDishName(list)
         para.cookSteps=JSON.stringify(list)
-        console.log("para:",JSON.stringify(para),systemSettings.leftCookDialog,systemSettings.rightCookDialog,root.device)
+        //        console.log("para:",JSON.stringify(para),systemSettings.leftCookDialog,systemSettings.rightCookDialog,root.device)
 
         if(para.cookPos===cookWorkPosEnum.LEFT)
         {
@@ -63,12 +63,12 @@ Rectangle {
         enabled:false
         target: QmlDevState
         onStateChanged: { // 处理目标对象信号的槽函数
-            console.log("PageSteamBakeBase onStateChanged",key)
             if("SteamStart"==key)
             {
-                console.log("PageSteamBakeBase onStateChanged",value)
                 steamStart()
             }
+            key=null
+            value=null
         }
     }
     StackView.onActivated:{
@@ -77,8 +77,12 @@ Rectangle {
     StackView.onDeactivated:{
         connections.enabled=false
     }
+
+    ListModel {
+        id:modeListModel
+    }
     Component.onCompleted: {
-        console.log("PageSteamBakeBase onCompleted")
+//        console.log("PageSteamBakeBase onCompleted")
         var i
 
         //        var timeArray = []
@@ -89,7 +93,7 @@ Rectangle {
         //            timeArray.push(i+"分钟")
         //        }
         //        timePathView.model=timeArray
-//        console.log("state",state,typeof state)
+        //        console.log("state",state,typeof state)
         if(multiMode==0 )//|| undefined != state || null != state || "" != state
         {
             root=JSON.parse(state)
@@ -116,7 +120,12 @@ Rectangle {
             }
         }
     }
-
+    //Component.onDestruction: {
+    //    rowPathView.model=null
+    //    tempPathView.model=null
+    //    timePathView.model=null
+    //    modeListModel.clear()
+    //}
     //    PageGradient{
     //        anchors.fill: parent
     //        radius:0
@@ -127,7 +136,7 @@ Rectangle {
         id:topBar
         anchors.bottom:parent.bottom
         name:""
-//        leftBtnText:qsTr("启动")
+        //        leftBtnText:qsTr("启动")
         rightBtnText:qsTr("预约")
         onClose:{
 
@@ -189,10 +198,6 @@ Rectangle {
             anchors.topMargin:rowPathView.height/3*2+30
         }
 
-        ListModel {
-            id:modeListModel
-        }
-
         Row {
             id:rowPathView
             width: parent.width-36
@@ -211,12 +216,11 @@ Rectangle {
                     visible: modePathView.moving
                     asynchronous:true
                     smooth:false
-//                    anchors.centerIn: parent
+                    //                    anchors.centerIn: parent
                     source: "qrc:/x50/steam/mode-change-background.png"
                 }
                 onValueChanged: {
-                    console.log(index,valueName)
-                    console.log("model onValueChanged:",model.get(index).modelData)
+                    //                    console.log("model onValueChanged:",model.get(index).modelData)
                     var minTemp=model.get(index).minTemp
                     var maxTemp=model.get(index).maxTemp
                     var tempArray=[]
@@ -230,7 +234,7 @@ Rectangle {
                     var maxTime=model.get(modePathView.currentIndex).maxTime
                     if(maxTime!=null && maxTime!=0)
                     {
-                        console.info("maxTime:",maxTime)
+
                     }
                     else
                     {
@@ -247,7 +251,7 @@ Rectangle {
                     timePathView.currentIndex=CookFunc.getCookTimeIndex(model.get(index).time)
                 }
                 Component.onCompleted:{
-                    console.log("modePathView",modePathView.currentIndex,modePathViewIndex)
+                    //                    console.log("modePathView",modePathView.currentIndex,modePathViewIndex)
                     if(modePathViewIndex===undefined)
                     {
 
@@ -276,7 +280,7 @@ Rectangle {
                     var maxTime=model.get(modePathView.currentIndex).maxTime
                     if(maxTime!=null && maxTime!=0)
                     {
-                        console.info("maxTime:",maxTime)
+
                     }
                     else
                     {
@@ -312,9 +316,9 @@ Rectangle {
                     anchors.centerIn: parent
                     source: "qrc:/x50/steam/temp-time-change-background.png"
                 }
-//                Component.onCompleted:{
-//                    console.log("tempPathView",tempPathView.currentIndex,tempPathViewIndex)
-//                }
+                //                Component.onCompleted:{
+                //                    console.log("tempPathView",tempPathView.currentIndex,tempPathViewIndex)
+                //                }
             }
             DataPathView {
                 id:timePathView
@@ -328,9 +332,9 @@ Rectangle {
                     anchors.centerIn: parent
                     source: "qrc:/x50/steam/temp-time-change-background.png"
                 }
-//                Component.onCompleted:{
-//                    console.log("timePathView",timePathView.currentIndex,timePathViewIndex)
-//                }
+                //                Component.onCompleted:{
+                //                    console.log("timePathView",timePathView.currentIndex,timePathViewIndex)
+                //                }
             }
         }
     }

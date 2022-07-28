@@ -13,7 +13,7 @@ Rectangle {
         id:timer_run
         repeat: true
         running: leftProgressBar.workState === workStateEnum.WORKSTATE_PREHEAT||rightProgressBar.workState === workStateEnum.WORKSTATE_PREHEAT||leftProgressBar.workState === workStateEnum.WORKSTATE_RESERVE||rightProgressBar.workState === workStateEnum.WORKSTATE_RESERVE||leftProgressBar.workState === workStateEnum.WORKSTATE_PAUSE_RESERVE||rightProgressBar.workState === workStateEnum.WORKSTATE_PAUSE_RESERVE||leftProgressBar.workState === workStateEnum.WORKSTATE_PAUSE||rightProgressBar.workState === workStateEnum.WORKSTATE_PAUSE
-        interval: 350
+        interval: 150
         triggeredOnStart: false
         onTriggered: {
             //            console.log("timer_run onTriggered");
@@ -39,7 +39,7 @@ Rectangle {
 
             if(leftProgressBar.workState === workStateEnum.WORKSTATE_RESERVE||leftProgressBar.workState === workStateEnum.WORKSTATE_PAUSE_RESERVE||rightProgressBar.workState === workStateEnum.WORKSTATE_RESERVE||rightProgressBar.workState === workStateEnum.WORKSTATE_PAUSE_RESERVE || leftProgressBar.workState === workStateEnum.WORKSTATE_PAUSE||rightProgressBar.workState === workStateEnum.WORKSTATE_PAUSE)
             {
-                if(++count>2)
+                if(++count>3)
                 {
                     count=0
                     leftProgressBar.reserveFlash=!leftProgressBar.reserveFlash
@@ -50,7 +50,7 @@ Rectangle {
     }
 
     Component.onCompleted: {
-        console.log("PageSteamBakeRun onCompleted")
+//        console.log("PageSteamBakeRun onCompleted")
 
         loaderSteamHide()
         leftProgressBar.updatePaint()
@@ -59,14 +59,12 @@ Rectangle {
     }
     Component.onDestruction: {
         closeCancelRun()
-        loaderNewCookHide() 
+        loaderNewCookHide()
     }
     StackView.onActivating:{
-        console.log("PageSteamBakeRun StackView onActivating")
         SendFunc.permitSteamStartStatus(0)
     }
     StackView.onActivated:{
-        console.log("PageSteamBakeRun StackView onActivated")
         if(permitStartStatus>0)
             SendFunc.permitSteamStartStatus(0)
     }

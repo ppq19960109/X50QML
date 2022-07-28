@@ -9,7 +9,6 @@ LocalClient::LocalClient(QObject *parent) : QObject(parent)
 {
     timeoutCount=0;
     m_socket = new QLocalSocket(this);
-    qDebug() << "readBufferSize:" <<m_socket->readBufferSize();
     qDebug() << "UNIX_DOMAIN:" << UNIX_DOMAIN;
     connect(m_socket, SIGNAL(connected()), this,SLOT(socketConnectedHandler()));
     connect(m_socket, SIGNAL(disconnected()), SLOT(socketDisConnectedHandler()));
@@ -24,8 +23,8 @@ LocalClient::LocalClient(QObject *parent) : QObject(parent)
 
 LocalClient::~LocalClient()
 {
-//    delete timer;
-//    delete m_socket;
+    delete timer;
+    delete m_socket;
 }
 
 void LocalClient::startConnectTimer()
@@ -38,22 +37,23 @@ void LocalClient::startConnectTimer()
 int LocalClient::seqid=0;
 
 void LocalClient::connectToServer()
-{    qDebug("connectToServer start");
-     m_socket->connectToServer(UNIX_DOMAIN);
-      ++timeoutCount;
-      if(timeoutCount==5)
-      {
+{
+    qDebug("connectToServer start");
+    m_socket->connectToServer(UNIX_DOMAIN);
+    ++timeoutCount;
+    if(timeoutCount==5)
+    {
 #ifdef USE_RK3308
-          emit sendConnected(0);
+        emit sendConnected(0);
 #endif
-      }
-      //    qDebug("connectToServer end");
+    }
+    //    qDebug("connectToServer end");
 
-      //    if (m_socket->waitForConnected(-1))
-      //    {
-      //        qDebug("Connected!");
-      //    }
-      //    qDebug("connectToServer fail!");
+    //    if (m_socket->waitForConnected(-1))
+    //    {
+    //        qDebug("Connected!");
+    //    }
+    //    qDebug("connectToServer fail!");
 }
 
 void LocalClient::get_all()
@@ -92,12 +92,12 @@ int LocalClient::sendMessage(QByteArray& data)
     buf.append(data.size()/256);
     buf.append(data.size()%256);
     buf.append(data);
-    unsigned char verify= CheckSum((unsigned char *)(&buf.data()[2]),data.size()+5);
+    unsigned char verify= CheckSum((unsigned char *)(&buf.constData()[2]),data.size()+5);
     buf.append((char)verify);
     buf.append(FRAME_TAIL);
     buf.append(FRAME_TAIL);
-    qDebug() << "sendMessage :" << buf << "size:" <<buf.size() << "seqid:"<<seqid<<"verify:"<< verify << "verify char:"<<(unsigned char)((char)verify);
-    int write_len= m_socket->write(buf.data(),buf.size());
+    qDebug() << "sendMessage :" << buf << "size:" <<buf.size() << "seqid:"<<seqid;
+    int write_len= m_socket->write(buf.constData(),buf.size());
     ++seqid;
     //    m_socket->flush();
     //    m_socket->waitForBytesWritten(2000);
@@ -215,7 +215,7 @@ int LocalClient::readMessage()
         return -1;
     }
     //    qDebug() << "recv_data:" <<recv_data << endl;
-    uds_recv(recv_data.data(),recv_data.size());
+    uds_recv(recv_data.constData(),recv_data.size());
 
     return 0;
 }

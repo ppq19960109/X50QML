@@ -20,7 +20,6 @@ Item {
         interval: 1000
         triggeredOnStart: false
         onTriggered: {
-            console.log("timer_test onTriggered");
             if(--timeout==0)
             {
                 containerqml.clickedTouchFunc(-1)
@@ -34,7 +33,7 @@ Item {
 
     function touchJudge(x,y,parent)
     {
-        console.warn("touchJudge",parent.width,parent.height,x,y,pressedX,pressedY)
+//        console.log("touchJudge",parent.width,parent.height,x,y,pressedX,pressedY)
         if(touchExited>2)
             return -1
 
@@ -86,7 +85,7 @@ Item {
             anchors.fill: parent
 
             onPressed: {
-                console.warn("onPressed",mouse.x,mouse.y)
+//                console.log("onPressed",mouse.x,mouse.y)
                 parent.lastX = mouseX//鼠标位置
                 parent.lastY = mouseY
                 pressedX = mouseX
@@ -94,7 +93,7 @@ Item {
                 touchExited=0
             }
             onReleased: {
-                console.warn("onReleased",mouse.x,mouse.y)
+//                console.log("onReleased",mouse.x,mouse.y)
                 canvas.context.reset()
                 canvas.requestPaint()
                 if(touchJudge(mouse.x,mouse.y,parent)==0)
@@ -103,11 +102,10 @@ Item {
                 }
             }
             onPositionChanged:{
-                console.warn("onPositionChanged",mouse.x,mouse.y)
+//                console.log("onPositionChanged",mouse.x,mouse.y)
                 canvas.requestPaint()//重绘
             }
             onExited:{
-                console.warn("onExited")
                 ++touchExited
             }
         }
@@ -122,7 +120,7 @@ Item {
         text: timeout+"s"
     }
     onTouchCountChanged:{
-        console.warn("onTouchCountChanged",touchCount)
+//        console.log("onTouchCountChanged",touchCount)
         timeout=20
         if(touchCount==1)
         {

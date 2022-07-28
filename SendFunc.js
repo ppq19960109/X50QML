@@ -66,7 +66,7 @@ function setToServer(Data)
     root.Type="SET"
     root.Data=Data
     var json=JSON.stringify(root)
-    console.info("setToServer:",json)
+    //    console.info("setToServer:",json)
     QmlDevState.sendToServer(json)
     json=undefined
     root=undefined
@@ -78,7 +78,7 @@ function getToServer(Data)
     root.Type="GET"
     root.Data=Data
     var json=JSON.stringify(root)
-    console.info("getToServer:",json)
+    //    console.info("getToServer:",json)
     QmlDevState.sendToServer(json)
     json=undefined
     root=undefined
@@ -89,7 +89,6 @@ function getAllToServer()
     root.Type="GETALL"
     root.Data=null
     var json=JSON.stringify(root)
-    console.info("getAllToServer:",json)
     QmlDevState.sendToServer(json)
     json=undefined
     root=undefined
@@ -143,7 +142,7 @@ function scanRWifi()
 {
     var Data={}
     Data.WifiScanR = null
-//    Data.WifiCurConnected = null
+    //    Data.WifiCurConnected = null
     getToServer(Data)
 }
 
@@ -151,11 +150,11 @@ function deleteWifissid(ssid)
 {
     if(ssid==""||ssid==null)
         return
-    console.log("deleteWifissid:",ssid)
+    //    console.log("deleteWifissid:",ssid)
     var wifiPasswdArray=systemSettings.wifiPasswdArray
     if(typeof wifiPasswdArray!="object")
     {
-        console.log("wifiPasswdArray not Object")
+        //        console.log("wifiPasswdArray not Object")
         return
     }
     var array_len=wifiPasswdArray.length
@@ -165,7 +164,7 @@ function deleteWifissid(ssid)
         element=wifiPasswdArray[i]
         if(element.ssid===ssid)
         {
-            console.log("remove ssid:",i,element.ssid)
+            //            console.log("remove ssid:",i,element.ssid)
             wifiPasswdArray.splice(i,1)
             break;
         }
@@ -175,7 +174,7 @@ function deleteWifissid(ssid)
     {
         return
     }
-    console.log("deleteWifissid:",JSON.stringify(wifiPasswdArray))
+    //    console.log("deleteWifissid:",JSON.stringify(wifiPasswdArray))
     systemSettings.wifiPasswdArray=wifiPasswdArray
 }
 
@@ -285,7 +284,6 @@ function setCooking(list,orderTime,cookPos)
 
 function setMultiCooking(list,orderTime,dishName,cookbookID)
 {
-    console.log("setMultiCooking")
     var Data={}
     var MultiStageContent=[]
     var step

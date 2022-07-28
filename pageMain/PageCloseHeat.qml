@@ -32,7 +32,6 @@ Item {
         enabled:false
         target: QmlDevState
         onStateChanged: { // 处理目标对象信号的槽函数
-            console.log("PageCloseHeat onStateChanged",key)
             if("SteamStart"==key)
             {
                 steamStart()
@@ -44,6 +43,8 @@ Item {
                 else
                     SendFunc.permitSteamStartStatus(0)
             }
+            key=null
+            value=null
         }
     }
     StackView.onActivated:{
@@ -75,7 +76,7 @@ Item {
         {
             if(hourPathView.currentIndex==0 && minutePathView.currentIndex==0)
                 return
-            console.log("PageCloseHeat",hourPathView.model[hourPathView.currentIndex],minutePathView.model[minutePathView.currentIndex])
+//            console.log("PageCloseHeat",hourPathView.model[hourPathView.currentIndex],minutePathView.model[minutePathView.currentIndex])
 
             var Data={}
             Data.RStoveTimingOpera = timingOperationEnum.START
@@ -148,7 +149,6 @@ Item {
                     source: "qrc:/x50/steam/temp-time-change-background.png"
                 }
                 onValueChanged: {
-                    console.log(index,valueName)
                     permitStart()
                 }
                 Component.onCompleted:{
@@ -169,7 +169,6 @@ Item {
                     source: "qrc:/x50/steam/temp-time-change-background.png"
                 }
                 onValueChanged: {
-                    console.log(index,valueName)
                     permitStart()
                 }
                 Component.onCompleted:{

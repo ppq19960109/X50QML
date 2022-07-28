@@ -19,6 +19,8 @@ Item {
                 var root=recipeListView.model.get(recipeListView.currentIndex)
                 startCooking(root,JSON.parse(root.cookSteps))
             }
+            key=null
+            value=null
         }
     }
     StackView.onActivated:{
@@ -28,7 +30,7 @@ Item {
         connections.enabled=false
     }
     Component.onCompleted: {
-        console.log("state",state,typeof state)
+//        console.log("state",state,typeof state)
         var root=JSON.parse(state)
         cookPos=root.device
 
@@ -41,6 +43,10 @@ Item {
             SendFunc.permitSteamStartStatus(1)
         }
     }
+//    Component.onDestruction: {
+//        recipeListView.model=null
+//        historyModel.clear()
+//    }
     ListModel {
         id:historyModel
     }
@@ -66,6 +72,7 @@ Item {
                 historyModel.append(element)
             }
         }
+        historys=null
     }
 
     function changeHistory(action,value)
@@ -83,7 +90,7 @@ Item {
                 if(value.id==historyModel.get(i).id)
                 {
                     historyModel.remove(i,1)
-                    console.warn("PageCookHistory DeleteHistory",value.id,i)
+//                    console.log("PageCookHistory DeleteHistory",value.id,i)
                     if(historyModel.count==0)
                         SendFunc.permitSteamStartStatus(0)
                     break
@@ -105,7 +112,6 @@ Item {
     Connections { // 将目标对象信号与槽函数进行连接
         target: QmlDevState
         onHistoryChanged: { // 处理目标对象信号的槽函数
-            console.warn("PageCookHistory onHistoryChanged...")
             changeHistory(action,history)
         }
     }
@@ -173,7 +179,6 @@ Item {
             highlightMoveDuration:80
             highlightMoveVelocity:-1
             onCurrentIndexChanged:{
-                console.log("ListView onCurrentIndexChanged",currentIndex)
                 if(permitStartStatus==0)
                 {
                     SendFunc.permitSteamStartStatus(1)
@@ -241,7 +246,7 @@ Item {
                         color:recipeListView.currentIndex===index?themesTextColor:collect===0?"#FFF":"#E5B9A1"
                     }
                     onClicked: {
-                        console.log("onClicked",id,collect)
+//                        console.log("onClicked",id,collect)
                         recipeListView.currentIndex=index
                         if(edit)
                         {

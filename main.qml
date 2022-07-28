@@ -14,7 +14,7 @@ ApplicationWindow {
     id: window
     width: 800
     height: 480
-    //        visible: true
+    //    visible: true
     property int sysPower:-1
     property int permitStartStatus:0
     property int productionTestStatus:0
@@ -104,17 +104,17 @@ ApplicationWindow {
         //            console.log("onFirstStartupChanged....",systemSettings.firstStartup)
         //        }
         onBrightnessChanged: {
-            console.log("onBrightnessChanged....",systemSettings.brightness)
+            //            console.log("onBrightnessChanged....",systemSettings.brightness)
             Backlight.backlightSet(systemSettings.brightness)
         }
-        onWifiEnableChanged: {
-            console.log("onWifiEnableChanged....",systemSettings.wifiEnable)
-        }
-        onWifiPasswdArrayChanged: {
-            console.log("onWifiPasswdArrayChanged....",JSON.stringify(systemSettings.wifiPasswdArray))
-        }
+        //        onWifiEnableChanged: {
+        //            console.log("onWifiEnableChanged....",systemSettings.wifiEnable)
+        //        }
+        //        onWifiPasswdArrayChanged: {
+        //            console.log("onWifiPasswdArrayChanged....",JSON.stringify(systemSettings.wifiPasswdArray))
+        //        }
         onSleepTimeChanged: {
-            console.log("onSleepTimeChanged",systemSettings.sleepTime)
+            //            console.log("onSleepTimeChanged",systemSettings.sleepTime)
             timer_window.interval=systemSettings.sleepTime*60000
             timer_window.restart()
         }
@@ -145,7 +145,6 @@ ApplicationWindow {
     }
 
     function systemPower(power){
-        console.log("systemPower",power)
 
         if(sysPower===power || (productionTestStatus>0 && power===0))
         {
@@ -175,35 +174,35 @@ ApplicationWindow {
     }
 
     Component.onCompleted: {
-        console.warn("Window onCompleted: ",Qt.fontFamilies(),JSON.stringify(systemSettings.wifiPasswdArray))
+        //        console.log("Window onCompleted: ",Qt.fontFamilies(),JSON.stringify(systemSettings.wifiPasswdArray))
         //        var value="\\xe6\\x95\\xb0\\xe6\\x8d\\xae" //'\\xe6\\x95\\xb0\\xe6\\x8d\\xae'
         //        value=value.replace(/\\{1}x/g,"\\\\x")
-        //        console.warn("Window onCompleted: ",value)
+        //        console.log("Window onCompleted: ",value)
         //        value="wpa_cli list_networks | tail -n +3 | grep \'"+value+"\' > test.conf"
-        //        console.warn("Window onCompleted: ",value)
+        //        console.log("Window onCompleted: ",value)
         //        QmlDevState.executeShell(value)
 
         //        QmlDevState.executeShell("wpa_cli list_networks | tail -n +3 | grep  \'\\\\xe6\\\\x95\\\\xb0\\\\xe6\\\\x8d\\\\xae\' > test.conf")
         //        var pattern = new RegExp("[\u4E00-\u9FA5]+")
         //        var str='\\xef\\xbc\\x81\\xef\\xbf\\xa5'
-        //        console.warn("Window onCompleted1: ",str,str.replace('\\x','%'),decodeURI(str.replace(/\\x/g,'%')))
-        //                console.warn("Window onCompleted test: ",encodeURI("a1数b2据C3"),encodeURIComponent("a1数b2据C3"),decodeURI("a1%E6%95%B0b2%E6%8D%AEC3"),decodeURIComponent("a1%E6%95%B0b2%E6%8D%AEC3"),pattern.test("数据a1"),pattern.test("adwe445-._"))
-        //console.warn("Window onCompleted test: ",encodeURI("数据？、。·、123"),encodeURIComponent("数据？、。·、123"))
-        //        console.warn("Window onCompleted test:",patternSymbol.test(str))
+        //        console.log("Window onCompleted1: ",str,str.replace('\\x','%'),decodeURI(str.replace(/\\x/g,'%')))
+        //                console.log("Window onCompleted test: ",encodeURI("a1数b2据C3"),encodeURIComponent("a1数b2据C3"),decodeURI("a1%E6%95%B0b2%E6%8D%AEC3"),decodeURIComponent("a1%E6%95%B0b2%E6%8D%AEC3"),pattern.test("数据a1"),pattern.test("adwe445-._"))
+        //console.log("Window onCompleted test: ",encodeURI("数据？、。·、123"),encodeURIComponent("数据？、。·、123"))
+        //        console.log("Window onCompleted test:",patternSymbol.test(str))
 
         load_page("pageHome")
         //                load_page("pageTestFront")
         //        load_page("pageDemoMode")
         if(systemSettings.wifiPasswdArray!=null)
         {
-            console.log("systemSettings.wifiPasswdArray",systemSettings.wifiPasswdArray.length)
+            //            console.log("systemSettings.wifiPasswdArray",systemSettings.wifiPasswdArray.length)
             var element
             for(var i = 0; i < systemSettings.wifiPasswdArray.length; ++i)
             {
                 element=systemSettings.wifiPasswdArray[i]
-                console.log("ssid:",element.ssid)
-                console.log("psk:",element.psk)
-                console.log("encryp:",element.encryp)
+                //                console.log("ssid:",element.ssid)
+                //                console.log("psk:",element.psk)
+                //                console.log("encryp:",element.encryp)
             }
         }
         systemSettings.childLock=false
@@ -239,7 +238,7 @@ ApplicationWindow {
         interval: 180000
         triggeredOnStart: false
         onTriggered: {
-            console.log("timer_standby onTriggered",productionTestFlag)
+            //            console.log("timer_standby onTriggered",productionTestFlag)
             if(productionTestFlag>0)
             {
                 productionTestFlag=0
@@ -267,14 +266,13 @@ ApplicationWindow {
         interval: 62000
         triggeredOnStart: false
         onTriggered: {
-            console.log("timer_wifi_connecting...",wifiConnecting)
+//            console.log("timer_wifi_connecting...",wifiConnecting)
             if(wifiConnecting==true)
             {
-//                WifiFunc.deleteWifiInfo(wifiConnectInfo)
+                //                WifiFunc.deleteWifiInfo(wifiConnectInfo)
                 wifiConnecting=false
                 QmlDevState.executeShell("(wpa_cli reconfigure) &")
-                //                QmlDevState.executeShell("(wpa_cli reconfigure && wpa_cli enable_network all && wpa_cli save_config) &")
-                console.log("timer_wifi_connecting...",JSON.stringify(systemSettings.wifiPasswdArray))
+                //                console.log("timer_wifi_connecting...",JSON.stringify(systemSettings.wifiPasswdArray))
             }
         }
     }
@@ -346,16 +344,17 @@ ApplicationWindow {
             confirmText:"开始烹饪"
             checkboxVisible:true
             onCancel:{
-                console.info("component_steam onCancel")
+//                console.info("component_steam onCancel")
                 loaderSteamHide()
             }
             onConfirm:{
-                console.info("component_steam onConfirm")
+//                console.info("component_steam onConfirm")
                 if(steamDialog.checkboxState)
                 {
                     var dialog=systemSettings.cookDialog
                     dialog[steamDialog.cookDialog]=0
                     systemSettings.cookDialog=dialog
+                    dialog=null
                 }
                 startCooking(steamDialog.para,JSON.parse(steamDialog.para.cookSteps))
                 loaderSteamHide()
@@ -855,7 +854,7 @@ ApplicationWindow {
         PageDemoMode {}
     }
     function isExistView(pageName) {
-        console.log("isExistView:",pageName)
+//        console.log("isExistView:",pageName)
         return stackView.find(function(item,index){
             return item.name === pageName
         })
@@ -864,19 +863,19 @@ ApplicationWindow {
     function backPrePage() {
         if(stackView.depth>0)
             stackView.pop(StackView.Immediate)
-        console.log("stackView depth:"+stackView.depth)
+//        console.log("stackView depth:"+stackView.depth)
     }
 
     function backTopPage() {
         if(stackView.depth>0)
             stackView.pop(null,StackView.Immediate)
-        console.log("stackView depth:"+stackView.depth)
+//        console.log("stackView depth:"+stackView.depth)
     }
 
     function backPage(page) {
         if(stackView.depth>0)
             stackView.pop(page,StackView.Immediate)
-        console.log("backPage stackView depth:"+stackView.depth)
+//        console.log("backPage stackView depth:"+stackView.depth)
     }
 
     function load_page(page,args) {
@@ -981,7 +980,7 @@ ApplicationWindow {
             break;
         }
 
-        console.log("stackView depth:"+stackView.depth)
+//        console.log("stackView depth:"+stackView.depth)
     }
     //获取当前时间方法
     //    function getCurtime()
@@ -997,7 +996,7 @@ ApplicationWindow {
         }
         else
         {
-            console.log("startCooking:",JSON.stringify(root),JSON.stringify(cookSteps))
+//            console.log("startCooking:",JSON.stringify(root),JSON.stringify(cookSteps))
             if(cookSteps.length===1 && (undefined === cookSteps[0].number || 0 === cookSteps[0].number))
             {
                 SendFunc.setCooking(cookSteps,root.orderTime,root.cookPos)

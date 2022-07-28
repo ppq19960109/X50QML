@@ -19,7 +19,6 @@ Item{
         interval: 4000
         triggeredOnStart: false
         onTriggered: {
-            console.log("onTriggered")
             if(swipeview.currentIndex==swipeview.count-1)
                 swipeview.currentIndex=0
             else
@@ -59,9 +58,9 @@ Item{
             source:"qrc:/x50/demo/demo5.png"
         }
 
-        onCurrentIndexChanged:{
-            console.log("onCurrentIndexChanged",currentIndex)
-        }
+//        onCurrentIndexChanged:{
+//            console.log("onCurrentIndexChanged",currentIndex)
+//        }
     }
 }
 

@@ -62,7 +62,7 @@ Item {
         propagateComposedEvents: true
 
         onPressed: {
-            console.warn("PageLockScreen onPressed",mouse.x,mouse.y)
+//            console.log("PageLockScreen onPressed",mouse.x,mouse.y)
             mouse.accepted = true
             if(mouse.x<650||mouse.y<390)
             {
@@ -73,7 +73,7 @@ Item {
             longPressTimer.running = true
         }
         onReleased: {
-            console.warn("PageLockScreen onReleased")
+            console.log("PageLockScreen onReleased")
             mouse.accepted = true
 
             longPressTimer.running = false
@@ -82,7 +82,7 @@ Item {
             }
         }
         //        onPositionChanged:{
-        //console.warn("PageLockScreen onPositionChanged",mouse.x,mouse.y)
+        //console.log("PageLockScreen onPositionChanged",mouse.x,mouse.y)
         //        }
     }
 
@@ -104,7 +104,7 @@ Item {
                     loaderLockScreen.source=""
                 }
             }
-            console.log("childLockPressCount:",childLockPressCount)
+//            console.log("childLockPressCount:",childLockPressCount)
         }
     }
 }

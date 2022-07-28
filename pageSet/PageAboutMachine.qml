@@ -25,8 +25,6 @@ Item {
         target: QmlDevState
 
         onStateChanged: { // 处理目标对象信号的槽函数
-            console.log("PageAboutMachine:",key)
-
             if("WifiState"==key)
             {
                 if(value==4 && step==0)
@@ -37,6 +35,8 @@ Item {
                     loaderQrcodeShow("此二维码可以")
                 }
             }
+            key=null
+            value=null
         }
     }
 
@@ -45,8 +45,11 @@ Item {
         infoModel.get(1).value=QmlDevState.state.ProductModel
         infoModel.get(2).value=QmlDevState.state.DeviceName
         listView.model=infoModel
-        console.log("infoModel",listView.model.count)
     }
+//    Component.onDestruction: {
+//        listView.model=null
+//        infoModel.clear()
+//    }
     PageBackBar{
         id:topBar
         anchors.bottom:parent.bottom

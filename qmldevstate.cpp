@@ -364,7 +364,7 @@ int QmlDevState::sendJsonToServer(const QString& type,const QJsonObject& json)
 
 void QmlDevState::readData(const QJsonValue &data)
 {
-    qDebug()<< "readData" << data  << endl;
+//    qDebug()<< "readData" << data  << endl;
     QJsonObject object =data.toObject();
 
     QString key;
@@ -417,7 +417,7 @@ void QmlDevState::readData(const QJsonValue &data)
                     QJsonValue mac_address =object_struct.value("mac_address");
                     setState("ssid",ssid.toString());
                     setState("bssid",bssid.toString());
-                    qDebug()<<"key:"<<"bssid"<<"value:"<<bssid.toString();
+//                    qDebug()<<"key:"<<"bssid"<<"value:"<<bssid.toString();
                 }
                 else if(key=="MultiStageState")
                 {
@@ -441,12 +441,12 @@ void QmlDevState::readData(const QJsonValue &data)
                     {
                         for(int i=0;i< (int)(sizeof(recipe)/sizeof(recipe[0]));++i)
                             recipe[i].clear();
-                        qDebug()<<"CookRecipe size:" <<array.size() << endl;
+//                        qDebug()<<"CookRecipe size:" <<array.size() << endl;
                     }
                     else
                     {
                         history.clear();
-                        qDebug()<<"CookHistory size:" <<array.size() << endl;
+//                        qDebug()<<"CookHistory size:" <<array.size() << endl;
                     }
 
                     for(int i=0;i<array.size();++i)
@@ -462,7 +462,7 @@ void QmlDevState::readData(const QJsonValue &data)
                             history.append(info);
                             //                            std::sort(history.begin(), history.end(), compareId);
                         }
-                        qDebug()<<key <<":"<<info<< endl;
+//                        qDebug()<<key <<":"<<info<< endl;
                     }
                 }
                 else if(key=="InsertHistory")
@@ -482,7 +482,7 @@ void QmlDevState::readData(const QJsonValue &data)
                     {
                         int id=array.at(i).toInt();
                         int index=getHistoryIndex(id);
-                        qDebug()<<"DeleteHistory index:"<<index;
+//                        qDebug()<<"DeleteHistory index:"<<index;
                         if(index<0)
                         {
                             break;
@@ -559,7 +559,7 @@ void QmlDevState::setState(const QString& name,const QVariant& value)
     //    if(stateMap.contains(name))
     //    {
 
-    //    qDebug()<<"setState name:"<<name << "new value:" << value;
+    //    qDebug()<<"setState name:"<<name << "value:" << value;
     //    if(stateMap.contains(name))
     //        qDebug()<< "old value:" << stateMap[name];
     stateMap[name]=value;

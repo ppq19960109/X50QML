@@ -2,7 +2,7 @@ import QtQuick 2.7
 import QtQuick.Controls 2.2
 
 Item {
-    property var para
+    property var para:null
     property int cookDialog:0
     property alias hintTopText: hintTop.text
     property alias confirmText: confirmBtnText.text
@@ -20,8 +20,8 @@ Item {
 //            mouse.accepted = true
 //        }
     }
-    Component.onCompleted: {
-
+    Component.onDestruction: {
+        para=null
     }
     anchors.fill: parent
 

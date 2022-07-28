@@ -12,7 +12,7 @@ Item {
         target: QmlDevState
 
         onStateChanged: { // 处理目标对象信号的槽函数
-            console.log("PageReset:",key)
+//            console.log("PageReset:",key)
 
             if("Reset"==key)
             {
@@ -27,6 +27,8 @@ Item {
                 //                }
                 //                backTopPage()
             }
+            key=null
+            value=null
         }
     }
 

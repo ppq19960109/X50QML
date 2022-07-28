@@ -1,7 +1,6 @@
 
 function leftWorkModeName(mode)
 {
-    //    console.log("leftWorkModeNamee",mode)
     var name
     switch(mode)
     {
@@ -46,7 +45,6 @@ function leftWorkModeName(mode)
 }
 function leftWorkModeToIndex(mode)
 {
-//        console.log("leftWorkModeToIndex",mode)
     var index
     switch(mode)
     {
@@ -148,7 +146,6 @@ function getDishName(root)
     for(var i = 0; i < root.length; ++i)
     {
         step=root[i]
-//        console.log(step.mode,step.temp,step.time,leftWorkModeName(step.mode))
         if(root.length===1 && step.number == null)
         {
             dishName=leftWorkModeName(step.mode)+"-"+step.temp+"℃-"+step.time+"分钟"

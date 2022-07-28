@@ -39,11 +39,11 @@ function deleteWifiInfo(wifiInfo)
 {
     if(wifiInfo==null || wifiInfo.ssid=="" ||wifiInfo.psk=="" || wifiInfo.encryp===0)
         return
-    console.log("deleteWifiInfo:",wifiInfo.ssid,wifiInfo.psk)
+    //    console.log("deleteWifiInfo:",wifiInfo.ssid,wifiInfo.psk)
     var wifiPasswdArray=systemSettings.wifiPasswdArray
     if(typeof wifiPasswdArray!="object")
     {
-        console.log("wifiPasswdArray not Object")
+        //        console.log("wifiPasswdArray not Object")
         return
     }
     var array_len=wifiPasswdArray.length
@@ -53,7 +53,7 @@ function deleteWifiInfo(wifiInfo)
         element=wifiPasswdArray[i]
         if(element.ssid===wifiInfo.ssid)
         {
-            console.log("remove ssid:",i,element.ssid,wifiInfo.ssid)
+            //            console.log("remove ssid:",i,element.ssid,wifiInfo.ssid)
             wifiPasswdArray.splice(i,1)
             break;
         }
@@ -63,7 +63,7 @@ function deleteWifiInfo(wifiInfo)
     {
         return
     }
-    console.log("deleteWifiInfo:",JSON.stringify(wifiPasswdArray))
+    //    console.log("deleteWifiInfo:",JSON.stringify(wifiPasswdArray))
     systemSettings.wifiPasswdArray=wifiPasswdArray
     wifiConnectInfo.psk=""
 }
@@ -72,12 +72,12 @@ function addWifiInfo(wifiInfo)
 {
     if(wifiInfo==null || wifiInfo.ssid=="" ||wifiInfo.psk=="" || wifiInfo.encryp===0)
         return
-    console.log("addWifiInfo:",wifiInfo.ssid,wifiInfo.psk)
+    //    console.log("addWifiInfo:",wifiInfo.ssid,wifiInfo.psk)
     var wifiPasswdArray=systemSettings.wifiPasswdArray
 
     if(typeof wifiPasswdArray!="object")
     {
-        console.log("wifiPasswdArray not Object")
+        //        console.log("wifiPasswdArray not Object")
         wifiPasswdArray=new Array
     }
     var array_len=wifiPasswdArray.length
@@ -91,7 +91,7 @@ function addWifiInfo(wifiInfo)
             {
                 return
             }
-            console.log("change ssid:",i,element.ssid,wifiInfo.ssid)
+            //            console.log("change ssid:",i,element.ssid,wifiInfo.ssid)
             element.psk=wifiInfo.psk
             element.encryp=wifiInfo.encryp
             break;
@@ -103,10 +103,10 @@ function addWifiInfo(wifiInfo)
         newWifiInfo.ssid=wifiInfo.ssid
         newWifiInfo.psk=wifiInfo.psk
         newWifiInfo.encryp=wifiInfo.encryp
-        console.log("add ssid:",newWifiInfo.ssid)
+        //        console.log("add ssid:",newWifiInfo.ssid)
         wifiPasswdArray.push(newWifiInfo)
     }
-    console.log("addWifiInfo:",JSON.stringify(wifiPasswdArray))
+    //    console.log("addWifiInfo:",JSON.stringify(wifiPasswdArray))
     systemSettings.wifiPasswdArray=wifiPasswdArray
     wifiConnectInfo.psk=""
 }
@@ -118,7 +118,7 @@ function getWifiInfo(ssid)
     var wifiPasswdArray=systemSettings.wifiPasswdArray
     if(typeof wifiPasswdArray!="object")
     {
-//        console.log("wifiPasswdArray not Object")
+        //        console.log("wifiPasswdArray not Object")
         return
     }
     var i,element
@@ -131,7 +131,7 @@ function getWifiInfo(ssid)
             wifiInfo.ssid=element.ssid
             wifiInfo.psk=element.psk
             wifiInfo.encryp=element.encryp
-//            console.log("get ssid:",wifiInfo.ssid,wifiInfo.psk,wifiInfo.encryp)
+            //            console.log("get ssid:",wifiInfo.ssid,wifiInfo.psk,wifiInfo.encryp)
             return wifiInfo
         }
     }

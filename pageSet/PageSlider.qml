@@ -9,10 +9,7 @@ Item {
     property alias value: control.value
     property string displayText
     signal valueSlider(var value)
-    Component.onCompleted: {
-        console.log("PageSlider",width,height)
 
-    }
     Slider {
         id: control
         anchors.fill: parent
@@ -68,7 +65,7 @@ Item {
             }
         }
         onValueChanged: {
-            console.log("Slider:",value)
+//            console.log("Slider:",value)
             valueSlider(value)
         }
     }
