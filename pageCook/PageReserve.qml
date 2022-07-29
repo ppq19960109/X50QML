@@ -29,30 +29,23 @@ Item {
         color: "#333333"
         radius: 10
 
-        Button {
-            width:closeImg.width+50
-            height:closeImg.height+50
+        PageCloseButton {
             anchors.top:parent.top
             anchors.right:parent.right
-            Image {
-                id:closeImg
-                asynchronous:true
-                smooth:false
-                cache:false
-                anchors.centerIn: parent
-                source: themesPicturesPath+"icon_window_close.png"
-            }
-            background: null
             onClicked: {
                 loaderMainHide()
             }
         }
 
         PageDivider{
+            width: parent.width-40
+            anchors.horizontalCenter: parent.horizontalCenter
             anchors.verticalCenter:row.verticalCenter
             anchors.verticalCenterOffset:-30
         }
         PageDivider{
+            width: parent.width-40
+            anchors.horizontalCenter: parent.horizontalCenter
             anchors.verticalCenter:row.verticalCenter
             anchors.verticalCenterOffset:30
         }
@@ -84,7 +77,7 @@ Item {
                 currentIndex:0
                 Image {
                     anchors.fill: parent
-                    visible: hourPathView.moving
+                    visible: parent.moving
                     asynchronous:true
                     smooth:false
                     anchors.centerIn: parent
@@ -105,7 +98,7 @@ Item {
                 pathItemCount:3
                 Image {
                     anchors.fill: parent
-                    visible: minutePathView.moving
+                    visible: parent.moving
                     asynchronous:true
                     smooth:false
                     anchors.centerIn: parent

@@ -41,6 +41,42 @@ Item {
                     anchors.horizontalCenter: parent.horizontalCenter
                     source: themesPicturesPath+modelData.text
                 }
+                Rectangle
+                {
+                    id:workStatus
+                    width: 130
+                    height: 130
+                    anchors.top: parent.top
+                    anchors.topMargin: 115
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    color: "#000"
+                    opacity: 0.5
+                    radius: 65
+                }
+                Image {
+                    anchors.centerIn: workStatus
+                    asynchronous:true
+                    smooth:false
+                    source: themesPicturesPath+"icon_runing.png"
+                    RotationAnimation on rotation {
+                        from: 0
+                        to: 360
+                        duration: 8000 //旋转速度，默认250
+                        loops: Animation.Infinite //一直旋转
+                        running:true
+                    }
+                }
+                Text{
+                    text:"工作中\n..."
+                    color:themesTextColor
+                    font.pixelSize: 26
+                    anchors.centerIn: workStatus
+                    horizontalAlignment:Text.AlignHCenter
+                    verticalAlignment:Text.AlignVCenter
+//                    lineHeightMode:Text.FixedHeight
+//                    lineHeight:20
+                    lineHeight:0.6
+                }
                 onClicked: {
                     if(index==0)
                     {
@@ -48,7 +84,9 @@ Item {
                     }
                     else
                     {
-                        push_page(pageSteamOvenConfig,{cookWorkPos:cookWorkPosEnum.RIGHT})
+//                        push_page(pageSteamOvenConfig,{cookWorkPos:cookWorkPosEnum.RIGHT})
+                        push_page(pageSteaming)
+
                     }
                 }
             }

@@ -122,7 +122,7 @@ Item {
             pathItemCount:3
             Image {
                 anchors.fill: parent
-                visible: modePathView.moving
+                visible: parent.moving
                 asynchronous:true
                 smooth:false
                 source: themesPicturesPath+"steamoven/"+"mode_roll_background.png"
@@ -138,7 +138,7 @@ Item {
             height:parent.height
             Image {
                 anchors.fill: parent
-                visible: tempPathView.moving
+                visible: parent.moving
                 asynchronous:true
                 smooth:false
                 anchors.centerIn: parent
@@ -158,7 +158,7 @@ Item {
             height:parent.height
             Image {
                 anchors.fill: parent
-                visible: timePathView.moving
+                visible: parent.moving
                 asynchronous:true
                 smooth:false
                 anchors.centerIn: parent
@@ -180,7 +180,7 @@ Item {
             model:["1档","2档","3档"]
             Image {
                 anchors.fill: parent
-                visible: steamGearPathView.moving
+                visible: parent.moving
                 asynchronous:true
                 smooth:false
                 anchors.centerIn: parent

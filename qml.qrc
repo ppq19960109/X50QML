@@ -125,5 +125,9 @@
         <file>pageSet/PageWifi.qml</file>
         <file>pageMain/PageSmartCook.qml</file>
         <file>PageSwitch.qml</file>
+        <file>PageCirBar.qml</file>
+        <file>PageButtonBar.qml</file>
+        <file>PageCloseButton.qml</file>
+        <file>pageCook/PageSteaming.qml</file>
     </qresource>
 </RCC>

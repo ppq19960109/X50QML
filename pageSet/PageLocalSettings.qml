@@ -3,6 +3,7 @@ import QtQuick.Controls 2.2
 import "../"
 Item {
     Item {
+        id:localSet
         anchors.fill: parent
         anchors.margins: 40
         ScrollView{
@@ -219,6 +220,74 @@ Item {
                 }
 
                 onClicked: {
+                    localSet.visible=false
+                    screen_saver.visible=true
+                }
+            }
+        }
+    }
+    Item{
+        id:screen_saver
+        visible: false
+        anchors.fill: parent
+        Button {
+           id:backBtn
+            width:80
+            height:40
+            anchors.top: parent.top
+            anchors.topMargin: 20
+            anchors.left: grid.left
+            background: Image{
+                asynchronous:true
+                smooth:false
+                anchors.centerIn: parent
+                source: themesPicturesPath+"back_button_background.png"
+            }
+            onClicked: {
+                screen_saver.visible=false
+                localSet.visible=true
+            }
+        }
+        Text{
+            anchors.left:backBtn.right
+            anchors.verticalCenter: backBtn.verticalCenter
+            color:"#fff"
+            font.pixelSize: 30
+            text: qsTr("屏保")
+        }
+        Grid{
+            property int currentIndex:0
+            id:grid
+            width: 418*2+columnSpacing
+            height: 115*2+rowSpacing
+            anchors.top: parent.top
+            anchors.topMargin: 74
+            anchors.horizontalCenter: parent.horizontalCenter
+            rows: 2
+            columns: 2
+            rowSpacing: 18
+            columnSpacing: 45
+            Repeater {
+                model: ["screen_saver0_narrow.png","screen_saver1_narrow.png","screen_saver2_narrow.png","screen_saver3_narrow.png"]
+                Button{
+                    width:418
+                    height: 116
+                    background: null
+                    Image {
+                        asynchronous:true
+                        smooth:false
+                        source: themesPicturesPath+modelData
+                    }
+                    Image {
+                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.right: parent.right
+                        asynchronous:true
+                        smooth:false
+                        source: themesPicturesPath+(grid.currentIndex==index?"icon_checked.png":"icon_unchecked.png")
+                    }
+                    onClicked: {
+                        grid.currentIndex=index
+                    }
                 }
             }
         }

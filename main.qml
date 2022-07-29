@@ -732,6 +732,10 @@ ApplicationWindow {
         PageSteamOvenConfig {}
     }
     Component {
+        id: pageSteaming
+        PageSteaming {}
+    }
+    Component {
         id: pageWifi
         PageWifi {}
     }

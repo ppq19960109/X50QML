@@ -6,14 +6,11 @@ import "../"
 import "qrc:/SendFunc.js" as SendFunc
 Item {
 
-    Component.onCompleted: {
-
-    }
     Component{
-        id:component_heat
+        id:component_closeHeat
         Item {
             property int cookWorkPos:0
-
+            property var clickFunc:null
             Component.onCompleted: {
                 var i
                 var hourArray = []
@@ -27,39 +24,36 @@ Item {
                 }
                 minutePathView.model=minuteArray
             }
+            Component.onDestruction: {
+                clickFunc=null
+            }
 
             //内容
             Rectangle{
                 width:730
                 height: 350
                 anchors.centerIn: parent
+                anchors.margins: 20
                 color: "#333333"
                 radius: 10
 
-                Button {
-                    width:closeImg.width+50
-                    height:closeImg.height+50
+                PageCloseButton {
                     anchors.top:parent.top
                     anchors.right:parent.right
-                    Image {
-                        id:closeImg
-                        asynchronous:true
-                        smooth:false
-                        cache:false
-                        anchors.centerIn: parent
-                        source: themesPicturesPath+"icon_window_close.png"
-                    }
-                    background: null
                     onClicked: {
                         loaderMainHide()
                     }
                 }
 
                 PageDivider{
+                    width: parent.width-40
+                    anchors.horizontalCenter: parent.horizontalCenter
                     anchors.verticalCenter:row.verticalCenter
                     anchors.verticalCenterOffset:-30
                 }
                 PageDivider{
+                    width: parent.width-40
+                    anchors.horizontalCenter: parent.horizontalCenter
                     anchors.verticalCenter:row.verticalCenter
                     anchors.verticalCenterOffset:30
                 }
@@ -81,7 +75,7 @@ Item {
                         anchors.verticalCenter: parent.verticalCenter
                         horizontalAlignment:Text.AlignHCenter
                         verticalAlignment:Text.AlignVCenter
-                        text:qsTr(cookWorkPos==0?"左灶将在 ":"右灶将在")
+                        text:qsTr(cookWorkPos==0?"左灶将在":"右灶将在")
                     }
                     PageCookPathView {
                         id:hourPathView
@@ -91,7 +85,7 @@ Item {
                         currentIndex:0
                         Image {
                             anchors.fill: parent
-                            visible: hourPathView.moving
+                            visible: parent.moving
                             asynchronous:true
                             smooth:false
                             anchors.centerIn: parent
@@ -112,7 +106,7 @@ Item {
                         pathItemCount:3
                         Image {
                             anchors.fill: parent
-                            visible: minutePathView.moving
+                            visible: parent.moving
                             asynchronous:true
                             smooth:false
                             anchors.centerIn: parent
@@ -136,52 +130,30 @@ Item {
                         text:qsTr("后关火")
                     }
                 }
-                Item {
-                    width:80+140*2
-                    height: 50
+
+                PageButtonBar{
+                    anchors.horizontalCenter: parent.horizontalCenter
                     anchors.bottom: parent.bottom
                     anchors.bottomMargin: 20
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    Button {
-                        width:140
-                        height: 50
-                        anchors.left: parent.left
-                        background: Rectangle{
-                            color:themesTextColor2
-                            radius: 25
-                        }
-                        Text{
-                            text:qsTr("取消")
-                            color:"#000"
-                            font.pixelSize: 34
-                            anchors.centerIn: parent
-                        }
-                        onClicked: {
-                            loaderMainHide()
-                        }
-                    }
-                    Button {
-                        width:140
-                        height: 50
-                        anchors.right: parent.right
-                        background: Rectangle{
-                            color:themesTextColor2
-                            radius: 25
-                        }
-                        Text{
-                            text:qsTr("开始")
-                            color:"#000"
-                            font.pixelSize: 34
-                            anchors.centerIn: parent
-                        }
-                        onClicked: {
 
-                            loaderMainHide()
-                        }
+                    space:80
+                    models: ["取消","开始"]
+                    onClick: {
+
                     }
                 }
             }
         }
+    }
+
+    function loaderCloseHeat(cookWorkPos,clickFunc)
+    {
+        loader_main.sourceComponent = component_closeHeat
+        loader_main.item.cookWorkPos=cookWorkPos
+        loader_main.item.clickFunc=clickFunc
+    }
+    Component.onCompleted: {
+
     }
     function steamStart()
     {
@@ -212,8 +184,27 @@ Item {
         anchors.top:parent.top
         name:"定时关火"
     }
-
     Row {
+        width: parent-100
+        height:row.height
+        anchors.centerIn: row
+        spacing: 780
+        Repeater {
+            model: ["左灶","右灶"]
+            PageButtonBar{
+                visible: true
+                anchors.verticalCenter: parent.verticalCenter
+                orientation:true
+                space:54
+                models: ["重置","取消"]
+                onClick: {
+
+                }
+            }
+        }
+    }
+    Row {
+        id:row
         width: 309*2+124
         height: 309
         anchors.top: topBar.bottom
@@ -300,14 +291,21 @@ Item {
                         anchors.topMargin: 188
                     }
                 }
+                PageCirBar{
+                    width: 260
+                    height: width
+                    anchors.centerIn: parent
+                    runing:true
+                    canvasDiameter:width
+                }
                 onClicked: {
                     if(index==0)
                     {
-
+                        loaderCloseHeat(cookWorkPosEnum.LEFT,null)
                     }
                     else
                     {
-
+                        loaderCloseHeat(cookWorkPosEnum.RIGHT,null)
                     }
                 }
             }
