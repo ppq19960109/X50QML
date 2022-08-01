@@ -430,6 +430,7 @@ Item {
                         WifiFunc.addWifiInfo(wifiConnectInfo)
                         var real_value=value.replace(/\\{1}x/g,"\\\\x")
                         QmlDevState.executeShell("(wpa_cli list_networks | tail -n +3 | grep \'"+real_value+"\' | grep -v 'CURRENT' | awk '{system(\"wpa_cli remove_network \" $1)}' && wpa_cli save_config) &")
+                        real_value=null
                     }
                 }
                 if(isExistView("pageWifi")==null)
@@ -649,13 +650,15 @@ Item {
     {
         var i
         for( i = 0; i < wifiModel.count; ++i) {
-            if(wifiModel.get(i).ssid==productionTestWIFISSID)//productionTestWIFISSID
+            var wifiItem=wifiModel.get(i)
+            if(wifiItem.ssid==productionTestWIFISSID)//productionTestWIFISSID
             {
                 wifiModel.setProperty(0,"connected",0)
                 wifiModel.setProperty(i,"connected",2)
                 wifiModel.move(i,0,1)
                 break
             }
+            wifiItem=null
         }
 
         if(i == wifiModel.count)

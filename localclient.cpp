@@ -126,7 +126,7 @@ int LocalClient::uds_json_parse(const char *value,const int value_len)
         return -1;
     }
 
-    QJsonValue Data =object.value( DATA);
+    QJsonValue Data =object.value(DATA);
     if (!Data .isObject())
     {
         qDebug("Data is NULL\n");
@@ -138,22 +138,21 @@ int LocalClient::uds_json_parse(const char *value,const int value_len)
         //        qDebug() << "Data" << Data << endl;
         emit sendData(Data);
     }
-    else
-    {
-        QJsonObject resp ;
-        if (TYPE_GET== Type.toString())
-        {
+//    else
+//    {
+//        if (TYPE_GET== Type.toString())
+//        {
 
-        }
-        else if (TYPE_SET== Type.toString())
-        {
+//        }
+//        else if (TYPE_SET== Type.toString())
+//        {
 
-        }
-        else
-        {
+//        }
+//        else
+//        {
 
-        }
-    }
+//        }
+//    }
 
     return 0;
 }
@@ -178,11 +177,11 @@ int LocalClient::uds_recv(const char *byte,const int len)
                 continue;
             }
             verify = data[6 + msg_len +1];
-            printf("uds_recv encry:%d seqid:%d msg_len:%d", encry, seqid, msg_len);
+//            printf("uds_recv encry:%d seqid:%d msg_len:%d", encry, seqid, msg_len);
 
             if (CheckSum((unsigned char *)&data[i + 2], msg_len + 5) != verify)
             {
-                printf("CheckSum error..................");
+//                printf("CheckSum error..................");
                 // continue;
             }
             if (msg_len > 0)

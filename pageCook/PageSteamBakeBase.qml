@@ -9,9 +9,9 @@ Rectangle {
     property alias name: topBar.name
     property alias leftBtnText: topBar.leftBtnText
     property alias rightBtnText: topBar.rightBtnText
-    property var modePathViewIndex
-    property var tempPathViewIndex
-    property var timePathViewIndex
+    property var modePathViewIndex:undefined
+    property var tempPathViewIndex:undefined
+    property var timePathViewIndex:undefined
     signal showListData(var listData)
 
     property var root
@@ -21,11 +21,11 @@ Rectangle {
 
     function steamStart()
     {
-        //        console.log("PageSteamBakeBase",modePathView.currentIndex,modePathView.model.get(modePathView.currentIndex).modelData,tempPathView.model[tempPathView.currentIndex],timePathView.model[timePathView.currentIndex])
+        //        console.log("PageSteamBakeBase",modePathView.currentIndex,modePathView.model.[modePathView.currentIndex].modelData,tempPathView.model[tempPathView.currentIndex],timePathView.model[timePathView.currentIndex])
         var list = []
         var steps={}
         //        steps.device=root.device
-        steps.mode=workModeNumberEnum[modePathView.model.get(modePathView.currentIndex).modelData]
+        steps.mode=workModeNumberEnum[modePathView.model[modePathView.currentIndex].modelData]
         steps.temp=parseInt(tempPathView.model[tempPathView.currentIndex])
         steps.time=parseInt(timePathView.model[timePathView.currentIndex])
         list.push(steps)
@@ -100,14 +100,11 @@ Rectangle {
             if(cookWorkPosEnum.LEFT===root.device)
             {
                 topBar.name="左腔蒸烤"
-                for (i=0; i< rightWorkModeIndex; ++i)
-                    modeListModel.append(workModeModelEnum[i])
             }
             else
             {
                 topBar.name="右腔速蒸"
-                for (i=rightWorkModeIndex; i< workModeModelEnum.length; ++i)
-                    modeListModel.append(workModeModelEnum[i])
+                modePathView.model=rightWorkModeModelEnum
             }
             SendFunc.permitSteamStartStatus(1)
             if(root.reserve!=null)
@@ -157,7 +154,7 @@ Rectangle {
             if(multiMode>0)
             {
                 var param = {};
-                param.mode=workModeNumberEnum[modePathView.model.get(modePathView.currentIndex).modelData]
+                param.mode=workModeNumberEnum[modePathView.model[modePathView.currentIndex].modelData]
                 param.temp=parseInt(tempPathView.model[tempPathView.currentIndex])
                 param.time=parseInt(timePathView.model[timePathView.currentIndex])
                 showListData(param);
@@ -167,7 +164,7 @@ Rectangle {
             {
                 var list = []
                 var steps={}
-                steps.mode=workModeNumberEnum[modePathView.model.get(modePathView.currentIndex).modelData]
+                steps.mode=workModeNumberEnum[modePathView.model[modePathView.currentIndex].modelData]
                 steps.temp=parseInt(tempPathView.model[tempPathView.currentIndex])
                 steps.time=parseInt(timePathView.model[timePathView.currentIndex])
                 list.push(steps)
@@ -209,7 +206,7 @@ Rectangle {
                 id:modePathView
                 width: 292
                 height:parent.height
-                model:modeListModel
+                model:workModeModelEnum
                 delegateIndex:1
                 currentIndex:0
                 Image {
@@ -220,18 +217,19 @@ Rectangle {
                     source: "qrc:/x50/steam/mode-change-background.png"
                 }
                 onValueChanged: {
-                    //                    console.log("model onValueChanged:",model.get(index).modelData)
-                    var minTemp=model.get(index).minTemp
-                    var maxTemp=model.get(index).maxTemp
+                    //                    console.log("model onValueChanged:",model[index].modelData)
+                    var modeItem=model[index]
+                    var minTemp=modeItem.minTemp
+                    var maxTemp=modeItem.maxTemp
                     var tempArray=[]
                     for(var i=minTemp; i<= maxTemp; ++i) {
                         tempArray.push(i+"℃")
                     }
 
                     tempPathView.model=tempArray
-                    tempPathView.currentIndex=model.get(index).temp-model.get(index).minTemp
+                    tempPathView.currentIndex=modeItem.temp-minTemp
 
-                    var maxTime=model.get(modePathView.currentIndex).maxTime
+                    var maxTime=modeItem.maxTime
                     if(maxTime!=null && maxTime!=0)
                     {
 
@@ -248,36 +246,38 @@ Rectangle {
                         timeArray.push(i+"分钟")
                     }
                     timePathView.model=timeArray
-                    timePathView.currentIndex=CookFunc.getCookTimeIndex(model.get(index).time)
+                    timePathView.currentIndex=CookFunc.getCookTimeIndex(modeItem.time)
+                    modeItem=null
                 }
                 Component.onCompleted:{
                     //                    console.log("modePathView",modePathView.currentIndex,modePathViewIndex)
-                    if(modePathViewIndex===undefined)
+                    if(modePathViewIndex==null)
                     {
 
                     }
                     else
                     {
-                        modePathView.currentIndex=modePathViewIndex>=rightWorkModeIndex?modePathViewIndex-rightWorkModeIndex:modePathViewIndex
+                        modePathView.currentIndex=modePathViewIndex
                     }
-                    var minTemp=model.get(modePathView.currentIndex).minTemp
-                    var maxTemp=model.get(modePathView.currentIndex).maxTemp
+                    var modeItem=modePathView.model[modePathView.currentIndex]
+                    var minTemp=modeItem.minTemp
+                    var maxTemp=modeItem.maxTemp
                     var tempArray=[]
                     for(var i=minTemp; i<= maxTemp; ++i) {
                         tempArray.push(i+"℃")
                     }
                     tempPathView.model=tempArray
 
-                    if(tempPathViewIndex===undefined)
+                    if(tempPathViewIndex==null)
                     {
-                        tempPathView.currentIndex=modePathView.model.get(modePathView.currentIndex).temp-modePathView.model.get(modePathView.currentIndex).minTemp
+                        tempPathView.currentIndex=modeItem.temp-minTemp
                     }
                     else
                     {
-                        tempPathView.currentIndex=tempPathViewIndex-modePathView.model.get(modePathView.currentIndex).minTemp
+                        tempPathView.currentIndex=tempPathViewIndex-minTemp
                     }
 
-                    var maxTime=model.get(modePathView.currentIndex).maxTime
+                    var maxTime=modeItem.maxTime
                     if(maxTime!=null && maxTime!=0)
                     {
 
@@ -294,14 +294,15 @@ Rectangle {
                         timeArray.push(i+"分钟")
                     }
                     timePathView.model=timeArray
-                    if(timePathViewIndex===undefined)
+                    if(timePathViewIndex==null)
                     {
-                        timePathView.currentIndex=CookFunc.getCookTimeIndex(modePathView.model.get(modePathView.currentIndex).time)
+                        timePathView.currentIndex=CookFunc.getCookTimeIndex(modeItem.time)
                     }
                     else
                     {
                         timePathView.currentIndex=CookFunc.getCookTimeIndex(timePathViewIndex)
                     }
+                    modeItem=null
                 }
             }
             DataPathView {

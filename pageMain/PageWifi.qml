@@ -401,7 +401,9 @@ Item {
                             //                            console.log("wifiInfo",wifiInfo,typeof wifiInfo)
                             if(wifiInfo==null)
                             {
-                                showWifiInput(index,listView.model.get(index))
+                                var modelItem=listView.model.get(index)
+                                showWifiInput(index,modelItem)
+                                modelItem=null
                             }
                             else
                             {

@@ -31,7 +31,7 @@ int Backlight::backlightEnable()
         perror("Open Backlight bl_power Fail");
         return -1;
     }
-    printf("Lcd Backlight Open\n");
+//    printf("Lcd Backlight Open\n");
     write(fd, "0", 2);
     close(fd);
 #endif
@@ -53,7 +53,7 @@ int Backlight::backlightDisable()
         perror("Open Backlight bl_power Fail");
         return -1;
     }
-    printf("Lcd Backlight Close\n");
+//    printf("Lcd Backlight Close\n");
     write(fd, "1", 2);
     close(fd);
 #endif

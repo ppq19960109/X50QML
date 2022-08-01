@@ -22,6 +22,7 @@ Item {
             steps.time=step.time
             steps.number=i+1
             list.push(steps)
+            step=null
         }
 
         var para =CookFunc.getDefHistory()
@@ -89,6 +90,7 @@ Item {
                 steps.time=step.time
                 steps.number=i+1
                 list.push(steps)
+                step=null
             }
             var para =CookFunc.getDefHistory()
             para.cookPos=cookWorkPosEnum.LEFT
@@ -186,9 +188,9 @@ Item {
             name:'第'+ (listClickIndex+1) +'段'
             leftBtnText:""
             rightBtnText:"确定"
-            modePathViewIndex:listClickIndex >= listView.count?undefined:CookFunc.leftWorkModeToIndex(listView.model.get(listClickIndex).mode)-1
-            tempPathViewIndex:listClickIndex >= listView.count?undefined:listView.model.get(listClickIndex).temp
-            timePathViewIndex:listClickIndex >= listView.count?undefined:listView.model.get(listClickIndex).time
+            modePathViewIndex:listClickIndex >= listView.count?undefined:CookFunc.leftWorkModeToIndex(listModel.get(listClickIndex).mode)-1
+            tempPathViewIndex:listClickIndex >= listView.count?undefined:listModel.get(listClickIndex).temp
+            timePathViewIndex:listClickIndex >= listView.count?undefined:listModel.get(listClickIndex).time
         }
     }
     function showTanchang(){
@@ -211,14 +213,14 @@ Item {
                 //                console.log("onShowListData",listData.mode,listData.temp,listData.time,listView.count)
 
                 if(listClickIndex >= listView.count){
-                    listView.model.append(listData)
+                    listModel.append(listData)
                 }else{
                     //                    console.log("onShowListData listClickIndex",listClickIndex)
-
-                    listView.model.get(listClickIndex).mode=listData.mode;
-                    listView.model.get(listClickIndex).temp=listData.temp;
-                    listView.model.get(listClickIndex).time=listData.time;
+                    listModel.setProperty(listClickIndex,"mode",listData.mode)
+                    listModel.setProperty(listClickIndex,"temp",listData.temp)
+                    listModel.setProperty(listClickIndex,"time",listData.time)
                 }
+                listData=null
             }
         }
     }

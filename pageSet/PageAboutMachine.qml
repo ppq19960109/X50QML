@@ -41,9 +41,12 @@ Item {
     }
 
     Component.onCompleted: {
-        infoModel.get(0).value=QmlDevState.state.ProductCategory
-        infoModel.get(1).value=QmlDevState.state.ProductModel
-        infoModel.get(2).value=QmlDevState.state.DeviceName
+//        infoModel.get(0).value=QmlDevState.state.ProductCategory
+//        infoModel.get(1).value=QmlDevState.state.ProductModel
+//        infoModel.get(2).value=QmlDevState.state.DeviceName
+        infoModel.setProperty(0,"value",QmlDevState.state.ProductCategory)
+        infoModel.setProperty(1,"value",QmlDevState.state.ProductModel)
+        infoModel.setProperty(2,"value",QmlDevState.state.DeviceName)
         listView.model=infoModel
     }
 //    Component.onDestruction: {

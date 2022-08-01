@@ -8,7 +8,7 @@
 #include <QPair>
 #include <QVector>
 #include <QtQml>
-#include <QProcess>
+//#include <QProcess>
 #include "localclient.h"
 #include "qrcodeen.h"
 #include <cstdlib>
@@ -40,7 +40,7 @@ public:
     void setLocalConnected(const int connected);
     int getLocalConnected() const;
 
-    Q_INVOKABLE  void setState(const QString &name,const QVariant& value);
+    void setState(const QString &name,const QVariant& value);
     QVariantMap getState() const;
     //    static QmlDevState *qmlAttachedProperties(QObject *);
     QVariantList recipe[6];
@@ -58,11 +58,11 @@ public:
     int getHistoryIndex(const int id);
 
     LocalClient client;
-    Q_INVOKABLE int sendToServer(const QString &data);
-    Q_INVOKABLE int sendJsonToServer(const QString &type,const QJsonObject &json);
+    Q_INVOKABLE int sendToServer(const QString data);
+    int sendJsonToServer(const QString &type,const QJsonObject &json);
 
     Q_INVOKABLE QVariantList getRecipeDetails(const int recipeid);
-    Q_INVOKABLE void executeShell(const QString &cmd);
+    Q_INVOKABLE void executeShell(const QString cmd);
 private:
 
     int localConnected;
@@ -75,8 +75,8 @@ private:
     void readRecipeDetails();
 signals:
     void localConnectedChanged(const int value);
-    void stateChanged(const QString& key,const QVariant& value);
-    void historyChanged(const QString& action,const QVariantMap& history);
+    void stateChanged(const QString key,const QVariant value);
+    void historyChanged(const QString action,const QVariantMap history);
 
 private slots:
     void readData(const QJsonValue& data);

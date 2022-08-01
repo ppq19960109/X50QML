@@ -33,7 +33,8 @@ ApplicationWindow {
 
     readonly property var workModeModelEnum:[{"modelData":1,"temp":100,"time":30,"minTemp":40,"maxTemp":100},{"modelData":2,"temp":120,"time":20,"minTemp":101,"maxTemp":120},{"modelData":6,"temp":150,"time":60,"minTemp":50,"maxTemp":200},{"modelData":7,"temp":220,"time":15,"minTemp":200,"maxTemp":230,"maxTime":180},{"modelData":3,"temp":200,"time":60,"minTemp":50,"maxTemp":230}
         ,{"modelData":5,"temp":180,"time":120,"minTemp":50,"maxTemp":230},{"modelData":4,"temp":180,"time":120,"minTemp":50,"maxTemp":230}
-        ,{"modelData":8,"temp":60,"time":30,"minTemp":50,"maxTemp":120},{"modelData":9,"temp":100,"time":30,"minTemp":40,"maxTemp":100}]
+        ,{"modelData":8,"temp":60,"time":30,"minTemp":50,"maxTemp":120}]
+    readonly property var rightWorkModeModelEnum:[{"modelData":9,"temp":100,"time":30,"minTemp":40,"maxTemp":100}]
 
     readonly property var workStateEnum:{"WORKSTATE_STOP":0,"WORKSTATE_RESERVE":1,"WORKSTATE_PREHEAT":2,"WORKSTATE_RUN":3,"WORKSTATE_FINISH":4,"WORKSTATE_PAUSE":5,"WORKSTATE_PAUSE_RESERVE":6}
     readonly property var workStateArray:["停止","预约中","预热中","运行中","烹饪完成","暂停中","预约暂停中"]
@@ -1043,6 +1044,7 @@ ApplicationWindow {
         var page=isExistView("pageSteamBakeRun")
         if(page!==null)
             backPage(page)
+        SendFunc.permitSteamStartStatus(0)
     }
 
     function loaderErrorCodeShow(value,dir)

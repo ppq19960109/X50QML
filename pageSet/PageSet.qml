@@ -4,11 +4,6 @@ import QtQuick.Layouts 1.3
 import "../"
 Item {
 
-    Component.onCompleted: {
-
-
-    }
-
     PageBackBar{
         id:topBar
         anchors.bottom:parent.bottom

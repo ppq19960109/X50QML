@@ -18,6 +18,7 @@ Item {
             {
                 var root=recipeListView.model.get(recipeListView.currentIndex)
                 startCooking(root,JSON.parse(root.cookSteps))
+                root=null
             }
             key=null
             value=null
@@ -87,7 +88,8 @@ Item {
         else if(action=="DeleteHistory")
         {
             for( i = 0; i < historyModel.count; ++i) {
-                if(value.id==historyModel.get(i).id)
+                var modelItem=historyModel.get(i)
+                if(value.id==modelItem.id)
                 {
                     historyModel.remove(i,1)
 //                    console.log("PageCookHistory DeleteHistory",value.id,i)
@@ -95,16 +97,19 @@ Item {
                         SendFunc.permitSteamStartStatus(0)
                     break
                 }
+                modelItem=null
             }
         }
         else if(action=="UpdateHistory")
         {
             for( i = 0; i < historyModel.count; ++i) {
-                if(value.id==historyModel.get(i).id)
+                var modelItem=historyModel.get(i)
+                if(value.id==modelItem.id)
                 {
                     historyModel.set(i,value)
                     break
                 }
+                modelItem=null
             }
         }
     }
@@ -137,7 +142,11 @@ Item {
         }
         onRightClick:{
             if(noHistory.visible==false && edit===false)
-                load_page("pageCookDetails",JSON.stringify(recipeListView.model.get(recipeListView.currentIndex)))
+            {
+                var modelItem=recipeListView.model.get(recipeListView.currentIndex)
+                load_page("pageCookDetails",JSON.stringify(modelItem))
+                modelItem=null
+            }
         }
         onClose:{
             backPrePage()

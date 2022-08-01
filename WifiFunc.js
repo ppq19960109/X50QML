@@ -66,6 +66,7 @@ function deleteWifiInfo(wifiInfo)
     //    console.log("deleteWifiInfo:",JSON.stringify(wifiPasswdArray))
     systemSettings.wifiPasswdArray=wifiPasswdArray
     wifiConnectInfo.psk=""
+    wifiPasswdArray=null
 }
 
 function addWifiInfo(wifiInfo)
@@ -109,6 +110,7 @@ function addWifiInfo(wifiInfo)
     //    console.log("addWifiInfo:",JSON.stringify(wifiPasswdArray))
     systemSettings.wifiPasswdArray=wifiPasswdArray
     wifiConnectInfo.psk=""
+    wifiPasswdArray=null
 }
 
 function getWifiInfo(ssid)
@@ -131,7 +133,7 @@ function getWifiInfo(ssid)
             wifiInfo.ssid=element.ssid
             wifiInfo.psk=element.psk
             wifiInfo.encryp=element.encryp
-            //            console.log("get ssid:",wifiInfo.ssid,wifiInfo.psk,wifiInfo.encryp)
+            //            console.log("ssid:",wifiInfo.ssid,wifiInfo.psk,wifiInfo.encryp)
             return wifiInfo
         }
     }

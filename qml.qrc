@@ -12,7 +12,6 @@
         <file>pageMain/PageWifi.qml</file>
         <file>pageCook/PageSteamBakeRun.qml</file>
         <file>PageCirProgressBar.qml</file>
-        <file>PageCirWaveProgressBar.qml</file>
         <file>pageMain/PageCookDetails.qml</file>
         <file>pageCook/PageSteamBakeReserve.qml</file>
         <file>pageMain/PageSmartRecipes.qml</file>
@@ -77,7 +76,6 @@
         <file>pageProductionTest/PageScreenLine.qml</file>
         <file>pageProductionTest/PageScreenClick.qml</file>
         <file>pageProductionTest/PageScreenLCD.qml</file>
-        <file>PageGradient.qml</file>
         <file>PageDialogGradient.qml</file>
         <file>x50/main/icon_ts_g.png</file>
         <file>PageLockScreen.qml</file>

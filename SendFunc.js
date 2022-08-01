@@ -176,6 +176,7 @@ function deleteWifissid(ssid)
     }
     //    console.log("deleteWifissid:",JSON.stringify(wifiPasswdArray))
     systemSettings.wifiPasswdArray=wifiPasswdArray
+    wifiPasswdArray=null
 }
 
 function connectWiFi(ssid,psk,encryp)
@@ -241,6 +242,7 @@ function setCookOperation(device,operation)
     }
     Data.DataReportReason=0
     setToServer(Data)
+//    permitSteamStartStatus(0)
 }
 
 function setCooking(list,orderTime,cookPos)

@@ -303,7 +303,7 @@ QVariantList QmlDevState::getRecipeDetails(const int recipeid)
     return recipeMap[recipeid];
 }
 
-void QmlDevState::executeShell(const QString &cmd)
+void QmlDevState::executeShell(const QString cmd)
 {
     qDebug() << "executeShell:" << cmd;
     //    QProcess::execute(cmd);
@@ -347,7 +347,7 @@ void QmlDevState::readRecipeDetails()
     //    qDebug()<<"recipeMap:"<<recipeMap;
 }
 
-int QmlDevState::sendToServer(const QString& data)
+int QmlDevState::sendToServer(const QString data)
 {
     QByteArray msg= data.toUtf8();
     return client.sendMessage(msg);
@@ -364,7 +364,7 @@ int QmlDevState::sendJsonToServer(const QString& type,const QJsonObject& json)
 
 void QmlDevState::readData(const QJsonValue &data)
 {
-//    qDebug()<< "readData" << data  << endl;
+    qDebug()<< "readData" << data  << endl;
     QJsonObject object =data.toObject();
 
     QString key;

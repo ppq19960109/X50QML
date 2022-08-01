@@ -34,7 +34,7 @@ Item {
         Item  {
             property int textFont:PathView.isCurrentItem ? 45 : 35
             property color textColor:PathView.isCurrentItem ?themesTextColor:themesTextColor2
-            property url imgUrl:PathView.isCurrentItem ?leftWorkBigImg[modelData]:leftWorkSmallImg[modelData]
+            property url imgUrl:PathView.isCurrentItem ?leftWorkBigImg[modelData.modelData]:leftWorkSmallImg[modelData.modelData]
             width:parent.width
             height:parent.height/parent.pathItemCount
 //            opacity: PathView.isCurrentItem ? 1 : 0.5
@@ -55,7 +55,7 @@ Item {
                 anchors.horizontalCenterOffset: 30
                 color:textColor
                 font.pixelSize: textFont
-                text: workModeEnum[modelData]
+                text: workModeEnum[modelData.modelData]
             }
         }
     }
