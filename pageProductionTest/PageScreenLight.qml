@@ -12,6 +12,7 @@ Item{
             width: parent.width
 //            height: 50
             anchors.top: parent.top
+            anchors.topMargin: 40
             color:"#FFF"
             font.pixelSize: 40
             text: qsTr("调节背光设置，背光是否随设置亮暗变化

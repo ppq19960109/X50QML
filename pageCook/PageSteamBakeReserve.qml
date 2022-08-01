@@ -71,7 +71,6 @@ Item {
         minutePathView.model=minuteArray
 
 //        console.log("state",state,typeof state)
-        root=JSON.parse(state)
         SendFunc.permitSteamStartStatus(1)
     }
     //'<font size="5">测试</font>

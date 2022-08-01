@@ -60,7 +60,7 @@ Rectangle {
                 source: themesImagesPath+"icon-cookadd.png"
             }
             onClicked: {
-                load_page("pageSteamBakeBase",JSON.stringify({"device":cookWorkPosEnum.LEFT}))
+                load_page("pageSteamBakeBase",{"device":cookWorkPosEnum.LEFT})
                 loaderNewCookHide()
             }
         }
@@ -117,7 +117,7 @@ Rectangle {
                 }
 
                 onClicked: {
-                    load_page("pageCookHistory",JSON.stringify({"device":cookWorkPosEnum.LEFT}))
+                    load_page("pageCookHistory",{"cookPos":cookWorkPosEnum.LEFT})
                     loaderNewCookHide()
                 }
             }
@@ -181,7 +181,7 @@ Rectangle {
                 }
 
                 onClicked: {
-                    load_page("pageSteamBakeBase",JSON.stringify({"device":cookWorkPosEnum.RIGHT}))
+                    load_page("pageSteamBakeBase",{"device":cookWorkPosEnum.RIGHT})
                     loaderNewCookHide()
                 }
             }
@@ -204,7 +204,7 @@ Rectangle {
                 }
 
                 onClicked: {
-                    load_page("pageCookHistory",JSON.stringify({"device":cookWorkPosEnum.RIGHT}))
+                    load_page("pageCookHistory",{"cookPos":cookWorkPosEnum.RIGHT})
                     loaderNewCookHide()
                 }
             }

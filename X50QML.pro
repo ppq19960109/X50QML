@@ -17,7 +17,6 @@ SOURCES += \
         backlight.cpp \
         localclient.cpp \
         main.cpp \
-        mnetwork.cpp \
         qmldevstate.cpp \
         qrcodeen.cpp
 
@@ -57,7 +56,6 @@ contains(QT_ARCH, arm){
 HEADERS += \
     backlight.h \
     localclient.h \
-    mnetwork.h \
     qmldevstate.h \
     qrcodeen.h
 

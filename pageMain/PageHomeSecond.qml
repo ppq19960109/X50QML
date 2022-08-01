@@ -57,7 +57,7 @@ Item {
             }
 
             onClicked: {
-                load_page("pageCookHistory",JSON.stringify({"device":cookWorkPosEnum.ALL}))
+                load_page("pageCookHistory")
             }
         }
 

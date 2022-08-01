@@ -37,7 +37,7 @@ Item {
             }
 
             onClicked: {
-                load_page("pageSteamBakeBase",JSON.stringify({"device":cookWorkPosEnum.LEFT}))
+                load_page("pageSteamBakeBase",{"device":cookWorkPosEnum.LEFT})
             }
         }
         Button{
@@ -62,7 +62,7 @@ Item {
             }
 
             onClicked: {
-                load_page("pageSteamBakeBase",JSON.stringify({"device":cookWorkPosEnum.RIGHT}))
+                load_page("pageSteamBakeBase",{"device":cookWorkPosEnum.RIGHT})
             }
         }
     }

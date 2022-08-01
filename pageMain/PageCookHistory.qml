@@ -31,9 +31,6 @@ Item {
         connections.enabled=false
     }
     Component.onCompleted: {
-//        console.log("state",state,typeof state)
-        var root=JSON.parse(state)
-        cookPos=root.device
 
         QmlDevState.sortHistory()
         getHistory(cookPos)
@@ -144,7 +141,7 @@ Item {
             if(noHistory.visible==false && edit===false)
             {
                 var modelItem=recipeListView.model.get(recipeListView.currentIndex)
-                load_page("pageCookDetails",JSON.stringify(modelItem))
+                load_page("pageCookDetails",{"root":modelItem})
                 modelItem=null
             }
         }

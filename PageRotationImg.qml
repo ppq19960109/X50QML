@@ -3,6 +3,7 @@ import QtQuick.Controls 2.2
 
 Image {
     property alias duration:rotation.duration
+    property alias smooth:busyImg.smooth
     id: busyImg
     asynchronous:true
     smooth:false

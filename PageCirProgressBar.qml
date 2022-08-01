@@ -36,11 +36,21 @@ Item {
             updatePaint()
         }
     }
-
+    Image {
+        width: 310
+        height: width
+        visible:workState !== workStateEnum.WORKSTATE_PREHEAT
+        anchors.centerIn: parent
+        asynchronous:true
+        smooth:false
+        cache:false
+        source: "qrc:/x50/icon_runing_background.png"
+    }
     Canvas{
         property int lineWidth:30
-        property real r: canvas.width/2-lineWidth
+        property real r: canvas.width/2-lineWidth/2
         id: canvas
+        visible: !(workState === workStateEnum.WORKSTATE_FINISH||workState === workStateEnum.WORKSTATE_STOP||workState === workStateEnum.WORKSTATE_PREHEAT)
         width: canvasDiameter
         height: width
         anchors.centerIn: parent
@@ -51,44 +61,44 @@ Item {
             ctx.clearRect(0, 0, canvas.width, canvas.height)
             ctx.translate(canvas.width/2,canvas.height/2)
             //            ctx.lineWidth = 0
-            if(workState !== workStateEnum.WORKSTATE_PREHEAT)
-            {
-                //显示外圈
-                ctx.beginPath()
-                ctx.lineWidth = lineWidth
-                ctx.strokeStyle = "#333333"
-                //            ctx.fillStyle = '#596767'
-                ctx.arc(0, 0, r, 0, 2*Math.PI)
-                ctx.closePath()
-                ctx.stroke()
-                //            ctx.fill()
-            }
-            if(!(workState === workStateEnum.WORKSTATE_FINISH||workState === workStateEnum.WORKSTATE_STOP))
+//            if(workState !== workStateEnum.WORKSTATE_PREHEAT)
+//            {
+//                //显示外圈
+//                ctx.beginPath()
+//                ctx.lineWidth = lineWidth
+//                ctx.strokeStyle = "#333333"
+//                //            ctx.fillStyle = '#596767'
+//                ctx.arc(0, 0, r, 0, 2*Math.PI)
+//                ctx.closePath()
+//                ctx.stroke()
+//                //            ctx.fill()
+//            }
+            if(!(workState === workStateEnum.WORKSTATE_FINISH||workState === workStateEnum.WORKSTATE_STOP||workState === workStateEnum.WORKSTATE_PREHEAT))
             {
                 gr = ctx.createConicalGradient(0, 0, 0.5*Math.PI)
                 ctx.lineCap="round"
                 ctx.lineWidth = lineWidth
                 ctx.beginPath()
-                if(workState === workStateEnum.WORKSTATE_PREHEAT)
-                {
-                    ctx.rotate(roate*Math.PI/180);
-                    if(device==cookWorkPosEnum.LEFT)
-                    {
-                        gr.addColorStop(1, "#00EF832B");
-                        gr.addColorStop(0, "#FFEF832B");
-                    }
-                    else
-                    {
-                        gr.addColorStop(1, "#00DE932F");
-                        gr.addColorStop(0, "#FFDE932F");
-                    }
+//                if(workState === workStateEnum.WORKSTATE_PREHEAT)
+//                {
+//                    ctx.rotate(roate*Math.PI/180);
+//                    if(device==cookWorkPosEnum.LEFT)
+//                    {
+//                        gr.addColorStop(1, "#00EF832B");
+//                        gr.addColorStop(0, "#FFEF832B");
+//                    }
+//                    else
+//                    {
+//                        gr.addColorStop(1, "#00DE932F");
+//                        gr.addColorStop(0, "#FFDE932F");
+//                    }
 
-                    ctx.strokeStyle =gr
-                    ctx.arc(0, 0, r, (-0.5+0.04)*Math.PI, (1.5-0.04)*Math.PI)
-                    ctx.stroke()
-                }
-                else
-                {
+//                    ctx.strokeStyle =gr
+//                    ctx.arc(0, 0, r, (-0.5+0.04)*Math.PI, (1.5-0.04)*Math.PI)
+//                    ctx.stroke()
+//                }
+//                else
+//                {
                     if(device==cookWorkPosEnum.LEFT)
                     {
                         gr.addColorStop(1, "#A0420F")
@@ -108,7 +118,7 @@ Item {
                     {
                         ctx.arc(0, 0, r, (-0.5+0.04)*Math.PI, (1.5-0.04-1.92*percent/100)*Math.PI)
                     }
-                }
+//                }
                 ctx.stroke()
 
 //                var rad=(1.5-2*percent/100)*Math.PI
@@ -142,6 +152,8 @@ Item {
             //                ctx.fillText(percent + '%', 0, 0)
 
             ctx.restore()
+            gr=null
+            ctx=null
         }
     }
     Item{

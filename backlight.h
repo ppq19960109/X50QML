@@ -15,7 +15,7 @@ public:
     Q_INVOKABLE static int backlightDisable();
     Q_INVOKABLE static int backlightSet(unsigned char value);
     Q_INVOKABLE static int backlightGet();
-    Q_INVOKABLE QVariantList getAllFileName(QString path);
+//    Q_INVOKABLE QVariantList getAllFileName(QString path);
 };
 
 #endif // BACKLIGHT_H

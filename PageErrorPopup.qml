@@ -65,7 +65,7 @@ Item {
         Text{
             id:hintBottom
             visible: hintBottom.text!=""
-            width:parent.width
+            width:parent.width-80
             color:"white"
             font.pixelSize: 34
             anchors.top: parent.top

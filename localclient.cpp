@@ -13,7 +13,7 @@ LocalClient::LocalClient(QObject *parent) : QObject(parent)
     connect(m_socket, SIGNAL(connected()), this,SLOT(socketConnectedHandler()));
     connect(m_socket, SIGNAL(disconnected()), SLOT(socketDisConnectedHandler()));
     connect(m_socket, SIGNAL(error(QLocalSocket::LocalSocketError)), SLOT(socketErrorHandler(QLocalSocket::LocalSocketError)));
-    connect(m_socket, SIGNAL(stateChanged(QLocalSocket::LocalSocketState)), SLOT(stateChangedHandler(QLocalSocket::LocalSocketState)));
+//    connect(m_socket, SIGNAL(stateChanged(QLocalSocket::LocalSocketState)), SLOT(stateChangedHandler(QLocalSocket::LocalSocketState)));
 
     connect(m_socket, SIGNAL(readyRead()), this,SLOT(readyReadHandler()));
 
@@ -23,6 +23,7 @@ LocalClient::LocalClient(QObject *parent) : QObject(parent)
 
 LocalClient::~LocalClient()
 {
+    timer->stop();
     delete timer;
     delete m_socket;
 }
@@ -162,15 +163,15 @@ int LocalClient::uds_recv(const char *byte,const int len)
     if (byte == NULL)
         return -1;
     unsigned char*data=(unsigned char*)byte;
-    int ret = 0;
-    int msg_len, encry, seqid;
+    int ret = 0,msg_len;
+//    int encry, seqid;
     unsigned char verify;
     for (int i = 0; i < len; ++i)
     {
         if (data[i] == FRAME_HEADER && data[i + 1] == FRAME_HEADER)
         {
-            encry = data[i + 2];
-            seqid = (data[i + 3] << 8) + data[i + 4];
+//            encry = data[i + 2];
+//            seqid = (data[i + 3] << 8) + data[i + 4];
             msg_len = (data[i + 5] << 8) + data[i + 6];
             if (data[i + 6 + msg_len + 2] != FRAME_TAIL || data[i + 6 + msg_len + 3] != FRAME_TAIL)
             {
@@ -227,6 +228,7 @@ void LocalClient::close()
 void LocalClient::socketConnectedHandler()
 {
     qDebug() << "socketConnectedHandler";
+    timer->stop();
     timeoutCount=0;
     emit sendConnected(1);
     get_all();
@@ -237,6 +239,10 @@ void LocalClient::socketDisConnectedHandler()
     qDebug() << "socketDisConnectedHandler";
     close();
     emit sendConnected(0);
+    if(!timer->isActive())
+    {
+        timer->start();
+    }
 }
 
 void LocalClient::socketErrorHandler(QLocalSocket::LocalSocketError error)
@@ -249,17 +255,11 @@ void LocalClient::stateChangedHandler(QLocalSocket::LocalSocketState socketState
     qDebug() << "stateChangedHandler: " << socketState;
     if(QLocalSocket::UnconnectedState==socketState)
     {
-        close();
-        if(!timer->isActive())
-        {
-            timer->start();
-        }
+
     }
     else if(QLocalSocket::ConnectedState==socketState)
     {
         qDebug() << "ConnectedState.......";
-
-        timer->stop();
     }
 }
 

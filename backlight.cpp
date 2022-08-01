@@ -109,27 +109,27 @@ int Backlight::backlightGet()
     return value;
 }
 
-QVariantList Backlight::getAllFileName(QString path)
-{
-    QVariantList pathList;
-    //    QDir *dir=new QDir(path);
-    QDir dir(path);
-    QStringList filter;
-    QList<QFileInfo> *fileInfo=new QList<QFileInfo>(dir.entryInfoList(filter));
-    for(int i = 0;i<fileInfo->count(); ++i)
-    {
-        const QFileInfo info_tmp = fileInfo->at(i);
-        QString path_tmp = info_tmp.filePath();
-        if( info_tmp.fileName()==".." || info_tmp.fileName()=="." )
-        {
-        }else if(info_tmp.isFile() ){
-            pathList.append(path_tmp);
-        }else if(info_tmp.isDir()){
-            pathList.append(getAllFileName(path_tmp));
-        }
-    }
-    delete fileInfo;
-    qDebug() << "getAllFileName:" <<pathList << "size:" << pathList.size() <<endl;
-    return pathList;
-}
+//QVariantList Backlight::getAllFileName(QString path)
+//{
+//    QVariantList pathList;
+//    //    QDir *dir=new QDir(path);
+//    QDir dir(path);
+//    QStringList filter;
+//    QList<QFileInfo> *fileInfo=new QList<QFileInfo>(dir.entryInfoList(filter));
+//    for(int i = 0;i<fileInfo->count(); ++i)
+//    {
+//        const QFileInfo info_tmp = fileInfo->at(i);
+//        QString path_tmp = info_tmp.filePath();
+//        if( info_tmp.fileName()==".." || info_tmp.fileName()=="." )
+//        {
+//        }else if(info_tmp.isFile() ){
+//            pathList.append(path_tmp);
+//        }else if(info_tmp.isDir()){
+//            pathList.append(getAllFileName(path_tmp));
+//        }
+//    }
+//    delete fileInfo;
+//    qDebug() << "getAllFileName:" <<pathList << "size:" << pathList.size() <<endl;
+//    return pathList;
+//}
 

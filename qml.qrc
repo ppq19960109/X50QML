@@ -120,5 +120,8 @@
         <file>x50/demo/demo2.png</file>
         <file>x50/demo/demo1.png</file>
         <file>x50/demo/demo6.png</file>
+        <file>x50/icon_runing_background.png</file>
+        <file>x50/icon_right_runing.png</file>
+        <file>x50/icon_left_runing.png</file>
     </qresource>
 </RCC>

@@ -14,27 +14,28 @@ Rectangle {
     property var timePathViewIndex:undefined
     signal showListData(var listData)
 
-    property var root
-
     readonly property var leftWorkBigImg: ["", "qrc:/x50/steam/icon_经典蒸.png", "qrc:/x50/steam/icon_高温蒸.png", "qrc:/x50/steam/icon_热风烧烤.png", "qrc:/x50/steam/icon_上下加热.png", "qrc:/x50/steam/icon_立体热风.png", "qrc:/x50/steam/icon_蒸汽烤.png", "qrc:/x50/steam/icon_空气炸.png", "qrc:/x50/steam/icon_保暖烘干.png","qrc:/x50/steam/icon_便捷蒸.png"]
     readonly property var leftWorkSmallImg: ["", "qrc:/x50/steam/icon_经典蒸缩小.png", "qrc:/x50/steam/icon_高温蒸缩小.png", "qrc:/x50/steam/icon_热风烧烤缩小.png", "qrc:/x50/steam/icon_上下加热缩小.png", "qrc:/x50/steam/icon_立体热风缩小.png", "qrc:/x50/steam/icon_蒸汽烤缩小.png", "qrc:/x50/steam/icon_空气炸缩小.png", "qrc:/x50/steam/icon_保暖烘干缩小.png","qrc:/x50/steam/icon_经典蒸缩小.png"]
+
+    property int device:0
+    property int reserve:0
 
     function steamStart()
     {
         //        console.log("PageSteamBakeBase",modePathView.currentIndex,modePathView.model.[modePathView.currentIndex].modelData,tempPathView.model[tempPathView.currentIndex],timePathView.model[timePathView.currentIndex])
         var list = []
         var steps={}
-        //        steps.device=root.device
+
         steps.mode=workModeNumberEnum[modePathView.model[modePathView.currentIndex].modelData]
         steps.temp=parseInt(tempPathView.model[tempPathView.currentIndex])
         steps.time=parseInt(timePathView.model[timePathView.currentIndex])
         list.push(steps)
         var para
         para =CookFunc.getDefHistory()
-        para.cookPos=root.device
+        para.cookPos=device
         para.dishName=CookFunc.getDishName(list)
         para.cookSteps=JSON.stringify(list)
-        //        console.log("para:",JSON.stringify(para),systemSettings.leftCookDialog,systemSettings.rightCookDialog,root.device)
+        //        console.log("para:",JSON.stringify(para),systemSettings.leftCookDialog,systemSettings.rightCookDialog)
 
         if(para.cookPos===cookWorkPosEnum.LEFT)
         {
@@ -96,8 +97,7 @@ Rectangle {
         //        console.log("state",state,typeof state)
         if(multiMode==0 )//|| undefined != state || null != state || "" != state
         {
-            root=JSON.parse(state)
-            if(cookWorkPosEnum.LEFT===root.device)
+            if(cookWorkPosEnum.LEFT===device)
             {
                 topBar.name="左腔蒸烤"
             }
@@ -107,7 +107,7 @@ Rectangle {
                 modePathView.model=rightWorkModeModelEnum
             }
             SendFunc.permitSteamStartStatus(1)
-            if(root.reserve!=null)
+            if(reserve!=0)
                 topBar.rightBtnText=""
         }
         else
@@ -170,11 +170,11 @@ Rectangle {
                 list.push(steps)
 
                 var para =CookFunc.getDefHistory()
-                para.cookPos=root.device
+                para.cookPos=device
                 para.dishName=CookFunc.getDishName(list)
                 para.cookSteps=JSON.stringify(list)
 
-                load_page("pageSteamBakeReserve",JSON.stringify(para))
+                load_page("pageSteamBakeReserve",{"root":para})
                 para=undefined
             }
         }

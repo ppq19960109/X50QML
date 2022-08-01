@@ -95,7 +95,7 @@ Item {
             startCooking(root,cookSteps)
         }
         onRightClick:{
-            load_page("pageSteamBakeReserve",JSON.stringify(root))
+            load_page("pageSteamBakeReserve",{"root":root})
         }
     }
 

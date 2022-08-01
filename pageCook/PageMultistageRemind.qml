@@ -16,7 +16,7 @@ Rectangle {
             edit=!edit
         }
         onRightClick:{
-            load_page("pageCookDetails",JSON.stringify(recipeListView.model[recipeListView.currentIndex]))
+            load_page("pageCookDetails",{"root":recipeListView.model[recipeListView.currentIndex]})
         }
         onClose:{
             backPrePage()

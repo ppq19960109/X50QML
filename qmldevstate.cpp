@@ -364,7 +364,7 @@ int QmlDevState::sendJsonToServer(const QString& type,const QJsonObject& json)
 
 void QmlDevState::readData(const QJsonValue &data)
 {
-    qDebug()<< "readData" << data  << endl;
+//    qDebug()<< "readData" << data  << endl;
     QJsonObject object =data.toObject();
 
     QString key;

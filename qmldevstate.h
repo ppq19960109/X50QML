@@ -40,7 +40,7 @@ public:
     void setLocalConnected(const int connected);
     int getLocalConnected() const;
 
-    void setState(const QString &name,const QVariant& value);
+    Q_INVOKABLE void setState(const QString &name,const QVariant& value);
     QVariantMap getState() const;
     //    static QmlDevState *qmlAttachedProperties(QObject *);
     QVariantList recipe[6];

@@ -1,7 +1,7 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.2
 Item {
-    implicitWidth: parent.width
+    width: parent.width
     height: control.height
     property alias stepSize: control.stepSize
     property alias from: control.from
@@ -16,10 +16,10 @@ Item {
         background: Rectangle {
             x: control.leftPadding
             y: control.topPadding + control.availableHeight / 2 - height / 2
-            implicitWidth: control.availableWidth
-            implicitHeight: 4
+//            implicitWidth: control.availableWidth
+//            implicitHeight: 4
             width: control.availableWidth
-            height: implicitHeight
+            height: 4
             radius: 2
             color: themesTextColor2
 //            opacity: 0.35

@@ -96,7 +96,7 @@ Item {
             para.cookPos=cookWorkPosEnum.LEFT
             para.dishName=CookFunc.getDishName(list)
             para.cookSteps=JSON.stringify(list)
-            load_page("pageSteamBakeReserve",JSON.stringify(para))
+            load_page("pageSteamBakeReserve",{"root":para})
             para=undefined
         }
         onClose:{
