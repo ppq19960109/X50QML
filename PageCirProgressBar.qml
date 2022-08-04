@@ -28,7 +28,8 @@ Item {
         //        {
         //            percent=-1
         //        }
-        updatePaint()
+        if(workState !== workStateEnum.WORKSTATE_STOP)
+            updatePaint()
     }
     onPercentChanged: {
         if(workState === workStateEnum.WORKSTATE_RESERVE||workState === workStateEnum.WORKSTATE_RUN||workState === workStateEnum.WORKSTATE_PAUSE||workState === workStateEnum.WORKSTATE_PAUSE_RESERVE)
@@ -43,7 +44,6 @@ Item {
         anchors.centerIn: parent
         asynchronous:true
         smooth:false
-        cache:false
         source: "qrc:/x50/icon_runing_background.png"
     }
     Canvas{
@@ -55,83 +55,90 @@ Item {
         height: width
         anchors.centerIn: parent
         onPaint: {
-            var gr
+            if(workState === workStateEnum.WORKSTATE_FINISH||workState === workStateEnum.WORKSTATE_STOP||workState === workStateEnum.WORKSTATE_PREHEAT)
+            {
+                return
+            }
             var ctx = getContext("2d")
             ctx.save()
             ctx.clearRect(0, 0, canvas.width, canvas.height)
+            //            if(workState === workStateEnum.WORKSTATE_FINISH||workState === workStateEnum.WORKSTATE_STOP||workState === workStateEnum.WORKSTATE_PREHEAT)
+            //            {
+            //                ctx.restore()
+            //                return
+            //            }
+            var gr
             ctx.translate(canvas.width/2,canvas.height/2)
             //            ctx.lineWidth = 0
-//            if(workState !== workStateEnum.WORKSTATE_PREHEAT)
-//            {
-//                //显示外圈
-//                ctx.beginPath()
-//                ctx.lineWidth = lineWidth
-//                ctx.strokeStyle = "#333333"
-//                //            ctx.fillStyle = '#596767'
-//                ctx.arc(0, 0, r, 0, 2*Math.PI)
-//                ctx.closePath()
-//                ctx.stroke()
-//                //            ctx.fill()
-//            }
-            if(!(workState === workStateEnum.WORKSTATE_FINISH||workState === workStateEnum.WORKSTATE_STOP||workState === workStateEnum.WORKSTATE_PREHEAT))
+            //            if(workState !== workStateEnum.WORKSTATE_PREHEAT)
+            //            {
+            //                //显示外圈
+            //                ctx.beginPath()
+            //                ctx.lineWidth = lineWidth
+            //                ctx.strokeStyle = "#333333"
+            //                //            ctx.fillStyle = '#596767'
+            //                ctx.arc(0, 0, r, 0, 2*Math.PI)
+            //                ctx.closePath()
+            //                ctx.stroke()
+            //                //            ctx.fill()
+            //            }
+
+            gr = ctx.createConicalGradient(0, 0, 0.5*Math.PI)
+            ctx.lineCap="round"
+            ctx.lineWidth = lineWidth
+            ctx.beginPath()
+            //                if(workState === workStateEnum.WORKSTATE_PREHEAT)
+            //                {
+            //                    ctx.rotate(roate*Math.PI/180);
+            //                    if(device==cookWorkPosEnum.LEFT)
+            //                    {
+            //                        gr.addColorStop(1, "#00EF832B");
+            //                        gr.addColorStop(0, "#FFEF832B");
+            //                    }
+            //                    else
+            //                    {
+            //                        gr.addColorStop(1, "#00DE932F");
+            //                        gr.addColorStop(0, "#FFDE932F");
+            //                    }
+
+            //                    ctx.strokeStyle =gr
+            //                    ctx.arc(0, 0, r, (-0.5+0.04)*Math.PI, (1.5-0.04)*Math.PI)
+            //                    ctx.stroke()
+            //                }
+            //                else
+            //                {
+            if(device==cookWorkPosEnum.LEFT)
             {
-                gr = ctx.createConicalGradient(0, 0, 0.5*Math.PI)
-                ctx.lineCap="round"
-                ctx.lineWidth = lineWidth
-                ctx.beginPath()
-//                if(workState === workStateEnum.WORKSTATE_PREHEAT)
-//                {
-//                    ctx.rotate(roate*Math.PI/180);
-//                    if(device==cookWorkPosEnum.LEFT)
-//                    {
-//                        gr.addColorStop(1, "#00EF832B");
-//                        gr.addColorStop(0, "#FFEF832B");
-//                    }
-//                    else
-//                    {
-//                        gr.addColorStop(1, "#00DE932F");
-//                        gr.addColorStop(0, "#FFDE932F");
-//                    }
-
-//                    ctx.strokeStyle =gr
-//                    ctx.arc(0, 0, r, (-0.5+0.04)*Math.PI, (1.5-0.04)*Math.PI)
-//                    ctx.stroke()
-//                }
-//                else
-//                {
-                    if(device==cookWorkPosEnum.LEFT)
-                    {
-                        gr.addColorStop(1, "#A0420F")
-                        gr.addColorStop(0, "#E68855")
-                    }
-                    else
-                    {
-                        gr.addColorStop(0, "#DE932F");
-                        //                        gr.addColorStop(1, "#DE932F");
-                    }
-                    ctx.strokeStyle =gr
-                    if(percent==0)
-                    {
-                        ctx.arc(0, 0, r, -0.5*Math.PI, 1.5*Math.PI)
-                    }
-                    else
-                    {
-                        ctx.arc(0, 0, r, (-0.5+0.04)*Math.PI, (1.5-0.04-1.92*percent/100)*Math.PI)
-                    }
-//                }
-                ctx.stroke()
-
-//                var rad=(1.5-2*percent/100)*Math.PI
-//                console.log("radian:",rad,"r:",r,"Angle",360*percent/100)
-//                var x = Math.cos(rad)*r
-//                var y = Math.sin(rad)*r
-
-//                ctx.beginPath()
-//                ctx.fillStyle = '#E68855'
-//                ctx.arc(x, y, lineWidth, 0, 2*Math.PI)
-//                ctx.closePath()
-//                ctx.fill()
+                gr.addColorStop(1, "#A0420F")
+                gr.addColorStop(0, "#E68855")
             }
+            else
+            {
+                gr.addColorStop(0, "#DE932F");
+                //                        gr.addColorStop(1, "#DE932F");
+            }
+            ctx.strokeStyle =gr
+            if(percent==0)
+            {
+                ctx.arc(0, 0, r, -0.5*Math.PI, 1.5*Math.PI)
+            }
+            else
+            {
+                ctx.arc(0, 0, r, (-0.5+0.04)*Math.PI, (1.5-0.04-1.92*percent/100)*Math.PI)
+            }
+            //                }
+            ctx.stroke()
+
+            //                var rad=(1.5-2*percent/100)*Math.PI
+            //                console.log("radian:",rad,"r:",r,"Angle",360*percent/100)
+            //                var x = Math.cos(rad)*r
+            //                var y = Math.sin(rad)*r
+
+            //                ctx.beginPath()
+            //                ctx.fillStyle = '#E68855'
+            //                ctx.arc(x, y, lineWidth, 0, 2*Math.PI)
+            //                ctx.closePath()
+            //                ctx.fill()
 
 
             //            var rad=(2*percent/100-0.5)*Math.PI
@@ -188,7 +195,7 @@ Item {
                 anchors.horizontalCenterOffset:(workState === workStateEnum.WORKSTATE_PREHEAT||workState === workStateEnum.WORKSTATE_RUN||workState === workStateEnum.WORKSTATE_PAUSE)?-20:0
                 color:workColor
                 font.pixelSize: 70
-//                font.bold: (workState === workStateEnum.WORKSTATE_RUN|| workState === workStateEnum.WORKSTATE_PAUSE)?true:false
+                //                font.bold: (workState === workStateEnum.WORKSTATE_RUN|| workState === workStateEnum.WORKSTATE_PAUSE)?true:false
                 visible: !((workState === workStateEnum.WORKSTATE_PAUSE_RESERVE||workState === workStateEnum.WORKSTATE_PAUSE) && reserveFlash==false)
             }
             Text{

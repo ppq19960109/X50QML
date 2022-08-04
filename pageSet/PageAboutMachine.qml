@@ -156,7 +156,7 @@ Item {
                     id:qrcodeImg
                     asynchronous:true
                     smooth:false
-                    //                    cache:false
+                    cache:false
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.right: parent.right
                     source: "qrc:/x50/set/gengduo.png"

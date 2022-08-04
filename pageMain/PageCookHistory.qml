@@ -236,7 +236,7 @@ Item {
                     anchors.right: parent.right
                     background: Image{
                         visible: edit
-                        cache:false
+                        smooth:false
                         asynchronous:true
                         anchors.centerIn: parent
                         source: themesImagesPath+"icon_cook_delete.png"

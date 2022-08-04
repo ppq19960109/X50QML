@@ -50,11 +50,9 @@ Rectangle {
     }
 
     Component.onCompleted: {
-//        console.log("PageSteamBakeRun onCompleted")
-
-        loaderSteamHide()
         leftProgressBar.updatePaint()
         rightProgressBar.updatePaint()
+        loaderSteamHide()
         sleepWakeup()
     }
     Component.onDestruction: {
@@ -184,7 +182,7 @@ Rectangle {
                     }
                     else if(leftProgressBar.workState === workStateEnum.WORKSTATE_PAUSE_RESERVE)
                     {
-                        var para =CookFunc.getDefHistory()
+                        var para =CookFunc.getDefHistory();
                         para.cookPos=cookWorkPosEnum.LEFT
                         var mode=QmlDevState.state.MultiMode
                         if(mode==0)

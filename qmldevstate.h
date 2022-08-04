@@ -36,11 +36,11 @@ public:
         LINK_VALUE_TYPE_NULL,
         LINK_VALUE_TYPE_ARRAY,
     };
-//    QProcess process;
+    //    QProcess process;
     void setLocalConnected(const int connected);
     int getLocalConnected() const;
 
-    Q_INVOKABLE void setState(const QString &name,const QVariant& value);
+    Q_INVOKABLE void setState(QString name,QVariant value);
     QVariantMap getState() const;
     //    static QmlDevState *qmlAttachedProperties(QObject *);
     QVariantList recipe[6];
@@ -52,34 +52,33 @@ public:
     Q_INVOKABLE void sortHistory();
     Q_INVOKABLE int setCollect(const int index,const int collect);
     Q_INVOKABLE void startLocalConnect();
-    void setHistory(const QString& action,const QVariantMap &history);
-    int coverHistory(const QJsonObject& single,QVariantMap& info);
-    int compareHistoryCollect(const QVariantMap& single);
+    void setHistory(QString& action,QVariantMap& history);
+    int coverHistory(QJsonObject& single,QVariantMap& info);
     int getHistoryIndex(const int id);
 
     LocalClient client;
-    Q_INVOKABLE int sendToServer(const QString data);
-    int sendJsonToServer(const QString &type,const QJsonObject &json);
+    Q_INVOKABLE int sendToServer(QString data);
+    int sendJsonToServer(QString type,QJsonObject& json);
 
     Q_INVOKABLE QVariantList getRecipeDetails(const int recipeid);
-    Q_INVOKABLE void executeShell(const QString cmd);
+    Q_INVOKABLE void executeShell(QString cmd);
 private:
 
     int localConnected;
     QVariantMap stateMap;
 
-//    QVariantMap stateTypeMap;
+    //    QVariantMap stateTypeMap;
     QVector<QPair<QString,int>> stateType;
 
     QMap<int,QVariantList> recipeMap;
     void readRecipeDetails();
 signals:
     void localConnectedChanged(const int value);
-    void stateChanged(const QString key,const QVariant value);
-    void historyChanged(const QString action,const QVariantMap history);
+    void stateChanged(QString key,QVariant value);
+    void historyChanged(QString action,QVariantMap history);
 
 private slots:
-    void readData(const QJsonValue& data);
+    void readData(QJsonValue data);
 };
 //QML_DECLARE_TYPEINFO(QmlDevState, QML_HAS_ATTACHED_PROPERTIES)
 

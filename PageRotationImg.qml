@@ -7,7 +7,6 @@ Image {
     id: busyImg
     asynchronous:true
     smooth:false
-    cache:false
     RotationAnimator {
         id:rotation
         target: busyImg

@@ -126,6 +126,7 @@ Item {
             Image{
                 asynchronous:true
                 smooth:false
+                cache:false
                 anchors.top: recipeImg.top
                 anchors.left: recipeImg.left
                 sourceSize.width: 88
@@ -196,8 +197,6 @@ Item {
             interactive: false
             delegate: multiDelegate
             //            model:
-
-            focus: true
         }
 
     }

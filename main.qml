@@ -14,7 +14,7 @@ ApplicationWindow {
     id: window
     width: 800
     height: 480
-//        visible: true
+    //        visible: true
     property int sysPower:-1
     property int permitStartStatus:0
     property int productionTestStatus:0
@@ -166,7 +166,8 @@ ApplicationWindow {
             loaderAutoHide()
             if(productionTestFlag==0 && timer_standby.running==true)
                 timer_standby.stop()
-            backTopPage()
+            if(isExistView("pageSteamBakeRun")==null)
+                backTopPage()
             SendFunc.setBuzControl(buzControlEnum.STOP)
         }
         if(window.visible===false)
@@ -267,7 +268,7 @@ ApplicationWindow {
         interval: 62000
         triggeredOnStart: false
         onTriggered: {
-//            console.log("timer_wifi_connecting...",wifiConnecting)
+            //            console.log("timer_wifi_connecting...",wifiConnecting)
             if(wifiConnecting==true)
             {
                 //                WifiFunc.deleteWifiInfo(wifiConnectInfo)
@@ -345,11 +346,11 @@ ApplicationWindow {
             confirmText:"开始烹饪"
             checkboxVisible:true
             onCancel:{
-//                console.info("component_steam onCancel")
+                //                console.info("component_steam onCancel")
                 loaderSteamHide()
             }
             onConfirm:{
-//                console.info("component_steam onConfirm")
+                //                console.info("component_steam onConfirm")
                 if(steamDialog.checkboxState)
                 {
                     var dialog=systemSettings.cookDialog
@@ -855,7 +856,7 @@ ApplicationWindow {
         PageDemoMode {}
     }
     function isExistView(pageName) {
-//        console.log("isExistView:",pageName)
+        //        console.log("isExistView:",pageName)
         return stackView.find(function(item,index){
             return item.name === pageName
         })
@@ -864,19 +865,19 @@ ApplicationWindow {
     function backPrePage() {
         if(stackView.depth>0)
             stackView.pop(StackView.Immediate)
-//        console.log("stackView depth:"+stackView.depth)
+        //        console.log("stackView depth:"+stackView.depth)
     }
 
     function backTopPage() {
         if(stackView.depth>0)
             stackView.pop(null,StackView.Immediate)
-//        console.log("stackView depth:"+stackView.depth)
+        //        console.log("stackView depth:"+stackView.depth)
     }
 
     function backPage(page) {
         if(stackView.depth>0)
             stackView.pop(page,StackView.Immediate)
-//        console.log("backPage stackView depth:"+stackView.depth)
+        //        console.log("backPage stackView depth:"+stackView.depth)
     }
 
     function load_page(page,args) {
@@ -981,7 +982,7 @@ ApplicationWindow {
             break;
         }
 
-//        console.log("stackView depth:"+stackView.depth)
+        //        console.log("stackView depth:"+stackView.depth)
     }
     //获取当前时间方法
     //    function getCurtime()
@@ -997,30 +998,30 @@ ApplicationWindow {
         }
         else
         {
-//            console.log("startCooking:",JSON.stringify(root),JSON.stringify(cookSteps))
+            //            console.log("startCooking:",JSON.stringify(root),JSON.stringify(cookSteps))
             if(cookSteps.length===1 && (undefined === cookSteps[0].number || 0 === cookSteps[0].number))
             {
                 SendFunc.setCooking(cookSteps,root.orderTime,root.cookPos)
-//                                if(cookWorkPosEnum.LEFT===root.cookPos)
-//                                {
-//                                    QmlDevState.setState("LStOvState",2)
-//                                    QmlDevState.setState("LStOvMode",cookSteps[0].mode)
-//                                    QmlDevState.setState("LStOvSetTemp",cookSteps[0].temp)
-//                                    QmlDevState.setState("LStOvRealTemp",cookSteps[0].temp)
-//                                    QmlDevState.setState("LStOvSetTimer",cookSteps[0].time)
-//                                    QmlDevState.setState("LStOvSetTimerLeft",cookSteps[0].time/4)
-//                                    QmlDevState.setState("LStOvOrderTimer",cookSteps[0].time)
-//                                    QmlDevState.setState("LStOvOrderTimerLeft",cookSteps[0].time)
-//                                }
-//                                else
-//                                {
-//                                    QmlDevState.setState("RStOvState",1)
-//                                    QmlDevState.setState("RStOvRealTemp",cookSteps[0].temp)
-//                                    QmlDevState.setState("RStOvSetTimerLeft",cookSteps[0].time)
-//                                    QmlDevState.setState("RStOvSetTimer",cookSteps[0].time)
-//                                    QmlDevState.setState("RStOvOrderTimer",cookSteps[0].time)
-//                                    QmlDevState.setState("RStOvOrderTimerLeft",cookSteps[0].time/2)
-//                                }
+                //                                if(cookWorkPosEnum.LEFT===root.cookPos)
+                //                                {
+                //                                    QmlDevState.setState("LStOvState",2)
+                //                                    QmlDevState.setState("LStOvMode",cookSteps[0].mode)
+                //                                    QmlDevState.setState("LStOvSetTemp",cookSteps[0].temp)
+                //                                    QmlDevState.setState("LStOvRealTemp",cookSteps[0].temp)
+                //                                    QmlDevState.setState("LStOvSetTimer",cookSteps[0].time)
+                //                                    QmlDevState.setState("LStOvSetTimerLeft",cookSteps[0].time/4)
+                //                                    QmlDevState.setState("LStOvOrderTimer",cookSteps[0].time)
+                //                                    QmlDevState.setState("LStOvOrderTimerLeft",cookSteps[0].time)
+                //                                }
+                //                                else
+                //                                {
+                //                                    QmlDevState.setState("RStOvState",1)
+                //                                    QmlDevState.setState("RStOvRealTemp",cookSteps[0].temp)
+                //                                    QmlDevState.setState("RStOvSetTimerLeft",cookSteps[0].time)
+                //                                    QmlDevState.setState("RStOvSetTimer",cookSteps[0].time)
+                //                                    QmlDevState.setState("RStOvOrderTimer",cookSteps[0].time)
+                //                                    QmlDevState.setState("RStOvOrderTimerLeft",cookSteps[0].time/2)
+                //                                }
             }
             else
             {
@@ -1077,11 +1078,11 @@ ApplicationWindow {
                 loaderErrorShow("防火墙传感器故障！","请拨打售后电话<font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员")
             break
         case 7:
-            loaderErrorShow("烟机进风口出现火情！","请及时关闭灶具旋钮 等待温度降低后使用",false)
+            loaderErrorShow("烟机进风口出现火情！","请及时关闭灶具旋钮\n等待温度降低后使用",false)
             standbyWakeup()
             break
         case 8:
-            loaderErrorShow("燃气泄漏","燃气有泄露风险\n请立即关闭灶具旋钮,关闭总阀并开窗通气",false)
+            loaderErrorShow("燃气泄漏","燃气有泄露风险\n请立即关闭灶具旋钮\n关闭总阀并开窗通气",false)
             break
         case 9:
             if(dir==null && productionTestStatus!=1)

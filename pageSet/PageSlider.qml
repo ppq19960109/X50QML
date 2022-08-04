@@ -48,7 +48,7 @@ Item {
 //                border.color: "#bdbebf"
 //            }
             Image {
-                cache:false
+                smooth:false
                 asynchronous:true
                 anchors.centerIn: parent
                 source: "qrc:/x50/set/huadonganniu.png"

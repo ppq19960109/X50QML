@@ -36,7 +36,7 @@ public:
     void close();
 
 signals:
-    void sendData(const QJsonValue& data);
+    void sendData(QJsonValue data);
     void sendConnected(const int connected);
 private slots:
     void socketConnectedHandler();

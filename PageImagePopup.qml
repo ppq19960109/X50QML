@@ -30,7 +30,6 @@ Item {
                 id:closeImg
                 asynchronous:true
                 smooth:false
-                cache:false
                 anchors.centerIn: parent
                 source: themesImagesPath+"icon-window-close.png"
             }
@@ -47,7 +46,6 @@ Item {
             id:hintTopImg
             asynchronous:true
             smooth:false
-            cache:false
             visible:hintTopImg.source!=""
             anchors.top: parent.top
             anchors.topMargin: 65

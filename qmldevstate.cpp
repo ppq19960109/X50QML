@@ -44,27 +44,25 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     stateType.append(QPair<QString,int>("MultiStageState",LINK_VALUE_TYPE_STRUCT));
     stateType.append(QPair<QString,int>("CookbookName",LINK_VALUE_TYPE_STRING));
 
-    //    stateType.append(QPair<QString,int>("LStOvOperation",LINK_VALUE_TYPE_NUM));
-    stateType.append(QPair<QString,int>("LStOvSetTimer",LINK_VALUE_TYPE_NUM));
-    stateType.append(QPair<QString,int>("LStOvSetTimerLeft",LINK_VALUE_TYPE_NUM));
-    stateType.append(QPair<QString,int>("LStOvSetTemp",LINK_VALUE_TYPE_NUM));
-    stateType.append(QPair<QString,int>("LStOvRealTemp",LINK_VALUE_TYPE_NUM));
-    stateType.append(QPair<QString,int>("LStOvOrderTimer",LINK_VALUE_TYPE_NUM));
-    stateType.append(QPair<QString,int>("LStOvOrderTimerLeft",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("LStOvDoorState",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("LStOvMode",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("LStOvState",LINK_VALUE_TYPE_NUM));
+    stateType.append(QPair<QString,int>("LStOvSetTemp",LINK_VALUE_TYPE_NUM));
+    stateType.append(QPair<QString,int>("LStOvRealTemp",LINK_VALUE_TYPE_NUM));
+    stateType.append(QPair<QString,int>("LStOvSetTimer",LINK_VALUE_TYPE_NUM));
+    stateType.append(QPair<QString,int>("LStOvOrderTimer",LINK_VALUE_TYPE_NUM));
+    stateType.append(QPair<QString,int>("LStOvSetTimerLeft",LINK_VALUE_TYPE_NUM));
+    stateType.append(QPair<QString,int>("LStOvOrderTimerLeft",LINK_VALUE_TYPE_NUM));
 
-    //    stateType.append(QPair<QString,int>("RStOvOperation",LINK_VALUE_TYPE_NUM));
-    stateType.append(QPair<QString,int>("RStOvSetTimer",LINK_VALUE_TYPE_NUM));
-    stateType.append(QPair<QString,int>("RStOvSetTimerLeft",LINK_VALUE_TYPE_NUM));
-    stateType.append(QPair<QString,int>("RStOvSetTemp",LINK_VALUE_TYPE_NUM));
-    stateType.append(QPair<QString,int>("RStOvRealTemp",LINK_VALUE_TYPE_NUM));
-    stateType.append(QPair<QString,int>("RStOvOrderTimer",LINK_VALUE_TYPE_NUM));
-    stateType.append(QPair<QString,int>("RStOvOrderTimerLeft",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("RStOvDoorState",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("RStOvMode",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("RStOvState",LINK_VALUE_TYPE_NUM));
+    stateType.append(QPair<QString,int>("RStOvRealTemp",LINK_VALUE_TYPE_NUM));
+    stateType.append(QPair<QString,int>("RStOvOrderTimer",LINK_VALUE_TYPE_NUM));
+    stateType.append(QPair<QString,int>("RStOvSetTimer",LINK_VALUE_TYPE_NUM));
+    stateType.append(QPair<QString,int>("RStOvSetTemp",LINK_VALUE_TYPE_NUM));
+    stateType.append(QPair<QString,int>("RStOvSetTimerLeft",LINK_VALUE_TYPE_NUM));
+    stateType.append(QPair<QString,int>("RStOvOrderTimerLeft",LINK_VALUE_TYPE_NUM));
 
     stateType.append(QPair<QString,int>("LStoveStatus",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("RStoveStatus",LINK_VALUE_TYPE_NUM));
@@ -98,7 +96,7 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     stateType.append(QPair<QString,int>("PCBInput",LINK_VALUE_TYPE_ARRAY));
 
     localConnected=0;
-    connect(&client, SIGNAL(sendData(const QJsonValue&)), this,SLOT(readData(const QJsonValue&)));
+    connect(&client, SIGNAL(sendData(QJsonValue)), this,SLOT(readData(QJsonValue)));
     connect(&client, &LocalClient::sendConnected, this,&QmlDevState::setLocalConnected);
 
     setState("HoodSpeed",0);
@@ -238,12 +236,12 @@ void QmlDevState::startLocalConnect()
 }
 
 
-void QmlDevState::setHistory(const QString& action,const QVariantMap &history)
+void QmlDevState::setHistory(QString& action,QVariantMap& history)
 {
     emit historyChanged(action,history);
 }
 
-int QmlDevState::coverHistory(const QJsonObject &object, QVariantMap &info)
+int QmlDevState::coverHistory(QJsonObject& object, QVariantMap& info)
 {
     QJsonValue id =object.value("id");
     QJsonValue seqid =object.value("seqid");
@@ -267,23 +265,6 @@ int QmlDevState::coverHistory(const QJsonObject &object, QVariantMap &info)
     return 0;
 }
 
-int QmlDevState::compareHistoryCollect(const QVariantMap& single)
-{
-    for (int i = 0;i < history.size(); ++i)
-    {
-        QVariantMap cur=history[i].toMap();
-        if(cur["collect"]==0)
-            continue;
-        qDebug() << "compareHistoryCollect" << cur["id"];
-
-        if(cur["dishName"]==single["dishName"]&&cur["recipeid"]==single["recipeid"]&&cur["cookSteps"]==single["cookSteps"])
-        {
-            return cur["id"].toInt();
-        }
-    }
-    return -1;
-}
-
 
 int QmlDevState::getHistoryIndex(const int id)
 {
@@ -303,7 +284,7 @@ QVariantList QmlDevState::getRecipeDetails(const int recipeid)
     return recipeMap[recipeid];
 }
 
-void QmlDevState::executeShell(const QString cmd)
+void QmlDevState::executeShell(QString cmd)
 {
     qDebug() << "executeShell:" << cmd;
     //    QProcess::execute(cmd);
@@ -347,13 +328,13 @@ void QmlDevState::readRecipeDetails()
     //    qDebug()<<"recipeMap:"<<recipeMap;
 }
 
-int QmlDevState::sendToServer(const QString data)
+int QmlDevState::sendToServer(QString data)
 {
     QByteArray msg= data.toUtf8();
     return client.sendMessage(msg);
 }
 
-int QmlDevState::sendJsonToServer(const QString& type,const QJsonObject& json)
+int QmlDevState::sendJsonToServer(QString type,QJsonObject& json)
 {
     QJsonObject root;
     root.insert("Type", type);
@@ -362,9 +343,9 @@ int QmlDevState::sendJsonToServer(const QString& type,const QJsonObject& json)
     return sendToServer(QString(data));
 }
 
-void QmlDevState::readData(const QJsonValue &data)
+void QmlDevState::readData(QJsonValue data)
 {
-//    qDebug()<< "readData" << data  << endl;
+    //    qDebug()<< "readData" << data  << endl;
     QJsonObject object =data.toObject();
 
     QString key;
@@ -417,7 +398,7 @@ void QmlDevState::readData(const QJsonValue &data)
                     QJsonValue mac_address =object_struct.value("mac_address");
                     setState("ssid",ssid.toString());
                     setState("bssid",bssid.toString());
-//                    qDebug()<<"key:"<<"bssid"<<"value:"<<bssid.toString();
+                    //                    qDebug()<<"key:"<<"bssid"<<"value:"<<bssid.toString();
                 }
                 else if(key=="MultiStageState")
                 {
@@ -441,12 +422,12 @@ void QmlDevState::readData(const QJsonValue &data)
                     {
                         for(int i=0;i< (int)(sizeof(recipe)/sizeof(recipe[0]));++i)
                             recipe[i].clear();
-//                        qDebug()<<"CookRecipe size:" <<array.size() << endl;
+                        //                        qDebug()<<"CookRecipe size:" <<array.size() << endl;
                     }
                     else
                     {
                         history.clear();
-//                        qDebug()<<"CookHistory size:" <<array.size() << endl;
+                        //                        qDebug()<<"CookHistory size:" <<array.size() << endl;
                     }
 
                     for(int i=0;i<array.size();++i)
@@ -462,7 +443,7 @@ void QmlDevState::readData(const QJsonValue &data)
                             history.append(info);
                             //                            std::sort(history.begin(), history.end(), compareId);
                         }
-//                        qDebug()<<key <<":"<<info<< endl;
+                        //                        qDebug()<<key <<":"<<info<< endl;
                     }
                 }
                 else if(key=="InsertHistory")
@@ -482,7 +463,7 @@ void QmlDevState::readData(const QJsonValue &data)
                     {
                         int id=array.at(i).toInt();
                         int index=getHistoryIndex(id);
-//                        qDebug()<<"DeleteHistory index:"<<index;
+                        //                        qDebug()<<"DeleteHistory index:"<<index;
                         if(index<0)
                         {
                             break;
@@ -554,7 +535,7 @@ int QmlDevState::getLocalConnected() const
     return localConnected;
 }
 
-void QmlDevState::setState(const QString& name,const QVariant& value)
+void QmlDevState::setState(QString name,QVariant value)
 {
     //    if(stateMap.contains(name))
     //    {

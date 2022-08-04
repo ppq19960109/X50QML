@@ -39,7 +39,6 @@ CheckBox {
             height: width
             asynchronous:true
             smooth:false
-            cache:false
             anchors.centerIn: parent
             source: themesImagesPath+(control.checked ?"iocn_checked.png":"iocn_uncheck.png")
             //                    visible: control.checked

@@ -19,9 +19,7 @@ Item {
         anchors.centerIn: parent
         color: themesPopupWindowColor
         radius: 16
-        //        PageDialogGradient{
-        //            anchors.fill: parent
-        //        }
+
         Button {
             width:closeImg.width+60
             height:closeImg.height+60
@@ -34,7 +32,6 @@ Item {
                 id:closeImg
                 asynchronous:true
                 smooth:false
-                cache:false
                 anchors.centerIn: parent
                 source: themesImagesPath+"icon-window-close.png"
             }
@@ -63,7 +60,7 @@ Item {
             sourceSize.height: 218
             asynchronous:true
             smooth:false
-            cache:false
+//            cache:false
             source: "file:QrCode.png"
         }
 
