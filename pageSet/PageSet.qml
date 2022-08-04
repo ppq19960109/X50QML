@@ -3,6 +3,7 @@ import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
 import "../"
 Item {
+    property string name: "PageSet"
     PageBackBar{
         id:topBar
         anchors.top:parent.top

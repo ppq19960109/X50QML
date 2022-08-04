@@ -1,64 +1,4 @@
-//.pragma library
-//var multiModeEnum={"NONE":0,"RECIPE":1,"MULTISTAGE":2}
 
-//function makeRequest()
-//{
-//    var doc = new XMLHttpRequest();
-
-//    doc.onreadystatechange = function() {
-//        if (doc.readyState == XMLHttpRequest.HEADERS_RECEIVED) {
-//            console.log("Headers -->",doc.statusText);
-//            console.log(doc.getAllResponseHeaders ());
-//            //            console.log("Last modified -->");
-//            //            console.log(doc.getResponseHeader ("Last-Modified"));
-//        } else if (doc.readyState == XMLHttpRequest.DONE) {
-//            //            var a = doc.responseXML.documentElement;
-//            //            for (var ii = 0; ii < a.childNodes.length; ++ii) {
-//            //                console.log(a.childNodes[ii].nodeName);
-//            //            }
-//            console.log("Headers -->",doc.status,doc.statusText);
-//            console.log(doc.getAllResponseHeaders ());
-//            //            console.log("Last modified -->");
-//            //            console.log(doc.getResponseHeader ("Last-Modified"));
-
-//            //            data=JSON.parse(request.responseText.toString());
-//            console.log(typeof doc.responseText,doc.responseText)
-//        }
-//    }
-
-//    doc.open("GET", "http://mcook.marssenger.com/application/weather/day");
-//    doc.send();
-//}
-
-//function weatherRequest(city)
-//{
-//    var doc = new XMLHttpRequest();
-
-//    doc.onreadystatechange = function() {
-//        if (doc.readyState == XMLHttpRequest.HEADERS_RECEIVED) {
-//            console.log("Headers -->",doc.statusText);
-//            console.log(doc.getAllResponseHeaders ());
-
-//        } else if (doc.readyState == XMLHttpRequest.DONE) {
-//            //            var a = doc.responseXML.documentElement;
-//            //            for (var ii = 0; ii < a.childNodes.length; ++ii) {
-//            //                console.log(a.childNodes[ii].nodeName);
-//            //            }
-//            console.log("Headers -->",doc.status,doc.statusText);
-//            console.log(doc.getAllResponseHeaders ());
-
-//            console.log(doc.responseText.toString())
-//            //            var resp=JSON.parse(doc.responseText.toString());
-//            //            var curTemp=resp.current_condition[0].temp_C
-//            //            var curMinTemp=resp.weather[0].mintempC
-//            //            var curMaxTemp=resp.weather[0].maxtempC
-//            //            console.log("today",curTemp,curMinTemp,curMaxTemp)
-//        }
-//    }
-//    console.log("weatherRequest","https://wttr.in/"+city+"?format=j2");
-//    doc.open("GET", "https://wttr.in/"+city+"?format=j2");
-//    doc.send();
-//}
 
 function setToServer(Data)
 {
@@ -67,8 +7,8 @@ function setToServer(Data)
     root.Data=Data
     var json=JSON.stringify(root)
     QmlDevState.sendToServer(json)
-    json=undefined
-    root=undefined
+    json=null
+    root=null
 }
 
 function getToServer(Data)
@@ -78,8 +18,8 @@ function getToServer(Data)
     root.Data=Data
     var json=JSON.stringify(root)
     QmlDevState.sendToServer(json)
-    json=undefined
-    root=undefined
+    json=null
+    root=null
 }
 function getAllToServer()
 {
@@ -88,8 +28,8 @@ function getAllToServer()
     root.Data=null
     var json=JSON.stringify(root)
     QmlDevState.sendToServer(json)
-    json=undefined
-    root=undefined
+    json=null
+    root=null
 }
 function loadPowerSet(value)
 {
@@ -104,16 +44,8 @@ function otaRquest(request)
     setToServer(Data)
 }
 
-function permitSteamStartStatus(status)
-{
-    permitStartStatus=status
-    var Data={}
-    Data.PermitSteamStartStatus = status
-    setToServer(Data)
-}
 function enableWifi(enable)
 {
-    //    systemSettings.wifiEnable=enable
     var Data={}
     Data.WifiEnable = enable
     setToServer(Data)
@@ -196,13 +128,13 @@ function getWifiState()
     getToServer(Data)
 }
 
-function setAlarm(operation)
+function setSmartSmoke(state)
 {
     var Data={}
-    Data.Alarm=operation
+    Data.SmartSmoke=state
+    Data.DataReportReason=0
     setToServer(Data)
 }
-
 function setHoodSpeed(speed)
 {
     var Data={}
@@ -210,6 +142,7 @@ function setHoodSpeed(speed)
     Data.DataReportReason=0
     setToServer(Data)
 }
+
 function setBuzControl(operation)
 {
     var Data={}
@@ -237,7 +170,6 @@ function setCookOperation(device,operation)
         Data.RStOvOperation=operation
     }
     Data.DataReportReason=0
-    Data.PermitSteamStartStatus = 0
     setToServer(Data)
 }
 
@@ -256,7 +188,7 @@ function setCooking(list,orderTime,cookPos)
         }
         Data.LStOvOperation=workOperationEnum.START
 
-        if(undefined !== orderTime && orderTime > 0)
+        if(null != orderTime && orderTime > 0)
         {
             Data.LStOvOrderTimer=orderTime
         }
@@ -271,13 +203,12 @@ function setCooking(list,orderTime,cookPos)
         }
         Data.RStOvOperation=workOperationEnum.START
 
-        if(undefined !== orderTime && orderTime > 0)
+        if(null != orderTime && orderTime > 0)
         {
             Data.RStOvOrderTimer=orderTime
         }
     }
     Data.DataReportReason=0
-//    Data.PermitSteamStartStatus = 0
     setToServer(Data)
 }
 
@@ -311,11 +242,10 @@ function setMultiCooking(list,orderTime,dishName,cookbookID)
         Data.CookbookID=cookbookID
     }
     Data.LStOvOperation=workOperationEnum.START
-    if(undefined !== orderTime && orderTime > 0)
+    if(null != orderTime && orderTime > 0)
     {
         Data.LStOvOrderTimer=orderTime
     }
     Data.DataReportReason=0
-//    Data.PermitSteamStartStatus = 0
     setToServer(Data)
 }

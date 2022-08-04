@@ -45,6 +45,7 @@ contains(QT_ARCH, arm){
     #LIBS += libqrencode/lib/libqrencode.a
 }else{
     message("x86_64")
+    DEFINES += USE_TCP
 }
 
 #win32{

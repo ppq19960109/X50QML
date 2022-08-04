@@ -5,6 +5,7 @@ import "qrc:/CookFunc.js" as CookFunc
 
 import "../"
 Item {
+    property string name: "PageMultistage"
     property int listLastIndex:0
 
     function steamStart(reserve)
@@ -152,7 +153,7 @@ Item {
                     anchors.top: parent.top
                     anchors.topMargin: 75
                     anchors.horizontalCenter: parent.horizontalCenter
-                    text: qsTr(CookFunc.leftWorkModeName(mode))
+                    text: qsTr(CookFunc.workModeName(mode))
                 }
                 Text{
                     visible: mode>=0

@@ -2,6 +2,7 @@ import QtQuick 2.7
 import QtQuick.Controls 2.2
 
 Rectangle {
+    property bool customClose:false
     property alias name: name.text
     property alias centerText:centerText.text
     property alias leftBtnText:leftBtnText.text
@@ -40,8 +41,10 @@ Rectangle {
                 source: themesPicturesPath+"back_button_background.png"
             }
             onClicked: {
-//                close()
-                backPrePage()
+                if(customClose==true)
+                    close()
+                else
+                    backPrePage()
             }
         }
 

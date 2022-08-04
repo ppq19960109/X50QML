@@ -3,7 +3,6 @@ import QtQuick.Controls 2.2
 import "../"
 import "qrc:/SendFunc.js" as SendFunc
 Item {
-
     Timer{
         id:timer_qrcode
         repeat: false
@@ -17,9 +16,8 @@ Item {
 
     Connections { // 将目标对象信号与槽函数进行连接
         target: QmlDevState
-
+        enabled:parent.visible
         onStateChanged: { // 处理目标对象信号的槽函数
-            console.log("PageAboutMachine:",key)
 
             if("WifiState"==key)
             {
@@ -37,7 +35,6 @@ Item {
         infoModel.get(1).value=QmlDevState.state.ProductModel
         infoModel.get(2).value=QmlDevState.state.DeviceName
         listView.model=infoModel
-        console.log("infoModel",listView.model.count)
     }
 
     ListModel {

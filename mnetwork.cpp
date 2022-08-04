@@ -3,13 +3,13 @@
 MNetwork::MNetwork(QObject *parent): QObject(parent)
 {
     networkAccessManager=new QNetworkAccessManager(this);
-//    connect(networkAccessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(requestFinished(QNetworkReply*)));
-//    weatherRequest("hangzhou");
+    //    connect(networkAccessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(requestFinished(QNetworkReply*)));
+    //    weatherRequest("hangzhou");
 }
 
 MNetwork::~MNetwork()
 {
-    //    delete networkAccessManager;
+    delete networkAccessManager;
 }
 
 void MNetwork::locationRequest() {
@@ -32,7 +32,7 @@ void MNetwork::replyLocationFinished()
 
     /* 读取数据 */
     QByteArray data =  reply->readAll();
-//    qDebug()<< "replyFinished:" << QString(data);
+    //    qDebug()<< "replyFinished:" << QString(data);
     emit replyLocationData(data);
     /* 防止内存泄漏 */
     reply->deleteLater();
@@ -58,7 +58,7 @@ void MNetwork::replyWeatherFinished()
 
     /* 读取数据 */
     QByteArray data =  reply->readAll();
-//    qDebug()<< "replyFinished:" << QString(data);
+    //    qDebug()<< "replyFinished:" << QString(data);
     emit replyWeatherData(data);
     /* 防止内存泄漏 */
     reply->deleteLater();

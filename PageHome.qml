@@ -5,6 +5,8 @@ import "pageMain"
 import "WifiFunc.js" as WifiFunc
 import "qrc:/SendFunc.js" as SendFunc
 Item {
+    property var lStOvState: QmlDevState.state.LStOvState
+    property var rStOvState: QmlDevState.state.RStOvState
     property int lastLStOvState:-1
     property int lastRStOvState:-1
     property int lastErrorCodeShow:0
@@ -25,53 +27,12 @@ Item {
                 loaderAuto.sourceComponent = undefined
         }
     }
-    Component{
-        id:component_alarm
-        PagePopup{
-            hintTopText:"点击机头图标\n或点击下方按钮关闭闹钟"
-            confirmText:"关闭闹钟"
-            onCancel: {
-                loaderAlarmHide()
-            }
-            onConfirm: {
-                SendFunc.setAlarm(0)
-                loaderAlarmHide()
-            }
-            Image {
-                asynchronous:true
-                smooth:false
-                anchors.top: parent.top
-                anchors.topMargin: 87+65
-                anchors.right: parent.right
-                anchors.rightMargin:100+160
-                source: "qrc:/x50/icon/icon_alarm.png"
-            }
-            //            Component.onCompleted: {
-            //                SendFunc.setBuzControl(buzControlEnum.OPEN)
-            //            }
-            //            Component.onDestruction: {
-            //                SendFunc.setBuzControl(buzControlEnum.STOP)
-            //            }
-        }
-    }
-    function loaderAlarmShow(){
-        if(loaderAuto.sourceComponent === component_autoPopup)
-        {
-            if(loaderAuto.item.closeVisible===false)
-                return
-        }
-        loaderAuto.sourceComponent = component_alarm
-    }
-    function loaderAlarmHide(){
-        if(loaderAuto.sourceComponent === component_alarm)
-            loaderAuto.sourceComponent = undefined
-    }
 
     Component{
         id:component_updateConfirm
         PageDialogConfirm{
             hintTopText:"系统更新"
-            hintBottomText:"检测到最新版本 "+QmlDevState.state.OTANewVersion+"\n是否升级系统?"
+            hintCenterText:"检测到最新版本 "+QmlDevState.state.OTANewVersion+"\n是否升级系统?"
             confirmText:"升级"
             hintHeight:360
             onCancel: {
@@ -177,6 +138,28 @@ Item {
     //        }
     //    }
 
+    function steamInterfaceChange(state){
+        if(state==false)
+        {
+            if(isExistView("PageSteaming")!=null)
+            {
+                let page=isExistView("PageSteamOven")
+                if(page==null)
+                    backTopPage()
+                else
+                    backPage(page)
+            }
+        }
+        else
+        {
+            if(isExistView("PageSteaming")==null)
+            {
+                if(isExistView("PageSteamOvenConfig")!=null||isExistView("PageMultistage")!=null)
+                    push_page(pageSteaming)
+            }
+        }
+    }
+
     Connections { // 将目标对象信号与槽函数进行连接
         target: QmlDevState
         onLocalConnectedChanged:{
@@ -185,7 +168,6 @@ Item {
             {
                 loaderErrorHide()
 
-                SendFunc.permitSteamStartStatus(0)
                 if(systemSettings.firstStartup===true)
                 {
                     systemSettings.firstStartup=false
@@ -197,8 +179,6 @@ Item {
 
                 //                else if(systemSettings.wifiEnable==false)
                 //                    SendFunc.enableWifi(false)
-                //                                loaderErrorShow("右腔干烧检测电路故障！","请拨打售后电话<font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员")
-
                 //                push_page("pageTestFront")
             }
             else
@@ -208,7 +188,6 @@ Item {
             }
         }
         onStateChanged: { // 处理目标对象信号的槽函数
-            var ret
             console.log("page home onStateChanged",key,value)
             if("SysPower"==key)
             {
@@ -238,83 +217,90 @@ Item {
             }
             else if("LStOvState"==key)
             {
-                console.log("LStOvState",value)
-                ret=isExistView("pageSteamBakeRun")
-                if(value > 0)
+                if(value===workStateEnum.WORKSTATE_STOP)
                 {
-                    if(ret==null)
+                    if(rStOvState===workStateEnum.WORKSTATE_STOP)
                     {
-                        push_page("pageSteamBakeRun")
+                        steamInterfaceChange(false)
                     }
                 }
                 else
                 {
-                    if(ret!=null)
-                    {
-                        if(QmlDevState.state.RStOvState===workStateEnum.WORKSTATE_STOP)
-                        {
-                            backTopPage()
-                        }
-                    }
+                    steamInterfaceChange(true)
                 }
-                if(value==workStateEnum.WORKSTATE_RUN)
+
+                if(value===workStateEnum.WORKSTATE_RUN)
                     sleepWakeup()
 
                 if(lastLStOvState!=value && lastLStOvState>=0)
                 {
-                    if(value==workStateEnum.WORKSTATE_PAUSE||value==workStateEnum.WORKSTATE_PAUSE_RESERVE)
+                    if(value===workStateEnum.WORKSTATE_PAUSE||value===workStateEnum.WORKSTATE_PAUSE_RESERVE)
                     {
-                        if(QmlDevState.state.LStOvDoorState==1)
-                            loaderDoorAutoPopupShow("左腔门开启，工作暂停")
-                        //                            loaderAutoPopupShow("","左腔门开启，工作暂停",292)
+                        if(QmlDevState.state.LStOvDoorState===1)
+                            loaderDoorAutoShow("左腔门打开，暂停烹饪","","好的",cookWorkPosEnum.LEFT)
                     }
                     else
                     {
-                        if(QmlDevState.state.LStOvDoorState==0||value==workStateEnum.WORKSTATE_STOP)
-                            loaderDoorAutoPopupHide("左腔")
+                        if(QmlDevState.state.LStOvDoorState===0)
+                        {
+                            if(value===workStateEnum.WORKSTATE_STOP)
+                                loaderDoorAutoHide(cookWorkPosEnum.LEFT)
+                        }
                     }
                 }
                 lastLStOvState=value
             }
+            else if("LStOvDoorState"==key)
+            {
+                if(value==0)
+                {
+                    if(lStOvState===workStateEnum.WORKSTATE_PAUSE||lStOvState===workStateEnum.WORKSTATE_PAUSE_RESERVE)
+                        loaderDoorAutoShow("左腔门已关闭，是否继续烹饪？","结束烹饪","继续烹饪",cookWorkPosEnum.LEFT)
+                }
+            }
             else if("RStOvState"==key)
             {
-                console.log("RStOvState",value)
-                ret=isExistView("pageSteamBakeRun")
-                if(value > 0)
+                if(value===workStateEnum.WORKSTATE_STOP)
                 {
-                    if(ret==null)
+                    if(lStOvState===workStateEnum.WORKSTATE_STOP)
                     {
-                        push_page("pageSteamBakeRun")
+                        steamInterfaceChange(false)
                     }
                 }
                 else
                 {
-                    if(ret!=null)
-                    {
-                        if(QmlDevState.state.LStOvState===workStateEnum.WORKSTATE_STOP)
-                        {
-                            backTopPage()
-                        }
-                    }
+                    steamInterfaceChange(true)
                 }
-                if(value==workStateEnum.WORKSTATE_RUN)
+                if(value===workStateEnum.WORKSTATE_RUN)
                     sleepWakeup()
 
                 if(lastRStOvState!=value && lastRStOvState>=0)
                 {
-                    if(value==workStateEnum.WORKSTATE_PAUSE||value==workStateEnum.WORKSTATE_PAUSE_RESERVE)
+                    if(value===workStateEnum.WORKSTATE_PAUSE||value===workStateEnum.WORKSTATE_PAUSE_RESERVE)
                     {
-                        if(QmlDevState.state.RStOvDoorState==1)
-                            loaderDoorAutoPopupShow("右腔门开启，工作暂停")
-                        //                            loaderAutoPopupShow("","右腔门开启，工作暂停",292)
+                        if(QmlDevState.state.RStOvDoorState===1)
+                            loaderDoorAutoShow("右腔门打开，暂停烹饪","","好的",cookWorkPosEnum.RIGHT)
                     }
                     else
                     {
-                        if(QmlDevState.state.RStOvDoorState==0||value==workStateEnum.WORKSTATE_STOP)
-                            loaderDoorAutoPopupHide("右腔")
+                        if(QmlDevState.state.RStOvDoorState===0)
+                        {
+                            if(value===workStateEnum.WORKSTATE_STOP)
+                                loaderDoorAutoHide(cookWorkPosEnum.RIGHT)
+                            else
+                                loaderDoorAutoShow("右腔门已关闭，是否继续烹饪？","结束烹饪","继续烹饪",cookWorkPosEnum.RIGHT)
+                        }
                     }
                 }
                 lastRStOvState=value
+            }
+            else if("RStOvDoorState"==key)
+            {
+                if(value==0)
+                {
+                    if(rStOvState===workStateEnum.WORKSTATE_PAUSE||rStOvState===workStateEnum.WORKSTATE_PAUSE_RESERVE)
+                        loaderDoorAutoShow("右腔门已关闭，是否继续烹饪？","结束烹饪","继续烹饪",cookWorkPosEnum.RIGHT)
+                }
             }
             else if("HoodOffLeftTime"==key)
             {

@@ -48,10 +48,12 @@ ToolBar {
 
                     switch (index){
                     case 0:
-                        push_page(pageWifi)
+                        if(isExistView("PageSet")==null)
+                            push_page(pageSet)
                         break
                     case 1:
-                        push_page(pageSet)
+                        if(isExistView("PageSet")==null)
+                            push_page(pageSet)
                         break
                     case 2:
                         break

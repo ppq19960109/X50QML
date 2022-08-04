@@ -8,14 +8,20 @@
 LocalClient::LocalClient(QObject *parent) : QObject(parent)
 {
     timeoutCount=0;
+#ifdef USE_TCP
+    m_socket = new QTcpSocket(this);
+#else
     m_socket = new QLocalSocket(this);
-    qDebug() << "readBufferSize:" <<m_socket->readBufferSize();
+#endif
     qDebug() << "UNIX_DOMAIN:" << UNIX_DOMAIN;
     connect(m_socket, SIGNAL(connected()), this,SLOT(socketConnectedHandler()));
     connect(m_socket, SIGNAL(disconnected()), SLOT(socketDisConnectedHandler()));
-    connect(m_socket, SIGNAL(error(QLocalSocket::LocalSocketError)), SLOT(socketErrorHandler(QLocalSocket::LocalSocketError)));
-    connect(m_socket, SIGNAL(stateChanged(QLocalSocket::LocalSocketState)), SLOT(stateChangedHandler(QLocalSocket::LocalSocketState)));
+#ifdef USE_TCP
 
+#else
+    //    connect(m_socket, SIGNAL(error(QLocalSocket::LocalSocketError)), SLOT(socketErrorHandler(QLocalSocket::LocalSocketError)));
+    connect(m_socket, SIGNAL(stateChanged(QLocalSocket::LocalSocketState)), SLOT(stateChangedHandler(QLocalSocket::LocalSocketState)));
+#endif
     connect(m_socket, SIGNAL(readyRead()), this,SLOT(readyReadHandler()));
 
     timer = new QTimer(this);
@@ -24,36 +30,41 @@ LocalClient::LocalClient(QObject *parent) : QObject(parent)
 
 LocalClient::~LocalClient()
 {
-//    delete timer;
-//    delete m_socket;
+    delete timer;
+    delete m_socket;
 }
 
 void LocalClient::startConnectTimer()
 {
-#ifdef USE_RK3308
+    //#ifdef USE_RK3308
     if(!timer->isActive())
         timer->start(1500);
-#endif
+    //#endif
 }
 int LocalClient::seqid=0;
 
 void LocalClient::connectToServer()
-{    qDebug("connectToServer start");
-     m_socket->connectToServer(UNIX_DOMAIN);
-      ++timeoutCount;
-      if(timeoutCount==5)
-      {
-#ifdef USE_RK3308
-          emit sendConnected(0);
+{
+    qDebug() << "connectToServer";
+#ifdef USE_TCP
+    m_socket->connectToHost("192.168.0.101",9999);
+#else
+    m_socket->connectToServer(UNIX_DOMAIN);
 #endif
-      }
-      //    qDebug("connectToServer end");
+    ++timeoutCount;
+    if(timeoutCount==5)
+    {
+#ifdef USE_RK3308
+        emit sendConnected(0);
+#endif
+    }
+    //    qDebug("connectToServer end");
 
-      //    if (m_socket->waitForConnected(-1))
-      //    {
-      //        qDebug("Connected!");
-      //    }
-      //    qDebug("connectToServer fail!");
+    //    if (m_socket->waitForConnected(-1))
+    //    {
+    //        qDebug("Connected!");
+    //    }
+    //    qDebug("connectToServer fail!");
 }
 
 void LocalClient::get_all()
@@ -62,7 +73,6 @@ void LocalClient::get_all()
     root.insert(TYPE,TYPE_GETALL);
     root.insert(DATA,QJsonValue::Null);
     QByteArray data=QJsonDocument(root).toJson(QJsonDocument::Compact);
-    //    qDebug() << "get_all: "<< QString(data);
     sendMessage(data);
 }
 
@@ -78,7 +88,11 @@ unsigned char CheckSum(unsigned char *buf, int len) //和校验算法
 
 int LocalClient::sendMessage(QByteArray& data)
 {
+#ifdef USE_TCP
+    if(QAbstractSocket::ConnectedState!=m_socket->state())
+#else
     if(QLocalSocket::ConnectedState!=m_socket->state())
+#endif
     {
         qDebug() << "sendMessage error: UnconnectedState";
         return -1;
@@ -96,8 +110,8 @@ int LocalClient::sendMessage(QByteArray& data)
     buf.append((char)verify);
     buf.append(FRAME_TAIL);
     buf.append(FRAME_TAIL);
-    qDebug() << "sendMessage :" << buf << "size:" <<buf.size() << "seqid:"<<seqid<<"verify:"<< verify << "verify char:"<<(unsigned char)((char)verify);
-    int write_len= m_socket->write(buf.data(),buf.size());
+    qDebug() << "sendMessage :" << buf << "size:" <<buf.size() << "seqid:"<<seqid;
+    int write_len= m_socket->write(buf.constData(),buf.size());
     ++seqid;
     //    m_socket->flush();
     //    m_socket->waitForBytesWritten(2000);
@@ -135,25 +149,24 @@ int LocalClient::uds_json_parse(const char *value,const int value_len)
 
     if (TYPE_EVENT== Type.toString())
     {
-        //        qDebug() << "Data" << Data << endl;
+//                qDebug() << "Data" << Data << endl;
         emit sendData(Data);
     }
-    else
-    {
-        QJsonObject resp ;
-        if (TYPE_GET== Type.toString())
-        {
+//    else
+//    {
+//        if (TYPE_GET== Type.toString())
+//        {
 
-        }
-        else if (TYPE_SET== Type.toString())
-        {
+//        }
+//        else if (TYPE_SET== Type.toString())
+//        {
 
-        }
-        else
-        {
+//        }
+//        else
+//        {
 
-        }
-    }
+//        }
+//    }
 
     return 0;
 }
@@ -178,11 +191,11 @@ int LocalClient::uds_recv(const char *byte,const int len)
                 continue;
             }
             verify = data[6 + msg_len +1];
-            printf("uds_recv encry:%d seqid:%d msg_len:%d", encry, seqid, msg_len);
-
+//            printf("uds_recv encry:%d seqid:%d msg_len:%d", encry, seqid, msg_len);
+            qDebug() << "msg_len:" << msg_len;
             if (CheckSum((unsigned char *)&data[i + 2], msg_len + 5) != verify)
             {
-                printf("CheckSum error..................");
+                qDebug() << "CheckSum error...";
                 // continue;
             }
             if (msg_len > 0)
@@ -214,8 +227,8 @@ int LocalClient::readMessage()
         qDebug() << "recv_data error";
         return -1;
     }
-    //    qDebug() << "recv_data:" <<recv_data << endl;
-    uds_recv(recv_data.data(),recv_data.size());
+        qDebug() << "recv_data:" <<recv_data << endl;
+    uds_recv(recv_data.constData(),recv_data.size());
 
     return 0;
 }
@@ -228,6 +241,7 @@ void LocalClient::close()
 void LocalClient::socketConnectedHandler()
 {
     qDebug() << "socketConnectedHandler";
+    timer->stop();
     timeoutCount=0;
     emit sendConnected(1);
     get_all();
@@ -238,6 +252,10 @@ void LocalClient::socketDisConnectedHandler()
     qDebug() << "socketDisConnectedHandler";
     close();
     emit sendConnected(0);
+    if(!timer->isActive())
+    {
+        timer->start();
+    }
 }
 
 void LocalClient::socketErrorHandler(QLocalSocket::LocalSocketError error)
@@ -250,17 +268,11 @@ void LocalClient::stateChangedHandler(QLocalSocket::LocalSocketState socketState
     qDebug() << "stateChangedHandler: " << socketState;
     if(QLocalSocket::UnconnectedState==socketState)
     {
-        close();
-        if(!timer->isActive())
-        {
-            timer->start();
-        }
+
     }
     else if(QLocalSocket::ConnectedState==socketState)
     {
         qDebug() << "ConnectedState.......";
-
-        timer->stop();
     }
 }
 

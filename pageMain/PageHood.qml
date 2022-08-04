@@ -1,10 +1,10 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.2
 import "../"
+import "qrc:/SendFunc.js" as SendFunc
 Item {
-    Component.onCompleted: {
-
-    }
+    property var hoodSpeed: QmlDevState.state.HoodSpeed
+    property var smartSmoke: QmlDevState.state.SmartSmoke
 
     PageBackBar{
         id:topBar
@@ -54,6 +54,17 @@ Item {
                     anchors.horizontalCenter: parent.horizontalCenter
                     source: themesPicturesPath+modelData.background
                     Image {
+                        id:rotation1
+                        visible: {
+                            if(index==0)
+                            {
+                                return smartSmoke
+                            }
+                            else
+                            {
+                                return hoodSpeed===10
+                            }
+                        }
                         asynchronous:true
                         smooth:false
                         source: themesPicturesPath+"icon_runing.png"
@@ -62,18 +73,24 @@ Item {
                             to: 360
                             duration: 8000 //旋转速度，默认250
                             loops: Animation.Infinite //一直旋转
-                            running:true
+                            running: rotation1.visible
                         }
                     }
                 }
                 onClicked: {
                     if(index==0)
                     {
-
+                        if(smartSmoke===0)
+                            SendFunc.setSmartSmoke(1)
+                        else
+                            SendFunc.setSmartSmoke(0)
                     }
                     else
                     {
-
+                        if(hoodSpeed===10)
+                            SendFunc.setHoodSpeed(0)
+                        else
+                            SendFunc.setHoodSpeed(10)
                     }
                 }
             }
@@ -99,6 +116,7 @@ Item {
                 anchors.topMargin: 26
             }
             Column {
+
                 width: 90
                 height: 45*3+15*2
                 anchors.horizontalCenter: parent.horizontalCenter
@@ -111,17 +129,21 @@ Item {
                         width: parent.width
                         height:45
                         background:Rectangle {
-                            color: "#191919"
+                            id:hoodSpeedBackground
+                            color: (hoodSpeed===(3-index))?themesTextColor:"#191919"
                             radius: 20
                         }
                         Text{
                             text:modelData
-                            color:"#7C7C7C"
+                            color:(hoodSpeed===(3-index))?"#fff":"#7C7C7C"
                             font.pixelSize: 30
                             anchors.centerIn: parent
                         }
                         onClicked: {
-                            console.log("onClicked index",index)
+                            if(hoodSpeed!==(3-index))
+                                SendFunc.setHoodSpeed(3-index)
+                            else
+                                SendFunc.setHoodSpeed(0)
                         }
                     }
                 }
@@ -158,6 +180,17 @@ Item {
                     anchors.horizontalCenter: parent.horizontalCenter
                     source: themesPicturesPath+modelData.background
                     Image {
+                        id:rotation2
+                        visible: {
+                            if(index==0)
+                            {
+                                return QmlDevState.state.LStoveTimingState!==timingStateEnum.STOP||QmlDevState.state.RStoveTimingState!==timingStateEnum.STOP
+                            }
+                            else
+                            {
+                                return false
+                            }
+                        }
                         asynchronous:true
                         smooth:false
                         source: themesPicturesPath+"icon_runing.png"
@@ -166,13 +199,31 @@ Item {
                             to: 360
                             duration: 8000 //旋转速度，默认250
                             loops: Animation.Infinite //一直旋转
-                            running:true
+                            running:rotation2.visible
                         }
                     }
                 }
                 Text{
-                    visible: index==0
-                    text:"00:30"
+                    visible: index==0 && rotation2.visible
+                    text:{
+                        if(index==0)
+                        {
+                            let lStoveTimingLeft=QmlDevState.state.LStoveTimingLeft
+                            let rStoveTimingLeft=QmlDevState.state.RStoveTimingLeft
+                            let timingTime
+                            if(lStoveTimingLeft>0 && rStoveTimingLeft>0)
+                                timingTime=lStoveTimingLeft > rStoveTimingLeft ? rStoveTimingLeft : lStoveTimingLeft
+                            else if(lStoveTimingLeft>0)
+                                timingTime=lStoveTimingLeft
+                            else if(rStoveTimingLeft>0)
+                                timingTime=rStoveTimingLeft
+                            return  Math.floor(timingTime/60)+":"+timingTime%60
+                        }
+                        else
+                        {
+                            return ""
+                        }
+                    }
                     color:themesTextColor
                     font.pixelSize: 28
                     anchors.horizontalCenter: parent.horizontalCenter

@@ -7,7 +7,7 @@ Item {
     property var models:["重置","取消"]
     property int buttonWidth:140
     property int buttonHeight:50
-    signal click(int index)
+    signal click(int clickIndex)
     width:orientation==false?(buttonWidth*models.length+space*(models.length-1)):buttonWidth
     height: orientation==false?buttonHeight:(buttonHeight*models.length+space*(models.length-1))
 

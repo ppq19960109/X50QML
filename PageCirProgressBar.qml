@@ -160,7 +160,7 @@ Item {
             anchors.horizontalCenter: parent.horizontalCenter
             //            horizontalAlignment :Text.AlignHCenter
             //            verticalAlignment :Text.AlignHCenter
-            text: workStateArray[workState]
+            text: workStateChineseEnum[workState]
         }
         Item
         {

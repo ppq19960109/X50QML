@@ -1,8 +1,7 @@
 
-function leftWorkModeName(mode)
+function workModeName(mode)
 {
-    //    console.log("leftWorkModeNamee",mode)
-    var name
+    let name
     switch(mode)
     {
     case 1:
@@ -46,8 +45,7 @@ function leftWorkModeName(mode)
 }
 function leftWorkModeToIndex(mode)
 {
-//        console.log("leftWorkModeToIndex",mode)
-    var index
+    let index
     switch(mode)
     {
     case 40:
@@ -143,14 +141,14 @@ function getDishName(root)
     for(var i = 0; i < root.length; ++i)
     {
         step=root[i]
-//        console.log(step.mode,step.temp,step.time,leftWorkModeName(step.mode))
+//        console.log(step.mode,step.temp,step.time,workModeName(step.mode))
         if(root.length===1 && step.number == null)
         {
-            dishName=leftWorkModeName(step.mode)+"-"+step.temp+"℃-"+step.time+"分钟"
+            dishName=workModeName(step.mode)+"-"+step.temp+"℃-"+step.time+"分钟"
         }
         else
         {
-            dishName+=leftWorkModeName(step.mode)
+            dishName+=workModeName(step.mode)
             if(i!==root.length-1)
                 dishName+="-"
         }

@@ -13,7 +13,6 @@
         <file>pageMain/PageCookDetails.qml</file>
         <file>pageCook/PageReserve.qml</file>
         <file>pageMain/PageSmartRecipes.qml</file>
-        <file>pageMain/PageCookHistory.qml</file>
         <file>pageMain/PageCloseHeat.qml</file>
         <file>pageSet/PageSet.qml</file>
         <file>pageSet/PageLocalSettings.qml</file>

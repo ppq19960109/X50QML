@@ -2,14 +2,15 @@ import QtQuick 2.7
 import QtQuick.Controls 2.2
 
 Item {
+    property int cookWorkPos:0
     property alias hintTopText: hintTop.text
-    property alias hintBottomText: hintBottom.text
+    property alias hintCenterText: hintCenter.text
     property alias cancelText: cancelBtnText.text
     property alias confirmText: confirmBtnText.text
     property alias hintWidth: hint.width
     property alias hintHeight: hint.height
-    property alias closeBtnVisible: closeBtn.visible
-    signal cancel(var flag)
+
+    signal cancel(int index)
     signal confirm()
     MouseArea{
         anchors.fill: parent
@@ -19,121 +20,101 @@ Item {
     Rectangle {
         id:hint
         anchors.centerIn: parent
-        implicitWidth: 680
-        implicitHeight: 360
+        implicitWidth: 730
+        implicitHeight: 350
         color: themesPopupWindowColor
-        radius: 16
-        //        PageGradient{
-        //            anchors.fill: parent
-        //        }
-        Button {
-            id:closeBtn
-            width:closeImg.width+60
-            height:closeImg.height+60
-            anchors.top:parent.top
-            //            anchors.topMargin: 33
-            anchors.right:parent.right
-            //            anchors.rightMargin: 33
+        radius: 10
 
-            Image {
-                id:closeImg
-                asynchronous:true
-                smooth:false
-                cache:false
-                anchors.centerIn: parent
-                source: themesImagesPath+"icon-window-close.png"
-            }
-            background: Item {}
+        PageCloseButton {
+            anchors.top:parent.top
+            anchors.right:parent.right
             onClicked: {
                 cancel(0)
             }
         }
 
-        Text{
-            id:hintTop
-            width:parent.width
-            visible: hintTop.text!=""
-            color:"#FFF"
-            font.pixelSize: 40
-            anchors.top: parent.top
-            anchors.topMargin: 50
+        Image {
+            visible: hintTop.text==""
+            anchors.top:parent.top
+            anchors.topMargin: 45
             anchors.horizontalCenter: parent.horizontalCenter
-            horizontalAlignment: Text.AlignHCenter
-            verticalAlignment: Text.AlignVCenter
-
-            wrapMode:Text.WrapAnywhere
+            asynchronous:true
+            smooth:false
+            cache:false
+            source: themesPicturesPath+"icon_warn.png"
         }
 
         Text{
-            id:hintBottom
-            visible: hintBottom.text!=""
+            id:hintTop
+            visible: text!=""
             width:parent.width
-            color:"#FFF"
-            font.pixelSize: 35
             anchors.top: parent.top
-            anchors.topMargin: 130
-            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.topMargin: 35
+            color:"#fff"
+            font.pixelSize: 30
             horizontalAlignment: Text.AlignHCenter
-            verticalAlignment: Text.AlignVCenter
-            lineHeight :1.1
             wrapMode:Text.WrapAnywhere
+            text:""
+        }
+
+        Text{
+            id:hintCenter
+            visible: text!=""
+            width:parent.width-60
+            anchors.centerIn: parent
+            color:"#fff"
+            font.pixelSize: 30
+            horizontalAlignment: Text.AlignHCenter
+            wrapMode:Text.WrapAnywhere
+            text:""
         }
         Button {
             id:cancelBtn
-            visible: confirmBtnText.text!=""
-            width: 176+15
-            height: 64+15
+            visible: cancelBtnText.text!=""
+            width:140+10
+            height:50+10
             anchors.bottom:parent.bottom
-            anchors.bottomMargin: 40
-            anchors.left: parent.left
-            anchors.leftMargin: 105
+            anchors.bottomMargin: 25
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.horizontalCenterOffset: -130
             Text{
                 id:cancelBtnText
                 anchors.centerIn: parent
-                color:themesTextColor2
+                color:"#000"
                 font.pixelSize: 30
-                horizontalAlignment: Text.AlignHCenter
-                verticalAlignment: Text.AlignVCenter
-                text:"取消"
+                text:""
             }
             background: Rectangle {
-                width:176
-                height:64
+                width:140
+                height:50
                 anchors.centerIn: parent
-                color:"transparent"
-                border.color:themesTextColor2
-                radius: 32
+                color:themesTextColor2
+                radius: height/2
             }
             onClicked: {
                 cancel(1)
             }
         }
-
         Button {
-            id:confirmBtn
-            visible: confirmBtnText.text!=""
-            width:176+15
-            height:64+15
+            width:140+10
+            height:50+10
             anchors.bottom:parent.bottom
-            anchors.bottomMargin: 40
-            anchors.right: parent.right
-            anchors.rightMargin: 105
-
+            anchors.bottomMargin: 20
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.horizontalCenterOffset: cancelBtn.visible ? 130 : 0
             Text{
                 id:confirmBtnText
                 anchors.centerIn: parent
                 color:"#000"
                 font.pixelSize: 30
-
-                horizontalAlignment: Text.AlignHCenter
-                verticalAlignment: Text.AlignVCenter
+                text:""
             }
             background: Rectangle {
-                width:176
-                height:64
+                width:140
+                height:50
                 anchors.centerIn: parent
                 color:themesTextColor2
-                radius: 32
+                radius: height/2
             }
             onClicked: {
                 confirm()

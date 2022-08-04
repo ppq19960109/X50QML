@@ -8,20 +8,15 @@ import "qrc:/WifiFunc.js" as WifiFunc
 import "qrc:/SendFunc.js" as SendFunc
 import "../"
 Item {
-    property string name: "pageWifi"
-
     property int scan_count: 0
     property bool wifiInputConnecting:false
     property int qrcode_display: 0
-
     function wifi_scan_timer_reset()
     {
-        console.log("wifi_scan_timer_reset")
         SendFunc.getCurWifi()
         SendFunc.scanRWifi()
-        //        SendFunc.scanWifi()
         scan_count=0
-        timer_wifi_scan.interval=3000
+        timer_wifi_scan.interval=2500
         timer_wifi_scan.restart()
     }
 
@@ -51,7 +46,7 @@ Item {
 
     Connections { // 将目标对象信号与槽函数进行连接
         target: QmlDevState
-
+        enabled:parent.visible
         onStateChanged: { // 处理目标对象信号的槽函数
             console.log("page wifi onStateChanged:",key)
 
@@ -147,8 +142,8 @@ Item {
     Timer{
         id:timer_wifi_scan
         repeat: true
-        running: (systemSettings.wifiEnable && sleepState==false)
-        interval: 3000
+        running: (systemSettings.wifiEnable && sleepState==false && parent.visible)
+        interval: 2500
         triggeredOnStart: false
         onTriggered: {
             //            console.log("timer_wifi_scan",timer_wifi_scan.interval,scan_count,wifiConnecting)

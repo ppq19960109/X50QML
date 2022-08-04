@@ -2,7 +2,7 @@ import QtQuick 2.7
 import QtQuick.Controls 2.2
 
 Item {
-    property var cookItem
+    property var cookItem:null
     property int cookDialogIndex
 
     property alias hintTopText: hintTop.text
@@ -17,6 +17,10 @@ Item {
     signal cancel(int index)
     signal confirm()
 
+    Component.onDestruction: {
+        cookItem=null
+    }
+
     MouseArea{
         anchors.fill: parent
     }
@@ -27,9 +31,16 @@ Item {
         anchors.centerIn: parent
         implicitWidth: 730
         implicitHeight: 350
-
         color: themesPopupWindowColor
         radius: 10
+
+        PageCloseButton {
+            anchors.top:parent.top
+            anchors.right:parent.right
+            onClicked: {
+                cancel(0)
+            }
+        }
 
         Image {
             visible: hintTop.text==""
@@ -40,25 +51,6 @@ Item {
             smooth:false
             cache:false
             source: themesPicturesPath+"icon_warn.png"
-        }
-
-        Button {
-            width:closeImg.width+50
-            height:closeImg.height+50
-            anchors.top:parent.top
-            anchors.right:parent.right
-            Image {
-                id:closeImg
-                asynchronous:true
-                smooth:false
-                cache:false
-                anchors.centerIn: parent
-                source: themesPicturesPath+"icon_window_close.png"
-            }
-            background: null
-            onClicked: {
-                cancel(0)
-            }
         }
 
         Text{

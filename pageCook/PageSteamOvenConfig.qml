@@ -4,6 +4,7 @@ import "../"
 import "qrc:/CookFunc.js" as CookFunc
 
 Rectangle {
+    property string name: "PageSteamOvenConfig"
     color:themesWindowBackgroundColor
     property int cookWorkPos:0
 

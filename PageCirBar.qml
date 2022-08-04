@@ -21,12 +21,13 @@ Item {
         if(runing == true)
             updatePaint()
     }
-//    onRuningChanged: {
-//        updatePaint()
-//    }
+    onRuningChanged: {
+        if(runing==true)
+            updatePaint()
+    }
 
     Canvas{
-        property int r: canvas.width/2-20
+        property int r: canvas.width/2-10
         id: canvas
         visible: runing
         width: canvasDiameter
@@ -86,15 +87,15 @@ Item {
     }
 
 
-    Slider {
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.bottom: parent.bottom
-        stepSize: 2
-        to: 100
-        value: 30
-        onValueChanged: {
-            console.log("slider:",value)
-            percent=value
-        }
-    }
+    //    Slider {
+    //        anchors.horizontalCenter: parent.horizontalCenter
+    //        anchors.bottom: parent.bottom
+    //        stepSize: 2
+    //        to: 100
+    //        value: 30
+    //        onValueChanged: {
+    //            console.log("slider:",value)
+    //            percent=value
+    //        }
+    //    }
 }

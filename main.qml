@@ -17,7 +17,6 @@ ApplicationWindow {
     height: 400
     visible: true
     property int sysPower:1
-    property int permitStartStatus:0
     property int productionTestStatus:0
     property int productionTestFlag:1
     property int demoModeStatus:0
@@ -37,7 +36,7 @@ ApplicationWindow {
     readonly property var rightAssistWorkModeModelEnum:[{"modelData":10,"temp":35,"time":60,"minTemp":30,"maxTemp":50},{"modelData":9,"temp":40,"time":30,"minTemp":30,"maxTemp":50},{"modelData":11,"temp":60,"time":60,"minTemp":50,"maxTemp":105}]
 
     readonly property var workStateEnum:{"WORKSTATE_STOP":0,"WORKSTATE_RESERVE":1,"WORKSTATE_PREHEAT":2,"WORKSTATE_RUN":3,"WORKSTATE_FINISH":4,"WORKSTATE_PAUSE":5,"WORKSTATE_PAUSE_RESERVE":6}
-    readonly property var workStateArray:["停止","预约中","预热中","运行中","烹饪完成","暂停中","预约暂停中"]
+    readonly property var workStateChineseEnum:["停止","预约中","预热中","运行中","烹饪完成","暂停中","预约暂停中"]
     readonly property var workOperationEnum:{"START":0,"PAUSE":1,"CANCEL":2,"CONFIRM":3,"RUN_NOW":4}
 
     readonly property var timingStateEnum:{"STOP":0,"RUN":1,"PAUSE":2,"CONFIRM":3}
@@ -324,7 +323,7 @@ ApplicationWindow {
         sourceComponent:null
     }
     function loaderMainHide(){
-        loader_main.sourceComponent = undefined
+        loader_main.sourceComponent = null
     }
     function loaderCookReserve(cookWorkPos,cookItem)
     {
@@ -366,6 +365,8 @@ ApplicationWindow {
         if(loader_main.sourceComponent===component_steam)
             loader_main.sourceComponent = undefined
     }
+
+
     Component{
         id:component_qrcode
         PageDialogQrcode{
@@ -472,7 +473,10 @@ ApplicationWindow {
         //加载弹窗组件
         id:loaderAuto
         anchors.fill: parent
-        sourceComponent:undefined
+        sourceComponent:null
+    }
+    function loaderAutoHide(){
+        loaderAuto.sourceComponent = null
     }
     Component{
         id:component_autoPopup
@@ -517,13 +521,21 @@ ApplicationWindow {
         }
     }
     Component{
-        id:component_autoPopupDoor
-        PagePopup{
-            hintTopText:""
-            hintCenterText:""
-            confirmText:""
+        id:component_doorAuto
+        PageDialogConfirm{
             onCancel: {
-                loaderAutoPopupHide()
+                if(cancelText!="")
+                {
+                    SendFunc.setCookOperation(cookWorkPos,workOperationEnum.CANCEL)
+                }
+                loaderAutoHide()
+            }
+            onConfirm:{
+                if(cancelText!="")
+                {
+                    SendFunc.setCookOperation(cookWorkPos,workOperationEnum.START)
+                }
+                loaderAutoHide()
             }
             Component.onCompleted: {
                 SendFunc.setBuzControl(buzControlEnum.OPEN)
@@ -533,18 +545,21 @@ ApplicationWindow {
             }
         }
     }
-    function loaderDoorAutoPopupShow(text){
-        if(loaderAuto.sourceComponent !== component_autoPopupDoor)
+    function loaderDoorAutoShow(text,cancelText,confirmText,cookWorkPos){
+        if(loaderAuto.sourceComponent !== component_doorAuto)
         {
-            loaderAuto.sourceComponent = component_autoPopupDoor
+            loaderAuto.sourceComponent = component_doorAuto
         }
         loaderAuto.item.hintCenterText=text
+        loaderAuto.item.cancelText=cancelText
+        loaderAuto.item.confirmText=confirmText
+        loaderAuto.item.cookWorkPos=cookWorkPos
     }
-    function loaderDoorAutoPopupHide(dirText){
-        if(loaderAuto.sourceComponent === component_autoPopupDoor)
+    function loaderDoorAutoHide(cookWorkPos){
+        if(loaderAuto.sourceComponent === component_doorAuto)
         {
-            if(loaderAuto.item.hintCenterText.indexOf("门开启")!=-1 && loaderAuto.item.hintCenterText.indexOf(dirText)!=-1)
-                loaderAuto.sourceComponent = undefined
+            if(loaderAuto.item.cookWorkPos===cookWorkPos)
+                loaderAuto.sourceComponent = null
         }
     }
     Component{
@@ -756,10 +771,7 @@ ApplicationWindow {
         id: pageCookDetails
         PageCookDetails {}
     }
-    Component {
-        id: pageCookHistory
-        PageCookHistory {}
-    }
+
     Component {
         id: pageCloseHeat
         PageCloseHeat {}
@@ -933,8 +945,8 @@ ApplicationWindow {
                 //            QmlDevState.setState("current",2)
             }
         }
-        var page=isExistView("pageSteamBakeRun")
-        if(page!==null)
+        let page=isExistView("PageSteaming")
+        if(page!=null)
             backPage(page)
     }
 

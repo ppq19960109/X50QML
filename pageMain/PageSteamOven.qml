@@ -2,9 +2,9 @@ import QtQuick 2.7
 import QtQuick.Controls 2.2
 import "../"
 Item {
-    Component.onCompleted: {
-
-    }
+    property string name: "PageSteamOven"
+    property var lStOvState: QmlDevState.state.LStOvState
+    property var rStOvState: QmlDevState.state.RStOvState
     PageBackBar{
         id:topBar
         anchors.top:parent.top
@@ -44,6 +44,16 @@ Item {
                 Rectangle
                 {
                     id:workStatus
+                    visible: {
+                        if(index==0)
+                        {
+                            return lStOvState!==workStateEnum.WORKSTATE_STOP
+                        }
+                        else
+                        {
+                            return rStOvState!==workStateEnum.WORKSTATE_STOP
+                        }
+                    }
                     width: 130
                     height: 130
                     anchors.top: parent.top
@@ -54,6 +64,7 @@ Item {
                     radius: 65
                 }
                 Image {
+                    visible: workStatus.visible
                     anchors.centerIn: workStatus
                     asynchronous:true
                     smooth:false
@@ -63,31 +74,38 @@ Item {
                         to: 360
                         duration: 8000 //旋转速度，默认250
                         loops: Animation.Infinite //一直旋转
-                        running:true
+                        running:workStatus.visible
                     }
                 }
                 Text{
+                    visible: workStatus.visible
                     text:"工作中\n..."
                     color:themesTextColor
                     font.pixelSize: 26
                     anchors.centerIn: workStatus
                     horizontalAlignment:Text.AlignHCenter
                     verticalAlignment:Text.AlignVCenter
-//                    lineHeightMode:Text.FixedHeight
-//                    lineHeight:20
+                    //                    lineHeightMode:Text.FixedHeight
+                    //                    lineHeight:20
                     lineHeight:0.6
                 }
                 onClicked: {
+
                     if(index==0)
                     {
-                        push_page(pageSteamOvenConfig,{cookWorkPos:cookWorkPosEnum.LEFT})
+                        if(lStOvState!==workStateEnum.WORKSTATE_STOP)
+                            push_page(pageSteaming)
+                        else
+                            push_page(pageSteamOvenConfig,{cookWorkPos:cookWorkPosEnum.LEFT})
                     }
                     else
                     {
-//                        push_page(pageSteamOvenConfig,{cookWorkPos:cookWorkPosEnum.RIGHT})
-                        push_page(pageSteaming)
-
+                        if(rStOvState!==workStateEnum.WORKSTATE_STOP)
+                            push_page(pageSteaming)
+                        else
+                            push_page(pageSteamOvenConfig,{cookWorkPos:cookWorkPosEnum.RIGHT})
                     }
+
                 }
             }
         }
@@ -112,13 +130,20 @@ Item {
                         source: themesPicturesPath+modelData.text
                     }
                     onClicked: {
+
                         if(index==0)
                         {
-                            push_page(pageSteamOvenConfig,{cookWorkPos:cookWorkPosEnum.ASSIST})
+                            if(rStOvState!==workStateEnum.WORKSTATE_STOP)
+                                push_page(pageSteaming)
+                            else
+                                push_page(pageSteamOvenConfig,{cookWorkPos:cookWorkPosEnum.ASSIST})
                         }
                         else
                         {
-                            push_page(pageMultistage)
+                            if(lStOvState!==workStateEnum.WORKSTATE_STOP)
+                                push_page(pageSteaming)
+                            else
+                                push_page(pageMultistage)
                         }
                     }
                 }

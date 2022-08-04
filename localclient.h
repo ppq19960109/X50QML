@@ -2,13 +2,18 @@
 #define LOCALCLIENT_H
 
 #include <QObject>
-#include <QLocalSocket>
 #include <QDebug>
 #include <QThread>
 #include <QTimer>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonValue>
+
+#ifdef USE_TCP
+#include <QTcpSocket>
+#endif
+#include <QLocalSocket>
+
 
 #define UNIX_DOMAIN "/tmp/unix_server.domain"
 #define FRAME_HEADER (0xAA)
@@ -31,7 +36,11 @@ public:
     int uds_recv(const char *byte,const int len);
     int uds_json_parse(const char *value,const int value_len);
     void get_all();
+#ifdef USE_TCP
+    QTcpSocket *m_socket;
+#else
     QLocalSocket *m_socket;
+#endif
     QTimer *timer;
     void close();
 

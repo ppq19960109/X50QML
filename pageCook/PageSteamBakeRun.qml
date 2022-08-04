@@ -61,10 +61,7 @@ Rectangle {
         closeCancelRun()
         loaderNewCookHide()
     }
-    StackView.onActivating:{
-        console.log("PageSteamBakeRun StackView onActivating")
-        SendFunc.permitSteamStartStatus(0)
-    }
+
 
     Component{
         id:component_newCook
@@ -136,7 +133,7 @@ Rectangle {
 
             workColor:"#E68855"
             workState:QmlDevState.state.LStOvState
-            workMode:workState===workStateEnum.WORKSTATE_STOP?qsTr("左腔烹饪"):QmlDevState.state.MultiMode===1?QmlDevState.state.CookbookName:CookFunc.leftWorkModeName(QmlDevState.state.LStOvMode)
+            workMode:workState===workStateEnum.WORKSTATE_STOP?qsTr("左腔烹饪"):QmlDevState.state.MultiMode===1?QmlDevState.state.CookbookName:CookFunc.workModeName(QmlDevState.state.LStOvMode)
             canvasDiameter:width
             setTimeLeft:QmlDevState.state.LStOvSetTimerLeft
             orderTimeLeft:QmlDevState.state.LStOvOrderTimerLeft
@@ -344,7 +341,7 @@ Rectangle {
 
             workColor:"#DE932F"
             workState:QmlDevState.state.RStOvState
-            workMode:workState===workStateEnum.WORKSTATE_STOP?qsTr("右腔烹饪"):CookFunc.leftWorkModeName(QmlDevState.state.RStOvMode)
+            workMode:workState===workStateEnum.WORKSTATE_STOP?qsTr("右腔烹饪"):CookFunc.workModeName(QmlDevState.state.RStOvMode)
             canvasDiameter:width
             setTimeLeft:QmlDevState.state.RStOvSetTimerLeft
             orderTimeLeft:QmlDevState.state.RStOvOrderTimerLeft
@@ -514,8 +511,6 @@ Rectangle {
     Component{
         id:component_cancelRun
         PageDialogConfirm{
-            hintTopText:""
-            hintBottomText:""
             cancelText:"取消"
             confirmText:"继续工作"
             hintWidth:600

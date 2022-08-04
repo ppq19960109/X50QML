@@ -5,6 +5,10 @@ import "qrc:/pageCook"
 import "../"
 import "qrc:/SendFunc.js" as SendFunc
 Item {
+    property var lTimingState: QmlDevState.state.LStoveTimingState
+    property var rTimingState: QmlDevState.state.RStoveTimingState
+    property var lTimingLeft: QmlDevState.state.LStoveTimingLeft
+    property var rTimingLeft: QmlDevState.state.RStoveTimingLeft
 
     Component{
         id:component_closeHeat
@@ -12,14 +16,14 @@ Item {
             property int cookWorkPos:0
             property var clickFunc:null
             Component.onCompleted: {
-                var i
-                var hourArray = []
+                let i
+                let hourArray = []
                 for(i=0; i<= 2; ++i) {
                     hourArray.push(i)
                 }
                 hourPathView.model=hourArray
-                var minuteArray = []
-                for(i=0; i<= 60; ++i) {
+                let minuteArray = []
+                for(i=0; i< 60; ++i) {
                     minuteArray.push(i)
                 }
                 minutePathView.model=minuteArray
@@ -139,7 +143,19 @@ Item {
                     space:80
                     models: ["取消","开始"]
                     onClick: {
-
+                        if(clickIndex==0)
+                        {
+                            loaderMainHide()
+                        }
+                        else
+                        {
+                            if(clickFunc==null)
+                                return
+                            if(clickFunc(cookWorkPos,hourPathView.currentIndex*60+minutePathView.currentIndex)===0)
+                            {
+                                loaderMainHide()
+                            }
+                        }
                     }
                 }
             }
@@ -152,57 +168,99 @@ Item {
         loader_main.item.cookWorkPos=cookWorkPos
         loader_main.item.clickFunc=clickFunc
     }
-    Component.onCompleted: {
 
-    }
-    function steamStart()
+    function startTurnOffFire(dir,time)
     {
-        if(QmlDevState.state.RStoveStatus===1)
+        if(time === 0)
+            return
+        let Data={}
+        if(dir===cookWorkPosEnum.LEFT)
         {
-            if(hourPathView.currentIndex==0 && minutePathView.currentIndex==0)
-                return
-            console.log("PageCloseHeat",hourPathView.model[hourPathView.currentIndex],minutePathView.model[minutePathView.currentIndex])
-
-            var Data={}
-            Data.RStoveTimingOpera = timingOperationEnum.START
-            Data.RStoveTimingSet = hourPathView.currentIndex*60+minutePathView.currentIndex
-            Data.DataReportReason=0
-            SendFunc.setToServer(Data)
-
-            //                            QmlDevState.setState("RStoveTimingLeft",hourPathView.currentIndex*60+minutePathView.currentIndex)
-            //                            QmlDevState.setState("RStoveTimingState",timingStateEnum.RUN)
-            backPrePage()
+            Data.LStoveTimingOpera = timingOperationEnum.START
+            Data.LStoveTimingSet = time
         }
         else
         {
-            loaderPopupShow("","右灶未开启\n开启后才可定时关火",292)
+            Data.RStoveTimingOpera = timingOperationEnum.START
+            Data.RStoveTimingSet = time
+        }
+        Data.DataReportReason=0
+        SendFunc.setToServer(Data)
+        return 0
+    }
+    function stopTurnOffFire(dir)
+    {
+        var Data={}
+        if(dir===cookWorkPosEnum.LEFT)
+        {
+            Data.LStoveTimingOpera = timingOperationEnum.CANCEL
+        }
+        else
+        {
+            Data.RStoveTimingOpera = timingOperationEnum.CANCEL
+        }
+        Data.DataReportReason=0
+        SendFunc.setToServer(Data)
+    }
+    Component{
+        id:component_closeHeatReset
+        PageDialogConfirm{
+            hintCenterText:""
+            cancelText:""
+            confirmText:""
+            onCancel:{
+                loaderMainHide()
+            }
+            onConfirm:{
+                if(cancelText!="")
+                {
+                    stopTurnOffFire(cookWorkPos)
+                }
+                loaderMainHide()
+            }
         }
     }
-
+    function loaderCloseHeatReset(hintCenterText,cancelText,confirmText,cookWorkPos){
+        loader_main.sourceComponent = component_closeHeatReset
+        loader_main.item.hintCenterText=hintCenterText
+        loader_main.item.cancelText=cancelText
+        loader_main.item.confirmText=confirmText
+        loader_main.item.cookWorkPos=cookWorkPos
+    }
     PageBackBar{
         id:topBar
         anchors.top:parent.top
         name:"定时关火"
     }
-    Row {
-        width: parent-100
-        height:row.height
-        anchors.centerIn: row
-        spacing: 780
-        Repeater {
-            model: ["左灶","右灶"]
-            PageButtonBar{
-                visible: true
-                anchors.verticalCenter: parent.verticalCenter
-                orientation:true
-                space:54
-                models: ["重置","取消"]
-                onClick: {
 
+    Repeater {
+        model: ["左灶","右灶"]
+        PageButtonBar{
+            visible: {
+                if(index==0)
+                {
+                    return lTimingState!==timingStateEnum.STOP
                 }
+                else
+                {
+                    return rTimingState!==timingStateEnum.STOP
+                }
+            }
+            anchors.verticalCenter: row.verticalCenter
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.horizontalCenterOffset: index==0?-440:440
+            orientation:true
+            space:54
+            models: ["重置","取消"]
+            onClick: {
+                if(clickIndex==0)
+                    loaderCloseHeat(index,startTurnOffFire)
+                else
+                    loaderCloseHeatReset("是否取消"+modelData+"定时关火？","否","是",index)
             }
         }
     }
+
     Row {
         id:row
         width: 309*2+124
@@ -225,14 +283,15 @@ Item {
                 }
                 Item
                 {
+                    id:timingState
                     visible: {
                         if(index==0)
                         {
-                            return false
+                            return lTimingState===timingStateEnum.STOP
                         }
                         else
                         {
-                            return true
+                            return rTimingState===timingStateEnum.STOP
                         }
                     }
                     anchors.fill: parent
@@ -255,16 +314,7 @@ Item {
                 }
                 Item
                 {
-                    visible: {
-                        if(index==0)
-                        {
-                            return true
-                        }
-                        else
-                        {
-                            return false
-                        }
-                    }
+                    visible:!timingState.visible
                     anchors.fill: parent
                     Text{
                         text:modelData+"将在"
@@ -275,7 +325,19 @@ Item {
                         anchors.topMargin: 90
                     }
                     Text{
-                        text:"10:11"
+                        text:{
+                            let timingTime
+                            if(index==0)
+                            {
+                                timingTime=lTimingLeft
+                            }
+                            else
+                            {
+                                timingTime=rTimingLeft
+                            }
+                            return  Math.floor(timingTime/60)+":"+timingTime%60
+                        }
+
                         color:themesTextColor
                         font.pixelSize: 50
                         anchors.horizontalCenter: parent.horizontalCenter
@@ -292,20 +354,51 @@ Item {
                     }
                 }
                 PageCirBar{
-                    width: 260
+                    width: 240
                     height: width
                     anchors.centerIn: parent
                     runing:true
                     canvasDiameter:width
+                    percent:{
+                        let timingTimeSet
+                        let timingTimeLeft
+                        if(index==0)
+                        {
+                            timingTimeLeft=lTimingLeft
+                            timingTimeSet=QmlDevState.state.LStoveTimingSet
+                        }
+                        else
+                        {
+                            timingTimeLeft=rTimingLeft
+                            timingTimeSet=QmlDevState.state.RStoveTimingSet
+                        }
+                        return  100-Math.floor(100*timingTimeLeft/timingTimeSet)
+                    }
                 }
                 onClicked: {
                     if(index==0)
                     {
-                        loaderCloseHeat(cookWorkPosEnum.LEFT,null)
+                        if(QmlDevState.state.LStoveStatus===0)
+                        {
+                            loaderCloseHeatReset("左灶未开启\n开启后才可设置定时关火","","好的",index)
+                        }
+                        else
+                        {
+                            if(lTimingState===timingStateEnum.STOP)
+                                loaderCloseHeat(index,startTurnOffFire)
+                        }
                     }
                     else
                     {
-                        loaderCloseHeat(cookWorkPosEnum.RIGHT,null)
+                        if(QmlDevState.state.RStoveStatus===0)
+                        {
+                            loaderCloseHeatReset("右灶未开启\n开启后才可设置定时关火","","好的",index)
+                        }
+                        else
+                        {
+                            if(rTimingState===timingStateEnum.STOP)
+                                loaderCloseHeat(index,startTurnOffFire)
+                        }
                     }
                 }
             }
