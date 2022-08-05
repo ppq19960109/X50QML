@@ -3,6 +3,7 @@ import QtQuick.Controls 2.2
 import "../"
 import "qrc:/SendFunc.js" as SendFunc
 Item {
+    id:root
     Timer{
         id:timer_qrcode
         repeat: false
@@ -16,24 +17,23 @@ Item {
 
     Connections { // 将目标对象信号与槽函数进行连接
         target: QmlDevState
-        enabled:parent.visible
+        enabled:root.visible
         onStateChanged: { // 处理目标对象信号的槽函数
-
             if("WifiState"==key)
             {
                 if(value==4 && timer_qrcode.running==false)
                 {
                     timer_qrcode.restart()
-                    loaderQrcodeShow("此二维码可以")
+                    loaderQrcodeShow("火粉APP")
                 }
             }
         }
     }
 
     Component.onCompleted: {
-        infoModel.get(0).value=QmlDevState.state.ProductCategory
-        infoModel.get(1).value=QmlDevState.state.ProductModel
-        infoModel.get(2).value=QmlDevState.state.DeviceName
+        infoModel.setProperty(0,"value",QmlDevState.state.ProductCategory)
+        infoModel.setProperty(1,"value",QmlDevState.state.ProductModel)
+        infoModel.setProperty(2,"value",QmlDevState.state.DeviceName)
         listView.model=infoModel
     }
 
@@ -113,7 +113,6 @@ Item {
                 id:qrcodeImg
                 asynchronous:true
                 smooth:false
-                //                    cache:false
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.right: parent.right
                 anchors.rightMargin: 10
@@ -124,9 +123,9 @@ Item {
 
                 if( timer_qrcode.running==false)
                 {
-                    if(QmlDevState.state.DeviceSecret=="")
+                    if(QmlDevState.state.DeviceSecret==="")
                     {
-                        loaderImagePopupShow("四元组不存在","/x50/icon/icon_pop_error.png")
+                        loaderWarnPopupShow("四元组不存在")
                         return
                     }
                     if(systemSettings.wifiEnable && wifiConnected==true)
@@ -139,12 +138,12 @@ Item {
                     }
                     else
                     {
-                        loaderImagePopupShow("未连网，请连接网络后再试","/x50/icon/icon_pop_error.png")
+                        loaderWarnPopupShow("未连网，请连接网络后再试")
                     }
                 }
                 else
                 {
-                    loaderQrcodeShow("此二维码可以")
+                    loaderQrcodeShow("火粉APP")
                 }
             }
         }

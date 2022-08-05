@@ -8,9 +8,11 @@ import "qrc:/WifiFunc.js" as WifiFunc
 import "qrc:/SendFunc.js" as SendFunc
 import "../"
 Item {
+    id:root
     property int scan_count: 0
     property bool wifiInputConnecting:false
     property int qrcode_display: 0
+
     function wifi_scan_timer_reset()
     {
         SendFunc.getCurWifi()
@@ -19,11 +21,18 @@ Item {
         timer_wifi_scan.interval=2500
         timer_wifi_scan.restart()
     }
+    function getWifiInfo()
+    {
+        if(wifiConnected==false)
+            SendFunc.getWifiState()
+        else
+            SendFunc.getCurWifi()
+    }
 
     Connections { // 将目标对象信号与槽函数进行连接
         target: window
+        enabled:root.visible
         onWifiConnectingChanged:{
-            console.log("onWifiConnectingChanged:",wifiConnecting,timer_wifi_connecting.running)
             if(wifiConnecting==true)
                 timer_wifi_connecting.restart()
             else
@@ -32,10 +41,10 @@ Item {
                     timer_wifi_connecting.stop()
                 else
                 {
-                    if(systemSettings.wifiEnable && wifiConnected==false && wifiConnectInfo.ssid!="")
+                    if(systemSettings.wifiEnable && wifiConnected==false && wifiConnectInfo.ssid!=="")
                     {
                         wifiConnectInfo.ssid=""
-                        loaderImagePopupShow("网络连接失败，请重试","/x50/icon/icon_pop_error.png")
+                        loaderWarnPopupShow("网络连接失败，请重试")
                     }
                 }
                 wifi_scan_timer_reset()
@@ -46,7 +55,7 @@ Item {
 
     Connections { // 将目标对象信号与槽函数进行连接
         target: QmlDevState
-        enabled:parent.visible
+        enabled:root.visible
         onStateChanged: { // 处理目标对象信号的槽函数
             console.log("page wifi onStateChanged:",key)
 
@@ -55,20 +64,20 @@ Item {
                 console.log("page wifi WifiState:",value,wifiConnected,wifiConnectInfo.ssid)
                 if(value > 1)
                 {
-                    if(value==2|| value==5) //
+                    if(value==2|| value==5)
                     {
-                        if(systemSettings.wifiEnable && wifiConnected==false && wifiConnectInfo.ssid!="")
+                        if(systemSettings.wifiEnable && wifiConnected==false && wifiConnectInfo.ssid!=="")
                         {
                             wifiConnectInfo.ssid=""
-                            loaderImagePopupShow("网络连接失败，请重试","/x50/icon/icon_pop_error.png")
+                            loaderWarnPopupShow("网络连接失败，请重试")
                         }
                     }
                     else if(value==3)
                     {
-                        if(systemSettings.wifiEnable && wifiConnected==false && wifiConnectInfo.ssid!="")
+                        if(systemSettings.wifiEnable && wifiConnected==false && wifiConnectInfo.ssid!=="")
                         {
                             wifiConnectInfo.ssid=""
-                            loaderImagePopupShow("密码错误，连接失败","/x50/icon/icon_pop_error.png")
+                            loaderWarnPopupShow("密码错误，连接失败")
                         }
                     }
                     else if(value==4)
@@ -76,17 +85,11 @@ Item {
                         if(scan_count>=3)
                             wifi_scan_timer_reset()
                     }
-                    //                    wifi_scan_timer_reset()
-                    //                    wifiInputConnecting=false
-                }
-                else
-                {
-
                 }
             }
             else if("ssid"==key)
             {
-                if(wifiConnected==true && wifiConnectInfo.ssid!="")
+                if(wifiConnected==true && wifiConnectInfo.ssid!=="")
                 {
                     var real_ssid
                     if(pattern.test(wifiConnectInfo.ssid))
@@ -98,7 +101,7 @@ Item {
                     {
                         real_ssid=value
                     }
-                    if(real_ssid==wifiConnectInfo.ssid)
+                    if(real_ssid===wifiConnectInfo.ssid)
                     {
                         qrcode_display=20
                         wifiConnectInfo.ssid=""
@@ -114,46 +117,44 @@ Item {
         }
     }
 
-    function getWifiInfo()
-    {
-        if(wifiConnected==false)
-            SendFunc.getWifiState()
-        else
-            SendFunc.getCurWifi()
-    }
     Component.onDestruction: {
+        if(wifiConnecting==false)
+        {
+            QmlDevState.executeShell("(wpa_cli enable_network all) &")
+        }
         if(loader_main.sourceComponent===component_wifiInput)
-            loader_main.sourceComponent = undefined
+            loader_main.sourceComponent = null
     }
     Component.onCompleted: {
         //        VirtualKeyboardSettings.styleName = "retro"
         //        VirtualKeyboardSettings.fullScreenMode=true
         //        console.info("VirtualKeyboardSettings",VirtualKeyboardSettings.availableLocales)
-
         if(systemSettings.wifiEnable && wifiConnecting==false)
         {
+            if(wifiConnected==true)
+                QmlDevState.executeShell("(wpa_cli list_networks | tail -n +3 | grep -v 'CURRENT' | awk '{system(\"wpa_cli disable_network \" $1)}') &")
             getWifiInfo()
             SendFunc.scanRWifi()
-            SendFunc.scanWifi()
         }
-        listView.positionViewAtBeginning()
     }
 
     Timer{
         id:timer_wifi_scan
         repeat: true
-        running: (systemSettings.wifiEnable && sleepState==false && parent.visible)
+        running: (systemSettings.wifiEnable && sleepState==false && root.visible)
         interval: 2500
         triggeredOnStart: false
         onTriggered: {
-            //            console.log("timer_wifi_scan",timer_wifi_scan.interval,scan_count,wifiConnecting)
             ++scan_count
             if(scan_count <= 3)
             {
                 if(scan_count==1)
                 {
-                    if(wifiConnectInfo.ssid==="")
+                    if(wifiConnecting==false)
+                    {
                         getWifiInfo()
+                        SendFunc.scanWifi()
+                    }
                 }
                 else if(scan_count==3)
                 {
@@ -254,7 +255,7 @@ Item {
                 PageRotationImg {
                     visible: connected==2
                     anchors.centerIn: parent
-                    source: themesPicturesPath+"wifi/"+"icon_loading.png"
+                    source: themesPicturesPath+"icon_loading_small.png"
                 }
                 Image{
                     asynchronous:true
@@ -331,7 +332,6 @@ Item {
                         else
                         {
                             var wifiInfo=WifiFunc.getWifiInfo(ssid)
-                            //                            console.log("wifiInfo",wifiInfo,typeof wifiInfo)
                             if(wifiInfo==null)
                             {
                                 loaderWifiInputShow(index,listView.model.get(index))
@@ -347,7 +347,7 @@ Item {
                                 }
                                 listView.positionViewAtBeginning()
                             }
-                            wifiInfo=undefined
+                            wifiInfo=null
                         }
                     }
                 }
@@ -366,7 +366,7 @@ Item {
 
             PageRotationImg {
                 anchors.centerIn: parent
-                source: themesPicturesPath+"wifi/"+"icon_loading.png"
+                source: themesPicturesPath+"icon_loading_small.png"
             }
         }
     }
@@ -462,7 +462,7 @@ Item {
                     anchors.right:connectBtn.left
                     anchors.rightMargin: 15
                     anchors.verticalCenter: parent.verticalCenter
-                    source: themesPicturesPath+"wifi/"+"icon_loading.png"
+                    source: themesPicturesPath+"icon_loading_small.png"
                 }
                 Button {
                     id:connectBtn
@@ -521,11 +521,11 @@ Item {
                 maximumLength:36
                 wrapMode:TextInput.WrapAnywhere
                 verticalAlignment:Text.AlignTop
-//                text: "123456789012345678901234567890123456"
+                //                text: "123456789012345678901234567890123456"
                 background: null
-//                onPressed: {
-//                    vkb.visible = true //当选择输入框的时候才显示键盘
-//                }
+                //                onPressed: {
+                //                    vkb.visible = true //当选择输入框的时候才显示键盘
+                //                }
                 onTextEdited:{
                     if(length>=8 && length<=36)
                     {
@@ -550,9 +550,9 @@ Item {
                 anchors.right:parent.right
                 //这种集成方式下点击隐藏键盘的按钮是没有效果的，
                 //只会改变active，因此我们自己处理一下
-//                onActiveChanged: {
-//                    if(!active) { visible = false }
-//                }
+                //                onActiveChanged: {
+                //                    if(!active) { visible = false }
+                //                }
             }
             Component.onCompleted: {
                 textField.forceActiveFocus()
@@ -569,7 +569,6 @@ Item {
         loaderStackView.item.wifi_flags=wifiInfo.flags
         loaderStackView.item.index=index
         timer_wifi_scan.stop()
-        console.log("loaderWifiInputShow:", wifiInfo.ssid,wifiInfo.flags)
     }
     function loaderWifiInputHide(){
         if(loaderStackView.sourceComponent===component_wifiInput)

@@ -123,7 +123,7 @@ Item {
                 }
                 else
                 {
-                    loaderImagePopupShow("未连网，请连接网络后再试","/x50/icon/icon_pop_error.png")
+                    loaderWarnPopupShow("未连网，请连接网络后再试")
                 }
             }
         }

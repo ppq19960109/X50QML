@@ -47,7 +47,7 @@ void LocalClient::connectToServer()
 {
     qDebug() << "connectToServer";
 #ifdef USE_TCP
-    m_socket->connectToHost("192.168.0.101",9999);
+    m_socket->connectToHost("192.168.1.140",9999);
 #else
     m_socket->connectToServer(UNIX_DOMAIN);
 #endif

@@ -5,9 +5,7 @@
         <file>pageMain/PageHood.qml</file>
         <file>pageMain/PageSteamOven.qml</file>
         <file>pageMain/PageHomeThird.qml</file>
-        <file>pageCook/DataPathView.qml</file>
         <file>pageCook/PageMultistage.qml</file>
-        <file>pageCook/PageSteamBakeRun.qml</file>
         <file>PageCirProgressBar.qml</file>
         <file>PageCirWaveProgressBar.qml</file>
         <file>pageMain/PageCookDetails.qml</file>
@@ -26,7 +24,6 @@
         <file>pageSet/PageReleaseNotes.qml</file>
         <file>pageSet/PageUpdateProgressBar.qml</file>
         <file>PageHomeBar.qml</file>
-        <file>pageCook/PageNewCook.qml</file>
         <file>PageErrorPopup.qml</file>
         <file>x50/wifi/kai.png</file>
         <file>x50/wifi/WIFI.png</file>
@@ -72,7 +69,6 @@
         <file>pageProductionTest/PageScreenLine.qml</file>
         <file>pageProductionTest/PageScreenClick.qml</file>
         <file>pageProductionTest/PageScreenLCD.qml</file>
-        <file>PageDialogGradient.qml</file>
         <file>x50/main/icon_ts_g.png</file>
         <file>PageLockScreen.qml</file>
         <file>CookFunc.js</file>
@@ -128,5 +124,6 @@
         <file>PageButtonBar.qml</file>
         <file>PageCloseButton.qml</file>
         <file>pageCook/PageSteaming.qml</file>
+        <file>PageWarnPopup.qml</file>
     </qresource>
 </RCC>

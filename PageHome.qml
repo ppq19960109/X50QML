@@ -32,9 +32,9 @@ Item {
         id:component_updateConfirm
         PageDialogConfirm{
             hintTopText:"系统更新"
-            hintCenterText:"检测到最新版本 "+QmlDevState.state.OTANewVersion+"\n是否升级系统?"
+            hintCenterText:"检测到最新版本 "+QmlDevState.state.OTANewVersion+"\n请问是否立即更新?"
+            cancelText:"取消"
             confirmText:"升级"
-            hintHeight:360
             onCancel: {
                 loaderAuto.sourceComponent = undefined
             }
@@ -680,9 +680,7 @@ Item {
         //                        loaderAutoPopupShow("","左腔门开启，工作暂停",292)
         //                        loaderPopupShow("","右灶未开启\n开启后才可定时关火",292)
         //        loaderErrorShow("右腔干烧检测电路故障！","请拨打售后电话<font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员")
-        //        loaderImagePopupShow("网络连接失败，请重试","/x50/icon/icon_pop_error.png")
         //        loaderAutoPopupShow("","右灶定时关火结束，\n请将旋钮复位",292,"",null,false)
-        //        loaderPopupShow("恢复出厂设置成功","",292,"确定")
         //        loaderUpdateConfirmShow()
         //       loaderUpdateResultShow("系统已更新至最新版本\n"+"1.2.0")
     }

@@ -1,25 +1,15 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.2
-
+import "qrc:/SendFunc.js" as SendFunc
 Item {
-    property var cookItem:null
-    property int cookDialogIndex
-
+    property alias topImageSrc: topImage.source
     property alias hintTopText: hintTop.text
-    property alias hintCenterText: hintCenter.text
-    property alias hintCenterTextAlign: hintCenter.horizontalAlignment
+    property alias hintBottomText: hintBottom.text
     property alias cancelText: cancelBtnText.text
     property alias confirmText: confirmBtnText.text
-    property alias checkboxVisible: checkBox.visible
-    property alias checkboxChecked: checkBox.checked
-    property alias hintWidth: hint.width
     property alias hintHeight: hint.height
     signal cancel(int index)
     signal confirm()
-
-    Component.onDestruction: {
-        cookItem=null
-    }
 
     MouseArea{
         anchors.fill: parent
@@ -29,7 +19,7 @@ Item {
     Rectangle {
         id:hint
         anchors.centerIn: parent
-        implicitWidth: 730
+        implicitWidth: 820
         implicitHeight: 350
         color: themesPopupWindowColor
         radius: 10
@@ -41,47 +31,41 @@ Item {
                 cancel(0)
             }
         }
-
         Image {
-            visible: hintTop.text==""
+            id:topImage
             anchors.top:parent.top
-            anchors.topMargin: 45
+            anchors.topMargin: 34
             anchors.horizontalCenter: parent.horizontalCenter
             asynchronous:true
             smooth:false
-            source: themesPicturesPath+"icon_warn.png"
+            source: themesPicturesPath+"icon_error.png"
+        }
+        Text{
+            id:hintTop
+            visible: hintTop.text!=""
+            width:parent.width
+            color:"white"
+            font.pixelSize: 40
+            anchors.top: parent.top
+            anchors.topMargin: 115
+            anchors.horizontalCenter: parent.horizontalCenter
+            horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignVCenter
+            wrapMode:Text.WrapAnywhere
         }
 
         Text{
-            id:hintTop
-            visible: text!=""
+            id:hintBottom
+            visible: hintBottom.text!=""
             width:parent.width
+            color:"white"
+            font.pixelSize: 35
             anchors.top: parent.top
-            anchors.topMargin: 35
-            color:"#fff"
-            font.pixelSize: 30
-            horizontalAlignment: Text.AlignHCenter
-            wrapMode:Text.WrapAnywhere
-            text:""
-        }
-        Text{
-            id:hintCenter
-            visible: text!=""
-            width:parent.width-60
-            anchors.centerIn: parent
-            anchors.verticalCenterOffset: -22
-            color:"#fff"
-            font.pixelSize: 30
-            horizontalAlignment: Text.AlignHCenter
-            wrapMode:Text.WrapAnywhere
-            text:""
-        }
-        PageCheckBox {
-            id:checkBox
-            anchors.top:parent.top
-            anchors.topMargin: 212
+            anchors.topMargin: 175
             anchors.horizontalCenter: parent.horizontalCenter
-            checked: false
+            horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignVCenter
+            wrapMode:Text.WrapAnywhere
         }
         Button {
             id:cancelBtn

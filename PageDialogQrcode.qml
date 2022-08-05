@@ -5,62 +5,39 @@ Item {
     signal cancel()
     MouseArea{
         anchors.fill: parent
-        //        hoverEnabled:true
-        //        propagateComposedEvents: true
-        //        onPressed: {
-        //            mouse.accepted = true
-        //        }
     }
     anchors.fill: parent
 
     Rectangle {
-        width:640
-        height: 400
+        width:730
+        height: 350
         anchors.centerIn: parent
         color: themesPopupWindowColor
-        radius: 16
-        //        PageDialogGradient{
-        //            anchors.fill: parent
-        //        }
-        Button {
-            width:closeImg.width+60
-            height:closeImg.height+60
-            anchors.top:parent.top
-            //            anchors.topMargin: 33
-            anchors.right:parent.right
-            //            anchors.rightMargin: 33
+        radius: 10
 
-            Image {
-                id:closeImg
-                asynchronous:true
-                smooth:false
-                cache:false
-                anchors.centerIn: parent
-                source: themesImagesPath+"icon-window-close.png"
-            }
-            background: Item {}
+        PageCloseButton {
+            anchors.top:parent.top
+            anchors.right:parent.right
             onClicked: {
-                cancel()
+                 cancel()
             }
         }
         Text{
             id:hintTop
             anchors.top: parent.top
-            anchors.topMargin: 50
+            anchors.topMargin: 30
             anchors.horizontalCenter: parent.horizontalCenter
             color:"white"
-            font.pixelSize: 40
+            font.pixelSize: 30
         }
         Image{
-            id:qrCodeImg
+            id:qrcode
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.horizontalCenterOffset: -120
-            anchors.top: hintTop.bottom
-            anchors.topMargin: 40
-            width: 218
-            height: 218
-            sourceSize.width: 218
-            sourceSize.height: 218
+            anchors.top: parent.top
+            anchors.topMargin: 100
+            sourceSize.width: 180
+            sourceSize.height: 180
             asynchronous:true
             smooth:false
             cache:false
@@ -68,18 +45,37 @@ Item {
         }
 
         Text{
-            anchors.top: qrCodeImg.top
-            anchors.left: qrCodeImg.right
+            anchors.left: qrcode.right
             anchors.leftMargin: 20
-            anchors.right: parent.right
+            anchors.verticalCenter: qrcode.verticalCenter
             color:"white"
-            font.pixelSize: 35
-            //                font.letterSpacing : 5
-            //            font.bold :true
-            lineHeight: 1.5
-
+            font.pixelSize: 30
+            lineHeight: 1.3
             wrapMode:Text.WrapAnywhere
-            text:"1、下载官方APP\n2、官方APP绑定设备"
+            text:"下载火粉APP   绑定设备\n海量智慧菜谱  一键烹饪"
+        }
+        Button {
+            width:140+10
+            height:50+10
+            anchors.bottom:parent.bottom
+            anchors.bottomMargin: 20
+            anchors.horizontalCenter: parent.horizontalCenter
+            Text{
+                anchors.centerIn: parent
+                color:"#000"
+                font.pixelSize: 30
+                text:"好的"
+            }
+            background: Rectangle {
+                width:140
+                height:50
+                anchors.centerIn: parent
+                color:themesTextColor2
+                radius: height/2
+            }
+            onClicked: {
+                cancel()
+            }
         }
     }
 }

@@ -81,21 +81,20 @@ Item {
                 }
             }
             ctx.stroke()
-
+            ctx.closePath()
             ctx.restore()
         }
     }
 
-
-    //    Slider {
-    //        anchors.horizontalCenter: parent.horizontalCenter
-    //        anchors.bottom: parent.bottom
-    //        stepSize: 2
-    //        to: 100
-    //        value: 30
-    //        onValueChanged: {
-    //            console.log("slider:",value)
-    //            percent=value
-    //        }
-    //    }
+//        Slider {
+//            anchors.horizontalCenter: parent.horizontalCenter
+//            anchors.bottom: parent.bottom
+//            stepSize: 2
+//            to: 100
+//            value: 30
+//            onValueChanged: {
+//                console.log("slider:",value)
+//                percent=value
+//            }
+//        }
 }

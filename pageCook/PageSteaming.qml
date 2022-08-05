@@ -90,8 +90,12 @@ Item {
                         {
                             if(lStOvState===workStateEnum.WORKSTATE_STOP)
                                 return ["左腔蒸烤","多段烹饪","智慧菜谱"]
-                            else if(lStOvState===workStateEnum.WORKSTATE_PAUSE||lStOvState===workStateEnum.WORKSTATE_PAUSE)
+                            else if(lStOvState===workStateEnum.WORKSTATE_PAUSE)
                                 return ["继续","取消"]
+                            else if(lStOvState===workStateEnum.WORKSTATE_PAUSE_RESERVE)
+                                return ["继续","取消","立即烹饪"]
+                            else if(lStOvState===workStateEnum.WORKSTATE_RESERVE)
+                                return ["暂停","取消","立即烹饪"]
                             else
                                 return ["暂停","取消"]
                         }
@@ -99,8 +103,12 @@ Item {
                         {
                             if(rStOvState===workStateEnum.WORKSTATE_STOP)
                                 return ["右腔速蒸","辅助烹饪"]
-                            else if(rStOvState===workStateEnum.WORKSTATE_PAUSE||rStOvState===workStateEnum.WORKSTATE_PAUSE)
+                            else if(rStOvState===workStateEnum.WORKSTATE_PAUSE)
                                 return ["继续","取消"]
+                            else if(rStOvState===workStateEnum.WORKSTATE_PAUSE_RESERVE)
+                                return ["继续","取消","立即烹饪"]
+                            else if(rStOvState===workStateEnum.WORKSTATE_RESERVE)
+                                return ["暂停","取消","立即烹饪"]
                             else
                                 return ["暂停","取消"]
                         }
@@ -137,7 +145,10 @@ Item {
                         }
                         else
                         {
-                            push_page(pageSmartRecipes)
+                            if(stOvState===workStateEnum.WORKSTATE_STOP)
+                                push_page(pageSmartRecipes)
+                            else
+                                SendFunc.setCookOperation(index,workOperationEnum.RUN_NOW)
                         }
                     }
 
@@ -181,7 +192,7 @@ Item {
                 background:Image {
                     asynchronous:true
                     smooth:false
-                    //                    source: themesPicturesPath+"icon_close_heat.png"
+                    source: themesPicturesPath+"icon_steam_runing_background.png"
                 }
                 PageRotationImg{
                     width: 290
@@ -197,7 +208,7 @@ Item {
                             return rStOvState===workStateEnum.WORKSTATE_PREHEAT
                         }
                     }
-                    duration:4000
+                    duration:6000
                     anchors.centerIn: parent
                     source:themesPicturesPath+"icon_steam_runing.png"
                 }
@@ -394,7 +405,7 @@ Item {
                         }
                     }
                     canvasDiameter:width
-                    outerRing:true
+                    outerRing:false
                     percent:{
                         if(index==0)
                         {

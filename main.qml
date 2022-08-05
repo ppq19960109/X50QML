@@ -376,10 +376,9 @@ ApplicationWindow {
         }
     }
     function loaderQrcodeShow(title){
-        //        console.log("BindTokenState",QmlDevState.state.BindTokenState,QmlDevState.state.DeviceSecret,QmlDevState.state.WifiState)//QmlDevState.state.BindTokenState > 0
-        if(QmlDevState.state.DeviceSecret=="")
+        if(QmlDevState.state.DeviceSecret==="")
         {
-            loaderImagePopupShow("四元组不存在","/x50/icon/icon_pop_error.png")
+            loaderWarnPopupShow("四元组不存在")
             return
         }
         if(systemSettings.wifiEnable && wifiConnected==true)
@@ -389,7 +388,7 @@ ApplicationWindow {
         }
         else
         {
-            loaderImagePopupShow("未连网，请连接网络后再试","/x50/icon/icon_pop_error.png")
+            loaderWarnPopupShow("未连网，请连接网络后再试")
         }
     }
     function loaderQrcodeHide(){
@@ -398,19 +397,21 @@ ApplicationWindow {
     }
 
     Component{
-        id:component_imagePopup
-        PageImagePopup{
-            hintTopImgSrc:""
+        id:component_warnPopup
+        PageWarnPopup{
+            hintTopText:""
             hintBottomText:""
             onCancel: {
-                loader_main.sourceComponent = undefined
+                loaderMainHide()
+            }
+            onConfirm:{
+                loaderMainHide()
             }
         }
     }
-    function loaderImagePopupShow(hintBottomText,hintTopImgSrc){
+    function loaderWarnPopupShow(hintTopText){
         loader_main.sourceComponent = component_imagePopup
-        loader_main.item.hintTopImgSrc=hintTopImgSrc
-        loader_main.item.hintBottomText=hintBottomText
+        loader_main.item.hintTopText=hintTopText
     }
     Component{
         id:component_loading
@@ -726,10 +727,6 @@ ApplicationWindow {
     //        }
     //    }
 
-    //    Component {
-    //        id: pageGradient
-    //        PageGradient {}
-    //    }
     Component {
         id: pageHome
         PageHome {}
@@ -753,10 +750,6 @@ ApplicationWindow {
     Component {
         id: pageWifi
         PageWifi {}
-    }
-    Component {
-        id: pageSteamBakeRun
-        PageSteamBakeRun {}
     }
     Component {
         id: pageMultistage

@@ -13,7 +13,7 @@ class QrcodeEn
 public:
     QrcodeEn();
 
-    static QImage encodeImage(const QString& qrTxt, int bulk,const QString& saveName);
+    static QImage encodeImage(const QString qrTxt, int bulk,const QString saveName);
 };
 
 #endif // QRCODEEN_H
