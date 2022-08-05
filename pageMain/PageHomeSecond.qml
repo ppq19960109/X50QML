@@ -1,22 +1,17 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.2
-import QtQuick.Layouts 1.3
 
 Item {
 //    anchors.fill: parent
 //    width: 800
 //    height: 400
-    RowLayout {
-        anchors.fill: parent
-
-        anchors.leftMargin: 60
-        anchors.rightMargin: 60
-
+    Row {
+        anchors.centerIn: parent
         spacing: 20
         Button{
-            Layout.preferredWidth: 210
-            Layout.preferredHeight:312
-            Layout.alignment: Qt.AlignHCenter|Qt.AlignVCenter
+            width: 210
+            height:312
+//            anchors.verticalCenter: parent.verticalCenter
 
             background:Image {
                 asynchronous:true
@@ -38,9 +33,9 @@ Item {
         }
 
         Button{
-            Layout.preferredWidth: 210
-            Layout.preferredHeight:312
-            Layout.alignment: Qt.AlignHCenter|Qt.AlignVCenter
+            width: 210
+            height:312
+//            anchors.verticalCenter: parent.verticalCenter
 
             background:Image {
                 asynchronous:true
@@ -62,9 +57,9 @@ Item {
         }
 
         Button{
-            Layout.preferredWidth: 210
-            Layout.preferredHeight:312
-            Layout.alignment: Qt.AlignHCenter|Qt.AlignVCenter
+            width: 210
+            height:312
+//            anchors.verticalCenter: parent.verticalCenter
 
             background:Image {
                 asynchronous:true

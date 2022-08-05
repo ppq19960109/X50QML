@@ -94,16 +94,6 @@
         <file>x50/steam/icon_经典蒸缩小.png</file>
         <file>x50/steam/icon_经典蒸.png</file>
         <file>PageScrollBarText.qml</file>
-        <file>x50/test/image1.png</file>
-        <file>x50/test/image2.png</file>
-        <file>x50/test/image3.png</file>
-        <file>x50/test/image4.png</file>
-        <file>x50/test/image5.png</file>
-        <file>x50/test/image6.png</file>
-        <file>x50/test/image7.png</file>
-        <file>x50/test/image8.png</file>
-        <file>x50/test/image9.png</file>
-        <file>x50/test/image10.png</file>
         <file>x50/icon/icon_alarm.png</file>
         <file>x50/icon/icon_pop_error.png</file>
         <file>PageImagePopup.qml</file>
@@ -112,12 +102,6 @@
         <file>pageProductionTest/PagePowerOut.qml</file>
         <file>pageProductionTest/PagePowerInput.qml</file>
         <file>pageMain/PageDemoMode.qml</file>
-        <file>x50/demo/demo5.png</file>
-        <file>x50/demo/demo4.png</file>
-        <file>x50/demo/demo3.png</file>
-        <file>x50/demo/demo2.png</file>
-        <file>x50/demo/demo1.png</file>
-        <file>x50/demo/demo6.png</file>
         <file>x50/icon_runing_background.png</file>
         <file>x50/icon_right_runing.png</file>
         <file>x50/icon_left_runing.png</file>

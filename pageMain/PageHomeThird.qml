@@ -1,6 +1,5 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.2
-import QtQuick.Layouts 1.3
 
 Item {
 //    anchors.fill: parent
@@ -9,7 +8,6 @@ Item {
     Row {
         width: parent.width-120
         anchors.centerIn: parent
-
         spacing: 20
 
         Button{

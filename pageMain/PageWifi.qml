@@ -1,6 +1,5 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.2
-import QtQuick.Layouts 1.3
 import QtQuick.VirtualKeyboard 2.2
 //import QtQuick.VirtualKeyboard.Settings 2.2
 
@@ -458,7 +457,7 @@ Item {
             //            highlightRangeMode: ListView.ApplyRange
             snapMode: ListView.SnapToItem
             //            boundsBehavior:Flickable.StopAtBounds
-            highlightMoveDuration:80
+            highlightMoveDuration:100
             highlightMoveVelocity:-1
             footer: footerView
             //            onFlickEnded:{

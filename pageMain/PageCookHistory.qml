@@ -182,7 +182,7 @@ Item {
             cacheBuffer:2
             clip: true
             currentIndex:0
-            highlightMoveDuration:80
+            highlightMoveDuration:100
             highlightMoveVelocity:-1
             onCurrentIndexChanged:{
                 if(permitStartStatus==0)

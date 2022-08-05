@@ -2,10 +2,11 @@ import QtQuick 2.7
 import QtQuick.Controls 2.2
 import "qrc:/SendFunc.js" as SendFunc
 Item {
+    id:root
     property int device
     property real percent:0
     property int roate:0
-    property bool reserveFlash:true
+    property int reserveFlash:0
 
     property int workState
     property color workColor
@@ -37,6 +38,14 @@ Item {
             updatePaint()
         }
     }
+
+    SequentialAnimation {
+        running: workState === workStateEnum.WORKSTATE_RESERVE||workState === workStateEnum.WORKSTATE_PAUSE_RESERVE||workState === workStateEnum.WORKSTATE_PAUSE
+        loops:Animation.Infinite
+        NumberAnimation { target: root; property: "reserveFlash"; from:0;to: 1; duration: 1000 ;easing.type: Easing.Linear}
+        NumberAnimation { target: root; property: "reserveFlash"; from:1;to: 0; duration: 1000 ;easing.type: Easing.Linear}
+    }
+
     Image {
         width: 310
         height: width
@@ -128,7 +137,7 @@ Item {
             }
             //                }
             ctx.stroke()
-
+            ctx.closePath()
             //                var rad=(1.5-2*percent/100)*Math.PI
             //                console.log("radian:",rad,"r:",r,"Angle",360*percent/100)
             //                var x = Math.cos(rad)*r

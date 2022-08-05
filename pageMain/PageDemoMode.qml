@@ -35,27 +35,27 @@ Item{
         Image {
             asynchronous: true
             smooth:false
-            source:"qrc:/x50/demo/demo1.png"
+            source:themesImagesPath+"demo/demo1.png"
         }
         Image {
             asynchronous: true
             smooth:false
-            source:"qrc:/x50/demo/demo2.png"
+            source:themesImagesPath+"demo/demo2.png"
         }
         Image {
             asynchronous: true
             smooth:false
-            source:"qrc:/x50/demo/demo3.png"
+            source:themesImagesPath+"demo/demo3.png"
         }
         Image {
             asynchronous: true
             smooth:false
-            source:"qrc:/x50/demo/demo4.png"
+            source:themesImagesPath+"demo/demo4.png"
         }
         Image {
             asynchronous: true
             smooth:false
-            source:"qrc:/x50/demo/demo5.png"
+            source:themesImagesPath+"demo/demo5.png"
         }
 
 //        onCurrentIndexChanged:{

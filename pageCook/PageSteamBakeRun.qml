@@ -7,7 +7,7 @@ import "../"
 Rectangle {
     color: themesWindowBackgroundColor
     property string name: "pageSteamBakeRun"
-
+/*
     Timer{
 //        property int count:0
         id:timer_run
@@ -48,7 +48,7 @@ Rectangle {
             }
         }
     }
-
+*/
     Component.onCompleted: {
         leftProgressBar.updatePaint()
         rightProgressBar.updatePaint()
@@ -58,7 +58,7 @@ Rectangle {
     Component.onDestruction: {
         closeCancelRun()
         loaderNewCookHide()
-        timer_run.stop()
+//        timer_run.stop()
     }
     StackView.onActivating:{
         SendFunc.permitSteamStartStatus(0)
@@ -129,9 +129,9 @@ Rectangle {
         PageRotationImg{
             width: 310
             height: width
-            smooth:true
+            smooth:false
             visible:leftProgressBar.workState === workStateEnum.WORKSTATE_PREHEAT
-            duration:4000
+            duration:8000
             anchors.centerIn: leftProgressBar
             source:"qrc:/x50/icon_left_runing.png"
         }
@@ -347,9 +347,9 @@ Rectangle {
         PageRotationImg{
             width: 310
             height: width
-            smooth:true
+            smooth:false
             visible:rightProgressBar.workState === workStateEnum.WORKSTATE_PREHEAT
-            duration:4000
+            duration:8000
             anchors.centerIn: rightProgressBar
             source:"qrc:/x50/icon_right_runing.png"
         }

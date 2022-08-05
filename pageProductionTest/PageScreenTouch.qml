@@ -1,6 +1,5 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.2
-import QtQuick.Layouts 1.3
 
 Item {
     id:root
@@ -26,9 +25,6 @@ Item {
                 backPrePage()
             }
         }
-    }
-    Component.onCompleted: {
-
     }
 
     function touchJudge(x,y,parent)

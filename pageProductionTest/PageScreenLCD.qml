@@ -1,6 +1,5 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.2
-import QtQuick.Layouts 1.3
 //Image {
 //    property int step: 1
 //    width: 800
@@ -9,7 +8,7 @@ import QtQuick.Layouts 1.3
 //    sourceSize.height: 480
 ////    asynchronous: true
 //    smooth:false
-//    source:step>10?"":"qrc:/x50/test/image"+step+".png" //themesImagesPath+"image"+step+".png"
+//    source:step>10?"":themesImagesPath+"test/image"+step+".png" //themesImagesPath+"image"+step+".png"
 //    visible: status==Image.Ready
 //    MouseArea{
 //        anchors.fill: parent
@@ -46,98 +45,99 @@ Item{
         Image {
             asynchronous: true
             smooth:false
-            source:"qrc:/x50/test/image1.png"
+            source:themesImagesPath+"test/image1.png"
         }
         Image {
             asynchronous: true
             smooth:false
-            source:"qrc:/x50/test/image2.png"
+            source:themesImagesPath+"test/image2.png"
         }
         Image {
             asynchronous: true
             smooth:false
-            source:"qrc:/x50/test/image3.png"
+            source:themesImagesPath+"test/image3.png"
         }
         Image {
             asynchronous: true
             smooth:false
-            source:"qrc:/x50/test/image4.png"
+            source:themesImagesPath+"test/image4.png"
         }
         Image {
             asynchronous: true
             smooth:false
-            source:"qrc:/x50/test/image5.png"
+            source:themesImagesPath+"test/image5.png"
         }
         Image {
             asynchronous: true
             smooth:false
-            source:"qrc:/x50/test/image6.png"
+            source:themesImagesPath+"test/image6.png"
         }
         Image {
             asynchronous: true
             smooth:false
-            source:"qrc:/x50/test/image7.png"
+            source:themesImagesPath+"test/image7.png"
         }
         Image {
             asynchronous: true
             smooth:false
-            source:"qrc:/x50/test/image8.png"
+            source:themesImagesPath+"test/image8.png"
         }
         Image {
             asynchronous: true
             smooth:false
-            source:"qrc:/x50/test/image9.png"
+            source:themesImagesPath+"test/image9.png"
         }
         Image {
             asynchronous: true
             smooth:false
-            source:"qrc:/x50/test/image10.png"
+            source:themesImagesPath+"test/image10.png"
         }
         Item {
-            RowLayout{
-                anchors.fill: parent
-                Button{
-                    Layout.preferredWidth: 200
-                    Layout.preferredHeight:100
-                    Layout.alignment: Qt.AlignHCenter|Qt.AlignVCenter
-                    background:Rectangle{
-                        radius: 16
-                        color:"green"
-                    }
-                    Text{
-                        text:"成功"
-                        color:"#FFF"
-                        font.pixelSize: 35
-                        anchors.centerIn: parent
-                    }
-                    onClicked: {
-                        containerqml.clickedLcdFunc(1)
-                        backPrePage()
-                    }
+            Button{
+                width: 200
+                height: 100
+                anchors.centerIn: parent
+                anchors.horizontalCenterOffset: -150
+
+                background:Rectangle{
+                    radius: 16
+                    color:"green"
                 }
-                Button{
-                    Layout.preferredWidth: 200
-                    Layout.preferredHeight:100
-                    Layout.alignment: Qt.AlignHCenter|Qt.AlignVCenter
-                    background:Rectangle{
-                        radius: 16
-                        color:"red"
-                    }
-                    Text{
-                        text:"失败"
-                        color:"#FFF"
-                        font.pixelSize: 35
-                        anchors.centerIn: parent
-                    }
-                    onClicked: {
-                        containerqml.clickedLcdFunc(-1)
-                        backPrePage()
-                    }
+                Text{
+                    text:"成功"
+                    color:"#FFF"
+                    font.pixelSize: 35
+                    anchors.centerIn: parent
+                }
+                onClicked: {
+                    containerqml.clickedLcdFunc(1)
+                    backPrePage()
+                }
+            }
+            Button{
+                width: 200
+                height: 100
+                anchors.centerIn: parent
+                anchors.horizontalCenterOffset: 150
+
+                background:Rectangle{
+                    radius: 16
+                    color:"red"
+                }
+                Text{
+                    text:"失败"
+                    color:"#FFF"
+                    font.pixelSize: 35
+                    anchors.centerIn: parent
+                }
+                onClicked: {
+                    containerqml.clickedLcdFunc(-1)
+                    backPrePage()
                 }
             }
         }
         Component.onCompleted:{
-            contentItem.highlightMoveDuration = 80       //将移动时间设为0
+            contentItem.highlightMoveDuration = 100       //将移动时间设为0
             contentItem.highlightMoveVelocity = -1
         }
 
@@ -154,7 +154,7 @@ Item{
 //AnimatedSprite {
 //    property int step: 1
 //    anchors.fill: parent
-//    source: "qrc:/x50/test/image"+step+".png"
+//    source: themesImagesPath+"test/image"+step+".png"
 //    frameWidth: 800
 //    frameHeight: 480
 //    frameDuration: 4000

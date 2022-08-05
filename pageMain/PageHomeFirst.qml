@@ -9,13 +9,12 @@ Item {
 //    height: 400
     Row {
         anchors.centerIn: parent
-
         spacing: 40
 
         Button{
             width: 324
             height:312
-            anchors.verticalCenter: parent.verticalCenter
+//            anchors.verticalCenter: parent.verticalCenter
             //            highlighted: true
             //             Material.accent: Material.Green
             //             Universal.accent: Universal.Indigo
@@ -43,7 +42,7 @@ Item {
         Button{
             width: 324
             height:312
-            anchors.verticalCenter: parent.verticalCenter
+//            anchors.verticalCenter: parent.verticalCenter
 
             background:Image {
                 asynchronous:true
