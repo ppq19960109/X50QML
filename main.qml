@@ -15,8 +15,8 @@ ApplicationWindow {
     id: window
     width: 800
     height: 480
-    visible: true
-    property int sysPower:2
+//    visible: true
+    property int sysPower:-1
     property int permitStartStatus:0
     readonly property string uiVersion:"1.1"
     readonly property string productionTestWIFISSID:"moduletest"

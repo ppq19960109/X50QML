@@ -37,7 +37,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 contains(QT_ARCH, arm){
     message("arm")
     DEFINES += USE_RK3308
-    DEFINES += SYSPOWER_RK3308
+#    DEFINES += SYSPOWER_RK3308
     #LIBS += -lqrencode
     #LIBS += -lDeviceIo -lasound
     INCLUDEPATH += libqrencode/include
