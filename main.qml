@@ -488,7 +488,59 @@ ApplicationWindow {
         if(loader_main.sourceComponent === component_popup)
             loader_main.sourceComponent = undefined
     }
-
+    Component{
+        id:component_cancelRun
+        PageDialogConfirm{
+            hintTopText:""
+            hintBottomText:""
+            cancelText:"取消"
+            confirmText:"继续工作"
+            hintWidth:600
+            hintHeight:280
+            //            closeBtnVisible:false
+            onCancel: {
+                if(flag>0)
+                {
+                    if(hintTopText.indexOf("左腔")!=-1)
+                    {
+                        SendFunc.setCookOperation(cookWorkPosEnum.LEFT,workOperationEnum.CANCEL)
+                    }
+                    else
+                    {
+                        SendFunc.setCookOperation(cookWorkPosEnum.RIGHT,workOperationEnum.CANCEL)
+                    }
+                }
+                closeCancelRun()
+            }
+            onConfirm: {
+                closeCancelRun()
+            }
+        }
+    }
+    function showCancelRun(device,state){
+        loader_main.sourceComponent = component_cancelRun
+        loader_main.item.hintTopText= "是否取消"+device+state+"？"
+        loader_main.item.cancelText= "取消"+state
+    }
+    function closeCancelRun(device){
+        if(loader_main.sourceComponent === component_cancelRun)
+        {
+            if(device!=null)
+            {
+                if(hintTopText.indexOf("左腔")!=-1)
+                {
+                    if(device!=cookWorkPosEnum.LEFT)
+                        return
+                }
+                else
+                {
+                    if(device!=cookWorkPosEnum.RIGHT)
+                        return
+                }
+            }
+            loader_main.sourceComponent = undefined
+        }
+    }
     Loader{
         //加载弹窗组件
         id:loaderAuto
@@ -854,6 +906,10 @@ ApplicationWindow {
     Component {
         id: pageDemoMode
         PageDemoMode {}
+    }
+    Component{
+        id:component_newCook
+        PageNewCook{}
     }
     function isExistView(pageName) {
         //        console.log("isExistView:",pageName)

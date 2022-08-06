@@ -137,7 +137,7 @@ Item {
             }
             //                }
             ctx.stroke()
-            ctx.closePath()
+//            ctx.closePath()
             //                var rad=(1.5-2*percent/100)*Math.PI
             //                console.log("radian:",rad,"r:",r,"Angle",360*percent/100)
             //                var x = Math.cos(rad)*r
