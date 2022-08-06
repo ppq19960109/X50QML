@@ -123,7 +123,7 @@ Item {
                 }
                 else
                 {
-                    loaderWarnPopupShow("未连网，请连接网络后再试")
+                    loaderWifiConfirmShow("未连网，请连接网络后再试")
                 }
             }
         }

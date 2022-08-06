@@ -20,6 +20,7 @@ ApplicationWindow {
     property int productionTestStatus:0
     property int productionTestFlag:1
     property int demoModeStatus:0
+    property bool wifiPageStatus:false
 
     readonly property string productionTestWIFISSID:"moduletest"
     readonly property string productionTestWIFIPWD:"58185818"
@@ -56,6 +57,19 @@ ApplicationWindow {
     readonly property string themesTextColor2:"#A2A2A2"
 
     property var pattern: new RegExp("[\u4E00-\u9FA5]+")
+    property var screenSaverInfo:{"month":"","date":"","hours":"","minutes":"","temp":"","lowTemp":"","highTemp":"","weatherId":0,"weather":"","holiday":""}
+    readonly property var weeksEnum:["周日","周一","周二","周三","周四","周五","周六"]
+    property int timeSync:0
+    property int gMonth
+    property int gDate
+    property int gDay
+    property int gHours
+    property int gMinutes
+    property string gHoliday
+    property int gTemp
+    property int gLowTemp
+    property int gHighTemp
+    property string gWeather
     Settings {
         id: testSettings
         category: "test"
@@ -91,22 +105,17 @@ ApplicationWindow {
         property int brightness: 250
         property bool wifiEnable: false
 
-        //判断儿童锁(true表示锁定，false表示未锁定)
-        property bool childLock:false
         property var cookDialog:[true,true,true,true,true,true,true]
         property bool multistageRemind:true
         property var wifiPasswdArray:[]
         property bool otaSuccess:false
 
         onBrightnessChanged: {
-            console.log("onBrightnessChanged....",systemSettings.brightness)
+            console.log("onBrightnessChanged...",systemSettings.brightness)
             Backlight.backlightSet(systemSettings.brightness)
         }
-        onWifiEnableChanged: {
-            console.log("onWifiEnableChanged....",systemSettings.wifiEnable)
-        }
         onSleepTimeChanged: {
-            console.log("onSleepTimeChanged",systemSettings.sleepTime)
+            console.log("onSleepTimeChanged...",systemSettings.sleepTime)
             timer_window.interval=systemSettings.sleepTime*60000
             timer_window.restart()
         }
@@ -128,7 +137,6 @@ ApplicationWindow {
 
         systemSettings.wifiEnable=true
 
-        systemSettings.childLock=false
         systemSettings.cookDialog=[true,true,true,true,true,true,true]
         systemSettings.multistageRemind=true
         systemSettings.wifiPasswdArray=[]
@@ -170,7 +178,7 @@ ApplicationWindow {
         //                console.warn("Window onCompleted test: ",encodeURI("a1数b2据C3"),encodeURIComponent("a1数b2据C3"),decodeURI("a1%E6%95%B0b2%E6%8D%AEC3"),decodeURIComponent("a1%E6%95%B0b2%E6%8D%AEC3"),pattern.test("数据a1"),pattern.test("adwe445-._"))
 
         push_page(pageHome)
-        //                push_page(pageTestFront)
+        //        push_page(pageTestFront)
         //        push_page(pageDemoMode)
         if(systemSettings.wifiPasswdArray!=null)
         {
@@ -184,18 +192,87 @@ ApplicationWindow {
                 console.log("encryp:",element.encryp)
             }
         }
-        systemSettings.childLock=false
         if(systemSettings.brightness<1 || systemSettings.brightness>255)
         {
             systemSettings.brightness=250
         }
-        //        SendFunc.makeRequest()
-        //        SendFunc.weatherRequest("杭州")
+    }
+    Connections { // 将目标对象信号与槽函数进行连接
+        target: MNetwork
+        onReplyLocationData:{
+            if(value=="")
+                return
+
+            var resp=JSON.parse(value)
+            if(resp.code!==200)
+                return
+            ++timeSync
+            gTemp=resp.data.temp
+            gLowTemp=resp.data.lowTemp
+            gHighTemp=resp.data.highTemp
+            gWeather=resp.data.desc
+            console.log("onReplyLocationData",value,resp.data.cityName)
+            //            MNetwork.weatherRequest(resp.data.cityName);//杭州
+        }
+        onReplyTimeData:{
+            console.log("onReplyTimeData",value)
+            if(value=="")
+                return
+            var resp=JSON.parse(value)
+            if(resp.code!==200)
+                return
+            ++timeSync
+            gHoliday=resp.data.holiday
+        }
+        onReplyWeatherData:{
+            console.log("onReplyWeatherData",value)
+            if(value=="")
+                return
+            var resp=JSON.parse(value);
+            var curTemp=resp.current_condition[0].temp_C
+            var curMinTemp=resp.weather[0].mintempC
+            var curMaxTemp=resp.weather[0].maxtempC
+            console.log("onReplyWeatherData",curTemp,curMinTemp,curMaxTemp)
+        }
+    }
+    Timer{
+        id:timer_time
+        repeat: true
+        running: true
+        interval: 60000
+        triggeredOnStart: true
+        onTriggered: {
+            console.log("time onTriggered")
+            var date=new Date()
+            gMonth=date.getMonth()+1
+            gDate=date.getDate()
+            gDay=date.getDay()
+            gHours=date.getHours()
+            gMinutes=date.getMinutes()
+            if(gHours==0)
+            {
+                if(gMinutes==0||gMinutes==5)
+                    timeSync=0
+            }
+
+            if(timeSync>=2)
+            {
+                ++timeSync
+                if(timeSync>60*3)
+                    timeSync=0
+            }
+
+            if(timeSync<2)
+            {
+                MNetwork.locationRequest()
+                MNetwork.timeRequest()
+            }
+        }
     }
 
     function sleepStandby()
     {
-        if(sleepState==true && QmlDevState.state.LStoveStatus == 0 && QmlDevState.state.RStoveStatus == 0 && QmlDevState.state.HoodSpeed == 0 && QmlDevState.state.HoodLight == 0 && QmlDevState.state.RStoveTimingState==timingStateEnum.STOP&& QmlDevState.state.AlarmStatus != 1 && QmlDevState.state.Alarm != 1)
+        if(sleepState==true && QmlDevState.state.LStoveStatus == 0 && QmlDevState.state.RStoveStatus == 0 && QmlDevState.state.HoodSpeed == 0 && QmlDevState.state.HoodLight == 0 && QmlDevState.state.RStoveTimingState==timingStateEnum.STOP)
         {
             if((QmlDevState.state.RStOvState == workStateEnum.WORKSTATE_STOP || QmlDevState.state.RStOvState == workStateEnum.WORKSTATE_FINISH) && (QmlDevState.state.LStOvState == workStateEnum.WORKSTATE_STOP || QmlDevState.state.LStOvState == workStateEnum.WORKSTATE_FINISH))
             {
@@ -228,7 +305,6 @@ ApplicationWindow {
             {
                 if(sleepStandby()===0)
                     return
-                console.log("timer_standby fail,restart")
                 timer_standby.interval=8*60000
                 timer_standby.restart()
             }
@@ -273,7 +349,7 @@ ApplicationWindow {
                     if(!((QmlDevState.state.RStOvState == workStateEnum.WORKSTATE_PREHEAT || QmlDevState.state.RStOvState == workStateEnum.WORKSTATE_RUN || QmlDevState.state.RStOvState == workStateEnum.WORKSTATE_PAUSE ) || (QmlDevState.state.LStOvState == workStateEnum.WORKSTATE_PREHEAT || QmlDevState.state.LStOvState == workStateEnum.WORKSTATE_RUN || QmlDevState.state.LStOvState == workStateEnum.WORKSTATE_PAUSE )))
                     {
                         sleepState=true
-                        Backlight.backlightSet(0)
+                        loaderScreenSaverShow()
 
                         timer_standby.interval=10*60000
                         timer_standby.restart()
@@ -287,7 +363,6 @@ ApplicationWindow {
     }
     signal sleepTimerRestart()
     onSleepTimerRestart:{
-        //        console.log("onSleepTimerRestart")
         timer_window.restart()
     }
     background:Image {
@@ -313,23 +388,23 @@ ApplicationWindow {
         id:loaderStackView
         //        asynchronous: true
         anchors.fill: stackView
-        sourceComponent:undefined
+        sourceComponent:null
     }
     Loader{
         //加载弹窗组件
-        id:loader_main
+        id:loaderManual
         //        asynchronous: true
         anchors.fill: parent
         sourceComponent:null
     }
     function loaderMainHide(){
-        loader_main.sourceComponent = null
+        loaderManual.sourceComponent = null
     }
     function loaderCookReserve(cookWorkPos,cookItem)
     {
-        loader_main.sourceComponent = pageReserve
-        loader_main.item.cookWorkPos=cookWorkPos
-        loader_main.item.cookItem=cookItem
+        loaderManual.sourceComponent = pageReserve
+        loaderManual.item.cookWorkPos=cookWorkPos
+        loaderManual.item.cookItem=cookItem
     }
 
     Component{
@@ -354,16 +429,16 @@ ApplicationWindow {
         }
     }
     function loaderSteamShow(hintCenterText,confirmText,cookItem,cookDialogIndex){
-        loader_main.sourceComponent = component_steam
+        loaderManual.sourceComponent = component_steam
 
-        loader_main.item.hintCenterText=hintCenterText
-        loader_main.item.confirmText=confirmText
-        loader_main.item.cookItem=cookItem
-        loader_main.item.cookDialogIndex=cookDialogIndex
+        loaderManual.item.hintCenterText=hintCenterText
+        loaderManual.item.confirmText=confirmText
+        loaderManual.item.cookItem=cookItem
+        loaderManual.item.cookDialogIndex=cookDialogIndex
     }
     function loaderSteamHide(){
-        if(loader_main.sourceComponent===component_steam)
-            loader_main.sourceComponent = undefined
+        if(loaderManual.sourceComponent===component_steam)
+            loaderManual.sourceComponent = undefined
     }
 
 
@@ -378,29 +453,27 @@ ApplicationWindow {
     function loaderQrcodeShow(title){
         if(QmlDevState.state.DeviceSecret==="")
         {
-            loaderWarnPopupShow("四元组不存在")
+            loaderErrorConfirmShow("四元组不存在")
             return
         }
         if(systemSettings.wifiEnable && wifiConnected==true)
         {
-            loader_main.sourceComponent = component_qrcode
-            loader_main.item.hintTopText=title
+            loaderManual.sourceComponent = component_qrcode
+            loaderManual.item.hintTopText=title
         }
         else
         {
-            loaderWarnPopupShow("未连网，请连接网络后再试")
+            loaderWifiConfirmShow("未连网，请连接网络后再试")
         }
     }
     function loaderQrcodeHide(){
-        if(loader_main.sourceComponent===component_qrcode)
-            loader_main.sourceComponent = undefined
+        if(loaderManual.sourceComponent===component_qrcode)
+            loaderManual.sourceComponent = undefined
     }
 
     Component{
-        id:component_warnPopup
-        PageWarnPopup{
-            hintTopText:""
-            hintBottomText:""
+        id:component_warnManual
+        PageDialogConfirm{
             onCancel: {
                 loaderMainHide()
             }
@@ -409,65 +482,38 @@ ApplicationWindow {
             }
         }
     }
-    function loaderWarnPopupShow(hintTopText){
-        loader_main.sourceComponent = component_imagePopup
-        loader_main.item.hintTopText=hintTopText
+    function loaderWarnManualShow(text,cancelText,confirmText,topImageSrc){
+        if(loaderManual.sourceComponent !== component_warnManual)
+        {
+            loaderManual.sourceComponent = component_warnManual
+        }
+        loaderManual.item.topImageSrc=topImageSrc
+        loaderManual.item.hintCenterText=text
+        loaderManual.item.cancelText=cancelText
+        loaderManual.item.confirmText=confirmText
+    }
+    function loaderWarnConfirmShow(text){
+        loaderWarnManualShow(text,"","好的",themesPicturesPath+"icon_warn.png")
+    }
+    function loaderErrorConfirmShow(text){
+        loaderWarnManualShow(text,"","好的",themesPicturesPath+"icon_error.png")
+    }
+    function loaderWifiConfirmShow(text){
+        loaderWarnManualShow(text,"","好的",themesPicturesPath+"icon_wifi_warn.png")
     }
     Component{
         id:component_loading
-
-        PageImagePopup{
-            hintTopImgSrc:""
-            hintBottomText:""
+        PageLoadingPopup{
+            hintText:""
             onCancel: {
-                loader_main.sourceComponent = undefined
-            }
-            PageRotationImg {
-                anchors.centerIn: parent
-                anchors.verticalCenterOffset: -50
-                source: "qrc:/x50/set/jiazaizhong.png"
+                loaderManual.sourceComponent = undefined
             }
         }
     }
-    function loaderLoadingShow(text){
-        loader_main.sourceComponent = component_loading
-        loader_main.item.hintBottomText=text
-    }
-
-    Component{
-        id:component_popup
-        PagePopup{
-            hintTopText:""
-            hintCenterText:""
-            confirmText:""
-            onCancel: {
-                loaderPopupHide()
-            }
-            onConfirm:{
-                loaderPopupHide()
-            }
-        }
-    }
-    function loaderPopupShow(hintTopText,hintCenterText,hintHeight,confirmText,confirmFunc,closeVisible){
-
-        if(loader_main.sourceComponent === component_popup)
-        {
-            if(closeVisible!==false && loader_main.item.closeVisible===false)
-                return
-        }
-        else
-            loader_main.sourceComponent = component_popup
-
-        loader_main.item.hintTopText=hintTopText==null?"":hintTopText
-        loader_main.item.hintCenterText=hintCenterText==null?"":hintCenterText
-        loader_main.item.hintHeight=hintHeight==null?292:hintHeight
-        loader_main.item.confirmText=confirmText==null?"":confirmText
-        loader_main.item.confirmFunc=confirmFunc
-        loader_main.item.closeVisible=closeVisible==null?true:closeVisible
-    }
-    function loaderPopupHide(){
-        if(loader_main.sourceComponent === component_popup)
-            loader_main.sourceComponent = undefined
+    function loaderLoadingShow(text,closeVisible){
+        loaderManual.sourceComponent = component_loading
+        loaderManual.item.hintText=text
+        loaderManual.item.closeVisible=closeVisible
     }
 
     Loader{
@@ -480,45 +526,38 @@ ApplicationWindow {
         loaderAuto.sourceComponent = null
     }
     Component{
-        id:component_autoPopup
-        PagePopup{
-            hintTopText:""
-            hintCenterText:""
+        id:component_autoConfirm
+        PageDialogConfirm{
             confirmText:""
             onCancel: {
-                loaderAutoPopupHide()
+                loaderAuto.sourceComponent = null
             }
             onConfirm:{
-                loaderAutoPopupHide()
+                loaderAuto.sourceComponent = null
             }
         }
     }
-    function loaderAutoPopupShow(hintTopText,hintCenterText,hintHeight,confirmText,confirmFunc,closeVisible){
+    function loaderAutoConfirmShow(hintCenterText,cancelText,confirmText){
+        if(loaderAuto.sourceComponent !== component_autoConfirm)
+            loaderAuto.sourceComponent = component_autoConfirm
 
-        if(loaderAuto.sourceComponent === component_autoPopup)
-        {
-            if(closeVisible!==false && loaderAuto.item.closeVisible===false)
-                return
-        }
-        else
-            loaderAuto.sourceComponent = component_autoPopup
+        loaderAuto.item.hintCenterText=hintCenterText
+        loaderAuto.item.confirmText=cancelText
+        loaderAuto.item.confirmText=confirmText
+    }
+    function loaderAutoTexthow(text){
+        loaderAutoPopupShow(hintCenterText,"","好的")
+    }
 
-        loaderAuto.item.hintTopText=hintTopText==null?"":hintTopText
-        loaderAuto.item.hintCenterText=hintCenterText==null?"":hintCenterText
-        loaderAuto.item.hintHeight=hintHeight==null?292:hintHeight
-        loaderAuto.item.confirmText=confirmText==null?"":confirmText
-        loaderAuto.item.confirmFunc=confirmFunc
-        loaderAuto.item.closeVisible=closeVisible==null?true:closeVisible
+    function loaderAutoConfirmHide(){
+        if(loaderAuto.sourceComponent === component_autoConfirm)
+            loaderAuto.sourceComponent = null
     }
-    function loaderAutoPopupHide(){
-        if(loaderAuto.sourceComponent === component_autoPopup)
-            loaderAuto.sourceComponent = undefined
-    }
-    function loaderStoveAutoPopupHide(){
-        if(loaderAuto.sourceComponent === component_autoPopup)
+    function loaderStoveAutoPopupHide(text){
+        if(loaderAuto.sourceComponent === component_autoConfirm)
         {
-            if(loaderAuto.item.hintCenterText.indexOf("定时")!=-1)
-                loaderAuto.sourceComponent = undefined
+            if(loaderAuto.item.hintCenterText.indexOf(text)!==-1)
+                loaderAuto.sourceComponent = null
         }
     }
     Component{
@@ -565,9 +604,10 @@ ApplicationWindow {
     }
     Component{
         id:component_hoodoff
-        PagePopup{
-            hintTopText:"烟机自动延时"+QmlDevState.state.HoodOffLeftTime+"分钟关闭，\n点击(立即关闭)可直接关闭烟机"
-            confirmText:"立即关闭"
+        PageDialogConfirm{
+            hintCenterText:"灶具已关闭，烟机\n将延时<br/><b><font color='#E68855'>"+QmlDevState.state.HoodOffLeftTime+"分钟</font></b>后关闭，清除余烟"
+            cancelText:"好的"
+            confirmText:"立即关闭("+QmlDevState.state.HoodOffLeftTime+"分钟)"
             onCancel: {
                 closeLoaderHoodOff()
             }
@@ -579,27 +619,15 @@ ApplicationWindow {
     }
 
     function showLoaderHoodOff(){
-        if(loaderAuto.sourceComponent === component_autoPopup)
-        {
-            if(loaderAuto.item.closeVisible===false)
-                return
-        }
         loaderAuto.sourceComponent = component_hoodoff
     }
     function closeLoaderHoodOff(){
         if(loaderAuto.sourceComponent === component_hoodoff)
         {
-            loaderAuto.sourceComponent = undefined
+            loaderAuto.sourceComponent = null
         }
     }
 
-    Loader{
-        //加载弹窗组件
-        id:loaderLockScreen
-        asynchronous: true
-        anchors.fill: parent
-        sourceComponent:undefined
-    }
     //---------------------------------------------------------------
     Loader{
         //加载弹窗组件
@@ -610,23 +638,34 @@ ApplicationWindow {
     }
 
     function loaderErrorShow(hintTopText,hintBottomText,closeVisible){
-
         if(loader_error.source !== "PageErrorPopup.qml")
-        {
             loader_error.source = "PageErrorPopup.qml"
-        }
-        loader_error.item.hintTopText=hintTopText==null?"":hintTopText
-        loader_error.item.hintBottomText=hintBottomText==null?"":hintBottomText
+
+        loader_error.item.hintTopText=hintTopText
+        loader_error.item.hintBottomText=hintBottomText
         loader_error.item.closeVisible=closeVisible==null?true:closeVisible
         //        loader_error.setSource("PageErrorPopup.qml",{"hintTopText": hintTopText,"hintBottomText": hintBottomText,"closeVisible": closeVisible})
     }
     function loaderErrorHide(){
         if(loader_error.source !== "")
-        {
             loader_error.source = ""
-        }
     }
     //---------------------------------------------------------------
+    Loader{
+        //加载弹窗组件
+        id:loaderScreenSaver
+        asynchronous: true
+        anchors.fill: parent
+        sourceComponent:null
+    }
+    function loaderScreenSaverShow()
+    {
+        loaderScreenSaver.source="PageScreenSaver0.qml"
+    }
+    function loaderScreenSaverHide(){
+        if(loaderScreenSaver.source !== "")
+            loaderScreenSaver.source = ""
+    }
 
     MouseArea{
         anchors.fill: parent
@@ -645,7 +684,7 @@ ApplicationWindow {
                         timer_standby.stop()
 
                     sleepState=false
-                    Backlight.backlightSet(systemSettings.brightness)
+                    loaderScreenSaverHide()
                     mouse.accepted = true
                 }
             }
@@ -666,7 +705,7 @@ ApplicationWindow {
             if(productionTestFlag==0 && timer_standby.running==true)
                 timer_standby.stop()
 
-            Backlight.backlightSet(systemSettings.brightness)
+            loaderScreenSaverHide()
             timer_window.restart()
         }
     }
@@ -945,13 +984,13 @@ ApplicationWindow {
 
     function loaderErrorCodeShow(value,dir)
     {
-        if(value!=0)
+        if(value!==0)
             sleepWakeup()
         if(productionTestStatus==0xff)
             return
         switch (value) {
         case 1:
-            if(dir==null||dir==cookWorkPosEnum.LEFT)
+            if(dir==null||dir===cookWorkPosEnum.LEFT)
                 loaderErrorShow("左腔蒸箱加热异常！","请拨打售后电话 <font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员")
             break
         case 2:
@@ -961,11 +1000,11 @@ ApplicationWindow {
             loaderErrorShow("水箱缺水","水箱缺水，请及时加水")
             break
         case 4:
-            if(dir==null||dir==cookWorkPosEnum.LEFT)
+            if(dir==null||dir===cookWorkPosEnum.LEFT)
                 loaderErrorShow("左腔蒸箱干烧！","请暂停使用左腔蒸箱并<br/>拨打售后电话<font color='"+themesTextColor+"'>400-888-8490</font>")
             break
         case 5:
-            if(dir==null||dir==cookWorkPosEnum.LEFT)
+            if(dir==null||dir===cookWorkPosEnum.LEFT)
                 loaderErrorShow("左腔干烧检测电路故障！","请拨打售后电话<font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员")
             break
         case 6:
@@ -987,19 +1026,19 @@ ApplicationWindow {
             }
             break
         case 10:
-            if(dir==null||dir==cookWorkPosEnum.LEFT)
+            if(dir==null||dir===cookWorkPosEnum.LEFT)
                 loaderErrorShow("左腔烤箱加热异常！","请拨打售后电话<font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员");
             break
         case 12:
-            if(dir==null||dir==cookWorkPosEnum.RIGHT)
+            if(dir==null||dir===cookWorkPosEnum.RIGHT)
                 loaderErrorShow("右腔蒸箱加热异常！","请拨打售后电话<font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员");
             break
         case 13:
-            if(dir==null||dir==cookWorkPosEnum.RIGHT)
+            if(dir==null||dir===cookWorkPosEnum.RIGHT)
                 loaderErrorShow("右腔蒸箱干烧","请暂停使用右腔蒸箱并<br/>拨打售后电话<font color='"+themesTextColor+"'>400-888-8490</font>");
             break
         case 14:
-            if(dir==null||dir==cookWorkPosEnum.RIGHT)
+            if(dir==null||dir===cookWorkPosEnum.RIGHT)
                 loaderErrorShow("右腔干烧检测电路故障！","请拨打售后电话<font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员")
             break
         case 15:

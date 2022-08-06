@@ -28,6 +28,7 @@ Item {
         radius: 10
 
         PageCloseButton {
+            id:closeBtn
             anchors.top:parent.top
             anchors.right:parent.right
             onClicked: {

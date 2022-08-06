@@ -125,12 +125,12 @@ Item {
                 {
                     if(QmlDevState.state.DeviceSecret==="")
                     {
-                        loaderWarnPopupShow("四元组不存在")
+                        loaderErrorConfirmShow("四元组不存在")
                         return
                     }
                     if(systemSettings.wifiEnable && wifiConnected==true)
                     {
-                        loaderLoadingShow("二维码刷新中...")
+                        loaderLoadingShow("二维码刷新中...",true)
                         wifiConnected=false
                         var Data={}
                         Data.BackOnline = null
@@ -138,7 +138,7 @@ Item {
                     }
                     else
                     {
-                        loaderWarnPopupShow("未连网，请连接网络后再试")
+                        loaderWifiConfirmShow("未连网，请连接网络后再试")
                     }
                 }
                 else

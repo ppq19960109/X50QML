@@ -70,7 +70,6 @@
         <file>pageProductionTest/PageScreenClick.qml</file>
         <file>pageProductionTest/PageScreenLCD.qml</file>
         <file>x50/main/icon_ts_g.png</file>
-        <file>PageLockScreen.qml</file>
         <file>CookFunc.js</file>
         <file>WifiFunc.js</file>
         <file>SendFunc.js</file>
@@ -100,7 +99,7 @@
         <file>x50/test/image10.png</file>
         <file>x50/icon/icon_alarm.png</file>
         <file>x50/icon/icon_pop_error.png</file>
-        <file>PageImagePopup.qml</file>
+        <file>PageLoadingPopup.qml</file>
         <file>pageProductionTest/PageLoadPower.qml</file>
         <file>pageProductionTest/PagePowerBoard.qml</file>
         <file>pageProductionTest/PagePowerOut.qml</file>
@@ -124,6 +123,6 @@
         <file>PageButtonBar.qml</file>
         <file>PageCloseButton.qml</file>
         <file>pageCook/PageSteaming.qml</file>
-        <file>PageWarnPopup.qml</file>
+        <file>PageScreenSaver0.qml</file>
     </qresource>
 </RCC>

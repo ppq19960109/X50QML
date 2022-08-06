@@ -101,8 +101,8 @@ Item {
     }
     function loaderTempControl(clickFunc)
     {
-        loader_main.sourceComponent = component_tempControl
-        loader_main.item.clickFunc=clickFunc
+        loaderManual.sourceComponent = component_tempControl
+        loaderManual.item.clickFunc=clickFunc
     }
 
     Component.onCompleted: {

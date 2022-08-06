@@ -164,9 +164,9 @@ Item {
 
     function loaderCloseHeat(cookWorkPos,clickFunc)
     {
-        loader_main.sourceComponent = component_closeHeat
-        loader_main.item.cookWorkPos=cookWorkPos
-        loader_main.item.clickFunc=clickFunc
+        loaderManual.sourceComponent = component_closeHeat
+        loaderManual.item.cookWorkPos=cookWorkPos
+        loaderManual.item.clickFunc=clickFunc
     }
 
     function startTurnOffFire(dir,time)
@@ -221,11 +221,11 @@ Item {
         }
     }
     function loaderCloseHeatReset(hintCenterText,cancelText,confirmText,cookWorkPos){
-        loader_main.sourceComponent = component_closeHeatReset
-        loader_main.item.hintCenterText=hintCenterText
-        loader_main.item.cancelText=cancelText
-        loader_main.item.confirmText=confirmText
-        loader_main.item.cookWorkPos=cookWorkPos
+        loaderManual.sourceComponent = component_closeHeatReset
+        loaderManual.item.hintCenterText=hintCenterText
+        loaderManual.item.cancelText=cancelText
+        loaderManual.item.confirmText=confirmText
+        loaderManual.item.cookWorkPos=cookWorkPos
     }
     PageBackBar{
         id:topBar

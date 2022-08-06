@@ -30,16 +30,16 @@ Item {
         }
     }
     function loaderCancelSteamShow(cookWorkPos,status){
-        loader_main.sourceComponent = component_cancelSteam
+        loaderManual.sourceComponent = component_cancelSteam
 
-        loader_main.item.hintCenterText="是否取消"+(cookWorkPos==0?"左腔":"右腔")+((status===workStateEnum.WORKSTATE_RESERVE||status===workStateEnum.WORKSTATE_PAUSE_RESERVE)?"预约？":"烹饪？")
-        loader_main.item.cookWorkPos=cookWorkPos
+        loaderManual.item.hintCenterText="是否取消"+(cookWorkPos==0?"左腔":"右腔")+((status===workStateEnum.WORKSTATE_RESERVE||status===workStateEnum.WORKSTATE_PAUSE_RESERVE)?"预约？":"烹饪？")
+        loaderManual.item.cookWorkPos=cookWorkPos
     }
     function loaderCancelSteamHide()
     {
-        if(loader_main.sourceComponent === component_cancelSteam)
+        if(loaderManual.sourceComponent === component_cancelSteam)
         {
-            loader_main.sourceComponent = null
+            loaderManual.sourceComponent = null
         }
     }
 

@@ -14,17 +14,32 @@ Item {
     property int lastHoodLight:0
 
     enabled: sysPower > 0
-    //    anchors.fill: parent
 
-    function remindConfirmFunc(){
-        SendFunc.setCookOperation(cookWorkPosEnum.LEFT,workOperationEnum.START)
-        loaderRemindHide()
+    Component{
+        id:component_multistageConfirm
+        PageDialogConfirm{
+            hintTopText:""
+            hintCenterText:""
+            cancelText:""
+            confirmText:"继续烹饪"
+            onCancel: {
+                loaderAuto.sourceComponent = null
+            }
+            onConfirm: {
+                SendFunc.setCookOperation(cookWorkPosEnum.LEFT,workOperationEnum.START)
+                loaderAuto.sourceComponent = null
+            }
+        }
     }
-    function loaderRemindHide(){
-        if(loaderAuto.sourceComponent === component_autoPopup)
+    function loaderMultistageShow(text){
+        if(loaderAuto.sourceComponent !== component_multistageConfirm)
+            loaderAuto.sourceComponent = component_multistageConfirm
+        loaderAuto.item.hintCenterText=text
+    }
+    function loaderMultistageHide(){
+        if(loaderAuto.sourceComponent === component_multistageConfirm)
         {
-            if(loaderAuto.item.confirmText=="继续烹饪")
-                loaderAuto.sourceComponent = undefined
+            loaderAuto.sourceComponent = null
         }
     }
 
@@ -118,28 +133,11 @@ Item {
     }
 
     function loaderUpdateResultShow(text){
-        loaderAutoPopupShow("",text,292)
+        loaderAutoTexthow(text)
     }
-    //    Connections { // 将目标对象信号与槽函数进行连接
-    //        target: MNetwork
-    //        onReplyLocationData:{
-
-    //            var resp=JSON.parse(value);
-    //            console.log("onReplyLocationData",value,resp.data.cityName)
-    //            MNetwork.weatherRequest(resp.data.cityName);//杭州
-    //        }
-    //        onReplyWeatherData:{
-    //            //            console.log("onReplyWeatherData",value)
-    //            var resp=JSON.parse(value);
-    //            var curTemp=resp.current_condition[0].temp_C
-    //            var curMinTemp=resp.weather[0].mintempC
-    //            var curMaxTemp=resp.weather[0].maxtempC
-    //            console.log("onReplyWeatherData",curTemp,curMinTemp,curMaxTemp)
-    //        }
-    //    }
 
     function steamInterfaceChange(state){
-        if(state==false)
+        if(state===false)
         {
             if(isExistView("PageSteaming")!=null)
             {
@@ -210,10 +208,6 @@ Item {
                     systemSettings.otaSuccess=false
                     loaderUpdateResultShow("系统已更新至最新版本\n"+value)
                 }
-            }
-            else if("SteamStart"==key)
-            {
-                sleepWakeup()
             }
             else if("LStOvState"==key)
             {
@@ -311,28 +305,25 @@ Item {
             {
                 if(value==1)
                 {
-                    if(QmlDevState.state.HoodOffLeftTime!=0)
+                    if(QmlDevState.state.HoodOffLeftTime!==0)
                     {
                         showLoaderHoodOff()
                     }
                 }
                 else if(value==2)
                 {
-                    var LStOvState=QmlDevState.state.LStOvState
-                    var RStOvState=QmlDevState.state.RStOvState
-                    if(LStOvState == workStateEnum.WORKSTATE_PREHEAT || LStOvState == workStateEnum.WORKSTATE_RUN || LStOvState == workStateEnum.WORKSTATE_PAUSE || RStOvState == workStateEnum.WORKSTATE_PREHEAT || RStOvState == workStateEnum.WORKSTATE_RUN|| RStOvState == workStateEnum.WORKSTATE_PAUSE)
-                        loaderAutoPopupShow("蒸烤箱工作中，\n需散热，烟机最低一档","",292,"知道了",loaderAutoPopupHide)
+                    if(lStOvState === workStateEnum.WORKSTATE_PREHEAT || lStOvState === workStateEnum.WORKSTATE_RUN || lStOvState === workStateEnum.WORKSTATE_PAUSE || rStOvState === workStateEnum.WORKSTATE_PREHEAT || rStOvState === workStateEnum.WORKSTATE_RUN|| rStOvState === workStateEnum.WORKSTATE_PAUSE)
+                        loaderAutoTexthow("蒸烤箱工作中，需散热，烟机无法关闭。")
                 }
                 else if(value==3)
                 {
-                    var LStOvState=QmlDevState.state.LStOvState
-                    if(LStOvState == workStateEnum.WORKSTATE_PREHEAT || LStOvState == workStateEnum.WORKSTATE_RUN|| LStOvState == workStateEnum.WORKSTATE_PAUSE)
-                        loaderAutoPopupShow("烤模式运行中，\n需散热，烟机最低二档","",292,"知道了",loaderAutoPopupHide)
+                    if(lStOvState === workStateEnum.WORKSTATE_PREHEAT || lStOvState === workStateEnum.WORKSTATE_RUN|| lStOvState === workStateEnum.WORKSTATE_PAUSE)
+                        loaderAutoTexthow("烤箱工作中，需散热，烟机不得低于2档。")
                 }
                 else if(value==4)
                 {
                     if(QmlDevState.state.LStoveStatus > 0 || QmlDevState.state.RStoveStatus > 0)
-                        loaderAutoPopupShow("灶具工作中，\n需散热，烟机最低一档","",292,"知道了",loaderAutoPopupHide)
+                        loaderAutoTexthow("灶具工作中，烟机无法关闭。")
                 }
                 else if(value==5)
                 {
@@ -383,7 +374,7 @@ Item {
                     wifiConnecting=false
                     if(value==2 || value==3||value==5)
                     {
-                        if(isExistView("pageWifi")==null)
+                        if(wifiPageStatus==false)
                         {
                             wifiConnectInfo.ssid=""
                         }
@@ -392,7 +383,7 @@ Item {
                     {
                         wifiConnected=true
                     }
-                    if(isExistView("pageWifi")==null)
+                    if(wifiPageStatus==false)
                     {
                         SendFunc.getCurWifi()
                     }
@@ -412,13 +403,13 @@ Item {
                     {
                         real_ssid=value
                     }
-                    if(real_ssid==wifiConnectInfo.ssid)
+                    if(real_ssid===wifiConnectInfo.ssid)
                     {
                         WifiFunc.addWifiInfo(wifiConnectInfo)
                         QmlDevState.executeShell("(wpa_cli list_networks | tail -n +3 | grep "+value+" | grep -v 'CURRENT' | awk '{system(\"wpa_cli remove_network \" $1)}' && wpa_cli save_config) &")
                     }
                 }
-                if(isExistView("pageWifi")==null)
+                if(wifiPageStatus==false)
                 {
                     wifiConnectInfo.ssid=""
                 }
@@ -436,24 +427,19 @@ Item {
                         backPage(page)
                 }
             }
-            else if("Alarm"==key)
+            else if("LStoveTimingState"==key)
             {
-                if(value > 0)
-                    loaderAlarmShow()
-                else
-                    loaderAlarmHide()
-            }
-            else if("RStoveStatus"==key)
-            {
-                if(value === 0)
-                    loaderStoveAutoPopupHide()
+                if(value === timingStateEnum.CONFIRM)
+                    loaderAutoTexthow("左灶定时结束，请将灶具旋钮复位")
+                else if(value === timingStateEnum.STOP)
+                    loaderStoveAutoPopupHide("左灶定时")
             }
             else if("RStoveTimingState"==key)
             {
                 if(value === timingStateEnum.CONFIRM)
-                    loaderAutoPopupShow("","右灶定时结束，\n请将右灶旋钮复位",292)
+                    loaderAutoTexthow("右灶定时结束，请将灶具旋钮复位")
                 else if(value === timingStateEnum.STOP)
-                    loaderStoveAutoPopupHide()
+                    loaderStoveAutoPopupHide("右灶定时")
             }
             else if("HoodSpeed"==key)
             {
@@ -493,7 +479,6 @@ Item {
                 else if(value==8)
                 {
                     systemSettings.otaSuccess=true
-                    //                    loaderUpdateResultShow("系统已更新至最新版本 "+QmlDevState.state.OTANewVersion)
                 }
             }
             else if(("OTAProgress"==key))
@@ -534,13 +519,13 @@ Item {
             }
             else if("remind"==key)
             {
-                if(value>0)
+                if(value>0 && QmlDevState.state.MultiMode === 1)
                 {
-                    loaderAutoPopupShow(QmlDevState.state.RemindText,"",null,"继续烹饪",remindConfirmFunc)
+                    loaderMultistageShow(QmlDevState.state.RemindText)
                 }
                 else
                 {
-                    loaderRemindHide()
+                    loaderMultistageHide()
                 }
             }
             else if("DemoStart"==key)
@@ -622,7 +607,7 @@ Item {
         }
     }
     function showBurnWifi(){
-        loader_main.sourceComponent = component_burn_wifi
+        loaderManual.sourceComponent = component_burn_wifi
     }
     function getQuadScanWifi()
     {
@@ -673,16 +658,14 @@ Item {
         console.log("page home onCompleted")
 
         QmlDevState.startLocalConnect()
-        //        MNetwork.locationRequest();
-
+//        MNetwork.locationRequest();
+//        MNetwork.timeRequest();
         //        loaderAlarmShow()
         //        loaderErrorShow("左腔蒸箱加热异常！","请拨打售后电话 <font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员");
-        //                        loaderAutoPopupShow("","左腔门开启，工作暂停",292)
-        //                        loaderPopupShow("","右灶未开启\n开启后才可定时关火",292)
         //        loaderErrorShow("右腔干烧检测电路故障！","请拨打售后电话<font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员")
-        //        loaderAutoPopupShow("","右灶定时关火结束，\n请将旋钮复位",292,"",null,false)
         //        loaderUpdateConfirmShow()
         //       loaderUpdateResultShow("系统已更新至最新版本\n"+"1.2.0")
+        loaderScreenSaverShow()
     }
     StackView.onActivating:{
         console.log("PageHome StackView onActivating")

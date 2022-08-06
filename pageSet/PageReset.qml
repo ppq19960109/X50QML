@@ -11,7 +11,7 @@ Item {
             console.log("PageReset:",key)
             if("Reset"==key)
             {
-                loaderPopupShow("恢复出厂设置成功","",292,"确定")
+                loaderWarnConfirmShow("恢复出厂设置成功")
             }
         }
     }
@@ -70,20 +70,20 @@ Item {
         id:component_resetConfirm
         PageDialogConfirm{
             hintTopText:"操作确认"
-            hintCenterText:"该操作将会清除您的个人数据\n包括烹饪记录、设备预设等\n请确认是否重置？"
-            confirmText:"重置设备"
-            hintHeight:412
+            hintCenterText:"此操作将会清除您的个人数据，\n包括设备设置、系统版本等。\n请确认是否重置设备？"
+            cancelText:"取消"
+            confirmText:"确认"
             onCancel: {
                 loaderMainHide()
             }
             onConfirm: {
                 systemReset()
-                loaderLoadingShow("恢复出厂设置中...")
+                loaderLoadingShow("重置设备中...",false)
             }
         }
     }
     function showResetConfirm(){
-        loader_main.sourceComponent = component_resetConfirm
+        loaderManual.sourceComponent = component_resetConfirm
     }
 
 }

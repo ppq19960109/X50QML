@@ -16,11 +16,14 @@ public:
     QNetworkAccessManager *networkAccessManager;
     Q_INVOKABLE void weatherRequest(QString city);
     Q_INVOKABLE void locationRequest();
+    Q_INVOKABLE void timeRequest();
 signals:
     void replyLocationData(QString value);
+    void replyTimeData(QString value);
     void replyWeatherData(QString value);
 private slots:
     void replyLocationFinished();
+    void replyTimeFinished();
     void replyWeatherFinished();
 };
 

@@ -10,7 +10,7 @@
 #include "backlight.h"
 #include <QtQuickControls2>
 //#include <QMetaObject>
-//#include "mnetwork.h"
+#include "mnetwork.h"
 
 int main(int argc, char *argv[])
 {
@@ -32,7 +32,7 @@ int main(int argc, char *argv[])
 
     QmlDevState* qmlDevState =new QmlDevState(&app);
 
-//    MNetwork* mNetwork =new MNetwork(&app);
+    MNetwork* mNetwork =new MNetwork(&app);
 
     //    QNetworkAccessManager *manager = new QNetworkAccessManager(&app);
     //    qDebug() << manager->supportedSchemes();
@@ -68,7 +68,7 @@ int main(int argc, char *argv[])
 
     engine.rootContext()->setContextProperty("QmlDevState", qmlDevState);
     engine.rootContext()->setContextProperty("Backlight", backlight);
-//    engine.rootContext()->setContextProperty("MNetwork", mNetwork);
+    engine.rootContext()->setContextProperty("MNetwork", mNetwork);
 
     const QUrl url(QStringLiteral("qrc:/main.qml"));
     //    QQmlComponent component(&engine, url);

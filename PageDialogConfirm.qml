@@ -3,6 +3,7 @@ import QtQuick.Controls 2.2
 
 Item {
     property int cookWorkPos:0
+    property alias topImageSrc: topImage.source
     property alias hintTopText: hintTop.text
     property alias hintCenterText: hintCenter.text
     property alias cancelText: cancelBtnText.text
@@ -34,6 +35,7 @@ Item {
         }
 
         Image {
+            id:topImage
             visible: hintTop.text==""
             anchors.top:parent.top
             anchors.topMargin: 45

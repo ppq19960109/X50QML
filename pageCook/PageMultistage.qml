@@ -59,12 +59,12 @@ Item {
             confirmText:"知道了"
             checkboxVisible:true
             onCancel:{
-                loader_main.sourceComponent = undefined
+                loaderManual.sourceComponent = undefined
             }
             onConfirm:{
                 if(checkboxChecked)
                     systemSettings.multistageRemind=false
-                loader_main.sourceComponent = undefined
+                loaderManual.sourceComponent = undefined
             }
         }
     }
@@ -72,7 +72,7 @@ Item {
         console.log("PageMultistage onCompleted")
         if(systemSettings.multistageRemind === true)
         {
-            loader_main.sourceComponent=component_remind
+            loaderManual.sourceComponent=component_remind
         }
     }
 

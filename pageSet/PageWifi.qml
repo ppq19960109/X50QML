@@ -13,6 +13,11 @@ Item {
     property bool wifiInputConnecting:false
     property int qrcode_display: 0
 
+    onVisibleChanged: {
+        console.log("onVisibleChanged",visible)
+        wifiPageStatus=visible
+    }
+
     function wifi_scan_timer_reset()
     {
         SendFunc.getCurWifi()
@@ -44,7 +49,7 @@ Item {
                     if(systemSettings.wifiEnable && wifiConnected==false && wifiConnectInfo.ssid!=="")
                     {
                         wifiConnectInfo.ssid=""
-                        loaderWarnPopupShow("网络连接失败，请重试")
+                        loaderWifiConfirmShow("网络连接失败，请重试")
                     }
                 }
                 wifi_scan_timer_reset()
@@ -69,7 +74,7 @@ Item {
                         if(systemSettings.wifiEnable && wifiConnected==false && wifiConnectInfo.ssid!=="")
                         {
                             wifiConnectInfo.ssid=""
-                            loaderWarnPopupShow("网络连接失败，请重试")
+                            loaderWifiConfirmShow("网络连接失败，请重试")
                         }
                     }
                     else if(value==3)
@@ -77,7 +82,7 @@ Item {
                         if(systemSettings.wifiEnable && wifiConnected==false && wifiConnectInfo.ssid!=="")
                         {
                             wifiConnectInfo.ssid=""
-                            loaderWarnPopupShow("密码错误，连接失败")
+                            loaderWifiConfirmShow("密码错误，连接失败")
                         }
                     }
                     else if(value==4)
@@ -122,8 +127,8 @@ Item {
         {
             QmlDevState.executeShell("(wpa_cli enable_network all) &")
         }
-        if(loader_main.sourceComponent===component_wifiInput)
-            loader_main.sourceComponent = null
+        if(loaderManual.sourceComponent===component_wifiInput)
+            loaderManual.sourceComponent = null
     }
     Component.onCompleted: {
         //        VirtualKeyboardSettings.styleName = "retro"
@@ -136,6 +141,7 @@ Item {
             getWifiInfo()
             SendFunc.scanRWifi()
         }
+        wifiPageStatus=true
     }
 
     Timer{
