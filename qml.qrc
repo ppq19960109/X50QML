@@ -124,5 +124,7 @@
         <file>PageCloseButton.qml</file>
         <file>pageCook/PageSteaming.qml</file>
         <file>PageScreenSaver0.qml</file>
+        <file>PageScreenSaver1.qml</file>
+        <file>PageTimer.qml</file>
     </qresource>
 </RCC>

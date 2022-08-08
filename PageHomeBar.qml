@@ -56,6 +56,7 @@ ToolBar {
                             push_page(pageSet)
                         break
                     case 2:
+                        loaderManual.sourceComponent = pageTimer
                         break
                     case 3:
                         break

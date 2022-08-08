@@ -2,11 +2,9 @@ import QtQuick 2.7
 import QtQuick.Controls 2.2
 Rectangle {
     color: "#000"
-
     MouseArea{
         anchors.fill: parent
     }
-
     Text{
         color:"#fff"
         font.pixelSize: 60
@@ -25,7 +23,7 @@ Rectangle {
         anchors.topMargin: 80
         anchors.left: parent.left
         anchors.leftMargin: 200
-        text: (gHours<10?("0"+gHours):gHours)+":"+(gMinutes<10?("0"+gMinutes):gMinutes)
+        text: generateTwoTime(gHours)+":"+generateTwoTime(gMinutes)
 
     }
 

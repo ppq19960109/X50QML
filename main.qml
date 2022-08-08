@@ -21,6 +21,7 @@ ApplicationWindow {
     property int productionTestFlag:1
     property int demoModeStatus:0
     property bool wifiPageStatus:false
+    property int pageSetIndex:0
 
     readonly property string productionTestWIFISSID:"moduletest"
     readonly property string productionTestWIFIPWD:"58185818"
@@ -58,8 +59,9 @@ ApplicationWindow {
 
     property var pattern: new RegExp("[\u4E00-\u9FA5]+")
     property var screenSaverInfo:{"month":"","date":"","hours":"","minutes":"","temp":"","lowTemp":"","highTemp":"","weatherId":0,"weather":"","holiday":""}
-    readonly property var weeksEnum:["周日","周一","周二","周三","周四","周五","周六"]
+    readonly property var weeksEnum:["日","一","二","三","四","五","六"]
     property int timeSync:0
+    property int gYear
     property int gMonth
     property int gDate
     property int gDay
@@ -70,6 +72,9 @@ ApplicationWindow {
     property int gLowTemp
     property int gHighTemp
     property string gWeather
+
+    property int gTimerTotalTime
+    property int gTimerLeft
     Settings {
         id: testSettings
         category: "test"
@@ -99,8 +104,9 @@ ApplicationWindow {
         category: "system"
         property bool firstStartup: true
         //设置-休眠时间(范围:1-5,单位:分钟 )
+        property bool sleepSwitch: true
         property int sleepTime: 3
-
+        property int screenSaverIndex:0
         //运行期间临时保存设置的亮度值，在收到开机状态是把该值重新设置回去 设置-屏幕亮度
         property int brightness: 250
         property bool wifiEnable: false
@@ -116,13 +122,17 @@ ApplicationWindow {
         }
         onSleepTimeChanged: {
             console.log("onSleepTimeChanged...",systemSettings.sleepTime)
-            timer_window.interval=systemSettings.sleepTime*60000
-            timer_window.restart()
+            timer_sleep.interval=systemSettings.sleepTime*60000
+            timer_sleep.restart()
         }
     }
     function systemSync()
     {
         QmlDevState.executeShell("(sleep 2;sync) &")
+    }
+    function generateTwoTime(time)
+    {
+        return time<10?("0"+time):time
     }
 
     function systemReset()
@@ -153,19 +163,19 @@ ApplicationWindow {
         if(power)
         {
             Backlight.backlightSet(systemSettings.brightness)
-            timer_window.restart()
+            window.visible=true
+            timer_sleep.restart()
         }
         else
         {
+            window.visible=false
             Backlight.backlightSet(0)
-            timer_window.stop()
+            timer_sleep.stop()
             loaderMainHide()
             if(productionTestFlag==0 && timer_standby.running==true)
                 timer_standby.stop()
             backTopPage()
         }
-        if(window.visible===false)
-            window.visible=true
         sysPower=power
     }
 
@@ -244,6 +254,7 @@ ApplicationWindow {
         onTriggered: {
             console.log("time onTriggered")
             var date=new Date()
+            gYear=date.getFullYear()
             gMonth=date.getMonth()+1
             gDate=date.getDate()
             gDay=date.getDay()
@@ -272,9 +283,9 @@ ApplicationWindow {
 
     function sleepStandby()
     {
-        if(sleepState==true && QmlDevState.state.LStoveStatus == 0 && QmlDevState.state.RStoveStatus == 0 && QmlDevState.state.HoodSpeed == 0 && QmlDevState.state.HoodLight == 0 && QmlDevState.state.RStoveTimingState==timingStateEnum.STOP)
+        if(sleepState==true && QmlDevState.state.LStoveStatus === 0 && QmlDevState.state.RStoveStatus === 0 && QmlDevState.state.HoodSpeed == 0 && QmlDevState.state.HoodLight === 0 && QmlDevState.state.LStoveTimingState===timingStateEnum.STOP && QmlDevState.state.RStoveTimingState===timingStateEnum.STOP)
         {
-            if((QmlDevState.state.RStOvState == workStateEnum.WORKSTATE_STOP || QmlDevState.state.RStOvState == workStateEnum.WORKSTATE_FINISH) && (QmlDevState.state.LStOvState == workStateEnum.WORKSTATE_STOP || QmlDevState.state.LStOvState == workStateEnum.WORKSTATE_FINISH))
+            if((QmlDevState.state.RStOvState === workStateEnum.WORKSTATE_STOP || QmlDevState.state.RStOvState === workStateEnum.WORKSTATE_FINISH) && (QmlDevState.state.LStOvState === workStateEnum.WORKSTATE_STOP || QmlDevState.state.LStOvState === workStateEnum.WORKSTATE_FINISH))
             {
                 SendFunc.setBuzControl(buzControlEnum.SHORTTWO)
                 SendFunc.setSysPower(0)
@@ -315,7 +326,7 @@ ApplicationWindow {
         id:timer_wifi_connecting
         repeat: false
         running: false
-        interval: 63000
+        interval: 62000
         triggeredOnStart: false
         onTriggered: {
             if(wifiConnecting==true)
@@ -328,42 +339,46 @@ ApplicationWindow {
     }
 
     Timer{
-        id:timer_window
+        id:timer_sleep
         repeat: false
-        running: sysPower > 0
-        interval: systemSettings.sleepTime*60000//
+        running: systemSettings.sleepSwitch //&& sysPower > 0
+        interval: systemSettings.sleepTime*60000
         triggeredOnStart: false
         onTriggered: {
-            console.log("timer_window sleep:")
-            //            console.log("timer_window sleep:",QmlDevState.state.HoodSpeed,QmlDevState.state.RStOvState,QmlDevState.state.LStOvState,QmlDevState.state.ErrorCodeShow,QmlDevState.localConnected)
-            if(productionTestStatus==0 && demoModeStatus==0 && QmlDevState.localConnected > 0 && sysPower > 0)
+            console.log("timer_sleep onTriggered...")
+            if(productionTestStatus==0 && demoModeStatus==0 && QmlDevState.localConnected > 0 && QmlDevState.state.ErrorCodeShow === 0)
             {
-                if(isExistView("pageWifi")==null)
-                    loaderMainHide()
-                var page=isExistView("pageSteamBakeRun")
-                if(page!==null)
-                    backPage(page)
-
-                if(QmlDevState.state.ErrorCodeShow == 0)
+                if((QmlDevState.state.RStOvState === workStateEnum.WORKSTATE_STOP || QmlDevState.state.RStOvState === workStateEnum.WORKSTATE_FINISH || QmlDevState.state.RStOvState === workStateEnum.WORKSTATE_RESERVE || QmlDevState.state.RStOvState === workStateEnum.WORKSTATE_PAUSE_RESERVE) && (QmlDevState.state.LStOvState === workStateEnum.WORKSTATE_STOP || QmlDevState.state.LStOvState === workStateEnum.WORKSTATE_FINISH || QmlDevState.state.LStOvState === workStateEnum.WORKSTATE_RESERVE || QmlDevState.state.LStOvState === workStateEnum.WORKSTATE_PAUSE_RESERVE ))
                 {
-                    if(!((QmlDevState.state.RStOvState == workStateEnum.WORKSTATE_PREHEAT || QmlDevState.state.RStOvState == workStateEnum.WORKSTATE_RUN || QmlDevState.state.RStOvState == workStateEnum.WORKSTATE_PAUSE ) || (QmlDevState.state.LStOvState == workStateEnum.WORKSTATE_PREHEAT || QmlDevState.state.LStOvState == workStateEnum.WORKSTATE_RUN || QmlDevState.state.LStOvState == workStateEnum.WORKSTATE_PAUSE )))
-                    {
-                        sleepState=true
-                        loaderScreenSaverShow()
+                    sleepState=true
+                    loaderScreenSaverShow()
 
-                        timer_standby.interval=10*60000
-                        timer_standby.restart()
-                        return
-                    }
+                    timer_standby.interval=10*60000
+                    timer_standby.restart()
+                    return
                 }
             }
             sleepState=false
-            timer_window.restart()
+            timer_sleep.restart()
         }
     }
-    signal sleepTimerRestart()
-    onSleepTimerRestart:{
-        timer_window.restart()
+    Timer{
+        id:timer_alarm
+        repeat: gTimerLeft > 0
+        running: gTimerLeft > 0
+        interval: 1000
+        triggeredOnStart: false
+        onTriggered: {
+//            console.log("timer_alarm onTriggered...")
+            if(gTimerLeft>0)
+                --gTimerLeft
+            if(gTimerLeft==0)
+            {
+                if(loaderManual.sourceComponent === pageTimer)
+                    loaderManual.sourceComponent = null
+                loaderAutoTimerShow("时间到！计时结束")
+            }
+        }
     }
     background:Image {
         asynchronous:true
@@ -463,7 +478,7 @@ ApplicationWindow {
         }
         else
         {
-            loaderWifiConfirmShow("未连网，请连接网络后再试")
+            loaderWifiConfirmShow("当前设备离线，请检查网络")
         }
     }
     function loaderQrcodeHide(){
@@ -530,25 +545,30 @@ ApplicationWindow {
         PageDialogConfirm{
             confirmText:""
             onCancel: {
-                loaderAuto.sourceComponent = null
+                loaderAutoHide()
             }
             onConfirm:{
-                loaderAuto.sourceComponent = null
+                loaderAutoHide()
             }
         }
     }
-    function loaderAutoConfirmShow(hintCenterText,cancelText,confirmText){
+    function loaderAutoConfirmShow(hintCenterText,cancelText,confirmText,topImageSrc){
         if(loaderAuto.sourceComponent !== component_autoConfirm)
             loaderAuto.sourceComponent = component_autoConfirm
-
+        loaderAuto.item.topImageSrc=topImageSrc
         loaderAuto.item.hintCenterText=hintCenterText
         loaderAuto.item.confirmText=cancelText
         loaderAuto.item.confirmText=confirmText
     }
-    function loaderAutoTexthow(text){
-        loaderAutoPopupShow(hintCenterText,"","好的")
+    function loaderAutoTextShow(text){
+        loaderAutoConfirmShow(text,"","好的",themesPicturesPath+"icon_warn.png")
     }
-
+    function loaderAutoCompleteShow(text){
+        loaderAutoConfirmShow(text,"","好的",themesPicturesPath+"icon_checked.png")
+    }
+    function loaderAutoTimerShow(text){
+        loaderAutoConfirmShow(text,"","好的",themesPicturesPath+"icon_timer.png")
+    }
     function loaderAutoConfirmHide(){
         if(loaderAuto.sourceComponent === component_autoConfirm)
             loaderAuto.sourceComponent = null
@@ -609,11 +629,11 @@ ApplicationWindow {
             cancelText:"好的"
             confirmText:"立即关闭("+QmlDevState.state.HoodOffLeftTime+"分钟)"
             onCancel: {
-                closeLoaderHoodOff()
+                loaderAutoHide()
             }
             onConfirm:{
                 SendFunc.setHoodSpeed(0)
-                closeLoaderHoodOff()
+                loaderAutoHide()
             }
         }
     }
@@ -634,7 +654,7 @@ ApplicationWindow {
         id:loader_error
         //                asynchronous: true
         anchors.fill: parent
-        sourceComponent:undefined
+        sourceComponent:null
     }
 
     function loaderErrorShow(hintTopText,hintBottomText,closeVisible){
@@ -647,7 +667,7 @@ ApplicationWindow {
         //        loader_error.setSource("PageErrorPopup.qml",{"hintTopText": hintTopText,"hintBottomText": hintBottomText,"closeVisible": closeVisible})
     }
     function loaderErrorHide(){
-        if(loader_error.source !== "")
+        if(loader_error.source != "")
             loader_error.source = ""
     }
     //---------------------------------------------------------------
@@ -656,14 +676,13 @@ ApplicationWindow {
         id:loaderScreenSaver
         asynchronous: true
         anchors.fill: parent
-        sourceComponent:null
     }
     function loaderScreenSaverShow()
     {
-        loaderScreenSaver.source="PageScreenSaver0.qml"
+        loaderScreenSaver.source=systemSettings.screenSaverIndex==0?"PageScreenSaver0.qml":"PageScreenSaver1.qml"
     }
     function loaderScreenSaverHide(){
-        if(loaderScreenSaver.source !== "")
+        if(loaderScreenSaver.source != "")
             loaderScreenSaver.source = ""
     }
 
@@ -676,7 +695,7 @@ ApplicationWindow {
             if(sysPower > 0)
             {
                 mouse.accepted = false
-                sleepTimerRestart()
+                timer_sleep.restart()
 
                 if(sleepState==true)
                 {
@@ -706,7 +725,7 @@ ApplicationWindow {
                 timer_standby.stop()
 
             loaderScreenSaverHide()
-            timer_window.restart()
+            timer_sleep.restart()
         }
     }
     ListModel {
@@ -765,7 +784,10 @@ ApplicationWindow {
     //            }
     //        }
     //    }
-
+    Component {
+        id: pageTimer
+        PageTimer {}
+    }
     Component {
         id: pageHome
         PageHome {}

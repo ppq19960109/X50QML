@@ -9,14 +9,10 @@ import "qrc:/SendFunc.js" as SendFunc
 import "../"
 Item {
     id:root
+    property bool completed_state: false
     property int scan_count: 0
     property bool wifiInputConnecting:false
     property int qrcode_display: 0
-
-    onVisibleChanged: {
-        console.log("onVisibleChanged",visible)
-        wifiPageStatus=visible
-    }
 
     function wifi_scan_timer_reset()
     {
@@ -122,26 +118,55 @@ Item {
         }
     }
 
-    Component.onDestruction: {
-        if(wifiConnecting==false)
+    function pageVisible(state)
+    {
+        console.log("pageVisible:",visible)
+        if(state===true)
         {
-            QmlDevState.executeShell("(wpa_cli enable_network all) &")
+            if(systemSettings.wifiEnable && wifiConnecting==false)
+            {
+                if(wifiConnected==true)
+                    QmlDevState.executeShell("(wpa_cli list_networks | tail -n +3 | grep -v 'CURRENT' | awk '{system(\"wpa_cli disable_network \" $1)}') &")
+                getWifiInfo()
+                SendFunc.scanRWifi()
+            }
+            wifiPageStatus=true
         }
-        if(loaderManual.sourceComponent===component_wifiInput)
-            loaderManual.sourceComponent = null
+        else
+        {
+            if(wifiConnecting==false)
+            {
+                QmlDevState.executeShell("(wpa_cli enable_network all) &")
+            }
+            if(loaderManual.sourceComponent===component_wifiInput)
+                loaderManual.sourceComponent = null
+        }
+    }
+
+    onVisibleChanged: {
+        if(completed_state==false)
+            return
+        console.log("onVisibleChanged",visible)
+        wifiPageStatus=visible
+        pageVisible(visible)
+    }
+    Component.onDestruction: {
+        console.log("PageWifi onDestruction",visible)
+        if(visible==true)
+        {
+            pageVisible(visible)
+        }
     }
     Component.onCompleted: {
+        completed_state=true
+        console.log("PageWifi onCompleted",visible)
         //        VirtualKeyboardSettings.styleName = "retro"
         //        VirtualKeyboardSettings.fullScreenMode=true
         //        console.info("VirtualKeyboardSettings",VirtualKeyboardSettings.availableLocales)
-        if(systemSettings.wifiEnable && wifiConnecting==false)
+        if(visible==true)
         {
-            if(wifiConnected==true)
-                QmlDevState.executeShell("(wpa_cli list_networks | tail -n +3 | grep -v 'CURRENT' | awk '{system(\"wpa_cli disable_network \" $1)}') &")
-            getWifiInfo()
-            SendFunc.scanRWifi()
+            pageVisible(visible)
         }
-        wifiPageStatus=true
     }
 
     Timer{

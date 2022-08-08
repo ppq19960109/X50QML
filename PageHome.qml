@@ -133,7 +133,7 @@ Item {
     }
 
     function loaderUpdateResultShow(text){
-        loaderAutoTexthow(text)
+        loaderAutoTextShow(text)
     }
 
     function steamInterfaceChange(state){
@@ -241,6 +241,12 @@ Item {
                                 loaderDoorAutoHide(cookWorkPosEnum.LEFT)
                         }
                     }
+                    if(lastLStOvState===workStateEnum.WORKSTATE_PREHEAT && value===WORKSTATE_RUN)
+                    {
+                        var lMode=QmlDevState.state.LStOvMode
+                        if(lMode===35||lMode===36||lMode===38||lMode===40||lMode===42)
+                            loaderAutoCompleteShow("预热完成\n请将食物放入左腔！")
+                    }
                 }
                 lastLStOvState=value
             }
@@ -313,17 +319,17 @@ Item {
                 else if(value==2)
                 {
                     if(lStOvState === workStateEnum.WORKSTATE_PREHEAT || lStOvState === workStateEnum.WORKSTATE_RUN || lStOvState === workStateEnum.WORKSTATE_PAUSE || rStOvState === workStateEnum.WORKSTATE_PREHEAT || rStOvState === workStateEnum.WORKSTATE_RUN|| rStOvState === workStateEnum.WORKSTATE_PAUSE)
-                        loaderAutoTexthow("蒸烤箱工作中，需散热，烟机无法关闭。")
+                        loaderAutoTextShow("蒸烤箱工作中，需散热，烟机无法关闭。")
                 }
                 else if(value==3)
                 {
                     if(lStOvState === workStateEnum.WORKSTATE_PREHEAT || lStOvState === workStateEnum.WORKSTATE_RUN|| lStOvState === workStateEnum.WORKSTATE_PAUSE)
-                        loaderAutoTexthow("烤箱工作中，需散热，烟机不得低于2档。")
+                        loaderAutoTextShow("烤箱工作中，需散热，烟机不得低于2档。")
                 }
                 else if(value==4)
                 {
                     if(QmlDevState.state.LStoveStatus > 0 || QmlDevState.state.RStoveStatus > 0)
-                        loaderAutoTexthow("灶具工作中，烟机无法关闭。")
+                        loaderAutoTextShow("灶具工作中，烟机无法关闭。")
                 }
                 else if(value==5)
                 {
@@ -430,14 +436,14 @@ Item {
             else if("LStoveTimingState"==key)
             {
                 if(value === timingStateEnum.CONFIRM)
-                    loaderAutoTexthow("左灶定时结束，请将灶具旋钮复位")
+                    loaderAutoTextShow("左灶定时结束，请将灶具旋钮复位")
                 else if(value === timingStateEnum.STOP)
                     loaderStoveAutoPopupHide("左灶定时")
             }
             else if("RStoveTimingState"==key)
             {
                 if(value === timingStateEnum.CONFIRM)
-                    loaderAutoTexthow("右灶定时结束，请将灶具旋钮复位")
+                    loaderAutoTextShow("右灶定时结束，请将灶具旋钮复位")
                 else if(value === timingStateEnum.STOP)
                     loaderStoveAutoPopupHide("右灶定时")
             }
@@ -567,11 +573,6 @@ Item {
             //            console.log("result:",QmlDevState.state.bssid,element.bssid,element.rssi,result.connected,result.ssid,result.level,result.flags)
         }
 
-        if(bssid==="")
-        {
-            console.log("setWifiList:",wifiConnected,bssid)
-            //            wifiConnected=false
-        }
     }
 
     Component{
@@ -658,14 +659,14 @@ Item {
         console.log("page home onCompleted")
 
         QmlDevState.startLocalConnect()
-//        MNetwork.locationRequest();
-//        MNetwork.timeRequest();
+        //        MNetwork.locationRequest();
+        //        MNetwork.timeRequest();
         //        loaderAlarmShow()
         //        loaderErrorShow("左腔蒸箱加热异常！","请拨打售后电话 <font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员");
         //        loaderErrorShow("右腔干烧检测电路故障！","请拨打售后电话<font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员")
         //        loaderUpdateConfirmShow()
         //       loaderUpdateResultShow("系统已更新至最新版本\n"+"1.2.0")
-        loaderScreenSaverShow()
+        //loaderScreenSaverShow()
     }
     StackView.onActivating:{
         console.log("PageHome StackView onActivating")

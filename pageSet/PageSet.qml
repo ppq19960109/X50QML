@@ -21,7 +21,7 @@ Item {
             anchors.topMargin: 15
             anchors.bottom: parent.bottom
             orientation:ListView.Vertical
-            currentIndex:0
+            currentIndex:pageSetIndex
             interactive:false
             delegate:Button {
                 width:parent.width
@@ -43,7 +43,7 @@ Item {
                     console.log("menuList",index)
                     if(menuList.currentIndex!=index)
                     {
-                        menuList.currentIndex=index
+                        pageSetIndex=index
                     }
                 }
             }

@@ -97,6 +97,7 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     setState("ProductCategory","集成灶");
     setState("ProductModel","IIZ(T/Y)—X8GCZ01");
     setState("SmartSmoke",0);
+    setState("LStOvState",0);
     setState("LStoveTimingState",0);
     setState("LStoveTimingLeft",0);
     setState("LStoveTimingSet",0);

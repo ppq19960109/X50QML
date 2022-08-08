@@ -13,6 +13,10 @@ Item {
     property var rStOvSetTimer: QmlDevState.state.RStOvSetTimer
     property var lStOvSetTimerLeft: QmlDevState.state.LStOvSetTimerLeft
     property var rStOvSetTimerLeft: QmlDevState.state.RStOvSetTimerLeft
+    property var lStOvOrderTimer: QmlDevState.state.LStOvOrderTimer
+    property var rStOvOrderTimer: QmlDevState.state.RStOvOrderTimer
+    property var lStOvOrderTimerLeft: QmlDevState.state.LStOvOrderTimerLeft
+    property var rStOvOrderTimerLeft: QmlDevState.state.RStOvOrderTimerLeft
 
     Component{
         id:component_cancelSteam
@@ -279,6 +283,8 @@ Item {
                             {
                                 if(lStOvState===workStateEnum.WORKSTATE_PREHEAT)
                                     return QmlDevState.state.LStOvRealTemp+"℃"
+                                else if(lStOvState===workStateEnum.WORKSTATE_RESERVE||lStOvState===workStateEnum.WORKSTATE_PAUSE_RESERVE)
+                                    return lStOvOrderTimerLeft+"分钟"
                                 else
                                     return lStOvSetTimerLeft+"分钟"
                             }
@@ -286,6 +292,8 @@ Item {
                             {
                                 if(rStOvState===workStateEnum.WORKSTATE_PREHEAT)
                                     return QmlDevState.state.RStOvRealTemp+"℃"
+                                else if(rStOvState===workStateEnum.WORKSTATE_RESERVE||rStOvState===workStateEnum.WORKSTATE_PAUSE_RESERVE)
+                                    return rStOvOrderTimerLeft+"分钟"
                                 else
                                     return rStOvSetTimerLeft+"分钟"
                             }
@@ -409,11 +417,17 @@ Item {
                     percent:{
                         if(index==0)
                         {
-                            return 100-Math.floor(100*lStOvSetTimerLeft/lStOvSetTimer)
+                            if(lStOvState===workStateEnum.WORKSTATE_RESERVE||lStOvState===workStateEnum.WORKSTATE_PAUSE_RESERVE)
+                                return 100-Math.floor(100*lStOvOrderTimerLeft/lStOvOrderTimer)
+                            else
+                                return 100-Math.floor(100*lStOvSetTimerLeft/lStOvSetTimer)
                         }
                         else
                         {
-                            return 100-Math.floor(100*rStOvSetTimerLeft/rStOvSetTimer)
+                            if(rStOvState===workStateEnum.WORKSTATE_RESERVE||rStOvState===workStateEnum.WORKSTATE_PAUSE_RESERVE)
+                                return 100-Math.floor(100*rStOvOrderTimerLeft/rStOvOrderTimer)
+                            else
+                                return 100-Math.floor(100*rStOvSetTimerLeft/rStOvSetTimer)
                         }
                     }
                 }

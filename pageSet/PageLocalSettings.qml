@@ -99,6 +99,7 @@ Item {
 
                     onCheckedChanged: {
                         console.log("onCheckedChanged:", checked)
+                        systemSettings.sleepSwitch=checked
                     }
                 }
                 PageDivider{
@@ -107,13 +108,14 @@ Item {
             }
             Item{
                 id:screen
+                visible: systemSettings.sleepSwitch
                 width:parent.width
                 height: 100
                 anchors.top: screenSwitch.bottom
 
                 Text{
                     color:"#fff"
-                    text:qsTr("1分钟")
+                    text:qsTr( systemSettings.sleepTime+"分钟")
                     font.pixelSize:30
                     anchors.right: screenSlider.left
                     anchors.rightMargin:15
@@ -256,8 +258,9 @@ Item {
             text: qsTr("屏保")
         }
         Grid{
-            property int currentIndex:0
+            property int currentIndex:systemSettings.screenSaverIndex
             id:grid
+
             width: 418*2+columnSpacing
             height: 115*2+rowSpacing
             anchors.top: parent.top
@@ -286,7 +289,7 @@ Item {
                         source: themesPicturesPath+(grid.currentIndex==index?"icon_checked.png":"icon_unchecked.png")
                     }
                     onClicked: {
-                        grid.currentIndex=index
+                        systemSettings.screenSaverIndex=index
                     }
                 }
             }
