@@ -541,6 +541,19 @@ ApplicationWindow {
             loader_main.sourceComponent = undefined
         }
     }
+    Component{
+        id:component_newCook
+        PageNewCook{}
+    }
+    function loaderPageNewCook(device){
+        loader_main.sourceComponent = component_newCook
+        loader_main.item.cookDir=device
+    }
+    function loaderNewCookHide()
+    {
+        if(loader_main.sourceComponent===component_newCook)
+            loader_main.sourceComponent = undefined
+    }
     Loader{
         //加载弹窗组件
         id:loaderAuto
@@ -907,10 +920,7 @@ ApplicationWindow {
         id: pageDemoMode
         PageDemoMode {}
     }
-    Component{
-        id:component_newCook
-        PageNewCook{}
-    }
+
     function isExistView(pageName) {
         //        console.log("isExistView:",pageName)
         return stackView.find(function(item,index){
@@ -953,7 +963,7 @@ ApplicationWindow {
             stackView.push(pageMultistageSet,StackView.Immediate)
             break;
         case "pageSteamBakeRun": //蒸烤页面
-            stackView.push(pageSteamBakeRun, args,StackView.Immediate)
+            stackView.push(pageSteamBakeRun,StackView.Immediate)
             break;
         case "pageSteamBakeReserve": //页面
             stackView.push(pageSteamBakeReserve, args,StackView.Immediate)

@@ -40,10 +40,14 @@ Item {
     }
 
     SequentialAnimation {
+        id:seqAnimation
         running: workState === workStateEnum.WORKSTATE_RESERVE||workState === workStateEnum.WORKSTATE_PAUSE_RESERVE||workState === workStateEnum.WORKSTATE_PAUSE
         loops:Animation.Infinite
         NumberAnimation { target: root; property: "reserveFlash"; from:0;to: 1; duration: 1000 ;easing.type: Easing.Linear}
         NumberAnimation { target: root; property: "reserveFlash"; from:1;to: 0; duration: 1000 ;easing.type: Easing.Linear}
+        Component.onDestruction: {
+            seqAnimation.stop()
+        }
     }
 
     Image {
@@ -55,20 +59,25 @@ Item {
         smooth:false
         source: "qrc:/x50/icon_runing_background.png"
     }
+    property int lineWidth:30
+    property real r: canvas.width/2-lineWidth/2
     Canvas{
-        property int lineWidth:30
-        property real r: canvas.width/2-lineWidth/2
         id: canvas
         visible: !(workState === workStateEnum.WORKSTATE_FINISH||workState === workStateEnum.WORKSTATE_STOP||workState === workStateEnum.WORKSTATE_PREHEAT)
         width: canvasDiameter
         height: width
+        canvasSize.width:canvasDiameter
+        canvasSize.height:canvasDiameter
+        contextType:"2d"
+        renderStrategy:Canvas.Cooperative//Threaded
+        renderTarget:Canvas.FramebufferObject
         anchors.centerIn: parent
         onPaint: {
             if(workState === workStateEnum.WORKSTATE_FINISH||workState === workStateEnum.WORKSTATE_STOP||workState === workStateEnum.WORKSTATE_PREHEAT)
             {
                 return
             }
-            var ctx = getContext("2d")
+            var ctx = context //getContext("2d")
             ctx.save()
             ctx.clearRect(0, 0, canvas.width, canvas.height)
             //            if(workState === workStateEnum.WORKSTATE_FINISH||workState === workStateEnum.WORKSTATE_STOP||workState === workStateEnum.WORKSTATE_PREHEAT)

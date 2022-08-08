@@ -128,7 +128,7 @@ function isSteam(cookSteps)
     for(var i = 0; i < cookSteps.length; ++i)
     {
         step=cookSteps[i]
-        if(step.mode==1||step.mode==2||step.mode==40)
+        if(step.mode==1||step.mode==2)
         {
            return 1
         }

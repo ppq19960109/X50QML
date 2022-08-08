@@ -18,8 +18,8 @@ int main(int argc, char *argv[])
     qputenv("QT_VIRTUALKEYBOARD_STYLE", "light");
 
     QLocale::setDefault(QLocale::English);//QLocale::English
-    QLocale locale;
-    qDebug()<< "locale:"<<locale.language();
+//    QLocale locale;
+//    qDebug()<< "locale:"<<locale.language();
     //    qDebug() << "availableStyles: " << QQuickStyle::availableStyles();
     //        QQuickStyle::setStyle("Imagine");
 
@@ -43,12 +43,13 @@ int main(int argc, char *argv[])
     app.setOrganizationDomain("Marssenger.com"); //2
     app.setApplicationName("X50BCZ"); //3
 
-    int fontId = QFontDatabase::addApplicationFont("SourceHanSansCN-Regular.ttf");
+    QFontDatabase::addApplicationFont("SourceHanSansCN-Regular.ttf");
+//    int fontId = QFontDatabase::addApplicationFont("SourceHanSansCN-Regular.ttf");
     //    int fontId = QFontDatabase::addApplicationFont("simfang.ttf");
-    QStringList fontFamilies = QFontDatabase::applicationFontFamilies(fontId);
-    qDebug()<<"fontfamilies: "<<fontFamilies;
+//    QStringList fontFamilies = QFontDatabase::applicationFontFamilies(fontId);
+//    qDebug()<<"fontfamilies: "<<fontFamilies;
 
-    qDebug()<<"FontsLocation"<<QStandardPaths::standardLocations(QStandardPaths::FontsLocation);
+//    qDebug()<<"FontsLocation"<<QStandardPaths::standardLocations(QStandardPaths::FontsLocation);
 
     QFont font;
     font.setFamily("SimHei");//设置全局字体 "Source Han Sans CN" SimHei

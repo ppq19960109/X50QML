@@ -24,4 +24,7 @@ Image {
 //            console.log("onRunningChanged",running)
         }
     }
+    Component.onDestruction: {
+        rotation.stop()
+    }
 }

@@ -68,16 +68,6 @@ Rectangle {
             SendFunc.permitSteamStartStatus(0)
     }
 
-    function loaderPageNewCook(device){
-        loader_main.sourceComponent = component_newCook
-        loader_main.item.cookDir=device
-    }
-
-    function loaderNewCookHide()
-    {
-        if(loader_main.sourceComponent===component_newCook)
-            loader_main.sourceComponent = undefined
-    }
     function cookConfirm(){
         if(leftProgressBar.workState===workStateEnum.WORKSTATE_FINISH)
         {
