@@ -12,12 +12,6 @@ Rectangle {
         name:qsTr("多段烹饪说明")
         leftBtnText:""
         rightBtnText:""
-        onLeftClick:{
-            edit=!edit
-        }
-        onRightClick:{
-            load_page("pageCookDetails",{"root":recipeListView.model[recipeListView.currentIndex]})
-        }
         onClose:{
             backPrePage()
         }

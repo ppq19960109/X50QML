@@ -134,7 +134,6 @@ Item {
         }
         if(loader_main.sourceComponent===component_wifiInput)
             loader_main.sourceComponent = undefined
-//        listView.model=null
     }
     Component.onCompleted: {
         //        VirtualKeyboardSettings.styleName = "retro"
@@ -400,9 +399,7 @@ Item {
                             //                            console.log("wifiInfo",wifiInfo,typeof wifiInfo)
                             if(wifiInfo==null)
                             {
-                                var modelItem=listView.model.get(index)
-                                showWifiInput(index,modelItem)
-                                modelItem=null
+                                showWifiInput(index,listView.model.get(index))
                             }
                             else
                             {

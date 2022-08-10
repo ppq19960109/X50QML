@@ -3,27 +3,32 @@ import QtQuick.Controls 2.2
 
 import "qrc:/SendFunc.js" as SendFunc
 Item {
-    //    property int priority:0
+    signal cancel()
+    signal confirm()
+    signal mcompleted()
+    signal mdestruction()
+
     property alias closeVisible: closeBtn.visible
     property alias hintTopText: hintTop.text
     property alias hintCenterText: hintCenter.text
     property alias confirmText: confirmBtnText.text
     property alias hintHeight: hint.height
     property var confirmFunc:null
-    signal cancel()
-    signal confirm()
+
     MouseArea{
         anchors.fill: parent
     }
-    anchors.fill: parent
+    //anchors.fill: parent
 
     Component.onCompleted: {
         if(sysPower > 0)
             sleepWakeup()
         else
             SendFunc.setSysPower(1)
+        mcompleted()
     }
     Component.onDestruction: {
+        mdestruction()
         confirmFunc=null
     }
 
@@ -43,7 +48,6 @@ Item {
             anchors.right:parent.right
             Image {
                 id:closeImg
-                asynchronous:true
                 smooth:false
                 anchors.centerIn: parent
                 source: themesImagesPath+"icon-window-close.png"
@@ -97,6 +101,7 @@ Item {
                 font.pixelSize: 30
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
+                  text:""
             }
             background: Rectangle {
                 width:176
@@ -113,4 +118,5 @@ Item {
             }
         }
     }
+
 }

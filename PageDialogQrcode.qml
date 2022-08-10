@@ -30,7 +30,6 @@ Item {
 
             Image {
                 id:closeImg
-                asynchronous:true
                 smooth:false
                 anchors.centerIn: parent
                 source: themesImagesPath+"icon-window-close.png"
@@ -54,13 +53,9 @@ Item {
             anchors.horizontalCenterOffset: -120
             anchors.top: hintTop.bottom
             anchors.topMargin: 40
-            width: 218
-            height: 218
             sourceSize.width: 218
             sourceSize.height: 218
-            asynchronous:true
-            smooth:false
-//            cache:false
+            //cache:false
             source: "file:QrCode.png"
         }
 

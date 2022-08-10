@@ -44,10 +44,7 @@ Item {
         getRecipe(menuList.currentIndex)
         SendFunc.permitSteamStartStatus(1)
     }
-//    Component.onDestruction: {
-//        menuList.model=null
-//        recipeListView.model=null
-//    }
+
     function getRecipe(index)
     {
         recipeListView.model=QmlDevState.getRecipe(index);

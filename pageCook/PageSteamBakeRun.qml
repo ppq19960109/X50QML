@@ -7,48 +7,8 @@ import "../"
 Rectangle {
     color: themesWindowBackgroundColor
     property string name: "pageSteamBakeRun"
-/*
-    Timer{
-//        property int count:0
-        id:timer_run
-        repeat: true
-        running: leftProgressBar.workState === workStateEnum.WORKSTATE_RESERVE||rightProgressBar.workState === workStateEnum.WORKSTATE_RESERVE||leftProgressBar.workState === workStateEnum.WORKSTATE_PAUSE_RESERVE||rightProgressBar.workState === workStateEnum.WORKSTATE_PAUSE_RESERVE||leftProgressBar.workState === workStateEnum.WORKSTATE_PAUSE||rightProgressBar.workState === workStateEnum.WORKSTATE_PAUSE
-        interval: 800
-        triggeredOnStart: false
-        onTriggered: {
-            //            console.log("timer_run onTriggered");
-//            if(leftProgressBar.workState === workStateEnum.WORKSTATE_PREHEAT)
-//            {
-//                leftProgressBar.roate+=10
-//                if(leftProgressBar.roate>360)
-//                {
-//                    leftProgressBar.roate=10
-//                }
-//                leftProgressBar.updatePaint()
-//            }
 
-//            if(rightProgressBar.workState === workStateEnum.WORKSTATE_PREHEAT)
-//            {
-//                rightProgressBar.roate+=10
-//                if(rightProgressBar.roate>360)
-//                {
-//                    rightProgressBar.roate=10
-//                }
-//                rightProgressBar.updatePaint()
-//            }
 
-            if(leftProgressBar.workState === workStateEnum.WORKSTATE_RESERVE||leftProgressBar.workState === workStateEnum.WORKSTATE_PAUSE_RESERVE||rightProgressBar.workState === workStateEnum.WORKSTATE_RESERVE||rightProgressBar.workState === workStateEnum.WORKSTATE_PAUSE_RESERVE || leftProgressBar.workState === workStateEnum.WORKSTATE_PAUSE||rightProgressBar.workState === workStateEnum.WORKSTATE_PAUSE)
-            {
-//                if(++count>3)
-//                {
-//                    count=0
-                    leftProgressBar.reserveFlash=!leftProgressBar.reserveFlash
-                    rightProgressBar.reserveFlash=!rightProgressBar.reserveFlash
-//                }
-            }
-        }
-    }
-*/
     Component.onCompleted: {
         leftProgressBar.updatePaint()
         rightProgressBar.updatePaint()
@@ -58,7 +18,6 @@ Rectangle {
     Component.onDestruction: {
         closeCancelRun()
         loaderNewCookHide()
-//        timer_run.stop()
     }
     StackView.onActivating:{
         SendFunc.permitSteamStartStatus(0)
@@ -95,8 +54,6 @@ Rectangle {
             Image {
                 anchors.top:parent.top
                 anchors.left:parent.left
-                asynchronous:true
-                smooth:false
                 source: themesImagesPath+"icon-cookstatus-left.png"
             }
             Text {
@@ -115,7 +72,6 @@ Rectangle {
         PageRotationImg{
             width: 310
             height: width
-            smooth:false
             visible:leftProgressBar.workState === workStateEnum.WORKSTATE_PREHEAT
             duration:8000
             anchors.centerIn: leftProgressBar
@@ -223,8 +179,6 @@ Rectangle {
             anchors.bottom: leftProgressBar.bottom
             //            anchors.bottomMargin: -10
             background:Image {
-                asynchronous:true
-                smooth:false
                 anchors.centerIn:parent
                 source: themesImagesPath+"icon-cookclose.png"
             }
@@ -244,8 +198,6 @@ Rectangle {
             anchors.bottom: leftProgressBar.bottom
             //            anchors.bottomMargin: -10
             background:Image {
-                asynchronous:true
-                smooth:false
                 anchors.centerIn:parent
                 source: themesImagesPath+((leftProgressBar.workState===workStateEnum.WORKSTATE_PAUSE || leftProgressBar.workState===workStateEnum.WORKSTATE_PAUSE_RESERVE)?"icon-cookpause.png":"icon-cookrun.png")
             }
@@ -314,8 +266,6 @@ Rectangle {
             Image {
                 anchors.top:parent.top
                 anchors.right:parent.right
-                asynchronous:true
-                smooth:false
                 source: themesImagesPath+"icon-cookstatus-right.png"
             }
             Text {
@@ -333,7 +283,6 @@ Rectangle {
         PageRotationImg{
             width: 310
             height: width
-            smooth:false
             visible:rightProgressBar.workState === workStateEnum.WORKSTATE_PREHEAT
             duration:8000
             anchors.centerIn: rightProgressBar
@@ -428,8 +377,6 @@ Rectangle {
             anchors.bottom: rightProgressBar.bottom
             //            anchors.bottomMargin: -10
             background:Image {
-                asynchronous:true
-                smooth:false
                 anchors.centerIn:parent
                 source: themesImagesPath+"icon-cookclose.png"
             }
@@ -449,8 +396,6 @@ Rectangle {
             anchors.bottom: rightProgressBar.bottom
             //            anchors.bottomMargin: -10
             background:Image {
-                asynchronous:true
-                smooth:false
                 anchors.centerIn:parent
                 source: themesImagesPath+((rightProgressBar.workState===workStateEnum.WORKSTATE_PAUSE|| rightProgressBar.workState===workStateEnum.WORKSTATE_PAUSE_RESERVE)?"icon-cookpause.png":"icon-cookrun.png")
             }

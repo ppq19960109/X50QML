@@ -19,7 +19,6 @@ Item {
         opacity: 0.3
     }
     Image{
-        asynchronous:true
         smooth:false
         anchors.right: parent.right
         anchors.rightMargin: 60
@@ -38,7 +37,6 @@ Item {
         background:Item {}
         Image{
             anchors.centerIn: parent
-            asynchronous:true
             smooth:false
             source:themesImagesPath+"icon_childlockscreen_close.png"
         }

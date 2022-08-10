@@ -5,8 +5,7 @@ Image {
     property alias duration:rotation.duration
     property alias smooth:busyImg.smooth
     id: busyImg
-    asynchronous:true
-    smooth:false
+
     RotationAnimator {
         id:rotation
         target: busyImg

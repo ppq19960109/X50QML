@@ -179,9 +179,15 @@ Item {
 
     Connections { // 将目标对象信号与槽函数进行连接
         target: QmlDevState
+        onRebootChanged:{
+            console.log("onRebootChanged...")
+            systemSettings.reboot=true
+        }
+
         onLocalConnectedChanged:{
             if(value > 0)
             {
+                SendFunc.getAllToServer()
                 loaderErrorHide()
 
                 SendFunc.permitSteamStartStatus(0)
@@ -208,19 +214,27 @@ Item {
             value=null
         }
         onStateChanged: { // 处理目标对象信号的槽函数
+
             var ret
             //            console.log("page home onStateChanged",key,value)
             if("SysPower"==key)
             {
-                if(sysPower<0 && value==0)
+                if(systemSettings.reboot==false)
                 {
-                    SendFunc.setSysPower(1)
+                    if(sysPower<0 && value==0)
+                    {
+                        SendFunc.setSysPower(1)
+                    }
+                    else if(value==1)
+                    {
+                        var errorCode=QmlDevState.state.ErrorCodeShow
+                        if(errorCode!==0)
+                            loaderErrorCodeShow(errorCode)
+                    }
                 }
-                else if(value==1)
+                else
                 {
-                    var errorCode=QmlDevState.state.ErrorCodeShow
-                    if(errorCode!==0)
-                        loaderErrorCodeShow(errorCode)
+                    systemSettings.reboot=false
                 }
                 systemPower(value)
             }
@@ -265,7 +279,6 @@ Item {
                     {
                         if(QmlDevState.state.LStOvDoorState==1)
                             loaderDoorAutoPopupShow("左腔门开启，工作暂停")
-                        //                            loaderAutoPopupShow("","左腔门开启，工作暂停",292)
                     }
                     else
                     {
@@ -306,7 +319,6 @@ Item {
                     {
                         if(QmlDevState.state.RStOvDoorState==1)
                             loaderDoorAutoPopupShow("右腔门开启，工作暂停")
-                        //                            loaderAutoPopupShow("","右腔门开启，工作暂停",292)
                     }
                     else
                     {
@@ -339,7 +351,7 @@ Item {
                 }
                 else if(value==3)
                 {
-                    var LStOvState=QmlDevState.state.LStOvState
+                    LStOvState=QmlDevState.state.LStOvState
                     if(LStOvState == workStateEnum.WORKSTATE_PREHEAT || LStOvState == workStateEnum.WORKSTATE_RUN|| LStOvState == workStateEnum.WORKSTATE_PAUSE)
                         loaderAutoPopupShow("烤模式运行中，\n需散热，烟机最低二档","",292,"知道了",loaderAutoPopupHide)
                 }
@@ -704,11 +716,11 @@ Item {
         //       loaderUpdateResultShow("系统已更新至最新版本\n"+"1.2.0")
     }
     StackView.onActivating:{
-//        console.log("PageHome StackView onActivating")
+        //        console.log("PageHome StackView onActivating")
         SendFunc.permitSteamStartStatus(0)
     }
     StackView.onActivated:{
-//        console.log("PageHome StackView onActivated")
+        //        console.log("PageHome StackView onActivated")
         if(permitStartStatus>0)
             SendFunc.permitSteamStartStatus(0)
     }
@@ -777,7 +789,7 @@ Item {
             source: themesImagesPath+"previouspage-background.png"
         }
         onClicked:{
-//            console.log('preBtn',swipeview.currentIndex)
+            //            console.log('preBtn',swipeview.currentIndex)
             if(swipeview.currentIndex>0){
                 //                    swipeview.currentIndex-=1
                 //                    swipeview.setCurrentIndex(swipeview.currentIndex-1)
@@ -805,7 +817,7 @@ Item {
             source: themesImagesPath+"nextpage-background.png"
         }
         onClicked:{
-//            console.log('nextBtn',swipeview.currentIndex)
+            //            console.log('nextBtn',swipeview.currentIndex)
             if(swipeview.currentIndex < swipeview.count){
                 //                    swipeview.currentIndex+=1
                 //                    swipeview.setCurrentIndex(swipeview.currentIndex+1)

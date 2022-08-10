@@ -1,15 +1,10 @@
 #include "localclient.h"
-#define TYPE "Type"
-#define TYPE_SET "SET"
-#define TYPE_GET "GET"
-#define TYPE_GETALL "GETALL"
-#define TYPE_EVENT "EVENT"
 
 LocalClient::LocalClient(QObject *parent) : QObject(parent)
 {
     timeoutCount=0;
     m_socket = new QLocalSocket(this);
-    qDebug() << "UNIX_DOMAIN:" << UNIX_DOMAIN;
+
     connect(m_socket, SIGNAL(connected()), this,SLOT(socketConnectedHandler()));
     connect(m_socket, SIGNAL(disconnected()), SLOT(socketDisConnectedHandler()));
     connect(m_socket, SIGNAL(error(QLocalSocket::LocalSocketError)), SLOT(socketErrorHandler(QLocalSocket::LocalSocketError)));
@@ -19,6 +14,10 @@ LocalClient::LocalClient(QObject *parent) : QObject(parent)
 
     timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, &LocalClient::connectToServer);
+    qDebug() << "UNIX_DOMAIN:" << UNIX_DOMAIN;
+//    qDebug() << "readBufferSize:" << m_socket->readBufferSize();
+//    m_socket->setReadBufferSize(10240*5);
+//    qDebug() << "readBufferSize:" << m_socket->readBufferSize();
 }
 
 LocalClient::~LocalClient()
@@ -57,16 +56,6 @@ void LocalClient::connectToServer()
     //    qDebug("connectToServer fail!");
 }
 
-void LocalClient::get_all()
-{
-    QJsonObject root;
-    root.insert(TYPE,TYPE_GETALL);
-    root.insert(DATA,QJsonValue::Null);
-    QByteArray data=QJsonDocument(root).toJson(QJsonDocument::Compact);
-    //    qDebug() << "get_all: "<< QString(data);
-    sendMessage(data);
-}
-
 unsigned char CheckSum(unsigned char *buf, int len) //和校验算法
 {
     unsigned char ret = 0;
@@ -77,147 +66,34 @@ unsigned char CheckSum(unsigned char *buf, int len) //和校验算法
     return ret;
 }
 
-int LocalClient::sendMessage(QByteArray& data)
+int LocalClient::sendMessage(QString& data)
 {
     if(QLocalSocket::ConnectedState!=m_socket->state())
     {
         qDebug() << "sendMessage error: UnconnectedState";
         return -1;
     }
+    QByteArray msg=data.toUtf8();
+    unsigned short msg_len=msg.size();
     QByteArray buf;
     buf.append(FRAME_HEADER);
     buf.append(FRAME_HEADER);
     buf.append((char)0);
     buf.append(seqid/256);
     buf.append(seqid%256);
-    buf.append(data.size()/256);
-    buf.append(data.size()%256);
-    buf.append(data);
-    unsigned char verify= CheckSum((unsigned char *)(&buf.constData()[2]),data.size()+5);
+    buf.append(msg_len/256);
+    buf.append(msg_len%256);
+    buf.append(msg);
+    unsigned char verify= CheckSum((unsigned char *)(&buf.constData()[2]),msg_len+5);
     buf.append((char)verify);
     buf.append(FRAME_TAIL);
     buf.append(FRAME_TAIL);
-    qDebug() << "sendMessage :" << buf << "size:" <<buf.size() << "seqid:"<<seqid;
-    int write_len= m_socket->write(buf.constData(),buf.size());
+    qDebug() << "sendMessage :" << buf << "size:" <<buf.size() << "msg size:" <<msg_len<< "seqid:"<<seqid;
+    int write_len= m_socket->write(buf);
     ++seqid;
     //    m_socket->flush();
     //    m_socket->waitForBytesWritten(2000);
     return write_len;
-}
-
-int LocalClient::uds_json_parse(const char *value,const int value_len)
-{
-    QJsonParseError error;
-    QJsonDocument doucment = QJsonDocument::fromJson(QByteArray(value,value_len),&error);
-    if(error.error!=QJsonParseError::NoError)
-    {
-        qDebug() << "QJsonDocument fromJson:"<< error.error<< ","<<error.errorString();
-        return -1;
-    }
-    if (!doucment.isObject())
-    {
-        qDebug() << "JSON Parse Error:";
-        return -1;
-    }
-    QJsonObject object = doucment.object();
-    QJsonValue Type = object.value(TYPE);
-    if (!Type.isString())
-    {
-        qDebug("Type is NULL\n");
-        return -1;
-    }
-
-    QJsonValue Data =object.value(DATA);
-    if (!Data .isObject())
-    {
-        qDebug("Data is NULL\n");
-        return -1;
-    }
-
-    if (TYPE_EVENT== Type.toString())
-    {
-        //        qDebug() << "Data" << Data << endl;
-        emit sendData(Data);
-    }
-//    else
-//    {
-//        if (TYPE_GET== Type.toString())
-//        {
-
-//        }
-//        else if (TYPE_SET== Type.toString())
-//        {
-
-//        }
-//        else
-//        {
-
-//        }
-//    }
-
-    return 0;
-}
-
-int LocalClient::uds_recv(const char *byte,const int len)
-{
-    if (byte == NULL)
-        return -1;
-    unsigned char*data=(unsigned char*)byte;
-    int ret = 0,msg_len;
-//    int encry, seqid;
-    unsigned char verify;
-    for (int i = 0; i < len; ++i)
-    {
-        if (data[i] == FRAME_HEADER && data[i + 1] == FRAME_HEADER)
-        {
-//            encry = data[i + 2];
-//            seqid = (data[i + 3] << 8) + data[i + 4];
-            msg_len = (data[i + 5] << 8) + data[i + 6];
-            if (data[i + 6 + msg_len + 2] != FRAME_TAIL || data[i + 6 + msg_len + 3] != FRAME_TAIL)
-            {
-                continue;
-            }
-            verify = data[6 + msg_len +1];
-//            printf("uds_recv encry:%d seqid:%d msg_len:%d", encry, seqid, msg_len);
-
-            if (CheckSum((unsigned char *)&data[i + 2], msg_len + 5) != verify)
-            {
-//                printf("CheckSum error..................");
-                // continue;
-            }
-            if (msg_len > 0)
-            {
-                ret = uds_json_parse(&byte[i + 6 +1], msg_len);
-                if (ret == 0)
-                {
-                    i += 6 + msg_len + 3;
-                }
-            }
-        }
-    }
-    return 0;
-}
-
-int LocalClient::readMessage()
-{
-    //    if(m_socket->bytesAvailable()<=0)
-    //    {
-    //        if(m_socket->waitForReadyRead(-1)==false)
-    //        {
-    //            qDebug() << "waitForReadyRead error";
-    //            return -1;
-    //        }
-    //    }
-    QByteArray recv_data=m_socket->readAll();
-    if(recv_data.size()==0)
-    {
-        qDebug() << "recv_data error";
-        return -1;
-    }
-    //    qDebug() << "recv_data:" <<recv_data << endl;
-    uds_recv(recv_data.constData(),recv_data.size());
-
-    return 0;
 }
 
 void LocalClient::close()
@@ -231,7 +107,6 @@ void LocalClient::socketConnectedHandler()
     timer->stop();
     timeoutCount=0;
     emit sendConnected(1);
-    get_all();
 }
 
 void LocalClient::socketDisConnectedHandler()
@@ -265,7 +140,27 @@ void LocalClient::stateChangedHandler(QLocalSocket::LocalSocketState socketState
 
 void LocalClient::readyReadHandler()
 {
-    qDebug() << "readyReadHandler";
-    readMessage();
+//    qDebug() << "readyReadHandler";
+
+    //    if(m_socket->bytesAvailable()<=0)
+    //    {
+    //        if(m_socket->waitForReadyRead(-1)==false)
+    //        {
+    //            qDebug() << "waitForReadyRead error";
+    //            return -1;
+    //        }
+    //    }
+
+    qDebug() << "recv_data bytesAvailable" << m_socket->bytesAvailable();
+    QByteArray recv_data=m_socket->readAll();
+    int recv_data_size=recv_data.size();
+    if(recv_data_size<=0)
+    {
+        qDebug() << "recv_data error";
+        return;
+    }
+    qDebug() << "recv_data:" <<recv_data << ",recv_data size:" << recv_data_size;
+
+    emit sendData(recv_data);
 }
 

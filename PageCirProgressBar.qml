@@ -25,11 +25,8 @@ Item {
         canvas.requestPaint()
     }
     onWorkStateChanged: {
-        //        if(workState === workStateEnum.WORKSTATE_STOP||workState === workStateEnum.WORKSTATE_FINISH||workState === workStateEnum.WORKSTATE_PREHEAT)
-        //        {
-        //            percent=-1
-        //        }
-        if(workState !== workStateEnum.WORKSTATE_STOP)
+
+        if(!(workState === workStateEnum.WORKSTATE_FINISH||workState === workStateEnum.WORKSTATE_STOP||workState === workStateEnum.WORKSTATE_PREHEAT))
             updatePaint()
     }
     onPercentChanged: {
@@ -55,10 +52,9 @@ Item {
         height: width
         visible:workState !== workStateEnum.WORKSTATE_PREHEAT
         anchors.centerIn: parent
-        asynchronous:true
-        smooth:false
         source: "qrc:/x50/icon_runing_background.png"
     }
+
     property int lineWidth:30
     property real r: canvas.width/2-lineWidth/2
     Canvas{
@@ -66,18 +62,18 @@ Item {
         visible: !(workState === workStateEnum.WORKSTATE_FINISH||workState === workStateEnum.WORKSTATE_STOP||workState === workStateEnum.WORKSTATE_PREHEAT)
         width: canvasDiameter
         height: width
-        canvasSize.width:canvasDiameter
-        canvasSize.height:canvasDiameter
+//        canvasSize.width:canvasDiameter
+//        canvasSize.height:canvasDiameter
         contextType:"2d"
-        renderStrategy:Canvas.Cooperative//Threaded
-        renderTarget:Canvas.FramebufferObject
+        //renderStrategy:Canvas.Cooperative//Threaded Cooperative
+        //renderTarget:Canvas.FramebufferObject
         anchors.centerIn: parent
         onPaint: {
             if(workState === workStateEnum.WORKSTATE_FINISH||workState === workStateEnum.WORKSTATE_STOP||workState === workStateEnum.WORKSTATE_PREHEAT)
             {
                 return
             }
-            var ctx = context //getContext("2d")
+            var ctx = getContext("2d") //getContext("2d") context
             ctx.save()
             ctx.clearRect(0, 0, canvas.width, canvas.height)
             //            if(workState === workStateEnum.WORKSTATE_FINISH||workState === workStateEnum.WORKSTATE_STOP||workState === workStateEnum.WORKSTATE_PREHEAT)
@@ -181,6 +177,7 @@ Item {
             ctx=null
         }
     }
+
     Item{
         //                width:canvas.width
         //                height: canvas.height
@@ -259,8 +256,6 @@ Item {
             }
         }
         Image {
-            asynchronous:true
-            smooth:false
             visible: workState === workStateEnum.WORKSTATE_STOP
             anchors.top:parent.top
             anchors.topMargin:90

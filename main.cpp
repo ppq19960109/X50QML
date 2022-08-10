@@ -11,15 +11,27 @@
 #include <QtQuickControls2>
 //#include <QMetaObject>
 //#include "mnetwork.h"
+#include <signal.h>
+#define REBOOT_CODE (8888)
+static void signalHandler(int signal)
+{
+    qDebug() << "signalHandler signal:" << signal << endl;
+    if (signal == SIGUSR1)
+    {
+        qApp->exit(REBOOT_CODE);
+    }
+}
 
 int main(int argc, char *argv[])
 {
+    signal(SIGUSR1, signalHandler);
+
     qputenv("QT_IM_MODULE", QByteArray("qtvirtualkeyboard"));
     qputenv("QT_VIRTUALKEYBOARD_STYLE", "light");
 
     QLocale::setDefault(QLocale::English);//QLocale::English
-//    QLocale locale;
-//    qDebug()<< "locale:"<<locale.language();
+    //    QLocale locale;
+    //    qDebug()<< "locale:"<<locale.language();
     //    qDebug() << "availableStyles: " << QQuickStyle::availableStyles();
     //        QQuickStyle::setStyle("Imagine");
 
@@ -32,7 +44,7 @@ int main(int argc, char *argv[])
 
     QmlDevState* qmlDevState =new QmlDevState(&app);
 
-//    MNetwork* mNetwork =new MNetwork(&app);
+    //    MNetwork* mNetwork =new MNetwork(&app);
 
     //    QNetworkAccessManager *manager = new QNetworkAccessManager(&app);
     //    qDebug() << manager->supportedSchemes();
@@ -44,12 +56,12 @@ int main(int argc, char *argv[])
     app.setApplicationName("X50BCZ"); //3
 
     QFontDatabase::addApplicationFont("SourceHanSansCN-Regular.ttf");
-//    int fontId = QFontDatabase::addApplicationFont("SourceHanSansCN-Regular.ttf");
+    //    int fontId = QFontDatabase::addApplicationFont("SourceHanSansCN-Regular.ttf");
     //    int fontId = QFontDatabase::addApplicationFont("simfang.ttf");
-//    QStringList fontFamilies = QFontDatabase::applicationFontFamilies(fontId);
-//    qDebug()<<"fontfamilies: "<<fontFamilies;
+    //    QStringList fontFamilies = QFontDatabase::applicationFontFamilies(fontId);
+    //    qDebug()<<"fontfamilies: "<<fontFamilies;
 
-//    qDebug()<<"FontsLocation"<<QStandardPaths::standardLocations(QStandardPaths::FontsLocation);
+    //    qDebug()<<"FontsLocation"<<QStandardPaths::standardLocations(QStandardPaths::FontsLocation);
 
     QFont font;
     font.setFamily("SimHei");//设置全局字体 "Source Han Sans CN" SimHei
@@ -69,7 +81,7 @@ int main(int argc, char *argv[])
 
     engine.rootContext()->setContextProperty("QmlDevState", qmlDevState);
     engine.rootContext()->setContextProperty("Backlight", backlight);
-//    engine.rootContext()->setContextProperty("MNetwork", mNetwork);
+    //    engine.rootContext()->setContextProperty("MNetwork", mNetwork);
 
     const QUrl url(QStringLiteral("qrc:/main.qml"));
     //    QQmlComponent component(&engine, url);
@@ -84,5 +96,13 @@ int main(int argc, char *argv[])
 
     engine.load(url);
 
-    return app.exec();
+    int err=app.exec();
+    if(err==REBOOT_CODE)
+    {
+        qmlDevState->selfStart();
+        qDebug()<< "applicationDirPath" << qApp->applicationDirPath();
+        //        QProcess::startDetached(qApp->applicationFilePath(), QStringList());
+        QProcess::startDetached(qApp->applicationDirPath()+"/X50Reboot.sh", QStringList());
+    }
+    return err;
 }

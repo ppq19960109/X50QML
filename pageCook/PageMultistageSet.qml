@@ -62,10 +62,7 @@ Item {
     StackView.onDeactivated:{
         connections.enabled=false
     }
-//    Component.onDestruction: {
-//        listView.model=null
-//        listModel.clear()
-//    }
+
     PageBackBar{
         id:topBar
         anchors.bottom:parent.bottom

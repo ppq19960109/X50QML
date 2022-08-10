@@ -41,10 +41,7 @@ Item {
             SendFunc.permitSteamStartStatus(1)
         }
     }
-//    Component.onDestruction: {
-//        recipeListView.model=null
-//        historyModel.clear()
-//    }
+
     ListModel {
         id:historyModel
     }
@@ -76,6 +73,7 @@ Item {
     function changeHistory(action,value)
     {
         var i
+        var modelItem
         if(action=="InsertHistory")
         {
             historyModel.append(value)
@@ -85,7 +83,7 @@ Item {
         else if(action=="DeleteHistory")
         {
             for( i = 0; i < historyModel.count; ++i) {
-                var modelItem=historyModel.get(i)
+                modelItem=historyModel.get(i)
                 if(value.id==modelItem.id)
                 {
                     historyModel.remove(i,1)
@@ -94,21 +92,20 @@ Item {
                         SendFunc.permitSteamStartStatus(0)
                     break
                 }
-                modelItem=null
             }
         }
         else if(action=="UpdateHistory")
         {
             for( i = 0; i < historyModel.count; ++i) {
-                var modelItem=historyModel.get(i)
+                modelItem=historyModel.get(i)
                 if(value.id==modelItem.id)
                 {
                     historyModel.set(i,value)
                     break
                 }
-                modelItem=null
             }
         }
+        modelItem=null
     }
 
     Connections { // 将目标对象信号与槽函数进行连接
@@ -140,9 +137,7 @@ Item {
         onRightClick:{
             if(noHistory.visible==false && edit===false)
             {
-                var modelItem=recipeListView.model.get(recipeListView.currentIndex)
-                load_page("pageCookDetails",{"root":modelItem})
-                modelItem=null
+                load_page("pageCookDetails",{"root":recipeListView.model.get(recipeListView.currentIndex)})
             }
         }
         onClose:{

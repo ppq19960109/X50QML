@@ -26,17 +26,14 @@ public:
     static int seqid;
     void startConnectTimer();
     void connectToServer();
-    int sendMessage(QByteArray& data);
-    int readMessage();
-    int uds_recv(const char *byte,const int len);
-    int uds_json_parse(const char *value,const int value_len);
-    void get_all();
+    int sendMessage(QString& data);
+
     QLocalSocket *m_socket;
     QTimer *timer;
     void close();
 
 signals:
-    void sendData(QJsonValue data);
+    void sendData(QByteArray data);
     void sendConnected(const int connected);
 private slots:
     void socketConnectedHandler();

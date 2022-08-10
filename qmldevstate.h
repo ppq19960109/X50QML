@@ -14,6 +14,13 @@
 #include <cstdlib>
 //#include <stdlib.h>
 
+#define TYPE "Type"
+#define TYPE_SET "SET"
+#define TYPE_GET "GET"
+#define TYPE_GETALL "GETALL"
+#define TYPE_EVENT "EVENT"
+
+
 class QmlDevState : public QObject
 {
     Q_OBJECT
@@ -41,7 +48,7 @@ public:
     int getLocalConnected() const;
 
     Q_INVOKABLE void setState(QString name,QVariant value);
-    QVariantMap getState() const;
+    QVariantMap getState();
     //    static QmlDevState *qmlAttachedProperties(QObject *);
     QVariantList recipe[6];
     Q_INVOKABLE QVariantList getRecipe(const int index);
@@ -62,6 +69,7 @@ public:
 
     Q_INVOKABLE QVariantList getRecipeDetails(const int recipeid);
     Q_INVOKABLE void executeShell(QString cmd);
+    void selfStart();
 private:
 
     int localConnected;
@@ -72,13 +80,15 @@ private:
 
     QMap<int,QVariantList> recipeMap;
     void readRecipeDetails();
+    void parsingData(QJsonObject& object);
+    int uds_json_parse(const char *value,const int value_len);
 signals:
     void localConnectedChanged(const int value);
     void stateChanged(QString key,QVariant value);
     void historyChanged(QString action,QVariantMap history);
-
+    void rebootChanged(const int value);
 private slots:
-    void readData(QJsonValue data);
+    void readData(QByteArray object);
 };
 //QML_DECLARE_TYPEINFO(QmlDevState, QML_HAS_ATTACHED_PROPERTIES)
 

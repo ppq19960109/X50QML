@@ -14,7 +14,7 @@ ApplicationWindow {
     id: window
     width: 800
     height: 480
-//            visible: true
+    //visible: true
     property int sysPower:-1
     property int permitStartStatus:0
     property int productionTestStatus:0
@@ -94,6 +94,7 @@ ApplicationWindow {
         //运行期间临时保存设置的亮度值，在收到开机状态是把该值重新设置回去 设置-屏幕亮度
         property int brightness: 250
         property bool wifiEnable: false
+        property bool reboot: false
 
         //判断儿童锁(true表示锁定，false表示未锁定)
         property bool childLock:false
@@ -610,14 +611,13 @@ ApplicationWindow {
         PagePopup{
             hintTopText:""
             hintCenterText:""
-            confirmText:""
             onCancel: {
                 loaderAuto.sourceComponent = undefined
             }
-            Component.onCompleted: {
+            onMcompleted: {
                 SendFunc.setBuzControl(buzControlEnum.OPEN)
             }
-            Component.onDestruction: {
+            onMdestruction: {
                 SendFunc.setBuzControl(buzControlEnum.STOP)
             }
         }
@@ -633,7 +633,7 @@ ApplicationWindow {
         if(loaderAuto.sourceComponent === component_autoPopupDoor)
         {
             if(loaderAuto.item.hintCenterText.indexOf("门开启")!=-1 && loaderAuto.item.hintCenterText.indexOf(dirText)!=-1)
-                loaderAuto.sourceComponent = undefined
+                loaderAuto.sourceComponent = null
         }
     }
     Component{
@@ -931,13 +931,13 @@ ApplicationWindow {
     function backPrePage() {
         if(stackView.depth>0)
             stackView.pop(StackView.Immediate)
-        //        console.log("stackView depth:"+stackView.depth)
+        console.log("stackView depth:"+stackView.depth)
     }
 
     function backTopPage() {
-        if(stackView.depth>0)
+//        if(stackView.depth>0)
             stackView.pop(null,StackView.Immediate)
-        //        console.log("stackView depth:"+stackView.depth)
+        console.log("stackView depth:"+stackView.depth)
     }
 
     function backPage(page) {
@@ -1048,7 +1048,7 @@ ApplicationWindow {
             break;
         }
 
-        //        console.log("stackView depth:"+stackView.depth)
+        console.log("stackView depth:"+stackView.depth)
     }
     //获取当前时间方法
     //    function getCurtime()
@@ -1111,7 +1111,7 @@ ApplicationWindow {
         var page=isExistView("pageSteamBakeRun")
         if(page!==null)
             backPage(page)
-        SendFunc.permitSteamStartStatus(0)
+//        SendFunc.permitSteamStartStatus(0)
     }
 
     function loaderErrorCodeShow(value,dir)

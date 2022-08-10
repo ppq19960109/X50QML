@@ -216,6 +216,8 @@ function setHoodSpeed(speed)
 }
 function setBuzControl(operation)
 {
+    if(systemSettings.reboot==true)
+        return
     var Data={}
     Data.BuzControl=operation
     Data.DataReportReason=0
