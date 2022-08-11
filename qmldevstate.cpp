@@ -58,9 +58,10 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
 
     stateType.append(QPair<QString,int>("PwrSWVersion",LINK_VALUE_TYPE_STRING));
     stateType.append(QPair<QString,int>("ComSWVersion",LINK_VALUE_TYPE_STRING));
+    stateType.append(QPair<QString,int>("SysPower",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("ErrorCode",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("ErrorCodeShow",LINK_VALUE_TYPE_NUM));
-    stateType.append(QPair<QString,int>("SysPower",LINK_VALUE_TYPE_NUM));
+
 
     stateType.append(QPair<QString,int>("CookRecipe",LINK_VALUE_TYPE_STRUCT));
     stateType.append(QPair<QString,int>("CookHistory",LINK_VALUE_TYPE_STRUCT));
@@ -282,7 +283,7 @@ QVariantList QmlDevState::getRecipeDetails(const int recipeid)
     return recipeMap[recipeid];
 }
 
-void QmlDevState::executeShell(QString cmd)
+void QmlDevState::executeShell(const QString cmd)
 {
     qDebug() << "executeShell:" << cmd;
     //    QProcess::execute(cmd);
@@ -337,7 +338,7 @@ int QmlDevState::sendToServer(QString data)
     return client.sendMessage(data);
 }
 
-int QmlDevState::sendJsonToServer(QString type,QJsonObject& json)
+int QmlDevState::sendJsonToServer(const QString type,QJsonObject& json)
 {
     QJsonObject root;
     root.insert("Type", type);
@@ -362,7 +363,7 @@ int QmlDevState::uds_json_parse(const char *value,const int value_len)
 //        return -1;
 //    }
     QJsonObject object = doucment.object();
-    QJsonValue Type = object.value(TYPE);
+    QJsonValue Type = object.value(JSONTYPE);
 //    if (!Type.isString())
 //    {
 //        qDebug() << "Type is NULL";
@@ -375,7 +376,7 @@ int QmlDevState::uds_json_parse(const char *value,const int value_len)
 //        qDebug() << "Data is NULL";
 //        return -1;
 //    }
-    QJsonObject Data =object.value(DATA).toObject();
+    QJsonObject Data =object.value(JSONDATA).toObject();
     if (TYPE_EVENT== Type.toString())
     {
         parsingData(Data);
@@ -615,7 +616,7 @@ int QmlDevState::getLocalConnected() const
     return localConnected;
 }
 
-void QmlDevState::setState(QString name,QVariant value)
+void QmlDevState::setState(const QString& name,const QVariant& value)
 {
     //    if(stateMap.contains(name))
     //    {

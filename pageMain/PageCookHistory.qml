@@ -177,7 +177,7 @@ Item {
             cacheBuffer:2
             clip: true
             currentIndex:0
-            highlightMoveDuration:100
+            highlightMoveDuration:0
             highlightMoveVelocity:-1
             onCurrentIndexChanged:{
                 if(permitStartStatus==0)

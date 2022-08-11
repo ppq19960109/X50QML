@@ -36,7 +36,6 @@ Item {
             anchors.right:parent.right
             Image {
                 id:closeImg
-                smooth:false
                 anchors.centerIn: parent
                 source: themesImagesPath+"icon-window-close.png"
             }

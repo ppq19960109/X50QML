@@ -14,8 +14,6 @@
 #define FRAME_HEADER (0xAA)
 #define FRAME_TAIL (0xBB)
 
-#define DATA "Data"
-
 class LocalClient : public QObject
 {
     Q_OBJECT
@@ -26,7 +24,7 @@ public:
     static int seqid;
     void startConnectTimer();
     void connectToServer();
-    int sendMessage(QString& data);
+    int sendMessage(const QString& data);
 
     QLocalSocket *m_socket;
     QTimer *timer;

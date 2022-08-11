@@ -19,7 +19,6 @@ Item {
         opacity: 0.3
     }
     Image{
-        smooth:false
         anchors.right: parent.right
         anchors.rightMargin: 60
         anchors.bottom: lockBtn.top
@@ -37,7 +36,6 @@ Item {
         background:Item {}
         Image{
             anchors.centerIn: parent
-            smooth:false
             source:themesImagesPath+"icon_childlockscreen_close.png"
         }
         //        onPressedChanged: {

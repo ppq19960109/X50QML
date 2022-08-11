@@ -23,8 +23,8 @@ Item {
     Component.onCompleted: {
         if(sysPower > 0)
             sleepWakeup()
-        else
-            SendFunc.setSysPower(1)
+//        else
+//            SendFunc.setSysPower(1)
         mcompleted()
     }
     Component.onDestruction: {
@@ -48,7 +48,6 @@ Item {
             anchors.right:parent.right
             Image {
                 id:closeImg
-                smooth:false
                 anchors.centerIn: parent
                 source: themesImagesPath+"icon-window-close.png"
             }

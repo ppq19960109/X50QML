@@ -14,12 +14,12 @@
 #include <cstdlib>
 //#include <stdlib.h>
 
-#define TYPE "Type"
+#define JSONTYPE "Type"
 #define TYPE_SET "SET"
 #define TYPE_GET "GET"
 #define TYPE_GETALL "GETALL"
 #define TYPE_EVENT "EVENT"
-
+#define JSONDATA "Data"
 
 class QmlDevState : public QObject
 {
@@ -47,7 +47,7 @@ public:
     void setLocalConnected(const int connected);
     int getLocalConnected() const;
 
-    Q_INVOKABLE void setState(QString name,QVariant value);
+    void setState(const QString& name,const QVariant& value);
     QVariantMap getState();
     //    static QmlDevState *qmlAttachedProperties(QObject *);
     QVariantList recipe[6];
@@ -65,17 +65,16 @@ public:
 
     LocalClient client;
     Q_INVOKABLE int sendToServer(QString data);
-    int sendJsonToServer(QString type,QJsonObject& json);
+    int sendJsonToServer(const QString type,QJsonObject& json);
 
     Q_INVOKABLE QVariantList getRecipeDetails(const int recipeid);
-    Q_INVOKABLE void executeShell(QString cmd);
+    Q_INVOKABLE void executeShell(const QString cmd);
     void selfStart();
 private:
 
     int localConnected;
     QVariantMap stateMap;
 
-    //    QVariantMap stateTypeMap;
     QVector<QPair<QString,int>> stateType;
 
     QMap<int,QVariantList> recipeMap;

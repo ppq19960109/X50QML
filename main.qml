@@ -48,7 +48,7 @@ ApplicationWindow {
     property bool sleepState: false
     property var wifiConnectInfo:{"encryp":1,"psk":"12345678","ssid":"moduletest"}//{"ssid":"","psk":"","encryp":0}
     readonly property var multiModeEnum:{"NONE":0,"RECIPE":1,"MULTISTAGE":2}
-    readonly property var buzControlEnum:{"STOP":0,"SHORT":1,"SHORTTWO":2,"2SCECONDS":3,"OPEN":4}
+    readonly property var buzControlEnum:{"STOP":0,"SHORT":1,"SHORTTWO":2,"SCECONDS2":3,"OPEN":4,"SHORTFIVE":5}
 
     property string themesImagesPath:"file:themes/default/"
     readonly property string themesWindowBackgroundColor:"#1A1A1A"
@@ -935,8 +935,8 @@ ApplicationWindow {
     }
 
     function backTopPage() {
-//        if(stackView.depth>0)
-            stackView.pop(null,StackView.Immediate)
+        //        if(stackView.depth>0)
+        stackView.pop(null,StackView.Immediate)
         console.log("stackView depth:"+stackView.depth)
     }
 
@@ -1111,11 +1111,13 @@ ApplicationWindow {
         var page=isExistView("pageSteamBakeRun")
         if(page!==null)
             backPage(page)
-//        SendFunc.permitSteamStartStatus(0)
+        //        SendFunc.permitSteamStartStatus(0)
     }
 
     function loaderErrorCodeShow(value,dir)
     {
+        //console.log("loaderErrorCodeShow",value)
+        //SendFunc.setSysPower(1)
         if(value!=0)
             sleepWakeup()
         if(productionTestStatus==0xff)
@@ -1148,11 +1150,14 @@ ApplicationWindow {
             standbyWakeup()
             break
         case 8:
-            loaderErrorShow("燃气泄漏","燃气有泄露风险\n请立即关闭灶具旋钮\n关闭总阀并开窗通气",false)
+            SendFunc.setSysPower(1)
+            if(sysPower>0 && systemSettings.reboot==false)
+                loaderErrorShow("燃气泄漏","燃气有泄露风险\n请立即关闭灶具旋钮\n关闭总阀并开窗通气",false)
             break
         case 9:
             if(dir==null && productionTestStatus!=1)
             {
+                SendFunc.setSysPower(1)
                 loaderErrorShow("电源板串口故障！","请拨打售后电话<font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员",false);
                 standbyWakeup()
             }

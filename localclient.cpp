@@ -15,9 +15,9 @@ LocalClient::LocalClient(QObject *parent) : QObject(parent)
     timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, &LocalClient::connectToServer);
     qDebug() << "UNIX_DOMAIN:" << UNIX_DOMAIN;
-//    qDebug() << "readBufferSize:" << m_socket->readBufferSize();
-//    m_socket->setReadBufferSize(10240*5);
-//    qDebug() << "readBufferSize:" << m_socket->readBufferSize();
+    qDebug() << "readBufferSize:" << m_socket->readBufferSize();
+    m_socket->setReadBufferSize(10240*5);
+    qDebug() << "readBufferSize:" << m_socket->readBufferSize();
 }
 
 LocalClient::~LocalClient()
@@ -66,7 +66,7 @@ unsigned char CheckSum(unsigned char *buf, int len) //和校验算法
     return ret;
 }
 
-int LocalClient::sendMessage(QString& data)
+int LocalClient::sendMessage(const QString& data)
 {
     if(QLocalSocket::ConnectedState!=m_socket->state())
     {

@@ -44,8 +44,6 @@ Item {
         anchors.top: parent.top
 
         background:Image {
-            asynchronous:true
-            smooth:false
             source: themesImagesPath+"homebar-background.png"
         }
 
@@ -61,8 +59,6 @@ Item {
             }
             Image{
                 id:wifi_icon
-                asynchronous:true
-                smooth:false
                 anchors.centerIn: parent
                 source: themesImagesPath+(wifiConnected==true ? "icon_wifi_connected.png":"icon_wifi_disconnect.png")
             }
@@ -82,8 +78,6 @@ Item {
         //            Image{
         //                id:wind_icon
         //                visible: source!=""
-        //                asynchronous:true
-        //                smooth:false
         //                anchors.centerIn: parent
         //                source: {
         //                    var speed=QmlDevState.state.HoodSpeed
@@ -118,8 +112,6 @@ Item {
             background: Item {}
             Image{
                 id:closeHeatImg
-                asynchronous:true
-                smooth:false
                 anchors.right: time.left
                 anchors.rightMargin: 10
                 anchors.verticalCenter: parent.verticalCenter
@@ -176,8 +168,6 @@ Item {
             }
             Image{
                 visible: !systemSettings.childLock
-                asynchronous:true
-                smooth:false
                 anchors.centerIn: parent
                 source: themesImagesPath+ "icon_childlock_open.png"
             }

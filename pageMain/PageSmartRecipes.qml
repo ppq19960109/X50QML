@@ -84,7 +84,7 @@ Item {
                 cacheBuffer:2
                 orientation:ListView.Vertical
                 currentIndex:0
-                highlightMoveDuration:100
+                highlightMoveDuration:0
                 highlightMoveVelocity:-1
                 boundsBehavior:Flickable.StopAtBounds
                 snapMode: ListView.SnapToItem
@@ -143,7 +143,7 @@ Item {
                 //snapMode: ListView.SnapToItem //SnapToItem SnapOneItem
                 clip: true
                 currentIndex:0
-                highlightMoveDuration:100
+                highlightMoveDuration:0
                 highlightMoveVelocity:-1
                 delegate: Item{
                     readonly property int cookType:CookFunc.getCookType(modelData.cookSteps)

@@ -137,7 +137,7 @@ Item{
             }
         }
         Component.onCompleted:{
-            contentItem.highlightMoveDuration = 100       //将移动时间设为0
+            contentItem.highlightMoveDuration = 0       //将移动时间设为0
             contentItem.highlightMoveVelocity = -1
         }
 

@@ -7,7 +7,7 @@ import "qrc:/SendFunc.js" as SendFunc
 Item {
     property int lastLStOvState:-1
     property int lastRStOvState:-1
-    property int lastErrorCodeShow:0
+    property int lastErrorCodeShow:-1
     property int lastHoodSpeed:0
     property int lastHoodLight:0
 
@@ -216,7 +216,7 @@ Item {
         onStateChanged: { // 处理目标对象信号的槽函数
 
             var ret
-            //            console.log("page home onStateChanged",key,value)
+            //console.log("page home onStateChanged",key,value)
             if("SysPower"==key)
             {
                 if(systemSettings.reboot==false)
@@ -229,13 +229,12 @@ Item {
                     {
                         var errorCode=QmlDevState.state.ErrorCodeShow
                         if(errorCode!==0)
+                        {
                             loaderErrorCodeShow(errorCode)
+                        }
                     }
                 }
-                else
-                {
-                    systemSettings.reboot=false
-                }
+
                 systemPower(value)
             }
             else if("ComSWVersion"==key)
@@ -270,8 +269,6 @@ Item {
                         }
                     }
                 }
-                if(value==workStateEnum.WORKSTATE_RUN)
-                    sleepWakeup()
 
                 if(lastLStOvState!=value && lastLStOvState>=0)
                 {
@@ -285,6 +282,18 @@ Item {
                         if(QmlDevState.state.LStOvDoorState==0 || value==workStateEnum.WORKSTATE_STOP)
                             loaderDoorAutoPopupHide("左腔")
                     }
+                    if(lastLStOvState==workStateEnum.WORKSTATE_STOP)
+                    {
+                        if(value==workStateEnum.WORKSTATE_PREHEAT || value==workStateEnum.WORKSTATE_RUN)
+                        {
+                            SendFunc.setBuzControl(buzControlEnum.SHORT)
+                            sleepWakeup()
+                        }
+                    }
+                    if(lastLStOvState==workStateEnum.WORKSTATE_PREHEAT && value==workStateEnum.WORKSTATE_RUN)
+                        SendFunc.setBuzControl(buzControlEnum.SHORT)
+                    if(value==workStateEnum.WORKSTATE_FINISH)
+                        SendFunc.setBuzControl(buzControlEnum.SHORTFIVE)
                     if(value==workStateEnum.WORKSTATE_STOP)
                         loaderRemindHide()
                 }
@@ -310,8 +319,6 @@ Item {
                         }
                     }
                 }
-                if(value==workStateEnum.WORKSTATE_RUN)
-                    sleepWakeup()
 
                 if(lastRStOvState!=value && lastRStOvState>=0)
                 {
@@ -325,6 +332,18 @@ Item {
                         if(QmlDevState.state.RStOvDoorState==0 || value==workStateEnum.WORKSTATE_STOP)
                             loaderDoorAutoPopupHide("右腔")
                     }
+                    if(lastRStOvState==workStateEnum.WORKSTATE_STOP)
+                    {
+                        if(value==workStateEnum.WORKSTATE_PREHEAT || value==workStateEnum.WORKSTATE_RUN)
+                        {
+                            SendFunc.setBuzControl(buzControlEnum.SHORT)
+                            sleepWakeup()
+                        }
+                    }
+                    if(lastRStOvState==workStateEnum.WORKSTATE_PREHEAT && value==workStateEnum.WORKSTATE_RUN)
+                        SendFunc.setBuzControl(buzControlEnum.SHORT)
+                    if(value==workStateEnum.WORKSTATE_FINISH)
+                        SendFunc.setBuzControl(buzControlEnum.SHORTFIVE)
                 }
                 lastRStOvState=value
             }
@@ -371,12 +390,15 @@ Item {
                 {
                     if(value>0)
                     {
-                        SendFunc.setSysPower(1)
                         loaderErrorCodeShow(value)
                     }
                     else
                     {
                         loaderErrorHide()
+                    }
+                    if(systemSettings.reboot==true)
+                    {
+                        systemSettings.reboot=false
                     }
                 }
                 lastErrorCodeShow=value
@@ -748,7 +770,7 @@ Item {
                 //                contentItem.highlightRangeMode=istView.StrictlyEnforceRange
                 //                contentItem.highlightResizeDuration= 0
                 //                contentItem.highlightResizeVelocity=-1
-                contentItem.highlightMoveDuration = 100       //将移动时间设为0
+                contentItem.highlightMoveDuration = 0       //将移动时间设为0
                 contentItem.highlightMoveVelocity = -1
                 //                contentItem.snapMode=ListView.SnapOneItem
                 contentItem.boundsBehavior=Flickable.StopAtBounds

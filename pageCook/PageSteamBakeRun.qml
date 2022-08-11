@@ -234,7 +234,7 @@ Rectangle {
             anchors.top: leftProgressBar.bottom
             anchors.topMargin: 5
             anchors.horizontalCenter: leftProgressBar.horizontalCenter
-            interactive: true
+            interactive: false
             delegate: Item {
                 implicitWidth: indicator.implicitWidth
                 implicitHeight: 6
