@@ -36,7 +36,7 @@ Item {
     function loaderCancelSteamShow(cookWorkPos,status){
         loaderManual.sourceComponent = component_cancelSteam
 
-        loaderManual.item.hintCenterText="是否取消"+(cookWorkPos==0?"左腔":"右腔")+((status===workStateEnum.WORKSTATE_RESERVE||status===workStateEnum.WORKSTATE_PAUSE_RESERVE)?"预约？":"烹饪？")
+        loaderManual.item.hintCenterText="是否取消"+(cookWorkPos===0?"左腔":"右腔")+((status===workStateEnum.WORKSTATE_RESERVE||status===workStateEnum.WORKSTATE_PAUSE_RESERVE)?"预约？":"烹饪？")
         loaderManual.item.cookWorkPos=cookWorkPos
     }
     function loaderCancelSteamHide()
@@ -396,6 +396,22 @@ Item {
                         onClicked: {
                             SendFunc.setCookOperation(index,workOperationEnum.CONFIRM)
                         }
+                    }
+                }
+                PageIndicator {
+                    id:indicator
+                    visible: index==0 && QmlDevState.state.MultiMode > 0
+                    count: QmlDevState.state.cnt
+                    currentIndex: QmlDevState.state.current-1
+                    anchors.bottom: parent.bottom
+                    anchors.bottomMargin: 35
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    interactive: false
+                    delegate: Rectangle {
+                        implicitWidth: 24
+                        implicitHeight: 4
+                        radius: implicitHeight/2
+                        color:index===indicator.currentIndex?themesTextColor:"#4f4f4f"
                     }
                 }
                 PageCirBar{

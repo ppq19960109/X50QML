@@ -10,6 +10,7 @@ Item {
     property alias confirmText: confirmBtnText.text
     property alias hintWidth: hint.width
     property alias hintHeight: hint.height
+    property int confirmBtnWidth:0
 
     signal cancel(int index)
     signal confirm()
@@ -98,7 +99,7 @@ Item {
             }
         }
         Button {
-            width:140+10
+            width:140+10+confirmBtnWidth
             height:50+10
             anchors.bottom:parent.bottom
             anchors.bottomMargin: 20
@@ -112,7 +113,7 @@ Item {
                 text:""
             }
             background: Rectangle {
-                width:140
+                width:140+confirmBtnWidth
                 height:50
                 anchors.centerIn: parent
                 color:themesTextColor2

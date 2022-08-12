@@ -160,10 +160,15 @@ Item {
 
     Connections { // 将目标对象信号与槽函数进行连接
         target: QmlDevState
+        onRebootChanged:{
+            console.log("onRebootChanged...")
+            systemSettings.reboot=true
+        }
         onLocalConnectedChanged:{
             console.log("page home onLocalConnectedChanged",value)
             if(value > 0)
             {
+                SendFunc.getAllToServer()
                 loaderErrorHide()
 
                 if(systemSettings.firstStartup===true)
@@ -175,8 +180,6 @@ Item {
                 SendFunc.setBuzControl(buzControlEnum.STOP)
                 SendFunc.setBuzControl(buzControlEnum.SHORT)
 
-                //                else if(systemSettings.wifiEnable==false)
-                //                    SendFunc.enableWifi(false)
                 //                push_page("pageTestFront")
             }
             else
@@ -189,16 +192,20 @@ Item {
             console.log("page home onStateChanged",key,value)
             if("SysPower"==key)
             {
-                if(sysPower<0 && value==0)
+                if(systemSettings.reboot==false)
                 {
-                    SendFunc.setSysPower(1)
+                    if(sysPower<0 && value==0)
+                    {
+                        SendFunc.setSysPower(1)
+                    }
+                    else if(value==1)
+                    {
+                        var errorCode=QmlDevState.state.ErrorCodeShow
+                        if(errorCode!==0)
+                            loaderErrorCodeShow(errorCode)
+                    }
                 }
-                else if(value==1)
-                {
-                    var errorCode=QmlDevState.state.ErrorCodeShow
-                    if(errorCode!==0)
-                        loaderErrorCodeShow(errorCode)
-                }
+
                 systemPower(value)
             }
             else if("ComSWVersion"==key)
@@ -338,17 +345,19 @@ Item {
             }
             else if("ErrorCodeShow"==key)
             {
-                console.log("ErrorCodeShow:",value)
                 if(lastErrorCodeShow!=value)
                 {
                     if(value>0)
                     {
-                        SendFunc.setSysPower(1)
                         loaderErrorCodeShow(value)
                     }
                     else
                     {
                         loaderErrorHide()
+                    }
+                    if(systemSettings.reboot==true)
+                    {
+                        systemSettings.reboot=false
                     }
                 }
                 lastErrorCodeShow=value
@@ -570,7 +579,6 @@ Item {
             }
             else
                 wifiModel.append(result)
-            //            console.log("result:",QmlDevState.state.bssid,element.bssid,element.rssi,result.connected,result.ssid,result.level,result.flags)
         }
 
     }
@@ -612,7 +620,6 @@ Item {
     }
     function getQuadScanWifi()
     {
-        console.log("getQuadScanWifi",productionTestFlag)
         SendFunc.scanWifi()
         timer_scanwifi.restart()
     }
@@ -621,7 +628,7 @@ Item {
     {
         var i
         for( i = 0; i < wifiModel.count; ++i) {
-            if(wifiModel.get(i).ssid==productionTestWIFISSID)//productionTestWIFISSID
+            if(wifiModel.get(i).ssid===productionTestWIFISSID)//productionTestWIFISSID
             {
                 wifiModel.setProperty(0,"connected",0)
                 wifiModel.setProperty(i,"connected",2)
@@ -630,7 +637,7 @@ Item {
             }
         }
 
-        if(i == wifiModel.count)
+        if(i === wifiModel.count)
         {
             if(productionTestFlag<5)
             {

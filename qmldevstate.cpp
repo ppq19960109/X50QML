@@ -8,10 +8,6 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     //    QProcess::execute("cd /oem && ./logoapp");
     readRecipeDetails();
 
-    stateType.append(QPair<QString,int>("Reset",LINK_VALUE_TYPE_NUM));
-    stateType.append(QPair<QString,int>("DemoStart",LINK_VALUE_TYPE_NULL));
-    stateType.append(QPair<QString,int>("ProductionTest",LINK_VALUE_TYPE_NULL));
-
     stateType.append(QPair<QString,int>("WifiCurConnected",LINK_VALUE_TYPE_STRUCT));
     stateType.append(QPair<QString,int>("WifiState",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("WifiEnable",LINK_VALUE_TYPE_NUM));
@@ -46,10 +42,10 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     stateType.append(QPair<QString,int>("RStOvDoorState",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("RStOvMode",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("RStOvState",LINK_VALUE_TYPE_NUM));
+    stateType.append(QPair<QString,int>("RStOvSetTemp",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("RStOvRealTemp",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("RStOvOrderTimer",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("RStOvSetTimer",LINK_VALUE_TYPE_NUM));
-    stateType.append(QPair<QString,int>("RStOvSetTemp",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("RStOvSetTimerLeft",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("RStOvOrderTimerLeft",LINK_VALUE_TYPE_NUM));
 
@@ -83,12 +79,23 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     stateType.append(QPair<QString,int>("BindTokenState",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("QuadInfo",LINK_VALUE_TYPE_STRING));
 
+    stateType.append(QPair<QString,int>("Reset",LINK_VALUE_TYPE_NUM));
+    stateType.append(QPair<QString,int>("DemoStart",LINK_VALUE_TYPE_NULL));
+    stateType.append(QPair<QString,int>("ProductionTest",LINK_VALUE_TYPE_NULL));
+
     stateType.append(QPair<QString,int>("PCBInput",LINK_VALUE_TYPE_ARRAY));
 
-    stateType.append(QPair<QString,int>("SmartSmoke",LINK_VALUE_TYPE_NUM));
+    stateType.append(QPair<QString,int>("SmartSmokeSwitch",LINK_VALUE_TYPE_NUM));
+    stateType.append(QPair<QString,int>("RAuxiliarySwitch",LINK_VALUE_TYPE_NUM));
+    stateType.append(QPair<QString,int>("RAuxiliaryTemp",LINK_VALUE_TYPE_NUM));
+    stateType.append(QPair<QString,int>("CookingCurveSwitch",LINK_VALUE_TYPE_NUM));
+    stateType.append(QPair<QString,int>("LOilTemp",LINK_VALUE_TYPE_NUM));
+    stateType.append(QPair<QString,int>("ROilTemp",LINK_VALUE_TYPE_NUM));
+    stateType.append(QPair<QString,int>("OilTempSwitch",LINK_VALUE_TYPE_NUM));
+    stateType.append(QPair<QString,int>("RMovePotLowHeatSwitch",LINK_VALUE_TYPE_NUM));
 
     localConnected=0;
-    connect(&client, SIGNAL(sendData(const QJsonValue)), this,SLOT(readData(const QJsonValue)));
+    connect(&client, SIGNAL(sendData(const QByteArray)), this,SLOT(readData(const QByteArray)));
     connect(&client, &LocalClient::sendConnected, this,&QmlDevState::setLocalConnected);
 
     setState("HoodSpeed",0);
@@ -96,11 +103,14 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     setState("RStoveStatus",0);
     setState("ProductCategory","集成灶");
     setState("ProductModel","IIZ(T/Y)—X8GCZ01");
-    setState("SmartSmoke",0);
+    setState("SmartSmokeSwitch",0);
     setState("LStOvState",0);
     setState("LStoveTimingState",0);
     setState("LStoveTimingLeft",0);
     setState("LStoveTimingSet",0);
+    //    setState("MultiMode",2);
+    //    setState("cnt",3);
+    //    setState("current",1);
 #ifndef USE_TCP
 #ifndef USE_RK3308
     setState("SysPower",1);
@@ -206,16 +216,19 @@ QVariantList QmlDevState::getRecipeDetails(const int recipeid)
     return recipeMap[recipeid];
 }
 
-void QmlDevState::executeShell(const QString &cmd)
+void QmlDevState::executeShell(const QString cmd)
 {
     qDebug() << "executeShell:" << cmd;
     //    QProcess::execute(cmd);
     //    QProcess::startDetached("cmd");
     //    process.start(cmd);
     //    qDebug() << "executeShell system:" << cmd.toUtf8().data();
-    system(cmd.toUtf8().data());
+    system(cmd.toUtf8().constData());
 }
-
+void QmlDevState::selfStart()
+{
+    emit rebootChanged(1);
+}
 void QmlDevState::readRecipeDetails()
 {
     QFile file("RecipesDetails.json");
@@ -259,17 +272,89 @@ void QmlDevState::readRecipeDetails()
     //        qDebug()<<"recipeMap:"<<recipeMap;
 }
 
-int QmlDevState::sendToServer(const QString& data)
+int QmlDevState::sendToServer(QString data)
 {
-    QByteArray msg= data.toUtf8();
-    return client.sendMessage(msg);
+    return client.sendMessage(data);
 }
 
-void QmlDevState::readData(const QJsonValue data)
+int QmlDevState::uds_json_parse(const char *value,const int value_len)
 {
-    qDebug()<< "readData" << data  << endl;
-    QJsonObject object =data.toObject();
+    QJsonParseError error;
+    //    QJsonDocument doucment = QJsonDocument::fromJson(QByteArray(value,value_len),&error);
+    QJsonDocument doucment = QJsonDocument::fromJson(QByteArray::fromRawData(value,value_len),&error);
+    if(error.error!=QJsonParseError::NoError)
+    {
+        qDebug() << "QJsonDocument fromJson:"<< error.error<< ","<<error.errorString();
+        return -1;
+    }
+    //    if (!doucment.isObject())
+    //    {
+    //        qDebug() << "JSON Parse Error:";
+    //        return -1;
+    //    }
+    QJsonObject object = doucment.object();
+    QJsonValue Type = object.value(JSONTYPE);
+    //    if (!Type.isString())
+    //    {
+    //        qDebug() << "Type is NULL";
+    //        return -1;
+    //    }
 
+    //    QJsonValue Data =object.value(DATA);
+    //    if (!Data .isObject())
+    //    {
+    //        qDebug() << "Data is NULL";
+    //        return -1;
+    //    }
+    QJsonObject Data =object.value(DATA).toObject();
+    if (TYPE_EVENT== Type.toString())
+    {
+        parsingData(Data);
+    }
+
+    return 0;
+}
+
+void QmlDevState::readData(QByteArray bytes)
+{
+    const unsigned char*data=(const unsigned char*)bytes.constData();
+    int len=bytes.size();
+
+    static unsigned short msg_len;
+    //    int encry, seqid;
+    //unsigned char verify;
+    for (int i = 0; i < len; ++i)
+    {
+        if (data[i] == FRAME_HEADER && data[i + 1] == FRAME_HEADER)
+        {
+            //            encry = data[i + 2];
+            //            seqid = (data[i + 3] << 8) + data[i + 4];
+            msg_len = (data[i + 5] << 8) + data[i + 6];
+            if (data[i + 6 + msg_len + 2] != FRAME_TAIL || data[i + 6 + msg_len + 3] != FRAME_TAIL)
+            {
+                continue;
+            }
+            //verify = data[i + 6 + msg_len +1];
+            //            printf("uds_recv encry:%d seqid:%d msg_len:%d", encry, seqid, msg_len);
+
+            //            if (CheckSum((unsigned char *)&data[i + 2], msg_len + 5) != verify)
+            //            {
+            //                qDebug() << "CheckSum error...";
+            //                continue;
+            //            }
+            if (msg_len > 0)
+            {
+                if (uds_json_parse((const char *)&data[i + 6 +1], msg_len) == 0)
+                {
+                    i += 6 + msg_len + 3;
+                }
+            }
+        }
+    }
+}
+
+void QmlDevState::parsingData(const QJsonObject& object)
+{
     QString key;
     enum LINK_VALUE_TYPE value_type;
     QVector<QPair<QString,int>>::iterator it;

@@ -128,7 +128,7 @@ Item {
                         loaderErrorConfirmShow("四元组不存在")
                         return
                     }
-                    if(systemSettings.wifiEnable && wifiConnected==true)
+                    if(wifiConnected==true)
                     {
                         loaderLoadingShow("二维码刷新中...",true)
                         wifiConnected=false

@@ -110,7 +110,7 @@ ApplicationWindow {
         //运行期间临时保存设置的亮度值，在收到开机状态是把该值重新设置回去 设置-屏幕亮度
         property int brightness: 250
         property bool wifiEnable: false
-
+        property bool reboot: false
         property var cookDialog:[true,true,true,true,true,true,true]
         property bool multistageRemind:true
         property var wifiPasswdArray:[]
@@ -369,7 +369,7 @@ ApplicationWindow {
         interval: 1000
         triggeredOnStart: false
         onTriggered: {
-//            console.log("timer_alarm onTriggered...")
+            //            console.log("timer_alarm onTriggered...")
             if(gTimerLeft>0)
                 --gTimerLeft
             if(gTimerLeft==0)
@@ -465,16 +465,20 @@ ApplicationWindow {
             }
         }
     }
-    function loaderQrcodeShow(title){
+    function loaderQrcodeShow(title,hint){
         if(QmlDevState.state.DeviceSecret==="")
         {
             loaderErrorConfirmShow("四元组不存在")
             return
         }
-        if(systemSettings.wifiEnable && wifiConnected==true)
+        if(wifiConnected==true)
         {
             loaderManual.sourceComponent = component_qrcode
             loaderManual.item.hintTopText=title
+            if(hint==null)
+                loaderManual.item.hintCenterText="下载火粉APP   绑定设备\n海量智慧菜谱  一键烹饪"
+            else
+                loaderManual.item.hintCenterText=hint
         }
         else
         {
@@ -625,9 +629,10 @@ ApplicationWindow {
     Component{
         id:component_hoodoff
         PageDialogConfirm{
-            hintCenterText:"灶具已关闭，烟机\n将延时<br/><b><font color='#E68855'>"+QmlDevState.state.HoodOffLeftTime+"分钟</font></b>后关闭，清除余烟"
+            hintCenterText:"灶具已关闭，烟机将延时<br/><b><font color='#E68855'>"+QmlDevState.state.HoodOffLeftTime+"分钟</font></b>后关闭，清除余烟"
             cancelText:"好的"
             confirmText:"立即关闭("+QmlDevState.state.HoodOffLeftTime+"分钟)"
+            confirmBtnWidth:130
             onCancel: {
                 loaderAutoHide()
             }
@@ -652,7 +657,6 @@ ApplicationWindow {
     Loader{
         //加载弹窗组件
         id:loader_error
-        //                asynchronous: true
         anchors.fill: parent
         sourceComponent:null
     }
@@ -816,7 +820,6 @@ ApplicationWindow {
         id: pageMultistage
         PageMultistage {}
     }
-
     Component {
         id: pageSmartRecipes
         PageSmartRecipes {}
@@ -841,10 +844,6 @@ ApplicationWindow {
     Component {
         id: pageReserve
         PageReserve {}
-    }
-    Component {
-        id: pageReleaseNotes
-        PageReleaseNotes {}
     }
     Component {
         id: pageTestFront
@@ -907,7 +906,6 @@ ApplicationWindow {
         PageDemoMode {}
     }
     function isExistView(pageName) {
-        console.log("isExistView:",pageName)
         return stackView.find(function(item,index){
             return item.name === pageName
         })
@@ -920,8 +918,7 @@ ApplicationWindow {
     }
 
     function backTopPage() {
-        if(stackView.depth>0)
-            stackView.pop(null,StackView.Immediate)
+        stackView.pop(null,StackView.Immediate)
         console.log("backTopPage stackView depth:"+stackView.depth)
     }
 
@@ -959,26 +956,26 @@ ApplicationWindow {
             if(cookSteps.length===1 && (undefined === cookSteps[0].number || 0 === cookSteps[0].number))
             {
                 SendFunc.setCooking(cookSteps,root.orderTime,root.cookPos)
-                //                if(cookWorkPosEnum.LEFT===root.cookPos)
-                //                {
-                //                    QmlDevState.setState("LStOvState",5)
-                //                    QmlDevState.setState("LStOvMode",cookSteps[0].mode)
-                //                    QmlDevState.setState("LStOvSetTemp",cookSteps[0].temp)
-                //                    QmlDevState.setState("LStOvRealTemp",cookSteps[0].temp)
-                //                    QmlDevState.setState("LStOvSetTimer",cookSteps[0].time)
-                //                    QmlDevState.setState("LStOvSetTimerLeft",cookSteps[0].time/4)
-                //                    QmlDevState.setState("LStOvOrderTimer",cookSteps[0].time)
-                //                    QmlDevState.setState("LStOvOrderTimerLeft",cookSteps[0].time)
-                //                }
-                //                else
-                //                {
-                //                    QmlDevState.setState("RStOvState",1)
-                //                    QmlDevState.setState("RStOvRealTemp",cookSteps[0].temp)
-                //                    QmlDevState.setState("RStOvSetTimerLeft",cookSteps[0].time)
-                //                    QmlDevState.setState("RStOvSetTimer",cookSteps[0].time)
-                //                    QmlDevState.setState("RStOvOrderTimer",cookSteps[0].time)
-                //                    QmlDevState.setState("RStOvOrderTimerLeft",cookSteps[0].time/2)
-                //                }
+//                                if(cookWorkPosEnum.LEFT===root.cookPos)
+//                                {
+//                                    QmlDevState.setState("LStOvState",5)
+//                                    QmlDevState.setState("LStOvMode",cookSteps[0].mode)
+//                                    QmlDevState.setState("LStOvSetTemp",cookSteps[0].temp)
+//                                    QmlDevState.setState("LStOvRealTemp",cookSteps[0].temp)
+//                                    QmlDevState.setState("LStOvSetTimer",cookSteps[0].time)
+//                                    QmlDevState.setState("LStOvSetTimerLeft",cookSteps[0].time/4)
+//                                    QmlDevState.setState("LStOvOrderTimer",cookSteps[0].time)
+//                                    QmlDevState.setState("LStOvOrderTimerLeft",cookSteps[0].time)
+//                                }
+//                                else
+//                                {
+//                                    QmlDevState.setState("RStOvState",1)
+//                                    QmlDevState.setState("RStOvRealTemp",cookSteps[0].temp)
+//                                    QmlDevState.setState("RStOvSetTimerLeft",cookSteps[0].time)
+//                                    QmlDevState.setState("RStOvSetTimer",cookSteps[0].time)
+//                                    QmlDevState.setState("RStOvOrderTimer",cookSteps[0].time)
+//                                    QmlDevState.setState("RStOvOrderTimerLeft",cookSteps[0].time/2)
+//                                }
             }
             else
             {
@@ -1038,11 +1035,13 @@ ApplicationWindow {
             standbyWakeup()
             break
         case 8:
+            SendFunc.setSysPower(1)
             loaderErrorShow("燃气泄漏","燃气有泄露风险\n请立即关闭灶具旋钮\n关闭总阀并开窗通气",false)
             break
         case 9:
             if(dir==null && productionTestStatus!=1)
             {
+                SendFunc.setSysPower(1)
                 loaderErrorShow("电源板串口故障！","请拨打售后电话<font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员",false);
                 standbyWakeup()
             }

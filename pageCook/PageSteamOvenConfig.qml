@@ -21,7 +21,9 @@ Rectangle {
             break
         }
     }
-
+    Component.onDestruction: {
+        loaderMainHide()
+    }
     function steamStart(reserve)
     {
         var cookSteps = []

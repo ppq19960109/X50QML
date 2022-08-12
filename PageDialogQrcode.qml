@@ -2,6 +2,7 @@ import QtQuick 2.7
 import QtQuick.Controls 2.2
 Item {
     property alias hintTopText: hintTop.text
+    property alias hintCenterText: hintCenter.text
     signal cancel()
     MouseArea{
         anchors.fill: parent
@@ -45,6 +46,7 @@ Item {
         }
 
         Text{
+            id:hintCenter
             anchors.left: qrcode.right
             anchors.leftMargin: 20
             anchors.verticalCenter: qrcode.verticalCenter

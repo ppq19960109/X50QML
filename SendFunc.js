@@ -6,6 +6,7 @@ function setToServer(Data)
     root.Type="SET"
     root.Data=Data
     var json=JSON.stringify(root)
+    console.log("setToServer",json)
     QmlDevState.sendToServer(json)
     json=null
     root=null
@@ -145,6 +146,8 @@ function setHoodSpeed(speed)
 
 function setBuzControl(operation)
 {
+    if(systemSettings.reboot==true)
+        return
     var Data={}
     Data.BuzControl=operation
     Data.DataReportReason=0

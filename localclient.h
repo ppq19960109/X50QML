@@ -19,8 +19,6 @@
 #define FRAME_HEADER (0xAA)
 #define FRAME_TAIL (0xBB)
 
-#define DATA "Data"
-
 class LocalClient : public QObject
 {
     Q_OBJECT
@@ -31,11 +29,7 @@ public:
     static int seqid;
     void startConnectTimer();
     void connectToServer();
-    int sendMessage(QByteArray& data);
-    int readMessage();
-    int uds_recv(const char *byte,const int len);
-    int uds_json_parse(const char *value,const int value_len);
-    void get_all();
+    int sendMessage(const QString& data);
 #ifdef USE_TCP
     QTcpSocket *m_socket;
 #else
@@ -45,7 +39,7 @@ public:
     void close();
 
 signals:
-    void sendData(const QJsonValue& data);
+    void sendData(const QByteArray data);
     void sendConnected(const int connected);
 private slots:
     void socketConnectedHandler();

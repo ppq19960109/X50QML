@@ -8,10 +8,17 @@
 #include <QPair>
 #include <QVector>
 #include <QtQml>
-#include <QProcess>
+//#include <QProcess>
 #include "localclient.h"
 #include "qrcodeen.h"
 #include <cstdlib>
+
+#define JSONTYPE "Type"
+#define TYPE_SET "SET"
+#define TYPE_GET "GET"
+#define TYPE_GETALL "GETALL"
+#define TYPE_EVENT "EVENT"
+#define DATA "Data"
 
 class QmlDevState : public QObject
 {
@@ -34,7 +41,7 @@ public:
     void setLocalConnected(const int connected);
     int getLocalConnected() const;
 
-    Q_INVOKABLE  void setState(const QString &name,const QVariant& value);
+    Q_INVOKABLE  void setState(const QString& name,const QVariant& value);
     QVariantMap getState() const;
 
     QVariantList recipe[6];
@@ -45,10 +52,11 @@ public:
     int coverHistory(const QJsonObject& single,QVariantMap& info);
 
     LocalClient client;
-    Q_INVOKABLE int sendToServer(const QString &data);
+    Q_INVOKABLE int sendToServer(QString data);
 
     Q_INVOKABLE QVariantList getRecipeDetails(const int recipeid);
-    Q_INVOKABLE void executeShell(const QString &cmd);
+    Q_INVOKABLE void executeShell(const QString cmd);
+    void selfStart();
 private:
 
     int localConnected;
@@ -58,12 +66,14 @@ private:
 
     QMap<int,QVariantList> recipeMap;
     void readRecipeDetails();
+    void parsingData(const QJsonObject& object);
+    int uds_json_parse(const char *value,const int value_len);
 signals:
     void localConnectedChanged(const int value);
-    void stateChanged(const QString& key,const QVariant& value);
-
+    void stateChanged(const QString key,const QVariant value);
+    void rebootChanged(const int value);
 private slots:
-    void readData(const QJsonValue data);
+    void readData(const QByteArray object);
 };
 
 #endif // QMLDEVSTATE_H

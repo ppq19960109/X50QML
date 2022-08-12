@@ -4,7 +4,7 @@ import "../"
 import "qrc:/SendFunc.js" as SendFunc
 Item {
     property var hoodSpeed: QmlDevState.state.HoodSpeed
-    property var smartSmoke: QmlDevState.state.SmartSmoke
+    property var smartSmoke: QmlDevState.state.SmartSmokeSwitch
 
     PageBackBar{
         id:topBar

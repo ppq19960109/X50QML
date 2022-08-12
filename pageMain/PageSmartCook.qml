@@ -2,8 +2,10 @@ import QtQuick 2.7
 import QtQuick.Controls 2.2
 import "../"
 import "qrc:/pageCook"
+import "qrc:/SendFunc.js" as SendFunc
 Item {
     property bool completed_state: false
+    property var auxiliarySwitch: QmlDevState.state.RAuxiliarySwitch
     Component{
         id:component_tempControl
         Item {
@@ -12,7 +14,7 @@ Item {
             Component.onCompleted: {
                 var i
                 var array = []
-                for(i=100; i<= 300; ++i) {
+                for(i=80; i<= 300; ++i) {
                     array.push(i)
                 }
                 tempPathView.model=array
@@ -93,6 +95,13 @@ Item {
                     space:80
                     models: ["取消","确定"]
                     onClick: {
+                        if(clickIndex==1)
+                        {
+                            var Data={}
+                            Data.RAuxiliarySwitch = 1
+                            Data.RAuxiliaryTemp = tempPathView.model[tempPathView.currentIndex]
+                            SendFunc.setToServer(Data)
+                        }
                         loaderMainHide()
                     }
                 }
@@ -140,8 +149,8 @@ Item {
                 horizontalAlignment:Text.AlignHCenter
             }
             Text{
-                visible: auxiliary_temp_control_switch.checked==true
-                text:140+"℃"
+                visible: auxiliarySwitch > 0
+                text:QmlDevState.state.RAuxiliaryTemp+"℃"
                 color:themesTextColor
                 font.pixelSize: 30
                 anchors.horizontalCenter: parent.horizontalCenter
@@ -149,8 +158,7 @@ Item {
                 anchors.topMargin: 84
             }
             PageSwitch {
-                id:auxiliary_temp_control_switch
-                checked:false
+                checked:auxiliarySwitch
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.bottom: parent.bottom
                 anchors.bottomMargin: 30
@@ -160,6 +168,12 @@ Item {
                         return
                     if(checked==true)
                         loaderTempControl(null)
+                    else
+                    {
+                        var Data={}
+                        Data.RAuxiliarySwitch = checked
+                        SendFunc.setToServer(Data)
+                    }
                 }
             }
         }
@@ -182,7 +196,7 @@ Item {
                 horizontalAlignment:Text.AlignHCenter
             }
             PageSwitch {
-                checked: false
+                checked: QmlDevState.state.CookingCurveSwitch
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.bottom: parent.bottom
                 anchors.bottomMargin: 30
@@ -190,6 +204,15 @@ Item {
                 onCheckedChanged: {
                     if(completed_state==false)
                         return
+                    if(wifiConnected==false)
+                    {
+                        loaderWifiConfirmShow("当前无网络，连网后可生成烹饪曲线")
+                        return
+                    }
+                    var Data={}
+                    Data.CookingCurveSwitch = checked
+                    SendFunc.setToServer(Data)
+                    loaderQrcodeShow("烹饪曲线已开启","下载火粉APP\n扫码查看您的烹饪曲线")
                 }
             }
         }
@@ -214,7 +237,7 @@ Item {
             }
             Text{
                 visible: oil_temp_switch.checked==true
-                text:"当前油温参考\n左灶 "+140+"℃\n右灶 "+23+"℃"
+                text:"当前油温参考\n左灶 "+QmlDevState.state.LOilTemp+"℃\n右灶 "+QmlDevState.state.ROilTemp+"℃"
                 color:themesTextColor
                 font.pixelSize: 24
                 anchors.horizontalCenter: parent.horizontalCenter
@@ -223,7 +246,7 @@ Item {
             }
             PageSwitch {
                 id:oil_temp_switch
-                checked: false
+                checked: QmlDevState.state.OilTempSwitch
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.bottom: parent.bottom
                 anchors.bottomMargin: 30
@@ -231,6 +254,9 @@ Item {
                 onCheckedChanged: {
                     if(completed_state==false)
                         return
+                    var Data={}
+                    Data.OilTempSwitch = checked
+                    SendFunc.setToServer(Data)
                 }
             }
         }
@@ -241,7 +267,7 @@ Item {
             Image {
                 asynchronous:true
                 smooth:false
-                source: themesPicturesPath+"remove_pan_fire.png"
+                source: themesPicturesPath+"movePot_lowHeat.png"
             }
             Text{
                 text:"右灶\n移锅小火"
@@ -253,7 +279,7 @@ Item {
                 horizontalAlignment:Text.AlignHCenter
             }
             PageSwitch {
-                checked: false
+                checked: QmlDevState.state.RMovePotLowHeatSwitch
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.bottom: parent.bottom
                 anchors.bottomMargin: 30
@@ -261,6 +287,9 @@ Item {
                 onCheckedChanged: {
                     if(completed_state==false)
                         return
+                    var Data={}
+                    Data.RMovePotLowHeatSwitch = checked
+                    SendFunc.setToServer(Data)
                 }
             }
         }

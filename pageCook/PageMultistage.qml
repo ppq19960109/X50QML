@@ -8,6 +8,10 @@ Item {
     property string name: "PageMultistage"
     property int listLastIndex:0
 
+    Component.onDestruction: {
+        loaderMainHide()
+    }
+
     function steamStart(reserve)
     {
         if(listLastIndex==0)

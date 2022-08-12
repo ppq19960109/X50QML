@@ -9,11 +9,23 @@
 #include "localclient.h"
 #include "backlight.h"
 #include <QtQuickControls2>
-//#include <QMetaObject>
 #include "mnetwork.h"
+
+#include <signal.h>
+#define REBOOT_CODE (8888)
+static void signalHandler(int signal)
+{
+    qDebug() << "signalHandler signal:" << signal << endl;
+    if (signal == SIGUSR1)
+    {
+        qApp->exit(REBOOT_CODE);
+    }
+}
 
 int main(int argc, char *argv[])
 {
+    signal(SIGUSR1, signalHandler);
+
     qputenv("QT_IM_MODULE", QByteArray("qtvirtualkeyboard"));
     qputenv("QT_VIRTUALKEYBOARD_STYLE", "light");
 
@@ -33,10 +45,6 @@ int main(int argc, char *argv[])
     QmlDevState* qmlDevState =new QmlDevState(&app);
 
     MNetwork* mNetwork =new MNetwork(&app);
-
-    //    QNetworkAccessManager *manager = new QNetworkAccessManager(&app);
-    //    qDebug() << manager->supportedSchemes();
-    //    qmlRegisterType<QmlWifi>("QmlWifi", 1, 0, "QmlWifi");
 
     // app qml settings
     app.setOrganizationName("Marssenger"); //1
@@ -63,7 +71,6 @@ int main(int argc, char *argv[])
     //            qDebug() << "font name" << i << ": " << fontList.at(i);
     //        }
 
-
     QQmlApplicationEngine engine;
 
     engine.rootContext()->setContextProperty("QmlDevState", qmlDevState);
@@ -71,9 +78,6 @@ int main(int argc, char *argv[])
     engine.rootContext()->setContextProperty("MNetwork", mNetwork);
 
     const QUrl url(QStringLiteral("qrc:/main.qml"));
-    //    QQmlComponent component(&engine, url);
-    //    QObject *object = component.create();
-    //    QMetaObject::invokeMethod(object, "myQmlFunction");
 
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
                      &app, [url](QObject *obj, const QUrl &objUrl) {
@@ -83,5 +87,13 @@ int main(int argc, char *argv[])
 
     engine.load(url);
 
-    return app.exec();
+    int err=app.exec();
+    if(err==REBOOT_CODE)
+    {
+        qmlDevState->selfStart();
+        qDebug()<< "applicationDirPath" << qApp->applicationDirPath();
+        //        QProcess::startDetached(qApp->applicationFilePath(), QStringList());
+        QProcess::startDetached(qApp->applicationDirPath()+"/X50Reboot.sh", QStringList());
+    }
+    return err;
 }
