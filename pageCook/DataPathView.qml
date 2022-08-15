@@ -1,5 +1,5 @@
 import QtQuick 2.9
-import QtQuick.Controls 2.2
+import QtQuick.Controls 2.5
 
 Item {
     property alias model:pathView.model
@@ -69,7 +69,7 @@ Item {
 //        focus: true
         preferredHighlightBegin: 0.5;
         preferredHighlightEnd: 0.5;
-        highlightMoveDuration:150
+        highlightMoveDuration:200
         highlightRangeMode: PathView.StrictlyEnforceRange
         maximumFlickVelocity:3600
 //        model:textModel

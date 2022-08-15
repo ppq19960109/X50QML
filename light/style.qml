@@ -28,12 +28,12 @@
 ****************************************************************************/
 
 import QtQuick 2.7
-import QtQuick.VirtualKeyboard 2.2
-import QtQuick.VirtualKeyboard.Styles 2.2
+import QtQuick.VirtualKeyboard 2.1
+import QtQuick.VirtualKeyboard.Styles 2.1
 
 KeyboardStyle {
     id: currentStyle
-    readonly property bool compactSelectionList: [InputEngine.Pinyin, InputEngine.Cangjie, InputEngine.Zhuyin].indexOf(InputContext.inputEngine.inputMode) !== -1
+    readonly property bool compactSelectionList: [InputEngine.InputMode.Pinyin, InputEngine.InputMode.Cangjie, InputEngine.InputMode.Zhuyin].indexOf(InputContext.inputEngine.inputMode) !== -1
     readonly property string fontFamily: "Sans"
     readonly property real keyBackgroundMargin: Math.round(10 * scaleHint)
     readonly property real keyContentMargin: Math.round(45 * scaleHint)
@@ -53,7 +53,6 @@ KeyboardStyle {
 
     keyboardDesignWidth: 2560
     keyboardDesignHeight: 1150
-
     keyboardRelativeLeftMargin: 20 / keyboardDesignWidth
     keyboardRelativeRightMargin: 20 / keyboardDesignWidth
     keyboardRelativeTopMargin: 20 / keyboardDesignHeight
@@ -64,11 +63,12 @@ KeyboardStyle {
     }
 
     keyPanel: KeyPanel {
+        id: keyPanel
         Rectangle {
             id: keyBackground
             radius: 5
             color: "white"
-            anchors.fill: parent
+            anchors.fill: keyPanel
             anchors.margins: keyBackgroundMargin
             Text {
                 id: keySmallText
@@ -93,9 +93,9 @@ KeyboardStyle {
                 verticalAlignment: Text.AlignVCenter
                 anchors.fill: parent
                 anchors.leftMargin: keyContentMargin
-                anchors.topMargin: control.smallTextVisible ? keyContentMargin * 1.2 : keyContentMargin
+                anchors.topMargin: keyContentMargin
                 anchors.rightMargin: keyContentMargin
-                anchors.bottomMargin: control.smallTextVisible ? keyContentMargin * 0.8 : keyContentMargin
+                anchors.bottomMargin: keyContentMargin
                 font {
                     family: fontFamily
                     weight: Font.Normal
@@ -133,11 +133,12 @@ KeyboardStyle {
     }
 
     backspaceKeyPanel: KeyPanel {
+        id: backspaceKeyPanel
         Rectangle {
             id: backspaceKeyBackground
             radius: 5
             color: "white"
-            anchors.fill: parent
+            anchors.fill: backspaceKeyPanel
             anchors.margins: keyBackgroundMargin
             Image {
                 id: backspaceKeyIcon
@@ -177,11 +178,12 @@ KeyboardStyle {
     }
 
     languageKeyPanel: KeyPanel {
+        id: languageKeyPanel
         Rectangle {
             id: languageKeyBackground
             radius: 5
             color: "#a7adbd"
-            anchors.fill: parent
+            anchors.fill: languageKeyPanel
             anchors.margins: keyBackgroundMargin
             Image {
                 id: languageKeyIcon
@@ -221,11 +223,12 @@ KeyboardStyle {
     }
 
     enterKeyPanel: KeyPanel {
+        id: enterKeyPanel
         Rectangle {
             id: enterKeyBackground
             radius: 5
             color: "#a7adbd"
-            anchors.fill: parent
+            anchors.fill: enterKeyPanel
             anchors.margins: keyBackgroundMargin
             Image {
                 id: enterKeyIcon
@@ -317,11 +320,12 @@ KeyboardStyle {
     }
 
     hideKeyPanel: KeyPanel {
+        id: hideKeyPanel
         Rectangle {
             id: hideKeyBackground
             radius: 5
             color: "#a7adbd"
-            anchors.fill: parent
+            anchors.fill: hideKeyPanel
             anchors.margins: keyBackgroundMargin
             Image {
                 id: hideKeyIcon
@@ -361,11 +365,12 @@ KeyboardStyle {
     }
 
     shiftKeyPanel: KeyPanel {
+        id: shiftKeyPanel
         Rectangle {
             id: shiftKeyBackground
             radius: 5
             color: "#a7adbd"
-            anchors.fill: parent
+            anchors.fill: shiftKeyPanel
             anchors.margins: keyBackgroundMargin
             Image {
                 id: shiftKeyIcon
@@ -377,8 +382,8 @@ KeyboardStyle {
             }
             states: [
                 State {
-                    name: "capslock"
-                    when: InputContext.capsLock
+                    name: "capsLockActive"
+                    when: InputContext.capsLockActive
                     PropertyChanges {
                         target: shiftKeyBackground
                         color: "#5a892e"
@@ -389,8 +394,8 @@ KeyboardStyle {
                     }
                 },
                 State {
-                    name: "shift"
-                    when: InputContext.shift
+                    name: "shiftActive"
+                    when: InputContext.shiftActive
                     PropertyChanges {
                         target: shiftKeyIcon
                         source: resourcePrefix + "images/shift-80c342.svg"
@@ -427,11 +432,12 @@ KeyboardStyle {
     }
 
     spaceKeyPanel: KeyPanel {
+        id: spaceKeyPanel
         Rectangle {
             id: spaceKeyBackground
             radius: 5
             color: "white"
-            anchors.fill: parent
+            anchors.fill: spaceKeyPanel
             anchors.margins: keyBackgroundMargin
             Text {
                 id: spaceKeyText
@@ -467,11 +473,12 @@ KeyboardStyle {
     }
 
     symbolKeyPanel: KeyPanel {
+        id: symbolKeyPanel
         Rectangle {
             id: symbolKeyBackground
             radius: 5
             color: "#a7adbd"
-            anchors.fill: parent
+            anchors.fill: symbolKeyPanel
             anchors.margins: keyBackgroundMargin
             Text {
                 id: symbolKeyText
@@ -518,11 +525,12 @@ KeyboardStyle {
     }
 
     modeKeyPanel: KeyPanel {
+        id: modeKeyPanel
         Rectangle {
             id: modeKeyBackground
             radius: 5
             color: "#1e1b18"
-            anchors.fill: parent
+            anchors.fill: modeKeyPanel
             anchors.margins: keyBackgroundMargin
             Text {
                 id: modeKeyText
@@ -582,11 +590,12 @@ KeyboardStyle {
     }
 
     handwritingKeyPanel: KeyPanel {
+        id: handwritingKeyPanel
         Rectangle {
             id: hwrKeyBackground
             radius: 5
             color: "#a7adbd"
-            anchors.fill: parent
+            anchors.fill: handwritingKeyPanel
             anchors.margins: keyBackgroundMargin
             Image {
                 id: hwrKeyIcon
@@ -695,7 +704,7 @@ KeyboardStyle {
         Text {
             id: selectionListLabel
             anchors.left: parent.left
-            anchors.leftMargin: Math.round((compactSelectionList ? 60 : 150) * scaleHint)
+            anchors.leftMargin: Math.round((compactSelectionList ? 50 : 140) * scaleHint)
             anchors.verticalCenter: parent.verticalCenter
             text: decorateText(display, wordCompletionLength)
             color: "black"
@@ -748,17 +757,47 @@ KeyboardStyle {
     }
 
     traceInputKeyPanelDelegate: TraceInputKeyPanel {
+        id: traceInputKeyPanel
         traceMargins: keyBackgroundMargin
         Rectangle {
             id: traceInputKeyPanelBackground
             radius: 5
             color: "#35322f"
-            anchors.fill: parent
+            anchors.fill: traceInputKeyPanel
             anchors.margins: keyBackgroundMargin
             Text {
                 id: hwrInputModeIndicator
-                visible: control.patternRecognitionMode === InputEngine.HandwritingRecoginition
-                text: InputContext.inputEngine.inputMode === InputEngine.Latin ? "Abc" : "123"
+                visible: control.patternRecognitionMode === InputEngine.PatternRecognitionMode.Handwriting
+                text: {
+                    switch (InputContext.inputEngine.inputMode) {
+                    case InputEngine.InputMode.Numeric:
+                        if (["ar", "fa"].indexOf(InputContext.locale.substring(0, 2)) !== -1)
+                            return "\u0660\u0661\u0662"
+                        // Fallthrough
+                    case InputEngine.InputMode.Dialable:
+                        return "123"
+                    case InputEngine.InputMode.Greek:
+                        return "ΑΒΓ"
+                    case InputEngine.InputMode.Cyrillic:
+                        return "АБВ"
+                    case InputEngine.InputMode.Arabic:
+                        if (InputContext.locale.substring(0, 2) === "fa")
+                            return "\u0627\u200C\u0628\u200C\u067E"
+                        return "\u0623\u200C\u0628\u200C\u062C"
+                    case InputEngine.InputMode.Hebrew:
+                        return "\u05D0\u05D1\u05D2"
+                    case InputEngine.InputMode.ChineseHandwriting:
+                        return "中文"
+                    case InputEngine.InputMode.JapaneseHandwriting:
+                        return "日本語"
+                    case InputEngine.InputMode.KoreanHandwriting:
+                        return "한국어"
+                    case InputEngine.InputMode.Thai:
+                        return "กขค"
+                    default:
+                        return "Abc"
+                    }
+                }
                 color: "white"
                 anchors.left: parent.left
                 anchors.top: parent.top
@@ -768,9 +807,9 @@ KeyboardStyle {
                     weight: Font.Normal
                     pixelSize: 44 * scaleHint
                     capitalization: {
-                        if (InputContext.capsLock)
+                        if (InputContext.capsLockActive)
                             return Font.AllUppercase
-                        if (InputContext.shift)
+                        if (InputContext.shiftActive)
                             return Font.MixedCase
                         return Font.AllLowercase
                     }
@@ -787,22 +826,41 @@ KeyboardStyle {
                 ctx.strokeStyle = Qt.rgba(0xFF, 0xFF, 0xFF)
                 ctx.clearRect(0, 0, width, height)
                 var i
+                var margin = Math.round(30 * scaleHint)
                 if (control.horizontalRulers) {
-                    for (i = 0; i < control.horizontalRulers.length; ++i) {
+                    for (i = 0; i < control.horizontalRulers.length; i++) {
                         ctx.beginPath()
-                        ctx.moveTo(0, control.horizontalRulers[i])
-                        ctx.lineTo(width, control.horizontalRulers[i])
+                        var y = Math.round(control.horizontalRulers[i])
+                        var rightMargin = Math.round(width - margin)
+                        if (i + 1 === control.horizontalRulers.length) {
+                            ctx.moveTo(margin, y)
+                            ctx.lineTo(rightMargin, y)
+                        } else {
+                            var dashLen = Math.round(20 * scaleHint)
+                            for (var dash = margin, dashCount = 0;
+                                 dash < rightMargin; dash += dashLen, dashCount++) {
+                                if ((dashCount & 1) === 0) {
+                                    ctx.moveTo(dash, y)
+                                    ctx.lineTo(Math.min(dash + dashLen, rightMargin), y)
+                                }
+                            }
+                        }
                         ctx.stroke()
                     }
                 }
                 if (control.verticalRulers) {
-                    for (i = 0; i < control.verticalRulers.length; ++i) {
+                    for (i = 0; i < control.verticalRulers.length; i++) {
                         ctx.beginPath()
-                        ctx.moveTo(control.verticalRulers[i], 0)
-                        ctx.lineTo(control.verticalRulers[i], height)
+                        ctx.moveTo(control.verticalRulers[i], margin)
+                        ctx.lineTo(control.verticalRulers[i], Math.round(height - margin))
                         ctx.stroke()
                     }
                 }
+            }
+            Connections {
+                target: control
+                onHorizontalRulersChanged: traceInputKeyGuideLines.requestPaint()
+                onVerticalRulersChanged: traceInputKeyGuideLines.requestPaint()
             }
         }
     }
@@ -888,14 +946,14 @@ KeyboardStyle {
     languageListDelegate: SelectionListItem {
         id: languageListItem
         width: languageNameTextMetrics.width * 25
-        height: languageNameTextMetrics.height*2 + languageListLabel.anchors.topMargin + languageListLabel.anchors.bottomMargin
+        height: languageNameTextMetrics.height * 2 + languageListLabel.anchors.topMargin + languageListLabel.anchors.bottomMargin
         Text {
             id: languageListLabel
             anchors.left: parent.left
             anchors.top: parent.top
             anchors.leftMargin: languageNameTextMetrics.height / 2
             anchors.rightMargin: anchors.leftMargin
-            anchors.topMargin: languageNameTextMetrics.height / 2
+            anchors.topMargin: languageNameTextMetrics.height / 3
             anchors.bottomMargin: anchors.topMargin
             text: languageNameFormatter.elidedText
             color: "#a7adbd"

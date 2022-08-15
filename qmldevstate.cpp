@@ -48,9 +48,9 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     stateType.append(QPair<QString,int>("RStoveTimingLeft",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("RStoveTimingState",LINK_VALUE_TYPE_NUM));
 
-    stateType.append(QPair<QString,int>("HoodStoveLink",LINK_VALUE_TYPE_NUM));
-    stateType.append(QPair<QString,int>("HoodLightLink",LINK_VALUE_TYPE_NUM));
-    stateType.append(QPair<QString,int>("HoodOffTimer",LINK_VALUE_TYPE_NUM));
+//    stateType.append(QPair<QString,int>("HoodStoveLink",LINK_VALUE_TYPE_NUM));
+//    stateType.append(QPair<QString,int>("HoodLightLink",LINK_VALUE_TYPE_NUM));
+//    stateType.append(QPair<QString,int>("HoodOffTimer",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("HoodOffLeftTime",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("HoodSpeed",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("HoodLight",LINK_VALUE_TYPE_NUM));
@@ -81,7 +81,7 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     stateType.append(QPair<QString,int>("DeviceSecret",LINK_VALUE_TYPE_STRING));
     stateType.append(QPair<QString,int>("QrCode",LINK_VALUE_TYPE_STRING));
     stateType.append(QPair<QString,int>("UpdateLog",LINK_VALUE_TYPE_STRING));
-    stateType.append(QPair<QString,int>("BindTokenState",LINK_VALUE_TYPE_NUM));
+//    stateType.append(QPair<QString,int>("BindTokenState",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("QuadInfo",LINK_VALUE_TYPE_STRING));
 
     stateType.append(QPair<QString,int>("Reset",LINK_VALUE_TYPE_NUM));
@@ -334,7 +334,7 @@ void QmlDevState::readRecipeDetails()
 
 int QmlDevState::sendToServer(QString data)
 {
-//    QByteArray msg= data.toUtf8();
+    //    QByteArray msg= data.toUtf8();
     return client.sendMessage(data);
 }
 
@@ -350,32 +350,32 @@ int QmlDevState::sendJsonToServer(const QString type,QJsonObject& json)
 int QmlDevState::uds_json_parse(const char *value,const int value_len)
 {
     QJsonParseError error;
-//    QJsonDocument doucment = QJsonDocument::fromJson(QByteArray(value,value_len),&error);
+    //    QJsonDocument doucment = QJsonDocument::fromJson(QByteArray(value,value_len),&error);
     QJsonDocument doucment = QJsonDocument::fromJson(QByteArray::fromRawData(value,value_len),&error);
     if(error.error!=QJsonParseError::NoError)
     {
         qDebug() << "QJsonDocument fromJson:"<< error.error<< ","<<error.errorString();
         return -1;
     }
-//    if (!doucment.isObject())
-//    {
-//        qDebug() << "JSON Parse Error:";
-//        return -1;
-//    }
+    //    if (!doucment.isObject())
+    //    {
+    //        qDebug() << "JSON Parse Error:";
+    //        return -1;
+    //    }
     QJsonObject object = doucment.object();
     QJsonValue Type = object.value(JSONTYPE);
-//    if (!Type.isString())
-//    {
-//        qDebug() << "Type is NULL";
-//        return -1;
-//    }
+    //    if (!Type.isString())
+    //    {
+    //        qDebug() << "Type is NULL";
+    //        return -1;
+    //    }
 
-//    QJsonValue Data =object.value(DATA);
-//    if (!Data .isObject())
-//    {
-//        qDebug() << "Data is NULL";
-//        return -1;
-//    }
+    //    QJsonValue Data =object.value(DATA);
+    //    if (!Data .isObject())
+    //    {
+    //        qDebug() << "Data is NULL";
+    //        return -1;
+    //    }
     QJsonObject Data =object.value(JSONDATA).toObject();
     if (TYPE_EVENT== Type.toString())
     {
@@ -391,27 +391,27 @@ void QmlDevState::readData(QByteArray bytes)
     int len=bytes.size();
 
     static unsigned short msg_len;
-//    int encry, seqid;
+    //    int encry, seqid;
     //unsigned char verify;
     for (int i = 0; i < len; ++i)
     {
         if (data[i] == FRAME_HEADER && data[i + 1] == FRAME_HEADER)
         {
-//            encry = data[i + 2];
-//            seqid = (data[i + 3] << 8) + data[i + 4];
+            //            encry = data[i + 2];
+            //            seqid = (data[i + 3] << 8) + data[i + 4];
             msg_len = (data[i + 5] << 8) + data[i + 6];
             if (data[i + 6 + msg_len + 2] != FRAME_TAIL || data[i + 6 + msg_len + 3] != FRAME_TAIL)
             {
                 continue;
             }
             //verify = data[i + 6 + msg_len +1];
-//            printf("uds_recv encry:%d seqid:%d msg_len:%d", encry, seqid, msg_len);
+            //            printf("uds_recv encry:%d seqid:%d msg_len:%d", encry, seqid, msg_len);
 
-//            if (CheckSum((unsigned char *)&data[i + 2], msg_len + 5) != verify)
-//            {
-//                qDebug() << "CheckSum error...";
-//                continue;
-//            }
+            //            if (CheckSum((unsigned char *)&data[i + 2], msg_len + 5) != verify)
+            //            {
+            //                qDebug() << "CheckSum error...";
+            //                continue;
+            //            }
             if (msg_len > 0)
             {
                 if (uds_json_parse((const char *)&data[i + 6 +1], msg_len) == 0)
@@ -425,7 +425,7 @@ void QmlDevState::readData(QByteArray bytes)
 
 void QmlDevState::parsingData(QJsonObject& object)
 {
-//    qDebug()<< "parsingData" << object << endl;
+    //    qDebug()<< "parsingData" << object << endl;
 
     QString key;
     enum LINK_VALUE_TYPE value_type;
@@ -449,12 +449,16 @@ void QmlDevState::parsingData(QJsonObject& object)
                     setState(key,0);
                 else
 #endif    
-                    setState(key,value.toInt());
+                    if("LStOvDoorState"==key || "LStOvMode"==key ||"LStOvState"==key ||"LStOvSetTemp"==key ||"LStOvRealTemp"==key ||"LStOvSetTimer"==key ||"LStOvOrderTimer"==key ||"LStOvSetTimerLeft"==key ||"RStOvDoorState"==key ||"RStOvMode"==key ||"RStOvState"==key ||"RStOvSetTemp"==key ||"RStOvRealTemp"==key ||"RStOvOrderTimer"==key ||"RStOvSetTimer"==key ||"RStOvSetTimerLeft"==key ||"RStOvOrderTimerLeft"==key||"MultiMode"==key||"HoodSpeed"==key||"HoodLight"==key)
+                    {
+                        if(stateMap[key]==value.toInt())
+                            continue;
+                    }
+                setState(key,value.toInt());
             }
             else if(LINK_VALUE_TYPE_STRING==value_type)
             {
                 //                qDebug()<<"key:"<<key<<"value:"<<value.toString();
-
                 if("QrCode"==key)
                 {
                     QrcodeEn::encodeImage(value.toString(),6,key+".png");
@@ -624,6 +628,7 @@ void QmlDevState::setState(const QString& name,const QVariant& value)
     //    qDebug()<<"setState name:"<<name << "value:" << value;
     //    if(stateMap.contains(name))
     //        qDebug()<< "old value:" << stateMap[name];
+
     stateMap[name]=value;
     emit stateChanged(name,value);
     //    }

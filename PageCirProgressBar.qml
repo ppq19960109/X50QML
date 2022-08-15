@@ -1,5 +1,5 @@
-import QtQuick 2.7
-import QtQuick.Controls 2.2
+import QtQuick 2.12
+import QtQuick.Controls 2.5
 import "qrc:/SendFunc.js" as SendFunc
 Item {
     id:root
@@ -42,9 +42,9 @@ Item {
         loops:Animation.Infinite
         NumberAnimation { target: root; property: "reserveFlash"; from:0;to: 1; duration: 1000 ;easing.type: Easing.Linear}
         NumberAnimation { target: root; property: "reserveFlash"; from:1;to: 0; duration: 1000 ;easing.type: Easing.Linear}
-        Component.onDestruction: {
-            seqAnimation.stop()
-        }
+//        Component.onDestruction: {
+//            seqAnimation.stop()
+//        }
     }
 
     Image {
