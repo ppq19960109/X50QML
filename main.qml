@@ -20,6 +20,7 @@ ApplicationWindow {
     property int productionTestStatus:0
     property int productionTestFlag:1
     property int demoModeStatus:0
+    property bool steamingStatus:false
 
     //    readonly property string uiVersion:"1.1"
     readonly property string productionTestWIFISSID:"moduletest"
@@ -963,6 +964,7 @@ ApplicationWindow {
             stackView.push(pageMultistageSet,StackView.Immediate)
             break;
         case "pageSteamBakeRun": //蒸烤页面
+            steamingStatus=true
             stackView.push(pageSteamBakeRun,StackView.Immediate)
             break;
         case "pageSteamBakeReserve": //页面

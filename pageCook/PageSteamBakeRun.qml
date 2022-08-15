@@ -18,6 +18,7 @@ Rectangle {
     Component.onDestruction: {
         closeCancelRun()
         loaderNewCookHide()
+        steamingStatus=false
     }
     StackView.onActivating:{
         SendFunc.permitSteamStartStatus(0)
