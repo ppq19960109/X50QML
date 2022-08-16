@@ -202,7 +202,11 @@ Item {
                     {
                         var errorCode=QmlDevState.state.ErrorCodeShow
                         if(errorCode!==0)
+                        {
+                            if(errorCode===6)
+                                errorBuzzer=true
                             loaderErrorCodeShow(errorCode)
+                        }
                     }
                 }
 

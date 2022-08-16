@@ -21,6 +21,7 @@ ApplicationWindow {
     property int productionTestFlag:1
     property int demoModeStatus:0
     property bool wifiPageStatus:false
+    property bool errorBuzzer:false
     property int pageSetIndex:0
 
     readonly property string productionTestWIFISSID:"moduletest"
@@ -668,6 +669,7 @@ ApplicationWindow {
         loader_error.item.hintTopText=hintTopText
         loader_error.item.hintBottomText=hintBottomText
         loader_error.item.closeVisible=closeVisible==null?true:closeVisible
+        errorBuzzer=false
         //        loader_error.setSource("PageErrorPopup.qml",{"hintTopText": hintTopText,"hintBottomText": hintBottomText,"closeVisible": closeVisible})
     }
     function loaderErrorHide(){

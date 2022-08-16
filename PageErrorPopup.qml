@@ -8,7 +8,8 @@ Item {
     property alias hintHeight: hint.height
 
     Component.onCompleted: {
-        SendFunc.setBuzControl(buzControlEnum.OPEN)
+        if(errorBuzzer==false)
+            SendFunc.setBuzControl(buzControlEnum.OPEN)
     }
     Component.onDestruction: {
         SendFunc.setBuzControl(buzControlEnum.STOP)

@@ -60,9 +60,9 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     stateType.append(QPair<QString,int>("RStoveTimingLeft",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("RStoveTimingState",LINK_VALUE_TYPE_NUM));
 
-    stateType.append(QPair<QString,int>("HoodStoveLink",LINK_VALUE_TYPE_NUM));
-    stateType.append(QPair<QString,int>("HoodLightLink",LINK_VALUE_TYPE_NUM));
-    stateType.append(QPair<QString,int>("HoodOffTimer",LINK_VALUE_TYPE_NUM));
+    //    stateType.append(QPair<QString,int>("HoodStoveLink",LINK_VALUE_TYPE_NUM));
+    //    stateType.append(QPair<QString,int>("HoodLightLink",LINK_VALUE_TYPE_NUM));
+    //    stateType.append(QPair<QString,int>("HoodOffTimer",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("HoodOffLeftTime",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("HoodSpeed",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("HoodLight",LINK_VALUE_TYPE_NUM));
@@ -76,7 +76,7 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     stateType.append(QPair<QString,int>("DeviceSecret",LINK_VALUE_TYPE_STRING));
     stateType.append(QPair<QString,int>("QrCode",LINK_VALUE_TYPE_STRING));
     stateType.append(QPair<QString,int>("UpdateLog",LINK_VALUE_TYPE_STRING));
-    stateType.append(QPair<QString,int>("BindTokenState",LINK_VALUE_TYPE_NUM));
+    //    stateType.append(QPair<QString,int>("BindTokenState",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("QuadInfo",LINK_VALUE_TYPE_STRING));
 
     stateType.append(QPair<QString,int>("Reset",LINK_VALUE_TYPE_NUM));
@@ -377,7 +377,12 @@ void QmlDevState::parsingData(const QJsonObject& object)
                     setState(key,0);
                 else
 #endif    
-                    setState(key,value.toInt());
+                    if("LStOvDoorState"==key || "LStOvMode"==key ||"LStOvState"==key ||"LStOvSetTemp"==key ||"LStOvRealTemp"==key ||"LStOvSetTimer"==key ||"LStOvOrderTimer"==key ||"LStOvSetTimerLeft"==key ||"RStOvDoorState"==key ||"RStOvMode"==key ||"RStOvState"==key ||"RStOvSetTemp"==key ||"RStOvRealTemp"==key ||"RStOvOrderTimer"==key ||"RStOvSetTimer"==key ||"RStOvSetTimerLeft"==key ||"RStOvOrderTimerLeft"==key||"MultiMode"==key||"HoodSpeed"==key||"HoodLight"==key)
+                    {
+                        if(stateMap[key]==value.toInt())
+                            continue;
+                    }
+                setState(key,value.toInt());
             }
             else if(LINK_VALUE_TYPE_STRING==value_type)
             {
