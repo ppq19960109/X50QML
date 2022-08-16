@@ -21,6 +21,7 @@ ApplicationWindow {
     property int productionTestFlag:1
     property int demoModeStatus:0
     property bool steamingStatus:false
+    property bool errorBuzzer:false
 
     //    readonly property string uiVersion:"1.1"
     readonly property string productionTestWIFISSID:"moduletest"
@@ -692,6 +693,7 @@ ApplicationWindow {
         loader_error.item.hintTopText=hintTopText==null?"":hintTopText
         loader_error.item.hintBottomText=hintBottomText==null?"":hintBottomText
         loader_error.item.closeVisible=closeVisible==null?true:closeVisible
+        errorBuzzer=false
         //        loader_error.setSource("PageErrorPopup.qml",{"hintTopText": hintTopText,"hintBottomText": hintBottomText,"closeVisible": closeVisible})
     }
     function loaderErrorHide(){

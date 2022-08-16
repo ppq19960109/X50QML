@@ -215,7 +215,7 @@ Item {
         }
         onStateChanged: { // 处理目标对象信号的槽函数
 
-//            var ret
+            //            var ret
             //console.log("page home onStateChanged",key,value)
             if("SysPower"==key)
             {
@@ -230,6 +230,8 @@ Item {
                         var errorCode=QmlDevState.state.ErrorCodeShow
                         if(errorCode!==0)
                         {
+                            if(errorCode===6)
+                                errorBuzzer=true
                             loaderErrorCodeShow(errorCode)
                         }
                     }
@@ -251,10 +253,10 @@ Item {
             }
             else if("LStOvState"==key)
             {
-//                ret=isExistView("pageSteamBakeRun")
+                //                ret=isExistView("pageSteamBakeRun")
                 if(value > 0)
                 {
-//                    if(ret==null)
+                    //                    if(ret==null)
                     if(steamingStatus==false)
                     {
                         load_page("pageSteamBakeRun")
@@ -262,7 +264,7 @@ Item {
                 }
                 else
                 {
-//                    if(ret!=null)
+                    //                    if(ret!=null)
                     if(steamingStatus==true)
                     {
                         if(QmlDevState.state.RStOvState===workStateEnum.WORKSTATE_STOP)
@@ -303,10 +305,10 @@ Item {
             }
             else if("RStOvState"==key)
             {
-//                ret=isExistView("pageSteamBakeRun")
+                //                ret=isExistView("pageSteamBakeRun")
                 if(value > 0)
                 {
-//                    if(ret==null)
+                    //                    if(ret==null)
                     if(steamingStatus==false)
                     {
                         load_page("pageSteamBakeRun")
@@ -314,7 +316,7 @@ Item {
                 }
                 else
                 {
-//                    if(ret!=null)
+                    //                    if(ret!=null)
                     if(steamingStatus==true)
                     {
                         if(QmlDevState.state.LStOvState===workStateEnum.WORKSTATE_STOP)
@@ -603,7 +605,7 @@ Item {
                         load_page("pageDemoMode")
                 }
             }
-//            ret=null
+            //            ret=null
             key=null
             value=null
         }
