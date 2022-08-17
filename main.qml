@@ -1115,7 +1115,7 @@ ApplicationWindow {
         var page=isExistView("pageSteamBakeRun")
         if(page!==null)
             backPage(page)
-        //        SendFunc.permitSteamStartStatus(0)
+        SendFunc.permitSteamStartStatus(0)
     }
 
     function loaderErrorCodeShow(value,dir)
