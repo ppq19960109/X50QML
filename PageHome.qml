@@ -286,6 +286,7 @@ Item {
                         if(QmlDevState.state.LStOvDoorState==0 || value==workStateEnum.WORKSTATE_STOP)
                             loaderDoorAutoPopupHide("左腔")
                     }
+
                     if(lastLStOvState==workStateEnum.WORKSTATE_STOP)
                     {
                         if(value==workStateEnum.WORKSTATE_PREHEAT || value==workStateEnum.WORKSTATE_RUN)
@@ -294,10 +295,13 @@ Item {
                             sleepWakeup()
                         }
                     }
-                    if(lastLStOvState==workStateEnum.WORKSTATE_PREHEAT && value==workStateEnum.WORKSTATE_RUN)
+                    else if(lastLStOvState==workStateEnum.WORKSTATE_PREHEAT && value==workStateEnum.WORKSTATE_RUN)
                         SendFunc.setBuzControl(buzControlEnum.SHORT)
-                    if(value==workStateEnum.WORKSTATE_FINISH)
+                    else if(lastLStOvState==workStateEnum.WORKSTATE_RESERVE && (value==workStateEnum.WORKSTATE_PREHEAT||value==workStateEnum.WORKSTATE_RUN))
+                        SendFunc.setBuzControl(buzControlEnum.SHORT)
+                    else if(value==workStateEnum.WORKSTATE_FINISH)
                         SendFunc.setBuzControl(buzControlEnum.SHORTFIVE)
+
                     if(value==workStateEnum.WORKSTATE_STOP)
                         loaderRemindHide()
                 }
@@ -338,6 +342,7 @@ Item {
                         if(QmlDevState.state.RStOvDoorState==0 || value==workStateEnum.WORKSTATE_STOP)
                             loaderDoorAutoPopupHide("右腔")
                     }
+
                     if(lastRStOvState==workStateEnum.WORKSTATE_STOP)
                     {
                         if(value==workStateEnum.WORKSTATE_PREHEAT || value==workStateEnum.WORKSTATE_RUN)
@@ -346,9 +351,11 @@ Item {
                             sleepWakeup()
                         }
                     }
-                    if(lastRStOvState==workStateEnum.WORKSTATE_PREHEAT && value==workStateEnum.WORKSTATE_RUN)
+                    else if(lastRStOvState==workStateEnum.WORKSTATE_PREHEAT && value==workStateEnum.WORKSTATE_RUN)
                         SendFunc.setBuzControl(buzControlEnum.SHORT)
-                    if(value==workStateEnum.WORKSTATE_FINISH)
+                    else if(lastRStOvState==workStateEnum.WORKSTATE_RESERVE && (value==workStateEnum.WORKSTATE_PREHEAT||value==workStateEnum.WORKSTATE_RUN))
+                        SendFunc.setBuzControl(buzControlEnum.SHORT)
+                    else if(value==workStateEnum.WORKSTATE_FINISH)
                         SendFunc.setBuzControl(buzControlEnum.SHORTFIVE)
                 }
                 lastRStOvState=value
@@ -506,7 +513,10 @@ Item {
             else if("RStoveTimingState"==key)
             {
                 if(value === timingStateEnum.CONFIRM)
+                {
                     loaderAutoPopupShow("","右灶定时结束，\n请将右灶旋钮复位",292)
+                    SendFunc.setBuzControl(buzControlEnum.SHORT)
+                }
                 else if(value === timingStateEnum.STOP)
                     loaderStoveAutoPopupHide()
             }
