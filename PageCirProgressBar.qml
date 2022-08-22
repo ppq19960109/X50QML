@@ -204,7 +204,7 @@ Item {
 
             Text{
                 id:time
-                textFormat: Text.RichText
+//                textFormat: Text.RichText
                 anchors.top:parent.top
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.horizontalCenterOffset:(workState === workStateEnum.WORKSTATE_PREHEAT||workState === workStateEnum.WORKSTATE_RUN||workState === workStateEnum.WORKSTATE_PAUSE)?-20:0
@@ -216,10 +216,11 @@ Item {
             Text{
                 visible: (workState === workStateEnum.WORKSTATE_RESERVE && reserveFlash) || (workState === workStateEnum.WORKSTATE_PAUSE_RESERVE && reserveFlash==true)
                 anchors.top:parent.top
+                anchors.topMargin: -5
                 anchors.horizontalCenter: parent.horizontalCenter
                 color:workColor
                 font.pixelSize: 70
-                text: qsTr("：")
+                text: qsTr(":")//：:
             }
             Text{
                 visible: !(workState === workStateEnum.WORKSTATE_RESERVE || workState === workStateEnum.WORKSTATE_PAUSE_RESERVE || (workState === workStateEnum.WORKSTATE_PAUSE && reserveFlash==false))
