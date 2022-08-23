@@ -1,6 +1,6 @@
-import QtQuick 2.7
-import QtQuick.Controls 2.2
-import QtQuick.Layouts 1.3
+import QtQuick 2.12
+import QtQuick.Controls 2.5
+import QtQuick.Layouts 1.12
 import QtQuick.VirtualKeyboard 2.2
 //import QtQuick.VirtualKeyboard.Settings 2.2
 
@@ -522,6 +522,10 @@ Item {
                                 wifiModel.move(index,0,1)
                             }
                             wifiInputConnecting=true
+                        }
+                        else
+                        {
+                            wifiInputConnecting=false
                         }
                     }
                 }

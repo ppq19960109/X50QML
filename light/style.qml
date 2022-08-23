@@ -27,7 +27,7 @@
 **
 ****************************************************************************/
 
-import QtQuick 2.7
+import QtQuick 2.12
 import QtQuick.VirtualKeyboard 2.2
 import QtQuick.VirtualKeyboard.Styles 2.2
 

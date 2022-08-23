@@ -1,5 +1,5 @@
-import QtQuick 2.7
-import QtQuick.Controls 2.2
+import QtQuick 2.12
+import QtQuick.Controls 2.5
 
 ToolBar {
     background: null
@@ -26,7 +26,7 @@ ToolBar {
         anchors.bottom:parent.bottom
         spacing: 0
         Repeater {
-            model: [(wifiConnected==true?"icon_wifi_connected.png":"icon_wifi_disconnect.png"),"icon_set.png", "icon_alarm.png", "icon_standby.png"]
+            model: [(wifiConnected==true?"icon_wifi_connected.png":"icon_wifi_disconnect.png"),"icon_set.png", "icon_alarm.png",(stackView.depth>1?"icon_standby.png":"icon_sleep.png") ]
             ToolButton {
                 width: parent.width
                 height:86
@@ -38,10 +38,18 @@ ToolBar {
                     source: themesPicturesPath+"icon_newline.png"
                 }
                 Image{
+                    visible: index!=2 || (index==2 && gTimerLeft==0)
                     asynchronous:true
                     smooth:false
                     anchors.centerIn: parent
                     source: themesPicturesPath+modelData
+                }
+                Text{
+                    visible: index==2 && gTimerLeft>0
+                    text:gTimerLeftText
+                    color:themesTextColor
+                    font.pixelSize: 24
+                    anchors.centerIn: parent
                 }
                 onClicked: {
                     console.log("onClicked index",index)
@@ -49,7 +57,7 @@ ToolBar {
                     switch (index){
                     case 0:
                         if(isExistView("PageSet")==null)
-                            push_page(pageSet)
+                            push_page(pageSet,{pageSetIndex:4})
                         break
                     case 1:
                         if(isExistView("PageSet")==null)
@@ -59,6 +67,10 @@ ToolBar {
                         loaderManual.sourceComponent = pageTimer
                         break
                     case 3:
+                        if(stackView.depth>1)
+                            backTopPage()
+                        else
+                            screenSleep()
                         break
                     }
                 }

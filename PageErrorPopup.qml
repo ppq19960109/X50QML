@@ -1,5 +1,5 @@
-import QtQuick 2.7
-import QtQuick.Controls 2.2
+import QtQuick 2.12
+import QtQuick.Controls 2.5
 import "qrc:/SendFunc.js" as SendFunc
 Item {
     property alias closeVisible: closeBtn.visible
@@ -77,6 +77,7 @@ Item {
             anchors.bottom:parent.bottom
             anchors.bottomMargin: 15
             anchors.horizontalCenter: parent.horizontalCenter
+            visible: closeBtn.visible
             Text{
                 anchors.centerIn: parent
                 color:"#000"

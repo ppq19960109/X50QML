@@ -1,6 +1,6 @@
-import QtQuick 2.7
-import QtQuick.Controls 2.2
-import QtQuick.Layouts 1.3
+import QtQuick 2.12
+import QtQuick.Controls 2.5
+import QtQuick.Layouts 1.12
 import "qrc:/pageCook"
 import "../"
 import "qrc:/CookFunc.js" as CookFunc
@@ -152,6 +152,7 @@ Item {
                                 model:recipeDetail[2]
                                 Flickable {
                                     id: flick
+                                    flickableDirection:Flickable.VerticalFlick
                                     contentWidth: detail.width
                                     contentHeight: detail.height
                                     clip: true

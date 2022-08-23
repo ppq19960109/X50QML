@@ -1,10 +1,8 @@
-import QtQuick 2.7
-import QtQuick.Controls 2.2
+import QtQuick 2.12
+import QtQuick.Controls 2.5
 import "../"
 Item {
     property string name: "PageSteamOven"
-    property var lStOvState: QmlDevState.state.LStOvState
-    property var rStOvState: QmlDevState.state.RStOvState
     PageBackBar{
         id:topBar
         anchors.top:parent.top
@@ -85,8 +83,6 @@ Item {
                     anchors.centerIn: workStatus
                     horizontalAlignment:Text.AlignHCenter
                     verticalAlignment:Text.AlignVCenter
-                    //                    lineHeightMode:Text.FixedHeight
-                    //                    lineHeight:20
                     lineHeight:0.6
                 }
                 onClicked: {

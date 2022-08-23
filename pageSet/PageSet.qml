@@ -1,9 +1,10 @@
-import QtQuick 2.7
-import QtQuick.Controls 2.2
-import QtQuick.Layouts 1.3
+import QtQuick 2.12
+import QtQuick.Controls 2.5
+import QtQuick.Layouts 1.12
 import "../"
 Item {
     property string name: "PageSet"
+    property int pageSetIndex:0
     PageBackBar{
         id:topBar
         anchors.top:parent.top
@@ -15,7 +16,7 @@ Item {
         anchors.bottom: parent.bottom
         ListView{
             id:menuList
-            model:['网络','本机设置','恢复出厂设置','系统更新','关于本机']
+            model:['本机设置','恢复出厂设置','系统更新','关于本机','网络']
             width:206
             anchors.top:parent.top
             anchors.topMargin: 15
@@ -39,13 +40,6 @@ Item {
                     anchors.centerIn: parent
                     color:"#fff"
                 }
-                onClicked: {
-                    console.log("menuList",index)
-                    if(menuList.currentIndex!=index)
-                    {
-                        pageSetIndex=index
-                    }
-                }
             }
         }
 
@@ -54,11 +48,11 @@ Item {
             anchors.left:menuList.right
             anchors.right: parent.right
             currentIndex: menuList.currentIndex
-            PageWifi {}
             PageLocalSettings {}
             PageReset {}
             PageSystemUpdate {}
             PageAboutMachine {}
+            PageWifi {}
         }
     }
 }

@@ -1,6 +1,6 @@
-import QtQuick 2.7
-import QtQuick.Controls 2.2
-import QtQuick.Layouts 1.3
+import QtQuick 2.12
+import QtQuick.Controls 2.5
+import QtQuick.Layouts 1.12
 import Qt.labs.settings 1.0
 //import QtQuick.Window 2.2
 
@@ -22,7 +22,13 @@ ApplicationWindow {
     property int demoModeStatus:0
     property bool wifiPageStatus:false
     property bool errorBuzzer:false
-    property int pageSetIndex:0
+
+    property var smartSmokeSwitch: QmlDevState.state.SmartSmokeSwitch
+    property var hoodSpeed: QmlDevState.state.HoodSpeed
+    property var lTimingState: QmlDevState.state.LStoveTimingState
+    property var rTimingState: QmlDevState.state.RStoveTimingState
+    property var lStOvState: QmlDevState.state.LStOvState
+    property var rStOvState: QmlDevState.state.RStOvState
 
     readonly property string productionTestWIFISSID:"moduletest"
     readonly property string productionTestWIFIPWD:"58185818"
@@ -76,6 +82,7 @@ ApplicationWindow {
 
     property int gTimerTotalTime
     property int gTimerLeft
+    property string gTimerLeftText:generateTwoTime(Math.floor(gTimerLeft/3600))+":"+generateTwoTime(Math.floor(gTimerLeft%3600/60))+":"+generateTwoTime(gTimerLeft%60)
     Settings {
         id: testSettings
         category: "test"
@@ -153,6 +160,19 @@ ApplicationWindow {
         systemSettings.wifiPasswdArray=[]
         systemSync()
     }
+    function closeHeatShortTime()
+    {
+        let lStoveTimingLeft=QmlDevState.state.LStoveTimingLeft
+        let rStoveTimingLeft=QmlDevState.state.RStoveTimingLeft
+        let timingTime
+        if(lStoveTimingLeft>0 && rStoveTimingLeft>0)
+            timingTime=lStoveTimingLeft > rStoveTimingLeft ? rStoveTimingLeft : lStoveTimingLeft
+        else if(lStoveTimingLeft>0)
+            timingTime=lStoveTimingLeft
+        else if(rStoveTimingLeft>0)
+            timingTime=rStoveTimingLeft
+        return  generateTwoTime(Math.floor(timingTime/60))+":"+generateTwoTime(timingTime%60)
+    }
 
     function systemPower(power){
         console.log("systemPower",power)
@@ -206,6 +226,7 @@ ApplicationWindow {
         if(systemSettings.brightness<1 || systemSettings.brightness>255)
         {
             systemSettings.brightness=250
+//            Backlight.backlightSet(systemSettings.brightness)
         }
     }
     Connections { // 将目标对象信号与槽函数进行连接
@@ -309,7 +330,7 @@ ApplicationWindow {
                 productionTestFlag=0
                 if(sysPower > 0 && sleepState==true)
                 {
-                    timer_standby.interval=8*60000
+                    timer_standby.interval=7*60000
                     timer_standby.restart()
                 }
             }
@@ -339,6 +360,16 @@ ApplicationWindow {
         }
     }
 
+    function screenSleep()
+    {
+        sleepState=true
+        loaderScreenSaverShow()
+
+        productionTestFlag=0
+        timer_standby.interval=10*60000
+        timer_standby.restart()
+    }
+
     Timer{
         id:timer_sleep
         repeat: false
@@ -351,11 +382,7 @@ ApplicationWindow {
             {
                 if((QmlDevState.state.RStOvState === workStateEnum.WORKSTATE_STOP || QmlDevState.state.RStOvState === workStateEnum.WORKSTATE_FINISH || QmlDevState.state.RStOvState === workStateEnum.WORKSTATE_RESERVE || QmlDevState.state.RStOvState === workStateEnum.WORKSTATE_PAUSE_RESERVE) && (QmlDevState.state.LStOvState === workStateEnum.WORKSTATE_STOP || QmlDevState.state.LStOvState === workStateEnum.WORKSTATE_FINISH || QmlDevState.state.LStOvState === workStateEnum.WORKSTATE_RESERVE || QmlDevState.state.LStOvState === workStateEnum.WORKSTATE_PAUSE_RESERVE ))
                 {
-                    sleepState=true
-                    loaderScreenSaverShow()
-
-                    timer_standby.interval=10*60000
-                    timer_standby.restart()
+                    screenSleep()
                     return
                 }
             }
@@ -367,14 +394,15 @@ ApplicationWindow {
         id:timer_alarm
         repeat: gTimerLeft > 0
         running: gTimerLeft > 0
-        interval: 1000
+        interval: 2000
         triggeredOnStart: false
         onTriggered: {
             //            console.log("timer_alarm onTriggered...")
             if(gTimerLeft>0)
-                --gTimerLeft
-            if(gTimerLeft==0)
+                gTimerLeft-=2
+            if(gTimerLeft<=0)
             {
+                gTimerLeft=0
                 if(loaderManual.sourceComponent === pageTimer)
                     loaderManual.sourceComponent = null
                 loaderAutoTimerShow("时间到！计时结束")

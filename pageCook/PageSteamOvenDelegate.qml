@@ -1,5 +1,5 @@
-import QtQuick 2.7
-import QtQuick.Controls 2.2
+import QtQuick 2.12
+import QtQuick.Controls 2.5
 import "../"
 import "qrc:/CookFunc.js" as CookFunc
 Item {
@@ -19,7 +19,7 @@ Item {
     property int timeIndex:-1
     property int steamGearIndex:-1
 
-    readonly property var workModeImg: ["", "icon_1", "icon_1","icon_4", "icon_35", "icon_36", "icon_38", "icon_40", "icon_42", "icon_68", "icon_1", "icon_68"]
+    readonly property var workModeImg: ["", "icon_1", "icon_3","icon_4", "icon_35", "icon_36", "icon_38", "icon_40", "icon_42", "icon_65", "icon_66", "icon_68"]
 
     function getCurrentSteamOven()
     {

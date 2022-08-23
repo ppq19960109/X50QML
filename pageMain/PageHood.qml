@@ -1,10 +1,8 @@
-import QtQuick 2.7
-import QtQuick.Controls 2.2
+import QtQuick 2.12
+import QtQuick.Controls 2.5
 import "../"
 import "qrc:/SendFunc.js" as SendFunc
 Item {
-    property var hoodSpeed: QmlDevState.state.HoodSpeed
-    property var smartSmoke: QmlDevState.state.SmartSmokeSwitch
 
     PageBackBar{
         id:topBar
@@ -58,7 +56,7 @@ Item {
                         visible: {
                             if(index==0)
                             {
-                                return smartSmoke
+                                return smartSmokeSwitch
                             }
                             else
                             {
@@ -80,7 +78,7 @@ Item {
                 onClicked: {
                     if(index==0)
                     {
-                        if(smartSmoke===0)
+                        if(smartSmokeSwitch===0)
                             SendFunc.setSmartSmoke(1)
                         else
                             SendFunc.setSmartSmoke(0)
@@ -184,7 +182,7 @@ Item {
                         visible: {
                             if(index==0)
                             {
-                                return QmlDevState.state.LStoveTimingState!==timingStateEnum.STOP||QmlDevState.state.RStoveTimingState!==timingStateEnum.STOP
+                                return lTimingState!==timingStateEnum.STOP||rTimingState!==timingStateEnum.STOP
                             }
                             else
                             {
@@ -208,16 +206,7 @@ Item {
                     text:{
                         if(index==0)
                         {
-                            let lStoveTimingLeft=QmlDevState.state.LStoveTimingLeft
-                            let rStoveTimingLeft=QmlDevState.state.RStoveTimingLeft
-                            let timingTime
-                            if(lStoveTimingLeft>0 && rStoveTimingLeft>0)
-                                timingTime=lStoveTimingLeft > rStoveTimingLeft ? rStoveTimingLeft : lStoveTimingLeft
-                            else if(lStoveTimingLeft>0)
-                                timingTime=lStoveTimingLeft
-                            else if(rStoveTimingLeft>0)
-                                timingTime=rStoveTimingLeft
-                            return  Math.floor(timingTime/60)+":"+timingTime%60
+                            return  closeHeatShortTime()
                         }
                         else
                         {

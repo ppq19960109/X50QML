@@ -1,12 +1,10 @@
-import QtQuick 2.7
-import QtQuick.Controls 2.2
+import QtQuick 2.12
+import QtQuick.Controls 2.5
 
 import "qrc:/pageCook"
 import "../"
 import "qrc:/SendFunc.js" as SendFunc
 Item {
-    property var lTimingState: QmlDevState.state.LStoveTimingState
-    property var rTimingState: QmlDevState.state.RStoveTimingState
     property var lTimingLeft: QmlDevState.state.LStoveTimingLeft
     property var rTimingLeft: QmlDevState.state.RStoveTimingLeft
 
@@ -279,7 +277,7 @@ Item {
                 background:Image {
                     asynchronous:true
                     smooth:false
-                    source: themesPicturesPath+"icon_close_heat.png"
+                    source: themesPicturesPath+"icon_close_heat_background.png"
                 }
                 Item
                 {
@@ -335,7 +333,7 @@ Item {
                             {
                                 timingTime=rTimingLeft
                             }
-                            return  Math.floor(timingTime/60)+":"+timingTime%60
+                            return  generateTwoTime(Math.floor(timingTime/60))+":"+generateTwoTime(timingTime%60)
                         }
 
                         color:themesTextColor

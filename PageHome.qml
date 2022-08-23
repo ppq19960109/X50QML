@@ -1,12 +1,11 @@
-import QtQuick 2.7
-import QtQuick.Controls 2.2
+import QtQuick 2.12
+import QtQuick.Controls 2.5
 
 import "pageMain"
 import "WifiFunc.js" as WifiFunc
 import "qrc:/SendFunc.js" as SendFunc
 Item {
-    property var lStOvState: QmlDevState.state.LStOvState
-    property var rStOvState: QmlDevState.state.RStOvState
+
     property int lastLStOvState:-1
     property int lastRStOvState:-1
     property int lastErrorCodeShow:0
@@ -691,47 +690,231 @@ Item {
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.bottom: parent.bottom
             spacing: 50
-            Repeater {
-                model: [{"background":"home_hood_background.png","text1":"烟机灶具","text2":"HOOD"}, {"background":"home_steamoven_background.png","text1":"蒸烤箱","text2":"STEAM OVEN"},{"background":"home_smartrecipes_background.png","text1":"智慧菜谱","text2":"SMART RECIPES"}]
-                Button{
-                    width: 292
-                    height:parent.height
 
-                    background:Image {
-                        asynchronous:true
-                        smooth:false
-                        source: themesPicturesPath+modelData.background
-                    }
+            Button{
+                width: 292
+                height:parent.height
+
+                background:Image {
+                    asynchronous:true
+                    smooth:false
+                    source: themesPicturesPath+"home_hood_background.png"
+                }
+                Text{
+                    text:"烟机灶具"
+                    color:"#fff"
+                    font.pixelSize: 40
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.top: parent.top
+                    anchors.topMargin: 45
                     Text{
-                        text:modelData.text1
-                        color:"#fff"
-                        font.pixelSize: 40
+                        text:"HOOD"
+                        color:"#C3C2C2"
+                        font.pixelSize: 16
                         anchors.horizontalCenter: parent.horizontalCenter
-                        anchors.top: parent.top
-                        anchors.topMargin: 45
+                        anchors.top: parent.bottom
+                        anchors.topMargin: 10
+                        anchors.left: parent.left
+                    }
+                }
+                Column{
+                    width: 182
+                    anchors.centerIn: parent
+                    anchors.verticalCenterOffset: 40
+                    spacing: 6
+                    Item
+                    {
+                        visible: smartSmokeSwitch
+                        width: parent.width
+                        height: 50
+                        Rectangle{
+                            width: parent.width
+                            height: parent.height
+                            color: "#000"
+                            opacity: 0.5
+                            border.color: themesTextColor
+                            radius: 4
+                        }
                         Text{
-                            text:modelData.text2
-                            color:"#C3C2C2"
-                            font.pixelSize: 16
-                            anchors.horizontalCenter: parent.horizontalCenter
-                            anchors.top: parent.bottom
-                            anchors.topMargin: 10
-                            anchors.left: parent.left
+                            text:"AUTO"
+                            color:themesTextColor
+                            font.pixelSize: 26
+                            anchors.centerIn: parent
                         }
                     }
-                    onClicked: {
-                        switch (index){
-                        case 0:
-                            push_page(pageHood)
-                            break
-                        case 1:
-                            push_page(pageSteamOven)
-                            break
-                        case 2:
-                            push_page(pageSmartRecipes)
-                            break
+                    Item
+                    {
+                        visible: hoodSpeed > 0
+                        width: parent.width
+                        height: 50
+                        Rectangle{
+                            visible: true
+                            width: parent.width
+                            height: parent.height
+                            color: "#000"
+                            opacity: 0.5
+                            border.color: themesTextColor
+                            radius: 4
+                        }
+                        Image {
+                            anchors.centerIn: parent
+                            anchors.horizontalCenterOffset: -30
+                            asynchronous:true
+                            smooth:false
+                            source:{
+                                if(hoodSpeed>=3)
+                                    return themesPicturesPath+"icon_speed_3.png"
+                                else if(hoodSpeed > 0)
+                                    return themesPicturesPath+"icon_speed_"+hoodSpeed+".png"
+                                else
+                                    return ""
+                            }
+                        }
+                        Text{
+                            text:{
+                                if(hoodSpeed>=3)
+                                    return "高速"
+                                else if(hoodSpeed==2)
+                                    return "中速"
+                                else
+                                    return "低速"
+                            }
+                            color:themesTextColor
+                            font.pixelSize: 24
+                            anchors.centerIn: parent
+                            anchors.horizontalCenterOffset: 20
                         }
                     }
+                    Item
+                    {
+                        visible: lTimingState!==timingStateEnum.STOP||rTimingState!==timingStateEnum.STOP
+                        width: parent.width
+                        height: 50
+                        Rectangle{
+                            visible: true
+                            width: parent.width
+                            height: parent.height
+                            color: "#000"
+                            opacity: 0.5
+                            border.color: themesTextColor
+                            radius: 4
+                        }
+                        Image {
+                            anchors.centerIn: parent
+                            anchors.horizontalCenterOffset: -30
+                            asynchronous:true
+                            smooth:false
+                            source:themesPicturesPath+"icon_stove.png"
+                        }
+                        Text{
+                            text:closeHeatShortTime()
+                            color:themesTextColor
+                            font.pixelSize: 24
+                            anchors.centerIn: parent
+                            anchors.horizontalCenterOffset: 20
+                        }
+                    }
+                }
+
+                onClicked: {
+                    push_page(pageHood)
+                }
+            }
+            Button{
+                width: 292
+                height:parent.height
+
+                background:Image {
+                    asynchronous:true
+                    smooth:false
+                    source: themesPicturesPath+"home_steamoven_background.png"
+                }
+                Text{
+                    text:"蒸烤箱"
+                    color:"#fff"
+                    font.pixelSize: 40
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.top: parent.top
+                    anchors.topMargin: 45
+                    Text{
+                        text:"STEAM OVEN"
+                        color:"#C3C2C2"
+                        font.pixelSize: 16
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        anchors.top: parent.bottom
+                        anchors.topMargin: 10
+                        anchors.left: parent.left
+                    }
+                }
+                Rectangle
+                {
+                    id:workStatus
+                    visible: rStOvState!==workStateEnum.WORKSTATE_STOP || lStOvState!==workStateEnum.WORKSTATE_STOP
+                    width: 130
+                    height: 130
+                    anchors.top: parent.top
+                    anchors.topMargin: 145
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    color: "#000"
+                    opacity: 0.5
+                    radius: 65
+                }
+                Image {
+                    visible: workStatus.visible
+                    anchors.centerIn: workStatus
+                    asynchronous:true
+                    smooth:false
+                    source: themesPicturesPath+"icon_runing.png"
+                    RotationAnimation on rotation {
+                        from: 0
+                        to: 360
+                        duration: 8000 //旋转速度，默认250
+                        loops: Animation.Infinite //一直旋转
+                        running:workStatus.visible
+                    }
+                }
+                Text{
+                    visible: workStatus.visible
+                    text:"工作中\n..."
+                    color:themesTextColor
+                    font.pixelSize: 26
+                    anchors.centerIn: workStatus
+                    horizontalAlignment:Text.AlignHCenter
+                    verticalAlignment:Text.AlignVCenter
+                    lineHeight:0.6
+                }
+                onClicked: {
+                    push_page(pageSteamOven)
+                }
+            }
+            Button{
+                width: 292
+                height:parent.height
+
+                background:Image {
+                    asynchronous:true
+                    smooth:false
+                    source: themesPicturesPath+"home_smartrecipes_background.png"
+                }
+                Text{
+                    text:"智慧菜谱"
+                    color:"#fff"
+                    font.pixelSize: 40
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.top: parent.top
+                    anchors.topMargin: 45
+                    Text{
+                        text:"SMART RECIPES"
+                        color:"#C3C2C2"
+                        font.pixelSize: 16
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        anchors.top: parent.bottom
+                        anchors.topMargin: 10
+                        anchors.left: parent.left
+                    }
+                }
+                onClicked: {
+                    push_page(pageSmartRecipes)
                 }
             }
 

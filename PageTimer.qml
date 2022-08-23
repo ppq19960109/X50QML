@@ -1,5 +1,5 @@
-import QtQuick 2.7
-import QtQuick.Controls 2.2
+import QtQuick 2.12
+import QtQuick.Controls 2.5
 import "pageCook"
 Item {
     property bool runing: timer_alarm.running
@@ -214,7 +214,7 @@ Item {
                 anchors.topMargin: 80
             }
             Text{
-                text:generateTwoTime(Math.floor(gTimerLeft/3600))+":"+generateTwoTime(Math.floor(gTimerLeft%3600/60))+":"+generateTwoTime(gTimerLeft%60)
+                text:gTimerLeftText
                 color:themesTextColor
                 font.pixelSize: 40
                 anchors.horizontalCenter: parent.horizontalCenter
