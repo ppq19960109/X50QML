@@ -1,14 +1,15 @@
 //.pragma library
 //var multiModeEnum={"NONE":0,"RECIPE":1,"MULTISTAGE":2}
 
+
 //function makeRequest()
 //{
 //    var doc = new XMLHttpRequest();
 
 //    doc.onreadystatechange = function() {
 //        if (doc.readyState == XMLHttpRequest.HEADERS_RECEIVED) {
-//            console.log("Headers -->",doc.statusText);
-//            console.log(doc.getAllResponseHeaders ());
+//            console.log("HEADERS_RECEIVED -->",doc.status,doc.statusText);
+//            console.log("getAllResponseHeaders:",doc.getAllResponseHeaders ());
 //            //            console.log("Last modified -->");
 //            //            console.log(doc.getResponseHeader ("Last-Modified"));
 //        } else if (doc.readyState == XMLHttpRequest.DONE) {
@@ -16,16 +17,16 @@
 //            //            for (var ii = 0; ii < a.childNodes.length; ++ii) {
 //            //                console.log(a.childNodes[ii].nodeName);
 //            //            }
-//            console.log("Headers -->",doc.status,doc.statusText);
-//            console.log(doc.getAllResponseHeaders ());
+//            console.log("DONE -->",doc.status,doc.statusText);
+//            console.log("getAllResponseHeaders:",doc.getAllResponseHeaders ());
 //            //            console.log("Last modified -->");
 //            //            console.log(doc.getResponseHeader ("Last-Modified"));
-
-//            //            data=JSON.parse(request.responseText.toString());
-//            console.log(typeof doc.responseText,doc.responseText)
+//            console.log("responseText:",doc.responseText)
+//            var dataJson=JSON.parse(doc.responseText.toString());
+//            console.log("responseText cityName:",dataJson.data.cityName)
+//            weatherRequest(dataJson.data.cityName)
 //        }
 //    }
-
 //    doc.open("GET", "http://mcook.marssenger.com/application/weather/day");
 //    doc.send();
 //}
@@ -44,7 +45,7 @@
 //            //            for (var ii = 0; ii < a.childNodes.length; ++ii) {
 //            //                console.log(a.childNodes[ii].nodeName);
 //            //            }
-//            console.log("Headers -->",doc.status,doc.statusText);
+//            console.log("DONE  -->",doc.status,doc.statusText);
 //            console.log(doc.getAllResponseHeaders ());
 
 //            console.log(doc.responseText.toString())
@@ -244,7 +245,7 @@ function setCookOperation(device,operation)
     }
     Data.DataReportReason=0
     setToServer(Data)
-//    permitSteamStartStatus(0)
+    //    permitSteamStartStatus(0)
 }
 
 function setCooking(list,orderTime,cookPos)

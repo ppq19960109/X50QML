@@ -48,9 +48,9 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     stateType.append(QPair<QString,int>("RStoveTimingLeft",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("RStoveTimingState",LINK_VALUE_TYPE_NUM));
 
-//    stateType.append(QPair<QString,int>("HoodStoveLink",LINK_VALUE_TYPE_NUM));
-//    stateType.append(QPair<QString,int>("HoodLightLink",LINK_VALUE_TYPE_NUM));
-//    stateType.append(QPair<QString,int>("HoodOffTimer",LINK_VALUE_TYPE_NUM));
+    //    stateType.append(QPair<QString,int>("HoodStoveLink",LINK_VALUE_TYPE_NUM));
+    //    stateType.append(QPair<QString,int>("HoodLightLink",LINK_VALUE_TYPE_NUM));
+    //    stateType.append(QPair<QString,int>("HoodOffTimer",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("HoodOffLeftTime",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("HoodSpeed",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("HoodLight",LINK_VALUE_TYPE_NUM));
@@ -81,7 +81,7 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     stateType.append(QPair<QString,int>("DeviceSecret",LINK_VALUE_TYPE_STRING));
     stateType.append(QPair<QString,int>("QrCode",LINK_VALUE_TYPE_STRING));
     stateType.append(QPair<QString,int>("UpdateLog",LINK_VALUE_TYPE_STRING));
-//    stateType.append(QPair<QString,int>("BindTokenState",LINK_VALUE_TYPE_NUM));
+    //    stateType.append(QPair<QString,int>("BindTokenState",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("QuadInfo",LINK_VALUE_TYPE_STRING));
 
     stateType.append(QPair<QString,int>("Reset",LINK_VALUE_TYPE_NUM));
@@ -291,6 +291,35 @@ void QmlDevState::executeShell(const QString cmd)
     //    process.start(cmd);
     //    qDebug() << "executeShell system:" << cmd.toUtf8().data();
     system(cmd.toUtf8().data());
+}
+
+QString QmlDevState::getNetworkMac()
+{
+    foreach (QNetworkInterface netInterface, QNetworkInterface::allInterfaces())
+    {
+        //设备名
+        qDebug() << "Device:" << netInterface.name();
+
+        //MAC地址
+        qDebug() << "HardwareAddress:" << netInterface.hardwareAddress();
+        if(netInterface.name()=="wlan0")
+            return netInterface.hardwareAddress();
+        //        QList<QNetworkAddressEntry> entryList = netInterface.addressEntries();
+
+        //        //遍历每一个IP地址(每个包含一个IP地址，一个子网掩码和一个广播地址)
+        //        foreach(QNetworkAddressEntry entry, entryList)
+        //        {
+        //            //IP地址
+        //            qDebug() << "IP Address:" << entry.ip().toString();
+
+        //            //子网掩码
+        //            qDebug() << "Netmask:" << entry.netmask().toString();
+
+        //            //广播地址
+        //            qDebug() << "Broadcast:" << entry.broadcast().toString();
+        //        }
+    }
+    return "";
 }
 
 void QmlDevState::selfStart()

@@ -213,10 +213,11 @@ ApplicationWindow {
         systemSettings.childLock=false
         if(systemSettings.brightness<1 || systemSettings.brightness>255)
         {
-            systemSettings.brightness=250
+            systemSettings.brightness=200
         }
-        //        SendFunc.makeRequest()
-        //        SendFunc.weatherRequest("杭州")
+
+//        SendFunc.makeRequest()
+//                SendFunc.weatherRequest("杭州")
     }
     background:Rectangle {
         color: themesWindowBackgroundColor

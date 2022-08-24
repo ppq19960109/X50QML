@@ -7,6 +7,7 @@
 #include <QMap>
 #include <QPair>
 #include <QVector>
+#include <QList>
 #include <QtQml>
 //#include <QProcess>
 #include "localclient.h"
@@ -69,6 +70,7 @@ public:
 
     Q_INVOKABLE QVariantList getRecipeDetails(const int recipeid);
     Q_INVOKABLE void executeShell(const QString cmd);
+    Q_INVOKABLE QString getNetworkMac();
     void selfStart();
 private:
 

@@ -6,7 +6,7 @@ import QtQuick.Layouts 1.12
 import "qrc:/SendFunc.js" as SendFunc
 Item {
     property int step: 0
-
+    property int rssi: 0
     Timer{
         id:timer_wifi
         repeat: false
@@ -19,8 +19,9 @@ Item {
                 versionText.visible=true
                 version.color="red"
                 versionText.text="电源串口通讯异常"
+                step=0xff
             }
-            else if(step==1)
+            else if(step>0 && step<=3)
             {
                 SendFunc.scanRWifi()
             }
@@ -33,7 +34,102 @@ Item {
 
         timer_wifi.restart()
     }
+    Connections { // 将目标对象信号与槽函数进行连接
+        target: window
+        onWifiConnectingChanged:{
+            console.log("onWifiConnectingChanged:",wifiConnecting,wifiConnected,timer_wifi_connecting.running)
+            if(wifiConnecting==true)
+                timer_wifi_connecting.restart()
+            else
+            {
+                if(timer_wifi_connecting.running)
+                {
+                    timer_wifi_connecting.stop()
+                }
+                else
+                {
+                    wifiConnect.color="red"
+                    wifiConnectText.text="失败"
+                    step=0xff
+                }
+            }
+        }
+    }
+    function factoryRequest(signalStrength,quadruple)
+    {
+        var doc = new XMLHttpRequest();
 
+        doc.onreadystatechange = function() {
+            console.log("onreadystatechange:",doc.readyState);
+            switch(doc.readyState){
+            case XMLHttpRequest.UNSENT://UNSENT
+                //do something
+                break;
+            case XMLHttpRequest.OPENED://OPENED
+                //do something
+                break;
+            case XMLHttpRequest.HEADERS_RECEIVED://HEADERS_RECEIVED
+                console.log("HEADERS_RECEIVED:",doc.status,doc.statusText);
+                break;
+            case XMLHttpRequest.DOLOADINGNE://LOADING
+                //do something
+                break;
+            case XMLHttpRequest.DONE://DONE
+                console.log("DONE:",doc.status,doc.statusText);
+                console.log("getAllResponseHeaders:",doc.getAllResponseHeaders ());
+                console.log("responseText:",doc.responseText)
+                do{
+                    if(doc.responseText=="")
+                    {
+                        sequence.color="red"
+                        sequenceText.text="产测上报异常"
+                        break
+                    }
+                    var dataJson=JSON.parse(doc.responseText.toString())
+                    if(dataJson.code!==0)
+                    {
+                        sequence.color="red"
+                        sequenceText.text="产测上报异常"
+                        break
+                    }
+                    sequence.color="green"
+                    sequenceText.text=dataJson.data
+                }while(0)
+                resetText.visible=true
+                systemReset()
+                break;
+            }
+        }
+        doc.ontimeout = function() {
+            console.log("ontimeout");
+        }
+        doc.onerror = function() {
+            console.log("onerror",doc.status);
+        }
+
+        doc.open("POST", "http://192.168.101.199:63036/iot/push/testing/result")
+        doc.timeout=5000
+        doc.setRequestHeader("Content-Type", "application/json")
+
+        var pk=QmlDevState.state.ProductKey
+        doc.setRequestHeader("pk", pk)
+        var mac=QmlDevState.getNetworkMac().replace(/:/g,"").toLowerCase()
+        doc.setRequestHeader("mac", mac)
+        var sign="1643338882000."+Qt.md5("1643338882000"+pk+mac+"mars")
+        doc.setRequestHeader("sign", sign)
+
+        console.log("Header:",pk,mac,sign)
+        var obj={}
+        obj.signalStrength=signalStrength
+        obj.quadruple=quadruple
+        obj.versionCommunicationPanel=QmlDevState.state.ComSWVersion
+        obj.versionPowerPanel=QmlDevState.state.PwrSWVersion.replace(/\./g,"")
+        obj.deviceName=QmlDevState.state.DeviceName
+        obj.deviceSecret=QmlDevState.state.DeviceSecret
+        console.log("body:",JSON.stringify(obj))
+        doc.send(JSON.stringify(obj),)
+        sequenceText.visible=true
+    }
     function parseWifiList(sanR)
     {
         var root=JSON.parse(sanR)
@@ -44,7 +140,8 @@ Item {
             if(element.ssid===productionTestWIFISSID)
             {
                 wifiSignalText.visible=true
-                if(element.rssi <= -75)
+                rssi=element.rssi
+                if(rssi <= -75)
                 {
                     wifiSignal.color="red"
                 }
@@ -58,38 +155,25 @@ Item {
         }
         if(i == root.length)
         {
-            if(wifiSignalText.visible==false)
+            if(step < 3)
             {
+                ++step
                 SendFunc.scanWifi()
-                wifiSignalText.visible=true
                 timer_wifi.restart()
                 return
             }
-            wifiSignalText.visible=true
             wifiSignal.color="red"
             wifiSignalText.text="WIFI "+productionTestWIFISSID+"不存在"
+            step=0xff
             return
         }
 
         if(root[i].rssi > -75)
         {
-//            step=2
-//            SendFunc.connectWiFi(productionTestWIFISSID,productionTestWIFIPWD,1)
-
-            step=3
-
-            quadText.visible=true
-            if(QmlDevState.state.ProductKey=="" || QmlDevState.state.DeviceName==""|| QmlDevState.state.ProductSecret==""|| QmlDevState.state.DeviceSecret=="")
-            {
-                quad.color="red"
-                quadText.text="四元组缺失"
-            }
-            else
-            {
-                quad.color="green"
-                quadText.text="四元组正常"
-                systemReset()
-            }
+            step=4
+            wifiConnectText.visible=true
+            //            SendFunc.connectWiFi("IoT-Test","12345678",1)
+            SendFunc.connectWiFi(productionTestWIFISSID,productionTestWIFIPWD,1)
         }
     }
 
@@ -97,52 +181,55 @@ Item {
         target: QmlDevState
 
         onStateChanged: { // 处理目标对象信号的槽函数
-//            console.log("page PageIntelligentDetection:",key,value,step)
+            //            console.log("page PageIntelligentDetection:",key,value,step)
             if("PwrSWVersion"==key && step==0)
             {
                 step=1
-                versionText.visible=true
                 versionText.text="电源板软件版本号:"+QmlDevState.state.PwrSWVersion+"\n屏幕模组软件版本号:"+QmlDevState.state.ComSWVersion
                 version.color="green"
                 SendFunc.scanWifi()
                 timer_wifi.restart()
+                wifiSignalText.visible=true
             }
-            else if("WifiScanR"==key && step==1)
+            else if("WifiScanR"==key && step>0 && step<=3)
             {
                 parseWifiList(value)
             }
-//            else if("WifiState"==key && step==2)
-//            {
-//                wifiConnectText.visible=true
-//                if(value==2 || value==3|| value==5)
-//                {
-//                    wifiConnect.color="red"
-//                    wifiConnectText.text="失败"
-//                }
-//                else if(value==4)
-//                {
-//                    step=3
-//                    wifiConnect.color="green"
-//                    wifiConnectText.text="成功"
+            else if("WifiState"==key && step==4)
+            {
 
-//                    quadText.visible=true
-//                    if(QmlDevState.state.ProductKey=="" || QmlDevState.state.DeviceName==""|| QmlDevState.state.ProductSecret==""|| QmlDevState.state.DeviceSecret=="")
-//                    {
-//                        quad.color="red"
-//                        quadText.text="四元组缺失"
-//                    }
-//                    else
-//                    {
-//                        quad.color="green"
-//                        quadText.text="四元组正常"
-//                        systemReset()
-//                    }
-//                }
-//            }
-            else if("Reset"==key && step==3)
+                if(value==2 || value==3|| value==5)
+                {
+                    wifiConnect.color="red"
+                    wifiConnectText.text="失败"
+                    step=0xff
+                }
+                else if(value==4)
+                {
+                    step=5
+                    wifiConnect.color="green"
+                    wifiConnectText.text="成功"
+
+                    quadText.visible=true
+                    if(QmlDevState.state.ProductKey=="" || QmlDevState.state.DeviceName==""|| QmlDevState.state.ProductSecret==""|| QmlDevState.state.DeviceSecret=="")
+                    {
+                        step=0xff
+                        quad.color="red"
+                        quadText.text="四元组缺失"
+                        factoryRequest(rssi,false)
+                    }
+                    else
+                    {
+                        quad.color="green"
+                        quadText.text="四元组正常"
+                        factoryRequest(rssi,true)
+                    }
+                }
+            }
+            else if("Reset"==key && step==5)
             {
                 step=0xff
-                resetText.visible=true
+
                 if(value==0)
                 {
                     reset.color="red"
@@ -201,10 +288,10 @@ Item {
             width:parent.width - 100
             height: parent.height - 20
             anchors.centerIn: parent
-            rows: 4
+            rows: 6
             columns: 2
-            rowSpacing: 1
-            columnSpacing: 1
+            rowSpacing: 5
+            columnSpacing: 5
 
             Text{
                 Layout.preferredWidth: 250
@@ -222,8 +309,8 @@ Item {
 
                 Text{
                     id:versionText
-                    visible: false
-                    text:"检测中"
+                    visible: true
+                    text:"检测中..."
                     color:"#FFF"
                     font.pixelSize: 30
                     anchors.centerIn: parent
@@ -249,37 +336,37 @@ Item {
                 Text{
                     id:wifiSignalText
                     visible: false
-                    text:"检测中"
+                    text:"检测中..."
                     color:"#FFF"
                     font.pixelSize: 30
                     anchors.centerIn: parent
                 }
             }
 
-//            Text{
-//                Layout.preferredWidth: 250
-//                Layout.preferredHeight:50
+            Text{
+                Layout.preferredWidth: 250
+                Layout.preferredHeight:50
 
-//                text:"wifi连接:"
-//                color:"#FFF"
-//                font.pixelSize: 30
-//            }
-//            Rectangle{
-//                id:wifiConnect
-//                Layout.preferredWidth: 450
-//                Layout.preferredHeight:50
+                text:"wifi连接:"
+                color:"#FFF"
+                font.pixelSize: 30
+            }
+            Rectangle{
+                id:wifiConnect
+                Layout.preferredWidth: 450
+                Layout.preferredHeight:50
 
-//                radius: 8
-//                color:"transparent"
-//                Text{
-//                    visible: false
-//                    id:wifiConnectText
-//                    text:"检测中"
-//                    color:"#FFF"
-//                    font.pixelSize: 30
-//                    anchors.centerIn: parent
-//                }
-//            }
+                radius: 8
+                color:"transparent"
+                Text{
+                    visible: false
+                    id:wifiConnectText
+                    text:"连接中..."
+                    color:"#FFF"
+                    font.pixelSize: 30
+                    anchors.centerIn: parent
+                }
+            }
 
             Text{
                 Layout.preferredWidth: 250
@@ -299,7 +386,31 @@ Item {
                 Text{
                     visible: false
                     id:quadText
-                    text:"检测中"
+                    text:"检测中..."
+                    color:"#FFF"
+                    font.pixelSize: 30
+                    anchors.centerIn: parent
+                }
+            }
+            Text{
+                Layout.preferredWidth: 250
+                Layout.preferredHeight:50
+
+                text:"产测序号:"
+                color:"#FFF"
+                font.pixelSize: 30
+            }
+            Rectangle{
+                id:sequence
+                Layout.preferredWidth: 450
+                Layout.preferredHeight:50
+                radius: 8
+                color:"transparent"
+
+                Text{
+                    visible: false
+                    id:sequenceText
+                    text:"检测中..."
                     color:"#FFF"
                     font.pixelSize: 30
                     anchors.centerIn: parent
@@ -322,7 +433,7 @@ Item {
                 Text{
                     visible: false
                     id:resetText
-                    text:"恢复出厂中"
+                    text:"恢复出厂设置中..."
                     color:"#FFF"
                     font.pixelSize: 30
                     anchors.centerIn: parent
