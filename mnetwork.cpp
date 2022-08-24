@@ -32,7 +32,7 @@ void MNetwork::replyLocationFinished()
 
     /* 读取数据 */
     QByteArray data =  reply->readAll();
-    //    qDebug()<< "replyFinished:" << QString(data);
+    qDebug()<< "replyLocationFinished:" << QString(data);
     emit replyLocationData(data);
     /* 防止内存泄漏 */
     reply->deleteLater();
@@ -58,7 +58,7 @@ void MNetwork::replyTimeFinished()
 
     /* 读取数据 */
     QByteArray data =  reply->readAll();
-    //    qDebug()<< "replyFinished:" << QString(data);
+    qDebug()<< "replyTimeFinished:" << QString(data);
     emit replyTimeData(data);
     /* 防止内存泄漏 */
     reply->deleteLater();

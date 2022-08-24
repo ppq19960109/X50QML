@@ -678,9 +678,6 @@ Item {
         //       loaderUpdateResultShow("系统已更新至最新版本\n"+"1.2.0")
         //loaderScreenSaverShow()
     }
-    StackView.onActivating:{
-        console.log("PageHome StackView onActivating")
-    }
 
     Item{
         anchors.fill:parent

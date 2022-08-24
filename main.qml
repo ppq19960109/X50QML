@@ -225,8 +225,7 @@ ApplicationWindow {
         }
         if(systemSettings.brightness<1 || systemSettings.brightness>255)
         {
-            systemSettings.brightness=250
-//            Backlight.backlightSet(systemSettings.brightness)
+            systemSettings.brightness=200
         }
     }
     Connections { // 将目标对象信号与槽函数进行连接
@@ -297,8 +296,9 @@ ApplicationWindow {
 
             if(timeSync<2)
             {
-                MNetwork.locationRequest()
-                MNetwork.timeRequest()
+//                MNetwork.locationRequest()
+//                MNetwork.timeRequest()
+                SendFunc.makeRequest()
             }
         }
     }
@@ -328,11 +328,6 @@ ApplicationWindow {
             if(productionTestFlag>0)
             {
                 productionTestFlag=0
-                if(sysPower > 0 && sleepState==true)
-                {
-                    timer_standby.interval=7*60000
-                    timer_standby.restart()
-                }
             }
             else
             {
