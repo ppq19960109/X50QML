@@ -249,7 +249,7 @@ ApplicationWindow {
                 productionTestFlag=0
                 if(sysPower > 0 && sleepState==true)
                 {
-                    timer_standby.interval=8*60000
+                    timer_standby.interval=7*60000
                     timer_standby.restart()
                 }
             }
@@ -305,7 +305,7 @@ ApplicationWindow {
                     {
                         sleepState=true
                         Backlight.backlightSet(0)
-
+                        productionTestFlag=0
                         timer_standby.interval=10*60000
                         timer_standby.restart()
                         return
