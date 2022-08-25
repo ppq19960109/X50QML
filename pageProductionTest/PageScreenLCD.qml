@@ -9,7 +9,7 @@ import QtQuick.Layouts 1.12
 //    sourceSize.height: 480
 ////    asynchronous: true
 //    smooth:false
-//    source:step>10?"":"qrc:/x50/test/image"+step+".png" //themesImagesPath+"image"+step+".png"
+//    source:step>10?"":themesPicturesPath+"test/image"+step+".png" //themesPicturesPath+"image"+step+".png"
 //    visible: status==Image.Ready
 //    MouseArea{
 //        anchors.fill: parent
@@ -46,52 +46,52 @@ Item{
         Image {
             asynchronous: true
             smooth:false
-            source:"qrc:/x50/test/image1.png"
+            source:themesPicturesPath+"test/image1.png"
         }
         Image {
             asynchronous: true
             smooth:false
-            source:"qrc:/x50/test/image2.png"
+            source:themesPicturesPath+"test/image2.png"
         }
         Image {
             asynchronous: true
             smooth:false
-            source:"qrc:/x50/test/image3.png"
+            source:themesPicturesPath+"test/image3.png"
         }
         Image {
             asynchronous: true
             smooth:false
-            source:"qrc:/x50/test/image4.png"
+            source:themesPicturesPath+"test/image4.png"
         }
         Image {
             asynchronous: true
             smooth:false
-            source:"qrc:/x50/test/image5.png"
+            source:themesPicturesPath+"test/image5.png"
         }
         Image {
             asynchronous: true
             smooth:false
-            source:"qrc:/x50/test/image6.png"
+            source:themesPicturesPath+"test/image6.png"
         }
         Image {
             asynchronous: true
             smooth:false
-            source:"qrc:/x50/test/image7.png"
+            source:themesPicturesPath+"test/image7.png"
         }
         Image {
             asynchronous: true
             smooth:false
-            source:"qrc:/x50/test/image8.png"
+            source:themesPicturesPath+"test/image8.png"
         }
         Image {
             asynchronous: true
             smooth:false
-            source:"qrc:/x50/test/image9.png"
+            source:themesPicturesPath+"test/image9.png"
         }
         Image {
             asynchronous: true
             smooth:false
-            source:"qrc:/x50/test/image10.png"
+            source:themesPicturesPath+"test/image10.png"
         }
         Item {
             RowLayout{
@@ -159,7 +159,7 @@ Item{
 //AnimatedSprite {
 //    property int step: 1
 //    anchors.fill: parent
-//    source: "qrc:/x50/test/image"+step+".png"
+//    source: themesPicturesPath+"test/image"+step+".png"
 //    frameWidth: 800
 //    frameHeight: 480
 //    frameDuration: 4000

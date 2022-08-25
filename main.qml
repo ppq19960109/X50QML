@@ -55,10 +55,9 @@ ApplicationWindow {
     property bool sleepState: false
     property var wifiConnectInfo:{"ssid":"","psk":"","encryp":0}
     readonly property var multiModeEnum:{"NONE":0,"RECIPE":1,"MULTISTAGE":2}
-    readonly property var buzControlEnum:{"STOP":0,"SHORT":1,"SHORTTWO":2,"2SCECONDS":3,"OPEN":4}
+    readonly property var buzControlEnum:{"STOP":0,"SHORT":1,"SHORTTWO":2,"2SCECONDS":3,"OPEN":4,"SHORTFIVE":5}
 
     readonly property string themesPicturesPath:"file:themes/X8GCZ/"
-    readonly property string themesImagesPath:"file:themes/default/"
     readonly property string themesWindowBackgroundColor:"#1A1A1A"
     readonly property string themesPopupWindowColor:"#333333"
     readonly property string themesTextColor:"#E68855"
@@ -181,6 +180,7 @@ ApplicationWindow {
         {
             return
         }
+        loaderScreenSaverHide()
         if(power)
         {
             Backlight.backlightSet(systemSettings.brightness)
@@ -197,6 +197,7 @@ ApplicationWindow {
                 timer_standby.stop()
             backTopPage()
         }
+
         sysPower=power
     }
 
@@ -296,9 +297,9 @@ ApplicationWindow {
 
             if(timeSync<2)
             {
-//                MNetwork.locationRequest()
-//                MNetwork.timeRequest()
-                SendFunc.makeRequest()
+                MNetwork.locationRequest()
+                MNetwork.timeRequest()
+//                SendFunc.makeRequest()
             }
         }
     }
@@ -705,6 +706,7 @@ ApplicationWindow {
         id:loaderScreenSaver
         asynchronous: true
         anchors.fill: parent
+        sourceComponent:null
     }
     function loaderScreenSaverShow()
     {

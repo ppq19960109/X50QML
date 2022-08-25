@@ -62,15 +62,36 @@ Item {
     }
 
     Component{
+        id:component_updatePowerConfirm
+        PageDialogConfirm{
+            hintTopText:"系统更新"
+            hintCenterText:"检测到最新版本 "+QmlDevState.state.OTAPowerNewVersion+"\n请问是否立即更新?"
+            cancelText:"取消"
+            confirmText:"升级"
+            onCancel: {
+                loaderAuto.sourceComponent = undefined
+            }
+            onConfirm: {
+                SendFunc.otaPowerRquest(1)
+            }
+        }
+    }
+    function loaderUpdatePowerConfirmShow(){
+        loaderAuto.sourceComponent = component_updatePowerConfirm
+    }
+
+    Component{
         id:component_update
         Rectangle {
             anchors.fill: parent
             color: themesWindowBackgroundColor
             property alias updateProgress: updateBar.value
+            property alias titleText: title.text
             MouseArea{
                 anchors.fill: parent
             }
             Text {
+                id:title
                 anchors.top: parent.top
                 anchors.topMargin: 50
                 anchors.horizontalCenter: parent.horizontalCenter
@@ -82,7 +103,7 @@ Item {
                 anchors.top: parent.top
                 anchors.topMargin: 155
                 anchors.horizontalCenter: parent.horizontalCenter
-                source: "qrc:/x50/set/jiazaizhong.png"
+                source: themesPicturesPath+"icon_loading_big.png"
             }
             Text {
                 anchors.top: parent.top
@@ -123,8 +144,9 @@ Item {
             }
         }
     }
-    function loaderUpdateShow(){
+    function loaderUpdateShow(text){
         loaderAuto.sourceComponent = component_update
+        loaderAuto.item.titleText=text+"升级中,请勿断电!"
     }
     function loaderUpdateProgress(value){
         if(loaderAuto.sourceComponent === component_update)
@@ -216,7 +238,14 @@ Item {
                 if(systemSettings.otaSuccess==true)
                 {
                     systemSettings.otaSuccess=false
-                    loaderUpdateResultShow("系统已更新至最新版本\n"+value)
+                    loaderUpdateResultShow("通讯板已更新至最新版本\n"+value)
+                }
+            }
+            else if("PwrSWVersion"==key)
+            {
+                if(value===QmlDevState.state.OTAPowerNewVersion)
+                {
+                    loaderUpdateResultShow("电源板已更新至最新版本\n"+value)
                 }
             }
             else if("LStOvState"==key)
@@ -251,12 +280,29 @@ Item {
                                 loaderDoorAutoHide(cookWorkPosEnum.LEFT)
                         }
                     }
-                    if(lastLStOvState===workStateEnum.WORKSTATE_PREHEAT && value===WORKSTATE_RUN)
+
+                    if(lastLStOvState===workStateEnum.WORKSTATE_STOP)
+                    {
+                        if(value===workStateEnum.WORKSTATE_PREHEAT || value===workStateEnum.WORKSTATE_RUN)
+                        {
+                            SendFunc.setBuzControl(buzControlEnum.SHORT)
+                            sleepWakeup()
+                        }
+                    }
+                    else if(lastLStOvState===workStateEnum.WORKSTATE_PREHEAT && value===WORKSTATE_RUN)
                     {
                         var lMode=QmlDevState.state.LStOvMode
                         if(lMode===35||lMode===36||lMode===38||lMode===40||lMode===42)
                             loaderAutoCompleteShow("预热完成\n请将食物放入左腔！")
+                        SendFunc.setBuzControl(buzControlEnum.SHORT)
                     }
+                    else if(lastLStOvState===workStateEnum.WORKSTATE_RESERVE && (value===workStateEnum.WORKSTATE_PREHEAT||value===workStateEnum.WORKSTATE_RUN))
+                        SendFunc.setBuzControl(buzControlEnum.SHORT)
+                    else if(value===workStateEnum.WORKSTATE_FINISH)
+                        SendFunc.setBuzControl(buzControlEnum.SHORTFIVE)
+
+                    if(value===workStateEnum.WORKSTATE_STOP)
+                        loaderMultistageHide()
                 }
                 lastLStOvState=value
             }
@@ -301,6 +347,20 @@ Item {
                                 loaderDoorAutoShow("右腔门已关闭，是否继续烹饪？","结束烹饪","继续烹饪",cookWorkPosEnum.RIGHT)
                         }
                     }
+                    if(lastRStOvState===workStateEnum.WORKSTATE_STOP)
+                    {
+                        if(value===workStateEnum.WORKSTATE_PREHEAT || value===workStateEnum.WORKSTATE_RUN)
+                        {
+                            SendFunc.setBuzControl(buzControlEnum.SHORT)
+                            sleepWakeup()
+                        }
+                    }
+                    else if(lastRStOvState===workStateEnum.WORKSTATE_PREHEAT && value===workStateEnum.WORKSTATE_RUN)
+                        SendFunc.setBuzControl(buzControlEnum.SHORT)
+                    else if(lastRStOvState===workStateEnum.WORKSTATE_RESERVE && (value===workStateEnum.WORKSTATE_PREHEAT||value===workStateEnum.WORKSTATE_RUN))
+                        SendFunc.setBuzControl(buzControlEnum.SHORT)
+                    else if(value===workStateEnum.WORKSTATE_FINISH)
+                        SendFunc.setBuzControl(buzControlEnum.SHORTFIVE)
                 }
                 lastRStOvState=value
             }
@@ -421,6 +481,7 @@ Item {
                     {
                         real_ssid=value
                     }
+                    console.log("real_ssid:",real_ssid)
                     if(real_ssid===wifiConnectInfo.ssid)
                     {
                         WifiFunc.addWifiInfo(wifiConnectInfo)
@@ -488,24 +549,43 @@ Item {
                 }
                 else if(value==3)
                 {
-                    loaderUpdateShow()
+                    loaderUpdateShow("通讯板")
                 }
                 else if(value==4)
                 {
-                    loaderUpdateResultShow("系统下载失败")
+                    loaderUpdateResultShow("通讯板系统下载失败")
                 }
                 else if(value==8)
                 {
                     systemSettings.otaSuccess=true
                 }
             }
-            else if(("OTAProgress"==key))
+            else if("OTAPowerState"==key)
+            {
+                if(value==1)
+                {
+                }
+                else if(value==2)
+                {
+                    loaderUpdatePowerConfirmShow()
+                }
+                else if(value==3)
+                {
+                    loaderUpdateShow("电源板")
+                }
+                else if(value==4)
+                {
+                    loaderUpdateResultShow("电源板系统下载失败")
+                }
+                else if(value==8)
+                {
+
+                }
+            }
+            else if("OTAProgress"==key || "OTAPowerProgress"==key)
             {
                 console.log("OTAProgress:",value)
                 loaderUpdateProgress(value);
-                if(value==100)
-                {
-                }
             }
             else if( "DeviceSecret"==key && productionTestFlag==1)
             {

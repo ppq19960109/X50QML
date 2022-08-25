@@ -34,27 +34,27 @@ Item{
         Image {
             asynchronous: true
             smooth:false
-            source:"qrc:/x50/demo/demo1.png"
+            source:themesPicturesPath+"demo/demo1.png"
         }
         Image {
             asynchronous: true
             smooth:false
-            source:"qrc:/x50/demo/demo2.png"
+            source:themesPicturesPath+"demo/demo2.png"
         }
         Image {
             asynchronous: true
             smooth:false
-            source:"qrc:/x50/demo/demo3.png"
+            source:themesPicturesPath+"demo/demo3.png"
         }
         Image {
             asynchronous: true
             smooth:false
-            source:"qrc:/x50/demo/demo4.png"
+            source:themesPicturesPath+"demo/demo4.png"
         }
         Image {
             asynchronous: true
             smooth:false
-            source:"qrc:/x50/demo/demo5.png"
+            source:themesPicturesPath+"demo/demo5.png"
         }
 
         //        Component.onCompleted:{

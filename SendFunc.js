@@ -100,7 +100,12 @@ function otaRquest(request)
     Data.OTARquest = request
     setToServer(Data)
 }
-
+function otaPowerRquest(request)
+{
+    var Data={}
+    Data.OTAPowerRquest = request
+    setToServer(Data)
+}
 function enableWifi(enable)
 {
     var Data={}

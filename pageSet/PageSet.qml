@@ -40,6 +40,10 @@ Item {
                     anchors.centerIn: parent
                     color:"#fff"
                 }
+                onClicked: {
+                    if(menuList.currentIndex!=index)
+                        menuList.currentIndex=index
+                }
             }
         }
 

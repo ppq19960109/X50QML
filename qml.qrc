@@ -4,9 +4,7 @@
         <file>PageHome.qml</file>
         <file>pageMain/PageHood.qml</file>
         <file>pageMain/PageSteamOven.qml</file>
-        <file>pageMain/PageHomeThird.qml</file>
         <file>pageCook/PageMultistage.qml</file>
-        <file>PageCirProgressBar.qml</file>
         <file>PageCirWaveProgressBar.qml</file>
         <file>pageMain/PageCookDetails.qml</file>
         <file>pageCook/PageReserve.qml</file>
@@ -25,92 +23,32 @@
         <file>pageSet/PageUpdateProgressBar.qml</file>
         <file>PageHomeBar.qml</file>
         <file>PageErrorPopup.qml</file>
-        <file>x50/wifi/kai.png</file>
-        <file>x50/wifi/WIFI.png</file>
-        <file>x50/wifi/yousuowifi 1.png</file>
-        <file>x50/wifi/yousuowifi 3.png</file>
-        <file>x50/wifi/yousuowifi 4.png</file>
-        <file>x50/wifi/guan.png</file>
         <file>PageDivider.qml</file>
-        <file>x50/wifi/yousuowifi 5.png</file>
-        <file>x50/wifi/icon_selected.png</file>
-        <file>x50/wifi/yousuowifi 7.png</file>
-        <file>x50/wifi/icon_sx.png</file>
         <file>PageRotationImg.qml</file>
-        <file>x50/steam/icon_上下加热.png</file>
-        <file>x50/steam/icon_上下加热缩小.png</file>
-        <file>x50/steam/icon_保暖烘干.png</file>
-        <file>x50/steam/icon_保暖烘干缩小.png</file>
-        <file>x50/steam/icon_热风烧烤.png</file>
-        <file>x50/steam/icon_热风烧烤缩小.png</file>
-        <file>x50/steam/icon_空气炸.png</file>
-        <file>x50/steam/icon_空气炸缩小.png</file>
-        <file>x50/steam/icon_立体热风.png</file>
-        <file>x50/steam/icon_立体热风缩小.png</file>
-        <file>x50/steam/icon_蒸汽烤.png</file>
-        <file>x50/steam/icon_蒸汽烤缩小.png</file>
-        <file>x50/steam/icon_高温蒸.png</file>
-        <file>x50/steam/icon_高温蒸缩小.png</file>
-        <file>x50/steam/icon_便捷蒸.png</file>
         <file>PageBackBar.qml</file>
         <file>PageCheckBox.qml</file>
         <file>PageDialogConfirm.qml</file>
-        <file>x50/set/huadonganniu.png</file>
-        <file>x50/set/icon_light_big.png</file>
-        <file>x50/set/icon_light_small.png</file>
-        <file>x50/set/gengduo.png</file>
-        <file>x50/set/jiazaizhong.png</file>
-        <file>x50/set/logo.png</file>
         <file>PageDialogQrcode.qml</file>
-        <file>x50/wifi/yousuowifi 2.png</file>
         <file>pageProductionTest/PageTestFront.qml</file>
         <file>pageProductionTest/PageIntelligentDetection.qml</file>
         <file>pageProductionTest/PageScreenTest.qml</file>
         <file>pageProductionTest/PageScreenLine.qml</file>
         <file>pageProductionTest/PageScreenClick.qml</file>
         <file>pageProductionTest/PageScreenLCD.qml</file>
-        <file>x50/main/icon_ts_g.png</file>
         <file>CookFunc.js</file>
         <file>WifiFunc.js</file>
         <file>SendFunc.js</file>
-        <file>x50/main/icon_ts_g_k.png</file>
         <file>pageProductionTest/PageScreenLight.qml</file>
         <file>pageProductionTest/PageScreenTouch.qml</file>
         <file>pageProductionTest/PageGetQuad.qml</file>
-        <file>PagePopup.qml</file>
         <file>pageProductionTest/PageAgingTest.qml</file>
-        <file>x50/steam/right-cook-background.png</file>
-        <file>x50/steam/left-cook-background2.png</file>
-        <file>x50/steam/left-cook-background1.png</file>
-        <file>x50/steam/temp-time-change-background.png</file>
-        <file>x50/steam/mode-change-background.png</file>
-        <file>x50/steam/icon_经典蒸缩小.png</file>
-        <file>x50/steam/icon_经典蒸.png</file>
         <file>PageScrollBarText.qml</file>
-        <file>x50/test/image1.png</file>
-        <file>x50/test/image2.png</file>
-        <file>x50/test/image3.png</file>
-        <file>x50/test/image4.png</file>
-        <file>x50/test/image5.png</file>
-        <file>x50/test/image6.png</file>
-        <file>x50/test/image7.png</file>
-        <file>x50/test/image8.png</file>
-        <file>x50/test/image9.png</file>
-        <file>x50/test/image10.png</file>
-        <file>x50/icon/icon_alarm.png</file>
-        <file>x50/icon/icon_pop_error.png</file>
         <file>PageLoadingPopup.qml</file>
         <file>pageProductionTest/PageLoadPower.qml</file>
         <file>pageProductionTest/PagePowerBoard.qml</file>
         <file>pageProductionTest/PagePowerOut.qml</file>
         <file>pageProductionTest/PagePowerInput.qml</file>
         <file>pageMain/PageDemoMode.qml</file>
-        <file>x50/demo/demo5.png</file>
-        <file>x50/demo/demo4.png</file>
-        <file>x50/demo/demo3.png</file>
-        <file>x50/demo/demo2.png</file>
-        <file>x50/demo/demo1.png</file>
-        <file>x50/demo/demo6.png</file>
         <file>PageTabBar.qml</file>
         <file>PageLaunchBtn.qml</file>
         <file>pageCook/PageSteamOvenConfig.qml</file>

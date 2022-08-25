@@ -13,7 +13,7 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     stateType.append(QPair<QString,int>("WifiEnable",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("WifiScanR",LINK_VALUE_TYPE_STRING));
 
-    stateType.append(QPair<QString,int>("ElcSWVersion",LINK_VALUE_TYPE_STRING));
+    stateType.append(QPair<QString,int>("PwrSWVersion",LINK_VALUE_TYPE_STRING));
     stateType.append(QPair<QString,int>("ComSWVersion",LINK_VALUE_TYPE_STRING));
     stateType.append(QPair<QString,int>("SysPower",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("ErrorCode",LINK_VALUE_TYPE_NUM));
@@ -24,6 +24,9 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     stateType.append(QPair<QString,int>("OTAState",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("OTAProgress",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("OTANewVersion",LINK_VALUE_TYPE_STRING));
+    stateType.append(QPair<QString,int>("OTAPowerState",LINK_VALUE_TYPE_NUM));
+    stateType.append(QPair<QString,int>("OTAPowerProgress",LINK_VALUE_TYPE_NUM));
+    stateType.append(QPair<QString,int>("OTAPowerNewVersion",LINK_VALUE_TYPE_STRING));
 
     stateType.append(QPair<QString,int>("MultiMode",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("MultiStageState",LINK_VALUE_TYPE_STRUCT));
@@ -216,14 +219,14 @@ QVariantList QmlDevState::getRecipeDetails(const int recipeid)
     return recipeMap[recipeid];
 }
 
-void QmlDevState::executeShell(const QString cmd)
+int QmlDevState::executeShell(const QString cmd)
 {
     qDebug() << "executeShell:" << cmd;
     //    QProcess::execute(cmd);
     //    QProcess::startDetached("cmd");
     //    process.start(cmd);
     //    qDebug() << "executeShell system:" << cmd.toUtf8().data();
-    system(cmd.toUtf8().constData());
+    return system(cmd.toUtf8().constData());
 }
 void QmlDevState::selfStart()
 {

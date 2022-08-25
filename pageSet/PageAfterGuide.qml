@@ -30,7 +30,7 @@ Item {
             asynchronous:true
             smooth:false
             cache:false
-            source: themesImagesPath+"AfterSalesQrCode.png"
+            source: themesPicturesPath+"AfterSalesQrCode.png"
         }
 
         Text{

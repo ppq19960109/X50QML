@@ -55,7 +55,7 @@ public:
     Q_INVOKABLE int sendToServer(QString data);
 
     Q_INVOKABLE QVariantList getRecipeDetails(const int recipeid);
-    Q_INVOKABLE void executeShell(const QString cmd);
+    Q_INVOKABLE int executeShell(const QString cmd);
     void selfStart();
 private:
 
