@@ -64,10 +64,10 @@ Item {
         Row {
             id:row
             width: parent.width
-            height:210
+            height:205
             anchors.top: parent.top
             anchors.topMargin: 60
-            anchors.left:parent.left
+            anchors.left: parent.left
             anchors.leftMargin: 30
             spacing: 10
 
@@ -79,8 +79,6 @@ Item {
                 Image {
                     anchors.fill: parent
                     visible: parent.moving
-                    asynchronous:true
-                    smooth:false
                     anchors.centerIn: parent
                     source: themesPicturesPath+"steamoven/"+"roll_background.png"
                 }
@@ -89,7 +87,7 @@ Item {
                     color:themesTextColor
                     font.pixelSize: 24
                     anchors.centerIn: parent
-                    anchors.horizontalCenterOffset: 60
+                    anchors.horizontalCenterOffset: 50
                 }
             }
             PageCookPathView {
@@ -99,8 +97,6 @@ Item {
                 Image {
                     anchors.fill: parent
                     visible: parent.moving
-                    asynchronous:true
-                    smooth:false
                     anchors.centerIn: parent
                     source: themesPicturesPath+"steamoven/"+"roll_background.png"
                 }
@@ -109,7 +105,7 @@ Item {
                     color:themesTextColor
                     font.pixelSize: 24
                     anchors.centerIn: parent
-                    anchors.horizontalCenterOffset: 60
+                    anchors.horizontalCenterOffset: 50
                 }
             }
             PageCookPathView {
@@ -119,8 +115,6 @@ Item {
                 Image {
                     anchors.fill: parent
                     visible: parent.moving
-                    asynchronous:true
-                    smooth:false
                     anchors.centerIn: parent
                     source: themesPicturesPath+"steamoven/"+"roll_background.png"
                 }
@@ -129,7 +123,7 @@ Item {
                     color:themesTextColor
                     font.pixelSize: 24
                     anchors.centerIn: parent
-                    anchors.horizontalCenterOffset: 60
+                    anchors.horizontalCenterOffset: 50
                 }
             }
         }
@@ -201,8 +195,6 @@ Item {
             anchors.topMargin: 20
             anchors.horizontalCenter: parent.horizontalCenter
             Image {
-                asynchronous:true
-                smooth:false
                 source: themesPicturesPath+"icon_steam_runing_background.png"
             }
             Text{

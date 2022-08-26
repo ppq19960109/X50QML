@@ -248,6 +248,11 @@ Item {
                     loaderUpdateResultShow("电源板已更新至最新版本\n"+value)
                 }
             }
+            else if("NtpTimestamp"==key)
+            {
+                if(value>1640966400)
+                    getCurrentTime(value)
+            }
             else if("LStOvState"==key)
             {
                 if(value===workStateEnum.WORKSTATE_STOP)
@@ -773,8 +778,6 @@ Item {
                 height:parent.height
 
                 background:Image {
-                    asynchronous:true
-                    smooth:false
                     source: themesPicturesPath+"home_hood_background.png"
                 }
                 Text{
@@ -836,8 +839,6 @@ Item {
                         Image {
                             anchors.centerIn: parent
                             anchors.horizontalCenterOffset: -30
-                            asynchronous:true
-                            smooth:false
                             source:{
                                 if(hoodSpeed>=3)
                                     return themesPicturesPath+"icon_speed_3.png"
@@ -879,8 +880,6 @@ Item {
                         Image {
                             anchors.centerIn: parent
                             anchors.horizontalCenterOffset: -30
-                            asynchronous:true
-                            smooth:false
                             source:themesPicturesPath+"icon_stove.png"
                         }
                         Text{
@@ -902,8 +901,6 @@ Item {
                 height:parent.height
 
                 background:Image {
-                    asynchronous:true
-                    smooth:false
                     source: themesPicturesPath+"home_steamoven_background.png"
                 }
                 Text{
@@ -939,8 +936,6 @@ Item {
                 Image {
                     visible: workStatus.visible
                     anchors.centerIn: workStatus
-                    asynchronous:true
-                    smooth:false
                     source: themesPicturesPath+"icon_runing.png"
                     RotationAnimation on rotation {
                         from: 0
@@ -969,8 +964,6 @@ Item {
                 height:parent.height
 
                 background:Image {
-                    asynchronous:true
-                    smooth:false
                     source: themesPicturesPath+"home_smartrecipes_background.png"
                 }
                 Text{

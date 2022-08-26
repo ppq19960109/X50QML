@@ -6,6 +6,10 @@ import "qrc:/SendFunc.js" as SendFunc
 Item {
     property bool versionCheckState: false
 
+    Component {
+        id: pageReleaseNotes
+        PageReleaseNotes {}
+    }
     Connections { // 将目标对象信号与槽函数进行连接
         target: QmlDevState
 
@@ -40,7 +44,6 @@ Item {
 
         Image{
             id:logo
-            cache:false
             smooth:false
             asynchronous:true
             anchors.top: parent.top
@@ -64,7 +67,6 @@ Item {
                 anchors.centerIn: parent
             }
             Image {
-                cache:false
                 asynchronous:true
                 smooth:false
                 anchors.verticalCenter: parent.verticalCenter
@@ -72,7 +74,7 @@ Item {
                 source: themesPicturesPath+"icon_more.png"
             }
             onClicked: {
-
+                  loaderManual.sourceComponent = pageReleaseNotes
             }
         }
         Item{

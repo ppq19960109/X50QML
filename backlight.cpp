@@ -7,6 +7,8 @@
 #include <stdlib.h>
 #include <errno.h>
 #include <signal.h>
+#include <sys/time.h>
+#include <time.h>
 
 #define SYSFS_BL_DIR "/sys/devices/platform/backlight/backlight/backlight"
 
@@ -133,3 +135,18 @@ QVariantList Backlight::getAllFileName(QString path)
     return pathList;
 }
 
+void Backlight::setClockTime(int hours,int minutes)
+{
+    qDebug() << "set hour min:" << hours << minutes;
+    time_t t;
+    time(&t);
+    struct tm * local_tm=localtime(&t);
+    qDebug() << "year mon day:" << local_tm->tm_year << local_tm->tm_mon << local_tm->tm_mday;
+    qDebug() << "hour min sec:" << local_tm->tm_hour << local_tm->tm_min << local_tm->tm_sec;
+    local_tm->tm_hour=hours;
+    local_tm->tm_min=minutes;
+    t=mktime(local_tm);
+    struct timeval tv;
+    tv.tv_sec=t;
+    settimeofday(&tv, NULL);
+}

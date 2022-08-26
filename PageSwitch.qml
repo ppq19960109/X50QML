@@ -9,8 +9,6 @@ Switch {
         anchors.centerIn: parent
         Image{
             id:indicatorImg
-            asynchronous:true
-            smooth:false
             source: themesPicturesPath+(checked ?"icon_wifi_open.png":"icon_wifi_close.png")
         }
     }

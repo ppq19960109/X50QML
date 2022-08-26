@@ -2,6 +2,10 @@ import QtQuick 2.12
 import QtQuick.Controls 2.5
 import "../"
 Item {
+    Component {
+        id: pageClock
+        PageClock {}
+    }
     Item {
         id:localSet
         anchors.fill: parent
@@ -45,7 +49,6 @@ Item {
                 }
                 Image{
                     asynchronous:true
-                    cache:false
                     source: themesPicturesPath+"icon_light_small.png"
                     anchors.right: lightSlider.left
                     anchors.rightMargin:15
@@ -69,7 +72,6 @@ Item {
                 }
                 Image{
                     asynchronous:true
-                    cache:false
                     source: themesPicturesPath+"icon_light_big.png"
                     anchors.left: lightSlider.right
                     anchors.leftMargin:15
@@ -168,14 +170,15 @@ Item {
 
                 }
                 Text{
-                    text:"13:14"
-                    color:"#fff"
+                    text:gTimeText
+                    color:wifiConnected?"#fff":themesTextColor2
                     font.pixelSize: 30
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.right: parent.right
                     anchors.rightMargin: 70
                 }
                 Image {
+                    visible: wifiConnected == false
                     asynchronous:true
                     smooth:false
                     anchors.verticalCenter: parent.verticalCenter
@@ -183,8 +186,9 @@ Item {
                     anchors.rightMargin: 35
                     source: themesPicturesPath+"icon_more.png"
                 }
-
                 onClicked: {
+                    if(wifiConnected==false)
+                        loaderManual.sourceComponent = pageClock
                 }
             }
             Button{
@@ -203,14 +207,6 @@ Item {
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.left: parent.left
 
-                }
-                Text{
-                    text:"时钟"
-                    color:"#fff"
-                    font.pixelSize: 30
-                    anchors.verticalCenter: parent.verticalCenter
-                    anchors.right: parent.right
-                    anchors.rightMargin: 70
                 }
                 Image {
                     asynchronous:true
@@ -233,7 +229,7 @@ Item {
         visible: false
         anchors.fill: parent
         Button {
-           id:backBtn
+            id:backBtn
             width:80
             height:40
             anchors.top: parent.top

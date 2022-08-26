@@ -63,12 +63,10 @@ Item {
                 anchors.fill: parent
                 asynchronous:true
                 smooth:false
-                cache:false
             }
             Image{
                 asynchronous:true
                 smooth:false
-                cache:false
                 width: recipeImg.width
                 anchors.bottom: recipeImg.bottom
                 anchors.horizontalCenter: recipeImg.horizontalCenter

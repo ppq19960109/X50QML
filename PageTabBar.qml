@@ -26,11 +26,11 @@ Item{
                 height: parent.height
                 background:null
                 Image {
+                    asynchronous:true
+                    smooth:false
                     visible: index==tabBar.currentIndex
                     anchors.horizontalCenter: parent.horizontalCenter
                     anchors.bottom: parent.bottom
-                    asynchronous:true
-                    smooth:false
                     source: themesPicturesPath+"navigation_bar_text_background.png"
                 }
                 Text{

@@ -8,15 +8,13 @@ ToolBar {
         width: parent.width
         height: 55
         anchors.top: parent.top
-        text: qsTr("12:44")
+        text: qsTr(gTimeText)
         font.pixelSize: 30
         color:themesTextColor2
         horizontalAlignment:Text.AlignHCenter
         verticalAlignment:Text.AlignVCenter
     }
     Image{
-        asynchronous:true
-        smooth:false
         anchors.left: parent.left
         source: themesPicturesPath+"icon_newline2.png"
     }
@@ -32,15 +30,11 @@ ToolBar {
                 height:86
                 background: null
                 Image{
-                    asynchronous:true
-                    smooth:false
                     anchors.top: parent.top
                     source: themesPicturesPath+"icon_newline.png"
                 }
                 Image{
                     visible: index!=2 || (index==2 && gTimerLeft==0)
-                    asynchronous:true
-                    smooth:false
                     anchors.centerIn: parent
                     source: themesPicturesPath+modelData
                 }

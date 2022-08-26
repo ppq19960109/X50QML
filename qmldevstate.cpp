@@ -97,6 +97,7 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     stateType.append(QPair<QString,int>("OilTempSwitch",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("RMovePotLowHeatSwitch",LINK_VALUE_TYPE_NUM));
 
+    stateType.append(QPair<QString,int>("NtpTimestamp",LINK_VALUE_TYPE_NUM));
     localConnected=0;
     connect(&client, SIGNAL(sendData(const QByteArray)), this,SLOT(readData(const QByteArray)));
     connect(&client, &LocalClient::sendConnected, this,&QmlDevState::setLocalConnected);
@@ -107,7 +108,12 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     setState("ProductCategory","集成灶");
     setState("ProductModel","IIZ(T/Y)—X8GCZ01");
     setState("SmartSmokeSwitch",0);
+    setState("LStoveStatus",0);
+    setState("RStoveStatus",0);
+    setState("LStoveTimingState",0);
+    setState("RStoveTimingState",0);
     setState("LStOvState",0);
+    setState("RStOvState",0);
     setState("LStoveTimingState",0);
     setState("LStoveTimingLeft",0);
     setState("LStoveTimingSet",0);

@@ -193,7 +193,7 @@ function getWifiState()
 function setSmartSmoke(state)
 {
     var Data={}
-    Data.SmartSmoke=state
+    Data.SmartSmokeSwitch=state
     Data.DataReportReason=0
     setToServer(Data)
 }

@@ -66,6 +66,7 @@ ApplicationWindow {
     property var pattern: new RegExp("[\u4E00-\u9FA5]+")
     property var screenSaverInfo:{"month":"","date":"","hours":"","minutes":"","temp":"","lowTemp":"","highTemp":"","weatherId":0,"weather":"","holiday":""}
     readonly property var weeksEnum:["日","一","二","三","四","五","六"]
+    readonly property var weatherEnum:["晴","阴","多云","大雨","中雨","小雨","雷雨","大风","雪","雾","雨夹雪"]
     property int timeSync:0
     property int gYear
     property int gMonth
@@ -77,11 +78,13 @@ ApplicationWindow {
     property int gTemp
     property int gLowTemp
     property int gHighTemp
-    property string gWeather
+    property string gWeatherId
 
     property int gTimerTotalTime
     property int gTimerLeft
+
     property string gTimerLeftText:generateTwoTime(Math.floor(gTimerLeft/3600))+":"+generateTwoTime(Math.floor(gTimerLeft%3600/60))+":"+generateTwoTime(gTimerLeft%60)
+    property string gTimeText:generateTwoTime(gHours)+":"+generateTwoTime(gMinutes)
     Settings {
         id: testSettings
         category: "test"
@@ -150,10 +153,11 @@ ApplicationWindow {
         SendFunc.setToServer(Data)
 
         systemSettings.sleepTime=3
-        systemSettings.brightness=250
+        systemSettings.brightness=200
 
         systemSettings.wifiEnable=true
-
+        systemSettings.sleepSwitch=true
+        systemSettings.screenSaverIndex=0
         systemSettings.cookDialog=[true,true,true,true,true,true,true]
         systemSettings.multistageRemind=true
         systemSettings.wifiPasswdArray=[]
@@ -232,6 +236,7 @@ ApplicationWindow {
     Connections { // 将目标对象信号与槽函数进行连接
         target: MNetwork
         onReplyLocationData:{
+            console.log("onReplyLocationData",value)
             if(value=="")
                 return
 
@@ -242,8 +247,7 @@ ApplicationWindow {
             gTemp=resp.data.temp
             gLowTemp=resp.data.lowTemp
             gHighTemp=resp.data.highTemp
-            gWeather=resp.data.desc
-            console.log("onReplyLocationData",value,resp.data.cityName)
+            gWeatherId=resp.data.weatherId
             //            MNetwork.weatherRequest(resp.data.cityName);//杭州
         }
         onReplyTimeData:{
@@ -264,24 +268,32 @@ ApplicationWindow {
             var curTemp=resp.current_condition[0].temp_C
             var curMinTemp=resp.weather[0].mintempC
             var curMaxTemp=resp.weather[0].maxtempC
-            console.log("onReplyWeatherData",curTemp,curMinTemp,curMaxTemp)
         }
     }
+    function getCurrentTime(ms)
+    {
+        var date
+        if(ms==null)
+            date=new Date()
+        else
+            date=new Date(ms)
+        gYear=date.getFullYear()
+        gMonth=date.getMonth()+1
+        gDate=date.getDate()
+        gDay=date.getDay()
+        gHours=date.getHours()
+        gMinutes=date.getMinutes()
+    }
+
     Timer{
         id:timer_time
         repeat: true
         running: true
-        interval: 60000
-        triggeredOnStart: true
+        interval: 20000
+        triggeredOnStart: false
         onTriggered: {
-            console.log("time onTriggered")
-            var date=new Date()
-            gYear=date.getFullYear()
-            gMonth=date.getMonth()+1
-            gDate=date.getDate()
-            gDay=date.getDay()
-            gHours=date.getHours()
-            gMinutes=date.getMinutes()
+            console.log("timer_time onTriggered")
+            getCurrentTime()
             if(gHours==0)
             {
                 if(gMinutes==0||gMinutes==5)
@@ -294,12 +306,20 @@ ApplicationWindow {
                 if(timeSync>60*3)
                     timeSync=0
             }
-
             if(timeSync<2)
             {
-                MNetwork.locationRequest()
-                MNetwork.timeRequest()
-//                SendFunc.makeRequest()
+                if(wifiConnected)
+                {
+                    if(timer_time.interval==20000)
+                    {
+                        console.log("time onTriggered interval:",timer_time.interval)
+                        timer_time.interval=60000
+                    }
+
+                    MNetwork.locationRequest()
+                    MNetwork.timeRequest()
+                }
+                //                SendFunc.makeRequest()
             }
         }
     }
@@ -369,12 +389,12 @@ ApplicationWindow {
     Timer{
         id:timer_sleep
         repeat: false
-        running: systemSettings.sleepSwitch //&& sysPower > 0
+        running: systemSettings.sleepSwitch && sysPower > 0
         interval: systemSettings.sleepTime*60000
         triggeredOnStart: false
         onTriggered: {
             console.log("timer_sleep onTriggered...")
-            if(productionTestStatus==0 && demoModeStatus==0 && QmlDevState.localConnected > 0 && QmlDevState.state.ErrorCodeShow === 0)
+            if(productionTestStatus==0 && demoModeStatus==0 && wifiConnecting==false && QmlDevState.localConnected > 0 && QmlDevState.state.ErrorCodeShow === 0)
             {
                 if((QmlDevState.state.RStOvState === workStateEnum.WORKSTATE_STOP || QmlDevState.state.RStOvState === workStateEnum.WORKSTATE_FINISH || QmlDevState.state.RStOvState === workStateEnum.WORKSTATE_RESERVE || QmlDevState.state.RStOvState === workStateEnum.WORKSTATE_PAUSE_RESERVE) && (QmlDevState.state.LStOvState === workStateEnum.WORKSTATE_STOP || QmlDevState.state.LStOvState === workStateEnum.WORKSTATE_FINISH || QmlDevState.state.LStOvState === workStateEnum.WORKSTATE_RESERVE || QmlDevState.state.LStOvState === workStateEnum.WORKSTATE_PAUSE_RESERVE ))
                 {
@@ -406,8 +426,6 @@ ApplicationWindow {
         }
     }
     background:Image {
-        asynchronous:true
-        smooth:false
         source: themesPicturesPath+"window-background.png"
     }
     StackView {
@@ -426,14 +444,12 @@ ApplicationWindow {
     Loader{
         //加载弹窗组件
         id:loaderStackView
-        //        asynchronous: true
         anchors.fill: stackView
         sourceComponent:null
     }
     Loader{
         //加载弹窗组件
         id:loaderManual
-        //        asynchronous: true
         anchors.fill: parent
         sourceComponent:null
     }
@@ -808,8 +824,9 @@ ApplicationWindow {
     //                    id: repeater
     //                    model: Backlight.getAllFileName("testPictures")
     //                    Item {
-    //                        Image{asynchronous:true
-    //                            source: "file:"+modelData }
+    //                        Image{
+    //                            source: "file:"+modelData
+    //                        }
     //                    }
     //                }
     //            }
@@ -983,26 +1000,26 @@ ApplicationWindow {
             if(cookSteps.length===1 && (undefined === cookSteps[0].number || 0 === cookSteps[0].number))
             {
                 SendFunc.setCooking(cookSteps,root.orderTime,root.cookPos)
-//                                if(cookWorkPosEnum.LEFT===root.cookPos)
-//                                {
-//                                    QmlDevState.setState("LStOvState",5)
-//                                    QmlDevState.setState("LStOvMode",cookSteps[0].mode)
-//                                    QmlDevState.setState("LStOvSetTemp",cookSteps[0].temp)
-//                                    QmlDevState.setState("LStOvRealTemp",cookSteps[0].temp)
-//                                    QmlDevState.setState("LStOvSetTimer",cookSteps[0].time)
-//                                    QmlDevState.setState("LStOvSetTimerLeft",cookSteps[0].time/4)
-//                                    QmlDevState.setState("LStOvOrderTimer",cookSteps[0].time)
-//                                    QmlDevState.setState("LStOvOrderTimerLeft",cookSteps[0].time)
-//                                }
-//                                else
-//                                {
-//                                    QmlDevState.setState("RStOvState",1)
-//                                    QmlDevState.setState("RStOvRealTemp",cookSteps[0].temp)
-//                                    QmlDevState.setState("RStOvSetTimerLeft",cookSteps[0].time)
-//                                    QmlDevState.setState("RStOvSetTimer",cookSteps[0].time)
-//                                    QmlDevState.setState("RStOvOrderTimer",cookSteps[0].time)
-//                                    QmlDevState.setState("RStOvOrderTimerLeft",cookSteps[0].time/2)
-//                                }
+                //                                if(cookWorkPosEnum.LEFT===root.cookPos)
+                //                                {
+                //                                    QmlDevState.setState("LStOvState",5)
+                //                                    QmlDevState.setState("LStOvMode",cookSteps[0].mode)
+                //                                    QmlDevState.setState("LStOvSetTemp",cookSteps[0].temp)
+                //                                    QmlDevState.setState("LStOvRealTemp",cookSteps[0].temp)
+                //                                    QmlDevState.setState("LStOvSetTimer",cookSteps[0].time)
+                //                                    QmlDevState.setState("LStOvSetTimerLeft",cookSteps[0].time/4)
+                //                                    QmlDevState.setState("LStOvOrderTimer",cookSteps[0].time)
+                //                                    QmlDevState.setState("LStOvOrderTimerLeft",cookSteps[0].time)
+                //                                }
+                //                                else
+                //                                {
+                //                                    QmlDevState.setState("RStOvState",1)
+                //                                    QmlDevState.setState("RStOvRealTemp",cookSteps[0].temp)
+                //                                    QmlDevState.setState("RStOvSetTimerLeft",cookSteps[0].time)
+                //                                    QmlDevState.setState("RStOvSetTimer",cookSteps[0].time)
+                //                                    QmlDevState.setState("RStOvOrderTimer",cookSteps[0].time)
+                //                                    QmlDevState.setState("RStOvOrderTimerLeft",cookSteps[0].time/2)
+                //                                }
             }
             else
             {

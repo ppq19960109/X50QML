@@ -35,9 +35,6 @@ CheckBox {
         //                    visible: control.checked
         //                }
         Image {
-            asynchronous:true
-            smooth:false
-            cache:false
             anchors.centerIn: parent
             source: themesPicturesPath+(control.checked ?"icon_checked.png":"icon_unchecked.png")
             //                    visible: control.checked

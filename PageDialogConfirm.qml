@@ -41,9 +41,6 @@ Item {
             anchors.top:parent.top
             anchors.topMargin: 45
             anchors.horizontalCenter: parent.horizontalCenter
-            asynchronous:true
-            smooth:false
-            cache:false
             source: themesPicturesPath+"icon_warn.png"
         }
 

@@ -6,8 +6,6 @@ Item {
         anchors.fill: parent
     }
     Image {
-        asynchronous:true
-        smooth:false
         source: themesPicturesPath+"screen_saver"+index+".png"
     }
 
@@ -19,7 +17,7 @@ Item {
         anchors.topMargin: 80
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.horizontalCenterOffset: index==1?0:-350
-        text: generateTwoTime(gHours)+":"+generateTwoTime(gMinutes)
+        text: gTimeText
 
     }
 

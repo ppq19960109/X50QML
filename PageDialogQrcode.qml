@@ -34,13 +34,11 @@ Item {
         Image{
             id:qrcode
             anchors.horizontalCenter: parent.horizontalCenter
-            anchors.horizontalCenterOffset: -120
+            anchors.horizontalCenterOffset: -150
             anchors.top: parent.top
-            anchors.topMargin: 100
-            sourceSize.width: 180
-            sourceSize.height: 180
-            asynchronous:true
-            smooth:false
+            anchors.topMargin: 80
+            width: 200
+            height: 200
             cache:false
             source: "file:QrCode.png"
         }
@@ -52,7 +50,7 @@ Item {
             anchors.verticalCenter: qrcode.verticalCenter
             color:"white"
             font.pixelSize: 30
-            lineHeight: 1.3
+            lineHeight: 1.5
             wrapMode:Text.WrapAnywhere
             text:"下载火粉APP   绑定设备\n海量智慧菜谱  一键烹饪"
         }
@@ -60,7 +58,7 @@ Item {
             width:140+10
             height:50+10
             anchors.bottom:parent.bottom
-            anchors.bottomMargin: 20
+            anchors.bottomMargin: 10
             anchors.horizontalCenter: parent.horizontalCenter
             Text{
                 anchors.centerIn: parent

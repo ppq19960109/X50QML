@@ -6,9 +6,6 @@ Button {
     height:closeImg.height+50
     Image {
         id:closeImg
-        asynchronous:true
-        smooth:false
-        cache:false
         anchors.centerIn: parent
         source: themesPicturesPath+"icon_window_close.png"
     }

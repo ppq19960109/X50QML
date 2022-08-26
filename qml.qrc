@@ -5,7 +5,6 @@
         <file>pageMain/PageHood.qml</file>
         <file>pageMain/PageSteamOven.qml</file>
         <file>pageCook/PageMultistage.qml</file>
-        <file>PageCirWaveProgressBar.qml</file>
         <file>pageMain/PageCookDetails.qml</file>
         <file>pageCook/PageReserve.qml</file>
         <file>pageMain/PageSmartRecipes.qml</file>
@@ -17,7 +16,6 @@
         <file>pageSet/PageAboutMachine.qml</file>
         <file>pageSet/PageAfterGuide.qml</file>
         <file>pageSet/PageSlider.qml</file>
-        <file>PageBusyIndicator.qml</file>
         <file>PageDialog.qml</file>
         <file>pageSet/PageReleaseNotes.qml</file>
         <file>pageSet/PageUpdateProgressBar.qml</file>
@@ -64,5 +62,6 @@
         <file>PageScreenSaver0.qml</file>
         <file>PageScreenSaver1.qml</file>
         <file>PageTimer.qml</file>
+        <file>PageClock.qml</file>
     </qresource>
 </RCC>

@@ -40,8 +40,6 @@ Item {
             anchors.top:parent.top
             anchors.topMargin: 34
             anchors.horizontalCenter: parent.horizontalCenter
-            asynchronous:true
-            smooth:false
             source: themesPicturesPath+"icon_error.png"
         }
         Text{

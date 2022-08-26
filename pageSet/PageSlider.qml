@@ -41,7 +41,6 @@ Slider {
         //                border.color: "#bdbebf"
         //            }
         Image {
-            cache:false
             asynchronous:true
             anchors.centerIn: parent
             source: themesPicturesPath+"icon_slide.png"

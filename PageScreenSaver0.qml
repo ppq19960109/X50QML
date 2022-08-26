@@ -23,7 +23,7 @@ Rectangle {
         anchors.topMargin: 80
         anchors.left: parent.left
         anchors.leftMargin: 200
-        text: generateTwoTime(gHours)+":"+generateTwoTime(gMinutes)
+        text: gTimeText
 
     }
 
@@ -33,7 +33,7 @@ Rectangle {
         anchors.top: parent.top
         anchors.topMargin: 250
         anchors.horizontalCenter: time.horizontalCenter
-        text: gMonth+"月"+gDate+"日 "+weeksEnum[gDay]+" "+gHoliday
+        text: gMonth+"月"+gDate+"日 周"+weeksEnum[gDay]+" "+gHoliday
     }
 
     Image {
@@ -42,9 +42,7 @@ Rectangle {
         anchors.topMargin: 110
         anchors.left: parent.left
         anchors.leftMargin: 715
-        asynchronous:true
-        smooth:false
-        source: themesPicturesPath+"weather_sunny.png"
+        source: themesPicturesPath+"weather/"+gWeatherId+".png"
     }
 
     Text{
@@ -53,7 +51,7 @@ Rectangle {
         anchors.top: parent.top
         anchors.topMargin: 230
         anchors.horizontalCenter: icon_weather.horizontalCenter
-        text: gWeather
+        text:weatherEnum[gWeatherId]
     }
 
     Text{

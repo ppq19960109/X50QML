@@ -29,7 +29,6 @@ Item {
             anchors.horizontalCenter: parent.horizontalCenter
             asynchronous:true
             smooth:false
-            cache:false
             source: themesPicturesPath+"AfterSalesQrCode.png"
         }
 

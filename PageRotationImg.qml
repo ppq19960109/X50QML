@@ -4,9 +4,6 @@ import QtQuick.Controls 2.5
 Image {
     property alias duration:rotation.duration
     id: busyImg
-    asynchronous:true
-    smooth:false
-    cache:false
     RotationAnimator {
         id:rotation
         target: busyImg

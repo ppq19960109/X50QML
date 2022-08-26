@@ -23,7 +23,9 @@ Flickable {
     ScrollBar.vertical: ScrollBar {
         parent: flick.parent
         anchors.top: flick.top
+        anchors.topMargin: 10
         anchors.bottom: flick.bottom
+        anchors.bottomMargin: 10
         anchors.left: flick.right
         anchors.leftMargin: scrollBarLeftMargin
 

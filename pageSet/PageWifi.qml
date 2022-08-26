@@ -456,7 +456,9 @@ Item {
             property int index
             property bool permit_connect:false
             color:themesWindowBackgroundColor
-
+            MouseArea{
+                anchors.fill: parent
+            }
             Item{
                 id:bar
                 width:parent.width
