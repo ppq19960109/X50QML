@@ -229,6 +229,7 @@ Item {
         id:topBar
         anchors.top:parent.top
         name:"定时关火"
+        centerText:QmlDevState.state.OilTempSwitch?("左灶油温:"+QmlDevState.state.LOilTemp+"℃"+"    右灶油温:"+QmlDevState.state.ROilTemp+"℃"):""
     }
 
     Repeater {

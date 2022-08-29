@@ -30,7 +30,7 @@ Item{
         anchors.fill: parent
         currentIndex:0
         interactive:false //是否可以滑动
-
+        clip: true
         Image {
             asynchronous: true
             smooth:false
@@ -57,14 +57,6 @@ Item{
             source:themesPicturesPath+"demo/demo5.png"
         }
 
-        //        Component.onCompleted:{
-        //            contentItem.highlightMoveDuration = 10       //将移动时间设为0
-        //            contentItem.highlightMoveVelocity = -1
-        //            contentItem.boundsBehavior=Flickable.StopAtBounds
-        //        }
-        onCurrentIndexChanged:{
-            console.log("onCurrentIndexChanged",currentIndex)
-        }
     }
 }
 

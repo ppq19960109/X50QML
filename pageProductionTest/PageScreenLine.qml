@@ -41,7 +41,6 @@ Item {
             property real pressedX
             id: rowarea
             anchors.fill: parent
-            //            hoverEnabled:true
             propagateComposedEvents: true
 
             onPressed: {
@@ -57,13 +56,12 @@ Item {
             onReleased: {
                 console.warn("row onReleased......",mouse.x,mouse.y)
                 rowCanvas.context.reset()
-                //                rowCanvas.requestPaint()
                 if(touchExited<3 && rowPos>0 && Math.abs(mouse.x-pressedX)>=600)
                     ++rowCount
                 rowPos=0
             }
             onPositionChanged:{
-                console.warn("row onPositionChanged....",mouse.x,mouse.y)
+//                console.warn("row onPositionChanged....",mouse.x,mouse.y)
                 rowPos=1
                 rowCanvas.requestPaint()//重绘
             }
@@ -119,7 +117,6 @@ Item {
             property real pressedY
             id: colarea
             anchors.fill: parent
-            //            hoverEnabled:true
             propagateComposedEvents: true
 
             onPressed: {
@@ -135,13 +132,12 @@ Item {
             onReleased: {
                 console.warn("col onReleased......",mouse.x,mouse.y)
                 colCanvas.context.reset()
-                //                colCanvas.requestPaint()
-                if( touchExited<3 && colPos>0&& Math.abs(mouse.y-pressedY)>=360)
+                if( touchExited<3 && colPos>0&& Math.abs(mouse.y-pressedY)>=260)
                     ++colCount
                 colPos=0
             }
             onPositionChanged:{
-                console.warn("col onPositionChanged....",mouse.x,mouse.y)
+//                console.warn("col onPositionChanged....",mouse.x,mouse.y)
                 colPos=1
                 colCanvas.requestPaint()//重绘
             }

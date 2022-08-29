@@ -1,5 +1,6 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.5
+import "../"
 import "qrc:/pageSet"
 Item{
     property var containerqml: null
@@ -9,91 +10,65 @@ Item{
         height: parent.height
         anchors.centerIn: parent
         Text {
-            width: parent.width
-//            height: 50
             anchors.top: parent.top
+            anchors.topMargin: 40
+            anchors.horizontalCenter: parent.horizontalCenter
             color:"#FFF"
             font.pixelSize: 40
             text: qsTr("调节背光设置，背光是否随设置亮暗变化
     ")
-//            horizontalAlignment:Text.AlignHCenter
-//            verticalAlignment:Text.AlignVCenter
+        }
+        Text{
+            anchors.left: parent.left
+            anchors.verticalCenter: parent.verticalCenter
+            color:"#fff"
+            text:qsTr("亮度")
+            font.pixelSize:30
         }
         Image{
-            id:startImg
             asynchronous:true
-            smooth:false
             source: themesPicturesPath+"icon_light_small.png"
-            anchors.left: parent.left
+            anchors.right: lightSlider.left
+            anchors.rightMargin:15
             anchors.verticalCenter: parent.verticalCenter
         }
         PageSlider {
             id:lightSlider
-            anchors.left:startImg.right
-            anchors.leftMargin: 20
-            anchors.right:endImg.left
-            anchors.rightMargin: 20
+            width: 590
+            anchors.horizontalCenter: parent.horizontalCenter
             anchors.verticalCenter: parent.verticalCenter
             stepSize: 2
             from: 1
             to: 255
             value: Backlight.backlightGet()
-
             onValueChanged: {
-                Backlight.backlightSet(value)
+                systemSettings.brightness=value
             }
         }
         Image{
-            id:endImg
             asynchronous:true
-            smooth:false
             source: themesPicturesPath+"icon_light_big.png"
-            anchors.right: parent.right
+            anchors.left: lightSlider.right
+            anchors.leftMargin:15
             anchors.verticalCenter: parent.verticalCenter
         }
     }
-    Button{
-        width:100
-        height:50
+    PageButtonBar{
         anchors.horizontalCenter: parent.horizontalCenter
-        anchors.horizontalCenterOffset: -150
         anchors.bottom: parent.bottom
         anchors.bottomMargin: 20
-        background:Rectangle{
-            radius: 8
-            color:themesTextColor2
-        }
-        Text{
-            text:"成功"
-            color:"#fff"
-            font.pixelSize: 40
-            anchors.centerIn: parent
-        }
-        onClicked: {
-            containerqml.clickedLightFunc(1)
-            Backlight.backlightSet(systemSettings.brightness)
-            backPrePage()
-        }
-    }
-    Button{
-        width:100
-        height:50
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.horizontalCenterOffset: 150
-        anchors.bottom: parent.bottom
-        anchors.bottomMargin: 20
-        background:Rectangle{
-            radius: 8
-            color:themesTextColor2
-        }
-        Text{
-            text:"失败"
-            color:"#fff"
-            font.pixelSize: 40
-            anchors.centerIn: parent
-        }
-        onClicked: {
-            containerqml.clickedLightFunc(-1)
+
+        space:150
+        models: ["成功","失败"]
+        onClick:{
+            if(clickIndex==0)
+            {
+                containerqml.clickedLightFunc(1)
+            }
+            else
+            {
+                containerqml.clickedLightFunc(-1)
+            }
             Backlight.backlightSet(systemSettings.brightness)
             backPrePage()
         }

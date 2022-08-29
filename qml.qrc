@@ -42,7 +42,6 @@
         <file>pageProductionTest/PageAgingTest.qml</file>
         <file>PageScrollBarText.qml</file>
         <file>PageLoadingPopup.qml</file>
-        <file>pageProductionTest/PageLoadPower.qml</file>
         <file>pageProductionTest/PagePowerBoard.qml</file>
         <file>pageProductionTest/PagePowerOut.qml</file>
         <file>pageProductionTest/PagePowerInput.qml</file>

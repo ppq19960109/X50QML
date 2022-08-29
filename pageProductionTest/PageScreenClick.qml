@@ -1,6 +1,5 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.5
-import QtQuick.Layouts 1.12
 
 Item {
     property int centerCount: 0
@@ -9,10 +8,6 @@ Item {
     property int  leftbottomCount: 0
     property int  rightbottomCount: 0
 
-    Component.onCompleted: {
-
-
-    }
     Button{
         id:lefttop
         width:100

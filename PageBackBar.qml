@@ -62,7 +62,7 @@ Rectangle {
             width: parent.width/2
             visible: centerText.text!=""
             anchors.centerIn: parent
-            color:themesTextColor2
+            color:themesTextColor
             font.pixelSize: 30
             elide: Text.ElideRight
             horizontalAlignment:Text.AlignHCenter

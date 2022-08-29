@@ -1,7 +1,7 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.5
 import QtQuick.Layouts 1.12
-
+import "../"
 Item {
     id:root
     Component.onCompleted: {
@@ -28,152 +28,18 @@ Item {
         testSettings.productionTestLight=status
     }
 
-    Item{
+    PageBackBar{
         id:topBar
-        width:parent.width
-        height:80
-        anchors.top: parent.top
-        Text {
-            anchors.centerIn: parent
-            color:themesTextColor
-            font.pixelSize: 40
-            font.bold : true
-            text: qsTr("屏幕检测")
-        }
-    }
-    Item{
-        width:parent.width
-        anchors.top: topBar.bottom
-        anchors.bottom: parent.bottom
+        anchors.top:parent.top
+        name:qsTr("屏幕检测")
 
-        GridLayout{
-            width:parent.width
-            height: parent.height-100
-            anchors.top: parent.top
-            rows: 2
-            columns: 3
-            rowSpacing: 10
-            columnSpacing: 10
-            Button{
-                Layout.preferredWidth: 200
-                Layout.preferredHeight:100
-                Layout.alignment: Qt.AlignHCenter|Qt.AlignVCenter
-                background:Rectangle{
-                    radius: 16
-                    color:themesTextColor2
-                }
-                Text{
-                    text:"LCD"
-                    color:testSettings.productionTestLcd==0?"#FFF":testSettings.productionTestLcd==1?"green":"red"
-                    font.pixelSize: 35
-                    anchors.centerIn: parent
-                }
-                onClicked: {
-                    push_page("pageScreenLCD",{containerqml:root})
-                }
-            }
-            Button{
-                Layout.preferredWidth: 200
-                Layout.preferredHeight:100
-                Layout.alignment: Qt.AlignHCenter|Qt.AlignVCenter
-                background:Rectangle{
-                    radius: 16
-                    color:themesTextColor2
-                }
-                Text{
-                    text:"触摸"
-                    color:testSettings.productionTestTouch==0?"#FFF":testSettings.productionTestTouch==1?"green":"red"
-                    font.pixelSize: 35
-                    anchors.centerIn: parent
-                }
-                onClicked: {
-                    push_page("pageScreenTouch",{containerqml:root})
-                }
-            }
-            Button{
-                Layout.preferredWidth: 200
-                Layout.preferredHeight:100
-                Layout.alignment: Qt.AlignHCenter|Qt.AlignVCenter
-                background:Rectangle{
-                    radius: 16
-                    color:themesTextColor2
-                }
-                Text{
-                    text:"背光"
-                    color:testSettings.productionTestLight==0?"#FFF":testSettings.productionTestLight==1?"green":"red"
-                    font.pixelSize: 35
-                    anchors.centerIn: parent
-                }
-                onClicked: {
-                    push_page("pageScreenLight",{containerqml:root})
-                }
-            }
-            Button{
-                Layout.preferredWidth: 200
-                Layout.preferredHeight:100
-                Layout.alignment: Qt.AlignHCenter|Qt.AlignVCenter
-                background:Rectangle{
-                    radius: 16
-                    color:themesTextColor2
-                }
-                Text{
-                    text:"划线耐久"
-                    color:"#FFF"
-                    font.pixelSize: 35
-                    anchors.centerIn: parent
-                }
-                onClicked: {
-                    push_page("pageScreenLine")
-                }
-            }
-            Button{
-                Layout.preferredWidth: 200
-                Layout.preferredHeight:100
-                Layout.alignment: Qt.AlignHCenter|Qt.AlignVCenter
-                background:Rectangle{
-                    radius: 16
-                    color:themesTextColor2
-                }
-                Text{
-                    text:"点击耐久"
-                    color:"#FFF"
-                    font.pixelSize: 35
-                    anchors.centerIn: parent
-                }
-
-                onClicked: {
-                    push_page("pageScreenClick")
-                }
-            }
-            Button{
-                Layout.preferredWidth: 200
-                Layout.preferredHeight:100
-                Layout.alignment: Qt.AlignHCenter|Qt.AlignVCenter
-                background:Rectangle{
-                    radius: 16
-                    color:themesTextColor2
-                }
-                Text{
-                    text:"老化测试"
-                    color:testSettings.productionTestAging==0?"#FFF":testSettings.productionTestAging==1?"green":"red"
-                    font.pixelSize: 35
-                    anchors.centerIn: parent
-                }
-
-                onClicked: {
-                    push_page("pageAgingTest",{containerqml:root})
-                }
-            }
-        }
         Button{
-            width:300+50
-            height:50+40
-            anchors.left: parent.left
+            width:250
+            height:50
+            anchors.right: parent.right
+            anchors.rightMargin: 30
             anchors.bottom: parent.bottom
             background:Rectangle{
-                width:300
-                height:60
-                anchors.centerIn: parent
                 radius: 8
                 color:themesTextColor2
             }
@@ -190,25 +56,123 @@ Item {
                 testSettings.productionTestTouch=0
             }
         }
-        Button{
-            width:100
-            height:50
-            anchors.right: parent.right
-            anchors.rightMargin: 20
-            anchors.bottom: parent.bottom
-            anchors.bottomMargin: 20
-            background:Rectangle{
-                radius: 8
-                color:themesTextColor2
+    }
+    Item{
+        width:parent.width
+        anchors.top: topBar.bottom
+        anchors.bottom: parent.bottom
+
+        Grid{
+            width:200*3+100*2
+            height: 100*2+50
+            anchors.centerIn: parent
+            rows: 2
+            columns: 3
+            rowSpacing: 50
+            columnSpacing: 100
+            Button{
+                width: 200
+                height:100
+                background:Rectangle{
+                    radius: 16
+                    color:themesTextColor2
+                }
+                Text{
+                    text:"LCD"
+                    color:testSettings.productionTestLcd==0?"#FFF":testSettings.productionTestLcd==1?"green":"red"
+                    font.pixelSize: 35
+                    anchors.centerIn: parent
+                }
+                onClicked: {
+                    push_page(pageScreenLCD,{containerqml:root})
+                }
             }
-            Text{
-                text:"退出"
-                color:"#fff"
-                font.pixelSize: 40
-                anchors.centerIn: parent
+            Button{
+                width: 200
+                height:100
+                background:Rectangle{
+                    radius: 16
+                    color:themesTextColor2
+                }
+                Text{
+                    text:"触摸"
+                    color:testSettings.productionTestTouch==0?"#FFF":testSettings.productionTestTouch==1?"green":"red"
+                    font.pixelSize: 35
+                    anchors.centerIn: parent
+                }
+                onClicked: {
+                    push_page(pageScreenTouch,{containerqml:root})
+                }
             }
-            onClicked: {
-                backPrePage()
+            Button{
+                width: 200
+                height:100
+                background:Rectangle{
+                    radius: 16
+                    color:themesTextColor2
+                }
+                Text{
+                    text:"背光"
+                    color:testSettings.productionTestLight==0?"#FFF":testSettings.productionTestLight==1?"green":"red"
+                    font.pixelSize: 35
+                    anchors.centerIn: parent
+                }
+                onClicked: {
+                    push_page(pageScreenLight,{containerqml:root})
+                }
+            }
+            Button{
+                width: 200
+                height:100
+                background:Rectangle{
+                    radius: 16
+                    color:themesTextColor2
+                }
+                Text{
+                    text:"划线耐久"
+                    color:"#FFF"
+                    font.pixelSize: 35
+                    anchors.centerIn: parent
+                }
+                onClicked: {
+                    push_page(pageScreenLine)
+                }
+            }
+            Button{
+                width: 200
+                height:100
+                background:Rectangle{
+                    radius: 16
+                    color:themesTextColor2
+                }
+                Text{
+                    text:"点击耐久"
+                    color:"#FFF"
+                    font.pixelSize: 35
+                    anchors.centerIn: parent
+                }
+
+                onClicked: {
+                    push_page(pageScreenClick)
+                }
+            }
+            Button{
+                width: 200
+                height:100
+                background:Rectangle{
+                    radius: 16
+                    color:themesTextColor2
+                }
+                Text{
+                    text:"老化测试"
+                    color:testSettings.productionTestAging==0?"#FFF":testSettings.productionTestAging==1?"green":"red"
+                    font.pixelSize: 35
+                    anchors.centerIn: parent
+                }
+
+                onClicked: {
+                    push_page(pageAgingTest,{containerqml:root})
+                }
             }
         }
     }

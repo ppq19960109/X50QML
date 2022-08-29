@@ -1,58 +1,40 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.5
-import QtQuick.Layouts 1.12
-
+import "../"
 import "qrc:/SendFunc.js" as SendFunc
 Item {
-    property string name: "pageTestFront"
     Component.onCompleted: {
         productionTestStatus=1
-        systemPower(1)
-        SendFunc.setSysPower(1)
         SendFunc.setBuzControl(buzControlEnum.SHORT)
     }
     Component.onDestruction: {
         productionTestStatus=0
-        systemPower(QmlDevState.state.SysPower)
-        loaderErrorCodeShow(QmlDevState.state.ErrorCodeShow)
     }
-    StackView.onActivated:{
-        var errorcode=QmlDevState.state.ErrorCodeShow
-        if(errorcode===9||errorcode===15)
-            loaderErrorHide()
-    }
-
-    Item{
+    PageBackBar{
         id:topBar
-        width:parent.width
-        height:80
-        anchors.top: parent.top
-        Text {
-            anchors.centerIn: parent
-            color:themesTextColor
-            font.pixelSize: 40
-            font.bold : true
-            text: qsTr("整机产测模式")
+        anchors.top:parent.top
+        name:qsTr("整机产测模式")
+        customClose:true
+        onClose:{
+            backTopPage()
         }
     }
     Item{
-        width:parent.width
+        width: parent.width
         anchors.top: topBar.bottom
         anchors.bottom: parent.bottom
-
-        GridLayout{
-            width:parent.width
-            height: parent.height-100
-            anchors.top: parent.top
+        Grid{
+            width:300*2+200
+            height: 120*2+50
+            anchors.centerIn: parent
             rows: 2
             columns: 2
-            rowSpacing: 20
-            columnSpacing: 50
+            rowSpacing: 50
+            columnSpacing: 200
 
             Button{
-                Layout.preferredWidth: 300
-                Layout.preferredHeight:120
-                Layout.alignment: Qt.AlignHCenter|Qt.AlignVCenter
+                width: 300
+                height:120
                 background:Rectangle{
                     radius: 16
                     color:themesTextColor2
@@ -64,13 +46,12 @@ Item {
                     anchors.centerIn: parent
                 }
                 onClicked: {
-                    push_page("pageScreenTest")
+                    push_page(pageScreenTest)
                 }
             }
             Button{
-                Layout.preferredWidth: 300
-                Layout.preferredHeight:120
-                Layout.alignment: Qt.AlignHCenter|Qt.AlignVCenter
+                width: 300
+                height:120
                 background:Rectangle{
                     radius: 16
                     color:themesTextColor2
@@ -83,33 +64,12 @@ Item {
                 }
 
                 onClicked: {
-                    push_page("pageIntelligentDetection")
+                    push_page(pageIntelligentDetection)
                 }
             }
             Button{
-                Layout.preferredWidth: 300
-                Layout.preferredHeight:120
-                Layout.alignment: Qt.AlignHCenter|Qt.AlignVCenter
-                background:Rectangle{
-                    radius: 16
-                    color:themesTextColor2
-                }
-                Text{
-                    text:"负载功率检测"
-                    color:"#FFF"
-                    font.pixelSize: 40
-                    anchors.centerIn: parent
-                    wrapMode: Text.WrapAnywhere
-                }
-
-                onClicked: {
-                    push_page("pageLoadPower")
-                }
-            }
-            Button{
-                Layout.preferredWidth: 300
-                Layout.preferredHeight:120
-                Layout.alignment: Qt.AlignHCenter|Qt.AlignVCenter
+                width: 300
+                height:120
                 background:Rectangle{
                     radius: 16
                     color:themesTextColor2
@@ -123,29 +83,8 @@ Item {
                 }
 
                 onClicked: {
-                    push_page("pagePowerBoard")
+                    push_page(pagePowerBoard)
                 }
-            }
-        }
-        Button{
-            width:100
-            height:50
-            anchors.right: parent.right
-            anchors.rightMargin: 20
-            anchors.bottom: parent.bottom
-            anchors.bottomMargin: 20
-            background:Rectangle{
-                radius: 8
-                color:themesTextColor2
-            }
-            Text{
-                text:"退出"
-                color:"#FFF"
-                font.pixelSize: 40
-                anchors.centerIn: parent
-            }
-            onClicked: {
-                backTopPage()
             }
         }
     }

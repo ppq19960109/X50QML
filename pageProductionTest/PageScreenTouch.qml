@@ -1,6 +1,5 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.5
-import QtQuick.Layouts 1.12
 
 Item {
     id:root
@@ -9,10 +8,10 @@ Item {
     property int pressedY: 0
     property int touchCount: 0
     property int touchExited:0
-    property int timeout:20
+    property int timeout:15
     readonly property int rectWidth: 100
-    readonly property int passWidth: 500
-    readonly property int passHeight: 320
+    readonly property int passWidth: 700
+    readonly property int passHeight: 300
     Timer{
         id:timer_test
         repeat: true
@@ -27,9 +26,6 @@ Item {
                 backPrePage()
             }
         }
-    }
-    Component.onCompleted: {
-
     }
 
     function touchJudge(x,y,parent)
@@ -61,7 +57,7 @@ Item {
         id:rect
         x:0
         y:0
-        width:800
+        width:parent.width
         height:rectWidth
         color:themesTextColor2
         transformOrigin: Item.Center
@@ -97,7 +93,7 @@ Item {
                 console.warn("onReleased",mouse.x,mouse.y)
                 canvas.context.reset()
                 canvas.requestPaint()
-                if(touchJudge(mouse.x,mouse.y,parent)==0)
+                if(touchJudge(mouse.x,mouse.y,parent)===0)
                 {
                     ++touchCount;
                 }
@@ -114,7 +110,7 @@ Item {
     }
     Text {
         anchors.top: parent.top
-        anchors.topMargin: 120
+        anchors.topMargin: 100
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.horizontalCenterOffset: 100
         color: themesTextColor
@@ -123,7 +119,7 @@ Item {
     }
     onTouchCountChanged:{
         console.warn("onTouchCountChanged",touchCount)
-        timeout=20
+        timeout=15
         if(touchCount==1)
         {
             rect.width=rectWidth
@@ -157,11 +153,11 @@ Item {
         else if(touchCount==6)
         {
             rect.width=root.width+5
-            rect.rotation=31
+            rect.rotation=15
         }
         else if(touchCount==7)
         {
-            rect.rotation=-31
+            rect.rotation=-15
         }
         else if(touchCount>=8)
         {

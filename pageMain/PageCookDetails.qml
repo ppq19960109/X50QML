@@ -187,7 +187,7 @@ Item {
 
                             }
                             Component.onCompleted:{
-                                contentItem.highlightMoveDuration = 80
+                                contentItem.highlightMoveDuration = 0
                                 contentItem.highlightMoveVelocity = -1
                                 contentItem.boundsBehavior=Flickable.StopAtBounds
                             }

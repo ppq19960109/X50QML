@@ -1,46 +1,23 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.5
-import QtQuick.Layouts 1.12
-//Image {
-//    property int step: 1
-//    width: 800
-//    height: 480
-//    sourceSize.width: 800
-//    sourceSize.height: 480
-////    asynchronous: true
-//    smooth:false
-//    source:step>10?"":themesPicturesPath+"test/image"+step+".png" //themesPicturesPath+"image"+step+".png"
-//    visible: status==Image.Ready
-//    MouseArea{
-//        anchors.fill: parent
-//        onClicked: {
-//            if(++step>10)
-//            {
-//                backPrePage()
-//            }
-//        }
-//    }
-//}
+import "../"
+
 Item{
     property var containerqml: null
     SwipeView {
         id:swipe
         anchors.fill: parent
         currentIndex:0
-
         interactive:true //是否可以滑动
+        clip: true
         Item{
             Text {
-                width: parent.width-100
-                //            height: 50
                 anchors.centerIn: parent
                 color:"#FFF"
                 font.pixelSize: 40
                 text: qsTr("滑动屏幕,观察测试过程显示的一些图像上是否有黑点和亮点
 ")
                 wrapMode: Text.WrapAnywhere
-                //            horizontalAlignment:Text.AlignHCenter
-                //            verticalAlignment:Text.AlignVCenter
             }
         }
         Image {
@@ -94,88 +71,31 @@ Item{
             source:themesPicturesPath+"test/image10.png"
         }
         Item {
-            RowLayout{
-                anchors.fill: parent
-                Button{
-                    Layout.preferredWidth: 200
-                    Layout.preferredHeight:100
-                    Layout.alignment: Qt.AlignHCenter|Qt.AlignVCenter
-                    background:Rectangle{
-                        radius: 16
-                        color:"green"
-                    }
-                    Text{
-                        text:"成功"
-                        color:"#FFF"
-                        font.pixelSize: 35
-                        anchors.centerIn: parent
-                    }
-                    onClicked: {
+            PageButtonBar{
+                anchors.centerIn: parent
+
+                space:150
+                models: ["成功","失败"]
+                onClick:{
+                    if(clickIndex==0)
+                    {
                         containerqml.clickedLcdFunc(1)
-                        backPrePage()
                     }
-                }
-                Button{
-                    Layout.preferredWidth: 200
-                    Layout.preferredHeight:100
-                    Layout.alignment: Qt.AlignHCenter|Qt.AlignVCenter
-                    background:Rectangle{
-                        radius: 16
-                        color:"red"
-                    }
-                    Text{
-                        text:"失败"
-                        color:"#FFF"
-                        font.pixelSize: 35
-                        anchors.centerIn: parent
-                    }
-                    onClicked: {
+                    else
+                    {
                         containerqml.clickedLcdFunc(-1)
-                        backPrePage()
                     }
+                    backPrePage()
                 }
             }
         }
         Component.onCompleted:{
-            contentItem.highlightMoveDuration = 10       //将移动时间设为0
+            contentItem.highlightMoveDuration = 0       //将移动时间设为0
             contentItem.highlightMoveVelocity = -1
         }
         onCurrentIndexChanged:{
             console.log("onCurrentIndexChanged",currentIndex)
-            //            if(currentIndex>=10)
-            //                backPrePage()
         }
-
     }
-    //    MouseArea{
-    //        anchors.fill: parent
-    //        enabled: swipe.currentIndex<10
-    //        onClicked: {
-    //            console.log("onClicked",swipe.currentIndex)
-    //            swipe.incrementCurrentIndex()
-    //        }
-    //    }
 }
-//AnimatedSprite {
-//    property int step: 1
-//    anchors.fill: parent
-//    source: themesPicturesPath+"test/image"+step+".png"
-//    frameWidth: 800
-//    frameHeight: 480
-//    frameDuration: 4000
-//    frameCount: 1
-//    frameX: 0
-//    frameY: 0
-//    frameSync :false
-//    interpolate :true
-//    loops :1
-//    MouseArea{
-//        anchors.fill: parent
-//        onClicked: {
-//            if(++step>10)
-//            {
-//                backPrePage()
-//            }
-//        }
-//    }
-//}
+

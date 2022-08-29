@@ -22,6 +22,7 @@ ApplicationWindow {
     property int demoModeStatus:0
     property bool wifiPageStatus:false
     property bool errorBuzzer:false
+    property var decode_ssid:""
 
     property var smartSmokeSwitch: QmlDevState.state.SmartSmokeSwitch
     property var hoodSpeed: QmlDevState.state.HoodSpeed
@@ -214,7 +215,7 @@ ApplicationWindow {
         //                console.warn("Window onCompleted test: ",encodeURI("a1数b2据C3"),encodeURIComponent("a1数b2据C3"),decodeURI("a1%E6%95%B0b2%E6%8D%AEC3"),decodeURIComponent("a1%E6%95%B0b2%E6%8D%AEC3"),pattern.test("数据a1"),pattern.test("adwe445-._"))
 
         push_page(pageHome)
-        //        push_page(pageTestFront)
+//                push_page(pageTestFront)
         //        push_page(pageDemoMode)
         if(systemSettings.wifiPasswdArray!=null)
         {
@@ -232,6 +233,7 @@ ApplicationWindow {
         {
             systemSettings.brightness=200
         }
+        getCurrentTime(1640966400)
     }
     Connections { // 将目标对象信号与槽函数进行连接
         target: MNetwork
@@ -274,15 +276,20 @@ ApplicationWindow {
     {
         var date
         if(ms==null)
+        {
             date=new Date()
+        }
         else
-            date=new Date(ms)
+        {
+            date=new Date(ms*1000)
+        }
         gYear=date.getFullYear()
         gMonth=date.getMonth()+1
         gDate=date.getDate()
         gDay=date.getDay()
         gHours=date.getHours()
         gMinutes=date.getMinutes()
+//        console.log("getCurrentTime",ms,gYear,gMonth,gDate,gDay,gHours,gMinutes)
     }
 
     Timer{
@@ -370,8 +377,8 @@ ApplicationWindow {
             if(wifiConnecting==true)
             {
                 console.log("timer_wifi_connecting...")
-                wifiConnecting=false
-                QmlDevState.executeShell("(wpa_cli reconfigure) &")
+//                wifiConnecting=false
+//                QmlDevState.executeShell("(wpa_cli reconfigure) &")
             }
         }
     }
@@ -756,6 +763,7 @@ ApplicationWindow {
             }
             else
             {
+                SendFunc.setSysPower(1)
                 mouse.accepted = true
             }
         }
@@ -930,10 +938,6 @@ ApplicationWindow {
         PageGetQuad {}
     }
     Component {
-        id: pageLoadPower
-        PageLoadPower {}
-    }
-    Component {
         id: pagePowerBoard
         PagePowerBoard {}
     }
@@ -1083,9 +1087,8 @@ ApplicationWindow {
             loaderErrorShow("燃气泄漏","燃气有泄露风险\n请立即关闭灶具旋钮\n关闭总阀并开窗通气",false)
             break
         case 9:
-            if(dir==null && productionTestStatus!=1)
+            if(dir==null)
             {
-                SendFunc.setSysPower(1)
                 loaderErrorShow("电源板串口故障！","请拨打售后电话<font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员",false);
                 standbyWakeup()
             }
@@ -1105,10 +1108,6 @@ ApplicationWindow {
         case 14:
             if(dir==null||dir===cookWorkPosEnum.RIGHT)
                 loaderErrorShow("右腔干烧检测电路故障！","请拨打售后电话<font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员")
-            break
-        case 15:
-            if(dir==null && productionTestStatus==0)
-                loaderErrorShow("手势板故障！","请拨打售后电话<font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员");
             break
         default:
             break

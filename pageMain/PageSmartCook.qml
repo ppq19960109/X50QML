@@ -121,6 +121,7 @@ Item {
         id:topBar
         anchors.top:parent.top
         name:qsTr("智慧烹饪")
+        centerText:QmlDevState.state.OilTempSwitch?("左灶油温:"+QmlDevState.state.LOilTemp+"℃"+"    右灶油温:"+QmlDevState.state.ROilTemp+"℃"):""
     }
 
     Row {

@@ -3,6 +3,7 @@ import QtQuick.Controls 2.5
 import "../"
 import "qrc:/SendFunc.js" as SendFunc
 Item {
+    property int longPressTime: 0
     id:root
     Timer{
         id:timer_qrcode
@@ -53,7 +54,33 @@ Item {
             value: ""
         }
     }
+    Timer{
 
+        id:timer_longPress
+        repeat: true
+        running: false
+        interval: 1000
+        triggeredOnStart: false
+        onTriggered: {
+            ++longPressTime
+            console.warn("timer_longPress onTriggered",longPressTime)
+            if(longPressTime >= 3)
+            {
+                if(timer_longPress.interval==1000)
+                {
+                    if(productionTestFlag > 0)
+                    {
+                        push_page(pageTestFront)
+                    }
+                }
+                else
+                {
+                    push_page(pageDemoMode)
+                }
+                timer_longPress.stop()
+            }
+        }
+    }
     Component {
         id: infoDelegate
         Item{
@@ -75,6 +102,36 @@ Item {
             }
             PageDivider{
                 anchors.bottom: parent.bottom
+            }
+            MouseArea{
+                anchors.fill: parent
+
+                onPressed: {
+                    console.warn("onPressed",mouse.x,mouse.y)
+                    if(mouse.x<700)
+                        return
+                    if(index==0)
+                    {
+                        timer_longPress.interval=1200
+                    }
+                    else if(index==1)
+                    {
+                        timer_longPress.interval=1000
+                    }
+                    else
+                        return
+                    longPressTime=0
+                    timer_longPress.restart()
+                }
+                onReleased: {
+                    console.warn("onReleased",mouse.x,mouse.y)
+                    if(timer_longPress.running==true)
+                        timer_longPress.stop()
+                }
+                onExited:{
+                    console.warn("onExited")
+
+                }
             }
         }
     }

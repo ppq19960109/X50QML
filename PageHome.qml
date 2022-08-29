@@ -201,7 +201,6 @@ Item {
                 SendFunc.setBuzControl(buzControlEnum.STOP)
                 SendFunc.setBuzControl(buzControlEnum.SHORT)
 
-                //                push_page("pageTestFront")
             }
             else
             {
@@ -457,6 +456,7 @@ Item {
                     wifiConnecting=false
                     if(value==2 || value==3||value==5)
                     {
+                        QmlDevState.executeShell("(wpa_cli reconfigure) &")
                         if(wifiPageStatus==false)
                         {
                             wifiConnectInfo.ssid=""
@@ -477,38 +477,26 @@ Item {
             {
                 if(wifiConnected==true && wifiConnectInfo.ssid!="")
                 {
-                    var real_ssid
-                    if(pattern.test(wifiConnectInfo.ssid))
-                    {
-                        real_ssid=decodeURI(value.replace(/\\x/g,'%'))
-                    }
-                    else
-                    {
-                        real_ssid=value
-                    }
-                    console.log("real_ssid:",real_ssid)
-                    if(real_ssid===wifiConnectInfo.ssid)
+                    //                    if(pattern.test(wifiConnectInfo.ssid))
+                    //                    {
+                    decode_ssid=decodeURI(value.replace(/\\x/g,'%'))
+                    //                    }
+                    //                    else
+                    //                    {
+                    //                        decode_ssid=value
+                    //                    }
+                    console.log("decode_ssid",decode_ssid,wifiConnectInfo.ssid)
+                    if(decode_ssid==wifiConnectInfo.ssid)
                     {
                         WifiFunc.addWifiInfo(wifiConnectInfo)
-                        QmlDevState.executeShell("(wpa_cli list_networks | tail -n +3 | grep "+value+" | grep -v 'CURRENT' | awk '{system(\"wpa_cli remove_network \" $1)}' && wpa_cli save_config) &")
+                        var real_value=value.replace(/\\{1}x/g,"\\\\x")
+                        QmlDevState.executeShell("(wpa_cli list_networks | tail -n +3 | grep \'"+real_value+"\' | grep -v 'CURRENT' | awk '{system(\"wpa_cli remove_network \" $1)}' && wpa_cli save_config) &")
+                        real_value=null
                     }
                 }
                 if(wifiPageStatus==false)
                 {
                     wifiConnectInfo.ssid=""
-                }
-            }
-            else if("ProductionTest"==key)
-            {
-                if(productionTestFlag > 0 && productionTestStatus==0)
-                {
-                    push_page("pageTestFront")
-                }
-                else
-                {
-                    var page=isExistView("pageTestFront")
-                    if(page!==null)
-                        backPage(page)
                 }
             }
             else if("LStoveTimingState"==key)
@@ -629,14 +617,6 @@ Item {
                 else
                 {
                     loaderMultistageHide()
-                }
-            }
-            else if("DemoStart"==key)
-            {
-                if(sysPower==0)
-                {
-                    if(demoModeStatus==0)
-                        push_page("pageDemoMode")
                 }
             }
         }

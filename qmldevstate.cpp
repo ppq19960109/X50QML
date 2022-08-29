@@ -110,6 +110,8 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     setState("SmartSmokeSwitch",0);
     setState("LStoveStatus",0);
     setState("RStoveStatus",0);
+    setState("LOilTemp",0);
+    setState("ROilTemp",0);
     setState("LStoveTimingState",0);
     setState("RStoveTimingState",0);
     setState("LStOvState",0);

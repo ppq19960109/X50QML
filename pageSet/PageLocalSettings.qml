@@ -64,9 +64,7 @@ Item {
                     from: 1
                     to: 255
                     value: Backlight.backlightGet()
-
                     onValueChanged: {
-                        console.log("lightSlider:",value)
                         systemSettings.brightness=value
                     }
                 }

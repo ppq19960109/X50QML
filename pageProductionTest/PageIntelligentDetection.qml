@@ -1,8 +1,7 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.5
 import QtQuick.Layouts 1.12
-//import QtTest 1.1
-
+import "../"
 import "qrc:/SendFunc.js" as SendFunc
 Item {
     property int step: 0
@@ -185,7 +184,7 @@ Item {
             if("PwrSWVersion"==key && step==0)
             {
                 step=1
-                versionText.text="电源板软件版本号:"+QmlDevState.state.PwrSWVersion+"\n屏幕模组软件版本号:"+QmlDevState.state.ComSWVersion
+                versionText.text="电源板软件版本号:"+QmlDevState.state.PwrSWVersion+" 屏幕模组软件版本号:"+QmlDevState.state.ComSWVersion
                 version.color="green"
                 SendFunc.scanWifi()
                 timer_wifi.restart()
@@ -245,39 +244,12 @@ Item {
             value=null
         }
     }
-    Item{
-        id:topBar
-        width:parent.width
-        height:100
-        anchors.top: parent.top
-        Text {
-            anchors.centerIn: parent
-            color:themesTextColor
-            font.pixelSize: 40
-            font.bold : true
-            text: qsTr("智能模块检测")
-        }
-        Button{
-            width:100
-            height:50
-            anchors.right: parent.right
-            anchors.rightMargin: 20
-            anchors.bottom: parent.bottom
 
-            background:Rectangle{
-                radius: 8
-                color:themesTextColor2
-            }
-            Text{
-                text:"退出"
-                color:"#fff"
-                font.pixelSize: 40
-                anchors.centerIn: parent
-            }
-            onClicked: {
-                backPrePage()
-            }
-        }
+    PageBackBar{
+        id:topBar
+        anchors.top:parent.top
+        name:qsTr("智能模块检测")
+        customClose:true
     }
     Item{
         id:bottomBar
@@ -286,15 +258,15 @@ Item {
         anchors.bottom: parent.bottom
         GridLayout{
             width:parent.width - 100
-            height: parent.height - 20
+            height: parent.height
             anchors.centerIn: parent
             rows: 6
             columns: 2
-            rowSpacing: 5
-            columnSpacing: 5
+            rowSpacing: 2
+            columnSpacing: 10
 
             Text{
-                Layout.preferredWidth: 250
+                Layout.preferredWidth: 300
                 Layout.preferredHeight:50
                 text:"通讯及版本检测:"
                 color:"#FFF"
@@ -302,8 +274,8 @@ Item {
             }
             Rectangle{
                 id:version
-                Layout.preferredWidth: 450
-                Layout.preferredHeight:80
+                Layout.preferredWidth: 600
+                Layout.preferredHeight:50
                 radius: 8
                 color:"transparent"
 
@@ -318,7 +290,7 @@ Item {
             }
 
             Text{
-                Layout.preferredWidth: 250
+                Layout.preferredWidth: 300
                 Layout.preferredHeight:50
 
                 text:"wifi信号检测:"
@@ -328,7 +300,7 @@ Item {
             Rectangle{
                 id:wifiSignal
 
-                Layout.preferredWidth: 450
+                Layout.preferredWidth: 600
                 Layout.preferredHeight:50
                 radius: 8
                 color:"transparent"
@@ -344,7 +316,7 @@ Item {
             }
 
             Text{
-                Layout.preferredWidth: 250
+                Layout.preferredWidth: 300
                 Layout.preferredHeight:50
 
                 text:"wifi连接:"
@@ -353,7 +325,7 @@ Item {
             }
             Rectangle{
                 id:wifiConnect
-                Layout.preferredWidth: 450
+                Layout.preferredWidth: 600
                 Layout.preferredHeight:50
 
                 radius: 8
@@ -369,7 +341,7 @@ Item {
             }
 
             Text{
-                Layout.preferredWidth: 250
+                Layout.preferredWidth: 300
                 Layout.preferredHeight:50
 
                 text:"四元组检测:"
@@ -378,7 +350,7 @@ Item {
             }
             Rectangle{
                 id:quad
-                Layout.preferredWidth: 450
+                Layout.preferredWidth: 600
                 Layout.preferredHeight:50
                 radius: 8
                 color:"transparent"
@@ -393,7 +365,7 @@ Item {
                 }
             }
             Text{
-                Layout.preferredWidth: 250
+                Layout.preferredWidth: 300
                 Layout.preferredHeight:50
 
                 text:"产测序号:"
@@ -402,7 +374,7 @@ Item {
             }
             Rectangle{
                 id:sequence
-                Layout.preferredWidth: 450
+                Layout.preferredWidth: 600
                 Layout.preferredHeight:50
                 radius: 8
                 color:"transparent"
@@ -417,7 +389,7 @@ Item {
                 }
             }
             Text{
-                Layout.preferredWidth: 250
+                Layout.preferredWidth: 300
                 Layout.preferredHeight:50
 
                 text:"恢复出厂设置:"
@@ -426,7 +398,7 @@ Item {
             }
             Rectangle{
                 id:reset
-                Layout.preferredWidth: 450
+                Layout.preferredWidth: 600
                 Layout.preferredHeight:50
                 radius: 8
                 color:"transparent"

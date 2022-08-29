@@ -38,7 +38,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 contains(QT_ARCH, arm)||contains(QT_ARCH, arm64){
     message("arm")
     DEFINES += USE_RK3308
-    DEFINES += SYSPOWER_RK3308
+#    DEFINES += SYSPOWER_RK3308
     LIBS += -lqrencode
 }else{
     message("x86_64")

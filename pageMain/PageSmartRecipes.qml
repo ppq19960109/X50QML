@@ -185,7 +185,7 @@ Item {
             //                snapMode: ListView.SnapToItem //SnapToItem SnapOneItem
             //                clip: true
             //                currentIndex:0
-            //                highlightMoveDuration:80
+            //                highlightMoveDuration:0
             //                highlightMoveVelocity:-1
             //                delegate:recipeDelegate
             //            }
@@ -198,15 +198,15 @@ Item {
                 anchors.topMargin: 26
 
                 clip: true
-                cacheItemCount:3
+                cacheItemCount:5
                 currentIndex:0
                 pathItemCount:5
                 interactive: true
                 preferredHighlightBegin: 0.5;
                 preferredHighlightEnd: 0.5;
-                highlightMoveDuration:320
+
                 highlightRangeMode: PathView.StrictlyEnforceRange
-                maximumFlickVelocity:1200
+                //maximumFlickVelocity:1280
                 model:listModel
                 delegate:recipeDelegate
                 path : Path{

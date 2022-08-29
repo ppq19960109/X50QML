@@ -45,9 +45,11 @@ Item {
 
     Rectangle{
         id:rect_bg
-        width: timer_aging.running?700:400
+        width: timer_aging.running?1000:400
         height: timer_aging.running?300:100
-        anchors.centerIn: parent
+        anchors.top: parent.top
+        anchors.topMargin: 20
+        anchors.horizontalCenter: parent.horizontalCenter
         color: "red"
         Text {
             id: rect_test

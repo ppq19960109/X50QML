@@ -83,6 +83,12 @@ Item {
                     }
                     else if(value==4)
                     {
+                        if(wifiConnected==true)
+                        {
+                            QmlDevState.executeShell("(wpa_cli list_networks | tail -n +3 | grep -v 'CURRENT' | awk '{system(\"wpa_cli disable_network \" $1)}') &")
+                        }
+                        if(wifiInputConnecting==true)
+                            dismissWifiInput()
                         if(scan_count>=3)
                             wifi_scan_timer_reset()
                     }
@@ -92,17 +98,7 @@ Item {
             {
                 if(wifiConnected==true && wifiConnectInfo.ssid!=="")
                 {
-                    var real_ssid
-                    if(pattern.test(wifiConnectInfo.ssid))
-                    {
-                        real_ssid=decodeURI(value.replace(/\\x/g,'%'))
-                        console.log("real_ssid",real_ssid,wifiConnectInfo.ssid)
-                    }
-                    else
-                    {
-                        real_ssid=value
-                    }
-                    if(real_ssid===wifiConnectInfo.ssid)
+                    if(decode_ssid===wifiConnectInfo.ssid)
                     {
                         qrcode_display=20
                         wifiConnectInfo.ssid=""
@@ -420,7 +416,7 @@ Item {
             //            highlightRangeMode: ListView.ApplyRange
             snapMode: ListView.SnapToItem
             boundsBehavior:Flickable.StopAtBounds
-            highlightMoveDuration:40
+            highlightMoveDuration:0
             highlightMoveVelocity:-1
             footer: footerView
 
@@ -529,6 +525,7 @@ Item {
                         {
                             wifiInputConnecting=false
                         }
+                        textField.focus=true
                     }
                 }
                 PageDivider{
@@ -546,6 +543,7 @@ Item {
                 padding: 20
                 leftPadding: 40
                 font.pixelSize: 35
+                font.letterSpacing :5
                 color: "#ECF4FC"
                 echoMode: TextInput.Normal//TextInput.Password:TextInput.Normal
                 placeholderText: qsTr("请输入密码")

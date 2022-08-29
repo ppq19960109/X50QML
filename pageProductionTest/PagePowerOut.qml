@@ -1,6 +1,6 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.5
-
+import "../"
 import "qrc:/SendFunc.js" as SendFunc
 Item {
 
@@ -10,40 +10,11 @@ Item {
     Component.onDestruction: {
         SendFunc.loadPowerSet(0)
     }
-    Item{
+    PageBackBar{
         id:topBar
-        width:parent.width
-        height:80
-        anchors.top: parent.top
-        Text {
-            anchors.centerIn: parent
-            color:themesTextColor
-            font.pixelSize: 40
-            font.bold : true
-            text: qsTr("电源板输出检测")
-        }
-        Button{
-            width:100
-            height:50
-            anchors.right: parent.right
-            anchors.rightMargin: 20
-            anchors.bottom: parent.bottom
-            background:Rectangle{
-                radius: 8
-                color:themesTextColor2
-            }
-            Text{
-                text:"退出"
-                color:"#fff"
-                font.pixelSize: 40
-                anchors.centerIn: parent
-            }
-            onClicked: {
-                backPrePage()
-            }
-        }
+        anchors.top:parent.top
+        name:qsTr("电源板输出检测")
     }
-
     Rectangle{
         width:parent.width-100
         height:200

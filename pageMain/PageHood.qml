@@ -8,6 +8,7 @@ Item {
         id:topBar
         anchors.top:parent.top
         name:qsTr("烟机灶具")
+        centerText:QmlDevState.state.OilTempSwitch?("左灶油温:"+QmlDevState.state.LOilTemp+"℃"+"    右灶油温:"+QmlDevState.state.ROilTemp+"℃"):""
     }
     PageTabBar{
         anchors.horizontalCenter: parent.horizontalCenter
