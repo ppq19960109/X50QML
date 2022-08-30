@@ -15,8 +15,8 @@ ApplicationWindow {
     id: window
     width: 1280
     height: 400
-    visible: true
-    property int sysPower:1
+    //    visible: true
+    property int sysPower:-1
     property int productionTestStatus:0
     property int productionTestFlag:1
     property int demoModeStatus:0
@@ -30,6 +30,7 @@ ApplicationWindow {
     property var rTimingState: QmlDevState.state.RStoveTimingState
     property var lStOvState: QmlDevState.state.LStOvState
     property var rStOvState: QmlDevState.state.RStOvState
+    property var errorCodeShow: QmlDevState.state.ErrorCodeShow
 
     readonly property string productionTestWIFISSID:"moduletest"
     readonly property string productionTestWIFIPWD:"58185818"
@@ -56,7 +57,7 @@ ApplicationWindow {
     property bool sleepState: false
     property var wifiConnectInfo:{"ssid":"","psk":"","encryp":0}
     readonly property var multiModeEnum:{"NONE":0,"RECIPE":1,"MULTISTAGE":2}
-    readonly property var buzControlEnum:{"STOP":0,"SHORT":1,"SHORTTWO":2,"2SCECONDS":3,"OPEN":4,"SHORTFIVE":5}
+    readonly property var buzControlEnum:{"STOP":0,"SHORT":1,"SHORTTWO":2,"SCECONDS2":3,"OPEN":4,"SHORTFIVE":5}
 
     readonly property string themesPicturesPath:"file:themes/X8GCZ/"
     readonly property string themesWindowBackgroundColor:"#1A1A1A"
@@ -81,8 +82,8 @@ ApplicationWindow {
     property int gHighTemp
     property string gWeatherId
 
-    property int gTimerTotalTime
-    property int gTimerLeft
+    property int gTimerTotalTime:0
+    property int gTimerLeft:0
 
     property string gTimerLeftText:generateTwoTime(Math.floor(gTimerLeft/3600))+":"+generateTwoTime(Math.floor(gTimerLeft%3600/60))+":"+generateTwoTime(gTimerLeft%60)
     property string gTimeText:generateTwoTime(gHours)+":"+generateTwoTime(gMinutes)
@@ -189,12 +190,10 @@ ApplicationWindow {
         if(power)
         {
             Backlight.backlightSet(systemSettings.brightness)
-            window.visible=true
             timer_sleep.restart()
         }
         else
         {
-            window.visible=false
             Backlight.backlightSet(0)
             timer_sleep.stop()
             loaderMainHide()
@@ -202,7 +201,8 @@ ApplicationWindow {
                 timer_standby.stop()
             backTopPage()
         }
-
+        if(window.visible==false)
+            window.visible=true
         sysPower=power
     }
 
@@ -215,8 +215,9 @@ ApplicationWindow {
         //                console.warn("Window onCompleted test: ",encodeURI("a1数b2据C3"),encodeURIComponent("a1数b2据C3"),decodeURI("a1%E6%95%B0b2%E6%8D%AEC3"),decodeURIComponent("a1%E6%95%B0b2%E6%8D%AEC3"),pattern.test("数据a1"),pattern.test("adwe445-._"))
 
         push_page(pageHome)
-//                push_page(pageTestFront)
+        //                push_page(pageTestFront)
         //        push_page(pageDemoMode)
+        //push_page(pageGetQuad)
         if(systemSettings.wifiPasswdArray!=null)
         {
             console.log("systemSettings.wifiPasswdArray",systemSettings.wifiPasswdArray.length)
@@ -289,7 +290,7 @@ ApplicationWindow {
         gDay=date.getDay()
         gHours=date.getHours()
         gMinutes=date.getMinutes()
-//        console.log("getCurrentTime",ms,gYear,gMonth,gDate,gDay,gHours,gMinutes)
+        //        console.log("getCurrentTime",ms,gYear,gMonth,gDate,gDay,gHours,gMinutes)
     }
 
     Timer{
@@ -377,8 +378,8 @@ ApplicationWindow {
             if(wifiConnecting==true)
             {
                 console.log("timer_wifi_connecting...")
-//                wifiConnecting=false
-//                QmlDevState.executeShell("(wpa_cli reconfigure) &")
+                //                wifiConnecting=false
+                //                QmlDevState.executeShell("(wpa_cli reconfigure) &")
             }
         }
     }
@@ -401,7 +402,7 @@ ApplicationWindow {
         triggeredOnStart: false
         onTriggered: {
             console.log("timer_sleep onTriggered...")
-            if(productionTestStatus==0 && demoModeStatus==0 && wifiConnecting==false && QmlDevState.localConnected > 0 && QmlDevState.state.ErrorCodeShow === 0)
+            if(productionTestStatus==0 && demoModeStatus==0 && wifiConnecting==false && QmlDevState.localConnected > 0 && errorCodeShow === 0)
             {
                 if((QmlDevState.state.RStOvState === workStateEnum.WORKSTATE_STOP || QmlDevState.state.RStOvState === workStateEnum.WORKSTATE_FINISH || QmlDevState.state.RStOvState === workStateEnum.WORKSTATE_RESERVE || QmlDevState.state.RStOvState === workStateEnum.WORKSTATE_PAUSE_RESERVE) && (QmlDevState.state.LStOvState === workStateEnum.WORKSTATE_STOP || QmlDevState.state.LStOvState === workStateEnum.WORKSTATE_FINISH || QmlDevState.state.LStOvState === workStateEnum.WORKSTATE_RESERVE || QmlDevState.state.LStOvState === workStateEnum.WORKSTATE_PAUSE_RESERVE ))
                 {
@@ -420,7 +421,7 @@ ApplicationWindow {
         interval: 2000
         triggeredOnStart: false
         onTriggered: {
-            //            console.log("timer_alarm onTriggered...")
+            console.log("timer_alarm onTriggered...")
             if(gTimerLeft>0)
                 gTimerLeft-=2
             if(gTimerLeft<=0)
@@ -618,9 +619,6 @@ ApplicationWindow {
     function loaderAutoCompleteShow(text){
         loaderAutoConfirmShow(text,"","好的",themesPicturesPath+"icon_checked.png")
     }
-    function loaderAutoTimerShow(text){
-        loaderAutoConfirmShow(text,"","好的",themesPicturesPath+"icon_timer.png")
-    }
     function loaderAutoConfirmHide(){
         if(loaderAuto.sourceComponent === component_autoConfirm)
             loaderAuto.sourceComponent = null
@@ -631,6 +629,41 @@ ApplicationWindow {
             if(loaderAuto.item.hintCenterText.indexOf(text)!==-1)
                 loaderAuto.sourceComponent = null
         }
+    }
+    Component{
+        id:component_autoTimer
+        PageDialogConfirm{
+            confirmText:""
+            onCancel: {
+                loaderAutoHide()
+            }
+            onConfirm:{
+                loaderAutoHide()
+            }
+            Component.onCompleted: {
+                SendFunc.setBuzControl(buzControlEnum.OPEN)
+            }
+            Component.onDestruction: {
+                SendFunc.setBuzControl(buzControlEnum.STOP)
+            }
+            Timer{
+                repeat: false
+                running: true
+                interval: 1000*60
+                triggeredOnStart: false
+                onTriggered: {
+                    SendFunc.setBuzControl(buzControlEnum.STOP)
+                }
+            }
+        }
+    }
+    function loaderAutoTimerShow(text){
+        if(loaderAuto.sourceComponent !== component_autoTimer)
+            loaderAuto.sourceComponent = component_autoTimer
+        loaderAuto.item.topImageSrc=themesPicturesPath+"icon_timer.png"
+        loaderAuto.item.hintCenterText=text
+        loaderAuto.item.confirmText=""
+        loaderAuto.item.confirmText="好的"
     }
     Component{
         id:component_doorAuto
@@ -745,7 +778,7 @@ ApplicationWindow {
         propagateComposedEvents: true
 
         onPressed: {
-            //            console.log("Window onPressed:",JSON.stringify(systemSettings.wifiPasswdArray))
+            console.log("Window onPressed:",sysPower)
             if(sysPower > 0)
             {
                 mouse.accepted = false
@@ -785,36 +818,36 @@ ApplicationWindow {
     }
     ListModel {
         id: wifiModel
-        ListElement {
-            connected: 1
-            ssid: "qwertyuio"
-            level:2
-            flags:2
-        }
-        ListElement {
-            connected: 0
-            ssid: "123456789123456789123456789"
-            level:2
-            flags:1
-        }
-        ListElement {
-            connected: 0
-            ssid: "123"
-            level:2
-            flags:0
-        }
-        ListElement {
-            connected: 0
-            ssid: "gttr"
-            level:2
-            flags:1
-        }
-        ListElement {
-            connected: 0
-            ssid: "daaas"
-            level:2
-            flags:0
-        }
+//        ListElement {
+//            connected: 1
+//            ssid: "qwertyuio"
+//            level:2
+//            flags:2
+//        }
+//        ListElement {
+//            connected: 0
+//            ssid: "123456789123456789123456789"
+//            level:2
+//            flags:1
+//        }
+//        ListElement {
+//            connected: 0
+//            ssid: "123"
+//            level:2
+//            flags:0
+//        }
+//        ListElement {
+//            connected: 0
+//            ssid: "gttr"
+//            level:2
+//            flags:1
+//        }
+//        ListElement {
+//            connected: 0
+//            ssid: "daaas"
+//            level:2
+//            flags:0
+//        }
     }
     //    Component {
     //        id: pageTest

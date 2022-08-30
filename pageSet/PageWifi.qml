@@ -87,8 +87,7 @@ Item {
                         {
                             QmlDevState.executeShell("(wpa_cli list_networks | tail -n +3 | grep -v 'CURRENT' | awk '{system(\"wpa_cli disable_network \" $1)}') &")
                         }
-                        if(wifiInputConnecting==true)
-                            dismissWifiInput()
+
                         if(scan_count>=3)
                             wifi_scan_timer_reset()
                     }
@@ -100,6 +99,7 @@ Item {
                 {
                     if(decode_ssid===wifiConnectInfo.ssid)
                     {
+                        loaderWifiInputHide(decode_ssid)
                         qrcode_display=20
                         wifiConnectInfo.ssid=""
                         loaderQrcodeShow("连接成功！")
@@ -512,6 +512,8 @@ Item {
                         console.log("connectBtn:" , wifi_ssid,textField.text,wifi_flags)
                         if(permit_connect)
                         {
+                            if(wifiConnecting==true)
+                                timer_wifi_connecting.restart()
                             SendFunc.connectWiFi(wifi_ssid,textField.text,wifi_flags)
                             wifiModel.setProperty(index,"connected",2)
                             if(index>0)
@@ -520,10 +522,6 @@ Item {
                                 wifiModel.move(index,0,1)
                             }
                             wifiInputConnecting=true
-                        }
-                        else
-                        {
-                            wifiInputConnecting=false
                         }
                         textField.focus=true
                     }
@@ -569,6 +567,7 @@ Item {
                     else
                     {
                         permit_connect=false
+                        wifiInputConnecting=false
                     }
                 }
                 PageDivider{
@@ -605,9 +604,17 @@ Item {
         loaderStackView.item.index=index
         timer_wifi_scan.stop()
     }
-    function loaderWifiInputHide(){
+    function loaderWifiInputHide(ssid){
         if(loaderStackView.sourceComponent===component_wifiInput)
-            loaderStackView.sourceComponent = undefined
+        {
+            if(ssid==null)
+                loaderStackView.sourceComponent = undefined
+            else
+            {
+                if(loaderStackView.item.wifi_ssid===ssid)
+                    loaderStackView.sourceComponent = undefined
+            }
+        }
         timer_wifi_scan.start()
         listView.positionViewAtBeginning()
     }

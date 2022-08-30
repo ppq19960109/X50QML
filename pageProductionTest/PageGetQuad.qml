@@ -1,8 +1,7 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.5
 import QtQuick.Layouts 1.12
-//import QtTest 1.1
-
+import "../"
 import "qrc:/SendFunc.js" as SendFunc
 Item {
     property int step: 0
@@ -15,7 +14,7 @@ Item {
     Component.onDestruction: {
         productionTestStatus=0
         systemPower(QmlDevState.state.SysPower)
-        loaderErrorCodeShow(QmlDevState.state.ErrorCodeShow)
+        loaderErrorCodeShow(errorCodeShow)
     }
     function connectTestWiFi()
     {
@@ -39,12 +38,6 @@ Item {
             {
                 if(value==4)
                 {
-                    //                    step=1
-                    //                    wifiConnect.color="green"
-                    //                    wifiConnectText.text="成功"
-
-                    //                    quadText.visible=true
-                    //                    getQuad()
                 }
                 else
                 {
@@ -97,27 +90,18 @@ Item {
             }
         }
     }
-    Item{
+    PageBackBar{
         id:topBar
-        width:parent.width
-        height:80
-        anchors.top: parent.top
-        Text {
-            anchors.centerIn: parent
-            color:"green"
-            font.pixelSize: 40
-            font.bold : true
-            text: qsTr("四元组烧录")
-        }
+        anchors.top:parent.top
+        name:qsTr("四元组烧录")
     }
     Item{
-        id:bottomBar
         width:parent.width
         anchors.top: topBar.bottom
         anchors.bottom: parent.bottom
 
         GridLayout{
-            width:parent.width-40
+            width:parent.width-200
             height: parent.height-100
             anchors.top: parent.top
             anchors.horizontalCenter: parent.horizontalCenter
@@ -127,7 +111,7 @@ Item {
             columnSpacing: 10
 
             Text{
-                Layout.preferredWidth: 200
+                Layout.preferredWidth: 300
                 Layout.preferredHeight:60
                 Layout.alignment: Qt.AlignVCenter
 
@@ -155,7 +139,7 @@ Item {
             }
 
             Text{
-                Layout.preferredWidth: 200
+                Layout.preferredWidth: 300
                 Layout.preferredHeight:60
                 Layout.alignment: Qt.AlignVCenter
 
@@ -189,9 +173,9 @@ Item {
             width:100
             height:50
             anchors.right: productionTest.left
-            anchors.rightMargin: 40
+            anchors.rightMargin: 80
             anchors.bottom: parent.bottom
-            anchors.bottomMargin: 20
+            anchors.bottomMargin: 40
             background:Rectangle{
                 radius: 8
                 color:"green"
@@ -216,10 +200,10 @@ Item {
             visible: false
             width:100
             height:50
-            anchors.right: quit.left
-            anchors.rightMargin: 40
+            anchors.right: parent.right
+            anchors.rightMargin: 80
             anchors.bottom: parent.bottom
-            anchors.bottomMargin: 20
+            anchors.bottomMargin: 40
             background:Rectangle{
                 radius: 8
                 color:"green"
@@ -231,29 +215,7 @@ Item {
                 anchors.centerIn: parent
             }
             onClicked: {
-                push_page("pageTestFront")
-            }
-        }
-        Button{
-            id:quit
-            width:100
-            height:50
-            anchors.right: parent.right
-            anchors.rightMargin: 20
-            anchors.bottom: parent.bottom
-            anchors.bottomMargin: 20
-            background:Rectangle{
-                radius: 8
-                color:"green"
-            }
-            Text{
-                text:"退出"
-                color:"#fff"
-                font.pixelSize: 40
-                anchors.centerIn: parent
-            }
-            onClicked: {
-                backTopPage()
+                push_page(pageTestFront)
             }
         }
     }

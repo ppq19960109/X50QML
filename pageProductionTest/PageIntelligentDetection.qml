@@ -29,7 +29,7 @@ Item {
 
     Component.onCompleted: {
         SendFunc.scanWifi()
-        SendFunc.getAllToServer()
+        SendFunc.getAllToServer(1)
 
         timer_wifi.restart()
     }
@@ -249,7 +249,6 @@ Item {
         id:topBar
         anchors.top:parent.top
         name:qsTr("智能模块检测")
-        customClose:true
     }
     Item{
         id:bottomBar

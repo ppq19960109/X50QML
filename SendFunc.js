@@ -78,11 +78,14 @@ function getToServer(Data)
     json=null
     root=null
 }
-function getAllToServer()
+function getAllToServer(value)
 {
     var root={}
     root.Type="GETALL"
-    root.Data=null
+    if(value==null)
+        root.Data=null
+    else
+        root.Data=value
     var json=JSON.stringify(root)
     QmlDevState.sendToServer(json)
     json=null

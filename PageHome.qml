@@ -189,6 +189,7 @@ Item {
             console.log("page home onLocalConnectedChanged",value)
             if(value > 0)
             {
+                SendFunc.setBuzControl(buzControlEnum.STOP)
                 SendFunc.getAllToServer()
                 loaderErrorHide()
 
@@ -198,9 +199,6 @@ Item {
                     SendFunc.enableWifi(true)
                     Backlight.backlightSet(systemSettings.brightness)
                 }
-                SendFunc.setBuzControl(buzControlEnum.STOP)
-                SendFunc.setBuzControl(buzControlEnum.SHORT)
-
             }
             else
             {
@@ -214,18 +212,24 @@ Item {
             {
                 if(systemSettings.reboot==false)
                 {
-                    if(sysPower<0 && value==0)
+                    if(value==0)
                     {
-                        SendFunc.setSysPower(1)
-                    }
-                    else if(value==1)
-                    {
-                        var errorCode=QmlDevState.state.ErrorCodeShow
-                        if(errorCode!==0)
+                        if(sysPower<0)
                         {
-                            if(errorCode===6)
+                            SendFunc.setSysPower(1)
+                        }
+                    }
+                    else
+                    {
+                        if(sysPower<0)
+                        {
+                            SendFunc.setBuzControl(buzControlEnum.SHORT)
+                        }
+                        if(errorCodeShow!==0)
+                        {
+                            if(errorCodeShow===6)
                                 errorBuzzer=true
-                            loaderErrorCodeShow(errorCode)
+                            loaderErrorCodeShow(errorCodeShow)
                         }
                     }
                 }
@@ -293,7 +297,7 @@ Item {
                             sleepWakeup()
                         }
                     }
-                    else if(lastLStOvState===workStateEnum.WORKSTATE_PREHEAT && value===WORKSTATE_RUN)
+                    else if(lastLStOvState===workStateEnum.WORKSTATE_PREHEAT && value===workStateEnum.WORKSTATE_RUN)
                     {
                         var lMode=QmlDevState.state.LStOvMode
                         if(lMode===35||lMode===36||lMode===38||lMode===40||lMode===42)
@@ -679,7 +683,7 @@ Item {
             Component.onDestruction: {
                 productionTestStatus=0
                 systemPower(QmlDevState.state.SysPower)
-                loaderErrorCodeShow(QmlDevState.state.ErrorCodeShow)
+                loaderErrorCodeShow(errorCodeShow)
             }
         }
     }
@@ -718,7 +722,7 @@ Item {
             return
         }
         productionTestFlag=0x0f
-        push_page("pageGetQuad")
+        push_page(pageGetQuad)
     }
     Timer{
         id:timer_scanwifi

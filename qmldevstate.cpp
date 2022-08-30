@@ -83,9 +83,6 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     stateType.append(QPair<QString,int>("QuadInfo",LINK_VALUE_TYPE_STRING));
 
     stateType.append(QPair<QString,int>("Reset",LINK_VALUE_TYPE_NUM));
-    stateType.append(QPair<QString,int>("DemoStart",LINK_VALUE_TYPE_NULL));
-    stateType.append(QPair<QString,int>("ProductionTest",LINK_VALUE_TYPE_NULL));
-
     stateType.append(QPair<QString,int>("PCBInput",LINK_VALUE_TYPE_ARRAY));
 
     stateType.append(QPair<QString,int>("SmartSmokeSwitch",LINK_VALUE_TYPE_NUM));
