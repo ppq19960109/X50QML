@@ -107,7 +107,7 @@ Item {
             console.log("onerror",doc.status);
         }
 
-        doc.open("POST", "http://192.168.101.199:63036/iot/push/testing/result")
+        doc.open("POST", "http://192.168.101.199:63136/iot/push/testing/result")
         doc.timeout=5000
         doc.setRequestHeader("Content-Type", "application/json")
 
@@ -123,7 +123,7 @@ Item {
         obj.signalStrength=signalStrength
         obj.quadruple=quadruple
         obj.versionCommunicationPanel=QmlDevState.state.ComSWVersion
-        obj.versionPowerPanel=QmlDevState.state.PwrSWVersion.replace(/\./g,"")
+        obj.versionPowerPanel=QmlDevState.state.PwrSWVersion//.replace(/\./g,"")
         obj.deviceName=QmlDevState.state.DeviceName
         obj.deviceSecret=QmlDevState.state.DeviceSecret
         console.log("body:",JSON.stringify(obj))
