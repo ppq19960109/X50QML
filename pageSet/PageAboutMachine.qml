@@ -108,7 +108,7 @@ Item {
 
                 onPressed: {
                     console.warn("onPressed",mouse.x,mouse.y)
-                    if(mouse.x<700)
+                    if(mouse.x<600)
                         return
                     if(index==0)
                     {

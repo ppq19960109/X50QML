@@ -4,7 +4,6 @@ import "../"
 import "qrc:/pageCook"
 import "qrc:/SendFunc.js" as SendFunc
 Item {
-    property bool completed_state: false
     property var auxiliarySwitch: QmlDevState.state.RAuxiliarySwitch
     Component{
         id:component_tempControl
@@ -114,9 +113,6 @@ Item {
         loaderManual.item.clickFunc=clickFunc
     }
 
-    Component.onCompleted: {
-        completed_state=true
-    }
     PageBackBar{
         id:topBar
         anchors.top:parent.top
@@ -164,9 +160,7 @@ Item {
                 anchors.bottom: parent.bottom
                 anchors.bottomMargin: 30
                 source: themesPicturesPath+(checked ?"icon_switch_open.png":"icon_switch_close.png")
-                onCheckedChanged: {
-                    if(completed_state==false)
-                        return
+                onClicked: {
                     if(checked==true)
                         loaderTempControl(null)
                     else
@@ -202,9 +196,7 @@ Item {
                 anchors.bottom: parent.bottom
                 anchors.bottomMargin: 30
                 source: themesPicturesPath+(checked ?"icon_switch_open.png":"icon_switch_close.png")
-                onCheckedChanged: {
-                    if(completed_state==false)
-                        return
+                onClicked: {
                     if(wifiConnected==false)
                     {
                         loaderWifiConfirmShow("当前无网络，连网后可生成烹饪曲线")
@@ -252,9 +244,7 @@ Item {
                 anchors.bottom: parent.bottom
                 anchors.bottomMargin: 30
                 source: themesPicturesPath+(checked ?"icon_switch_open.png":"icon_switch_close.png")
-                onCheckedChanged: {
-                    if(completed_state==false)
-                        return
+                onClicked: {
                     var Data={}
                     Data.OilTempSwitch = checked
                     SendFunc.setToServer(Data)
@@ -285,9 +275,7 @@ Item {
                 anchors.bottom: parent.bottom
                 anchors.bottomMargin: 30
                 source: themesPicturesPath+(checked ?"icon_switch_open.png":"icon_switch_close.png")
-                onCheckedChanged: {
-                    if(completed_state==false)
-                        return
+                onClicked: {
                     var Data={}
                     Data.RMovePotLowHeatSwitch = checked
                     SendFunc.setToServer(Data)

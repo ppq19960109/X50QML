@@ -86,6 +86,32 @@ Item {
                     push_page(pagePowerBoard)
                 }
             }
+            Button{
+                width: 300
+                height:120
+                background:Rectangle{
+                    radius: 16
+                    color:testMode?themesTextColor:themesTextColor2
+                }
+                Text{
+                    text:"测试模式"
+                    color:"#FFF"
+                    font.pixelSize: 40
+                    anchors.centerIn: parent
+                    wrapMode: Text.WrapAnywhere
+                    anchors.verticalCenterOffset: -20
+                }
+                Text{
+                    text:testMode?"开":"关"
+                    color:"#FFF"
+                    font.pixelSize: 30
+                    anchors.centerIn: parent
+                    anchors.verticalCenterOffset: 30
+                }
+                onClicked: {
+                    testMode=!testMode
+                }
+            }
         }
     }
 }

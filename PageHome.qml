@@ -189,7 +189,6 @@ Item {
             console.log("page home onLocalConnectedChanged",value)
             if(value > 0)
             {
-                SendFunc.setBuzControl(buzControlEnum.STOP)
                 SendFunc.getAllToServer()
                 loaderErrorHide()
 
@@ -197,8 +196,8 @@ Item {
                 {
                     systemSettings.firstStartup=false
                     SendFunc.enableWifi(true)
-                    Backlight.backlightSet(systemSettings.brightness)
                 }
+                SendFunc.setBuzControl(buzControlEnum.STOP)
             }
             else
             {
@@ -808,7 +807,7 @@ Item {
                     }
                     Item
                     {
-                        visible: hoodSpeed > 0
+                        visible: hoodSpeed > 0 && (testMode==true||smartSmokeSwitch===0)
                         width: parent.width
                         height: 50
                         Rectangle{

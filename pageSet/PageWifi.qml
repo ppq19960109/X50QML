@@ -243,7 +243,7 @@ Item {
                 anchors.rightMargin: 20
                 anchors.bottom: divider.top
 
-                onCheckedChanged: {
+                onClicked: {
                     console.log("wifi_switch:", checked,wifi_switch.width)
                     if(systemSettings.wifiEnable!=checked)
                         SendFunc.enableWifi(checked)

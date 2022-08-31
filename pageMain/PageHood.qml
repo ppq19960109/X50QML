@@ -129,12 +129,12 @@ Item {
                         height:45
                         background:Rectangle {
                             id:hoodSpeedBackground
-                            color: (hoodSpeed===(3-index))?themesTextColor:"#191919"
+                            color: (hoodSpeed===(3-index) && (testMode==true||smartSmokeSwitch===0))?themesTextColor:"#191919"
                             radius: 20
                         }
                         Text{
                             text:modelData
-                            color:(hoodSpeed===(3-index))?"#fff":"#7C7C7C"
+                            color:(hoodSpeed===(3-index) && (testMode==true||smartSmokeSwitch===0))?"#fff":"#7C7C7C"
                             font.pixelSize: 30
                             anchors.centerIn: parent
                         }
@@ -142,7 +142,12 @@ Item {
                             if(hoodSpeed!==(3-index))
                                 SendFunc.setHoodSpeed(3-index)
                             else
-                                SendFunc.setHoodSpeed(0)
+                            {
+                                if(testMode==false && smartSmokeSwitch>0)
+                                    SendFunc.setSmartSmoke(0)
+                                else
+                                    SendFunc.setHoodSpeed(0)
+                            }
                         }
                     }
                 }

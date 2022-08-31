@@ -97,7 +97,7 @@ Item {
                     anchors.verticalCenter: parent.verticalCenter
                     checked:true
 
-                    onCheckedChanged: {
+                    onClicked: {
                         console.log("onCheckedChanged:", checked)
                         systemSettings.sleepSwitch=checked
                     }

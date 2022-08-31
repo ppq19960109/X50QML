@@ -24,7 +24,7 @@ ToolBar {
         anchors.bottom:parent.bottom
         spacing: 0
         Repeater {
-            model: [(wifiConnected==true?"icon_wifi_connected.png":"icon_wifi_disconnect.png"),"icon_set.png", "icon_alarm.png",(stackView.depth>1?"icon_standby.png":"icon_sleep.png") ]
+            model: [(wifiConnected==true?"icon_wifi_connected.png":"icon_wifi_disconnect.png"),"icon_set.png", "icon_alarm.png",(stackView.depth>1?"icon_home.png":"icon_sleep.png") ]
             ToolButton {
                 width: parent.width
                 height:86

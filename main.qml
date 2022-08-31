@@ -15,13 +15,14 @@ ApplicationWindow {
     id: window
     width: 1280
     height: 400
-    //    visible: true
+//        visible: true
     property int sysPower:-1
     property int productionTestStatus:0
     property int productionTestFlag:1
     property int demoModeStatus:0
     property bool wifiPageStatus:false
     property bool errorBuzzer:false
+    property bool testMode:false
     property var decode_ssid:""
 
     property var smartSmokeSwitch: QmlDevState.state.SmartSmokeSwitch
@@ -397,7 +398,7 @@ ApplicationWindow {
     Timer{
         id:timer_sleep
         repeat: false
-        running: systemSettings.sleepSwitch && sysPower > 0
+        running: systemSettings.sleepSwitch && sysPower == 1
         interval: systemSettings.sleepTime*60000
         triggeredOnStart: false
         onTriggered: {
