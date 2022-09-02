@@ -4,7 +4,7 @@ import "../"
 import "qrc:/pageCook"
 import "qrc:/SendFunc.js" as SendFunc
 Item {
-    property var auxiliarySwitch: QmlDevState.state.RAuxiliarySwitch
+
     Component{
         id:component_tempControl
         Item {
@@ -100,6 +100,7 @@ Item {
                             Data.RAuxiliarySwitch = 1
                             Data.RAuxiliaryTemp = tempPathView.model[tempPathView.currentIndex]
                             SendFunc.setToServer(Data)
+                            timer_auxiliary.restart()
                         }
                         loaderMainHide()
                     }
@@ -251,6 +252,29 @@ Item {
                 }
             }
         }
+        Component{
+            id:component_lowHeat
+            PageDialog{
+                cancelText:"取消"
+                confirmText:"确定"
+                hintCenterText:"开启后锅具离开灶具，火力变小\n离开3分钟以上，自动熄火"
+                checkboxVisible:true
+                onCancel:{
+                    lowHeatSwitch.checked=false
+                    loaderMainHide()
+                }
+                onConfirm:{
+                    if(checkboxChecked)
+                    {
+                        systemSettings.rMovePotLowHeatRemind=false
+                    }
+                    var Data={}
+                    Data.RMovePotLowHeatSwitch = true
+                    SendFunc.setToServer(Data)
+                    loaderMainHide()
+                }
+            }
+        }
         Item{
             width: 204
             height:parent.height
@@ -270,15 +294,24 @@ Item {
                 horizontalAlignment:Text.AlignHCenter
             }
             PageSwitch {
+                id:lowHeatSwitch
                 checked: QmlDevState.state.RMovePotLowHeatSwitch
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.bottom: parent.bottom
                 anchors.bottomMargin: 30
                 source: themesPicturesPath+(checked ?"icon_switch_open.png":"icon_switch_close.png")
                 onClicked: {
-                    var Data={}
-                    Data.RMovePotLowHeatSwitch = checked
-                    SendFunc.setToServer(Data)
+                    if(checked==true)
+                    {
+                        if(systemSettings.rMovePotLowHeatRemind)
+                            loaderManual.sourceComponent = component_lowHeat
+                    }
+                    else
+                    {
+                        var Data={}
+                        Data.RMovePotLowHeatSwitch = false
+                        SendFunc.setToServer(Data)
+                    }
                 }
             }
         }

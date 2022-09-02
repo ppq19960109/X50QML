@@ -8,6 +8,26 @@ Item {
     property var lTimingLeft: QmlDevState.state.LStoveTimingLeft
     property var rTimingLeft: QmlDevState.state.RStoveTimingLeft
 
+    Connections { // 将目标对象信号与槽函数进行连接
+        target: QmlDevState
+        onStateChanged: { // 处理目标对象信号的槽函数
+            console.log("PageCloseHeat:",key)
+            if("LStoveTimingState"==key)
+            {
+                if(value===timingStateEnum.STOP && rTimingState===timingStateEnum.STOP)
+                {
+                    backPrePage()
+                }
+            }
+            else if("RStoveTimingState"==key)
+            {
+                if(value===timingStateEnum.STOP && lTimingState===timingStateEnum.STOP)
+                {
+                    backPrePage()
+                }
+            }
+        }
+    }
     Component{
         id:component_closeHeat
         Item {

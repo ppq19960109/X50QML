@@ -15,7 +15,7 @@ ApplicationWindow {
     id: window
     width: 1280
     height: 400
-//        visible: true
+//    visible: true
     property int sysPower:-1
     property int productionTestStatus:0
     property int productionTestFlag:1
@@ -32,6 +32,7 @@ ApplicationWindow {
     property var lStOvState: QmlDevState.state.LStOvState
     property var rStOvState: QmlDevState.state.RStOvState
     property var errorCodeShow: QmlDevState.state.ErrorCodeShow
+    property var auxiliarySwitch: QmlDevState.state.RAuxiliarySwitch
 
     readonly property string productionTestWIFISSID:"moduletest"
     readonly property string productionTestWIFIPWD:"58185818"
@@ -70,6 +71,7 @@ ApplicationWindow {
     property var screenSaverInfo:{"month":"","date":"","hours":"","minutes":"","temp":"","lowTemp":"","highTemp":"","weatherId":0,"weather":"","holiday":""}
     readonly property var weeksEnum:["日","一","二","三","四","五","六"]
     readonly property var weatherEnum:["晴","阴","多云","大雨","中雨","小雨","雷雨","大风","雪","雾","雨夹雪"]
+
     property int timeSync:0
     property int gYear
     property int gMonth
@@ -126,6 +128,7 @@ ApplicationWindow {
         property bool reboot: false
         property var cookDialog:[true,true,true,true,true,true,true]
         property bool multistageRemind:true
+        property bool rMovePotLowHeatRemind:true
         property var wifiPasswdArray:[]
         property bool otaSuccess:false
 
@@ -195,6 +198,7 @@ ApplicationWindow {
         }
         else
         {
+            gTimerLeft=0
             Backlight.backlightSet(0)
             timer_sleep.stop()
             loaderMainHide()
@@ -269,9 +273,9 @@ ApplicationWindow {
             if(value=="")
                 return
             var resp=JSON.parse(value);
-            var curTemp=resp.current_condition[0].temp_C
-            var curMinTemp=resp.weather[0].mintempC
-            var curMaxTemp=resp.weather[0].maxtempC
+            gTemp=resp.current_condition[0].temp_C
+            gLowTemp=resp.weather[0].mintempC
+            gHighTemp=resp.weather[0].maxtempC
         }
     }
     function getCurrentTime(ms)
@@ -347,6 +351,22 @@ ApplicationWindow {
         return -1
     }
 
+    Timer{
+        id:timer_auxiliary
+        repeat: false
+        running: false
+        interval: 1000*60*10
+        triggeredOnStart: false
+        onTriggered: {
+            console.log("timer_auxiliary onTriggered")
+            if(auxiliarySwitch===0)
+                return
+            var Data={}
+            Data.RAuxiliarySwitch = 0
+            SendFunc.setToServer(Data)
+            loaderAutoTextShow("长时间未开启右灶，已自动取消右灶控温")
+        }
+    }
     Timer{
         id:timer_standby
         repeat: false
@@ -430,6 +450,8 @@ ApplicationWindow {
                 gTimerLeft=0
                 if(loaderManual.sourceComponent === pageTimer)
                     loaderManual.sourceComponent = null
+                if(sleepState==true)
+                    loaderScreenSaverHide()
                 loaderAutoTimerShow("时间到！计时结束")
             }
         }
@@ -819,36 +841,36 @@ ApplicationWindow {
     }
     ListModel {
         id: wifiModel
-//        ListElement {
-//            connected: 1
-//            ssid: "qwertyuio"
-//            level:2
-//            flags:2
-//        }
-//        ListElement {
-//            connected: 0
-//            ssid: "123456789123456789123456789"
-//            level:2
-//            flags:1
-//        }
-//        ListElement {
-//            connected: 0
-//            ssid: "123"
-//            level:2
-//            flags:0
-//        }
-//        ListElement {
-//            connected: 0
-//            ssid: "gttr"
-//            level:2
-//            flags:1
-//        }
-//        ListElement {
-//            connected: 0
-//            ssid: "daaas"
-//            level:2
-//            flags:0
-//        }
+        //        ListElement {
+        //            connected: 1
+        //            ssid: "qwertyuio"
+        //            level:2
+        //            flags:2
+        //        }
+        //        ListElement {
+        //            connected: 0
+        //            ssid: "123456789123456789123456789"
+        //            level:2
+        //            flags:1
+        //        }
+        //        ListElement {
+        //            connected: 0
+        //            ssid: "123"
+        //            level:2
+        //            flags:0
+        //        }
+        //        ListElement {
+        //            connected: 0
+        //            ssid: "gttr"
+        //            level:2
+        //            flags:1
+        //        }
+        //        ListElement {
+        //            connected: 0
+        //            ssid: "daaas"
+        //            level:2
+        //            flags:0
+        //        }
     }
     //    Component {
     //        id: pageTest
@@ -1147,5 +1169,76 @@ ApplicationWindow {
             break
         }
     }
-}
 
+    //    readonly property var weather_code:{
+    //        "113": "Sunny",
+    //        "116": "PartlyCloudy",
+    //        "119": "Cloudy",
+    //        "122": "VeryCloudy",
+    //        "143": "Fog",
+    //        "176": "LightShowers",
+    //        "179": "LightSleetShowers",
+    //        "182": "LightSleet",
+    //        "185": "LightSleet",
+    //        "200": "ThunderyShowers",
+    //        "227": "LightSnow",
+    //        "230": "HeavySnow",
+    //        "248": "Fog",
+    //        "260": "Fog",
+    //        "263": "LightShowers",
+    //        "266": "LightRain",
+    //        "281": "LightSleet",
+    //        "284": "LightSleet",
+    //        "293": "LightRain",
+    //        "296": "LightRain",
+    //        "299": "HeavyShowers",
+    //        "302": "HeavyRain",
+    //        "305": "HeavyShowers",
+    //        "308": "HeavyRain",
+    //        "311": "LightSleet",
+    //        "314": "LightSleet",
+    //        "317": "LightSleet",
+    //        "320": "LightSnow",
+    //        "323": "LightSnowShowers",
+    //        "326": "LightSnowShowers",
+    //        "329": "HeavySnow",
+    //        "332": "HeavySnow",
+    //        "335": "HeavySnowShowers",
+    //        "338": "HeavySnow",
+    //        "350": "LightSleet",
+    //        "353": "LightShowers",
+    //        "356": "HeavyShowers",
+    //        "359": "HeavyRain",
+    //        "362": "LightSleetShowers",
+    //        "365": "LightSleetShowers",
+    //        "368": "LightSnowShowers",
+    //        "371": "HeavySnowShowers",
+    //        "374": "LightSleetShowers",
+    //        "377": "LightSleet",
+    //        "386": "ThunderyShowers",
+    //        "389": "ThunderyHeavyRain",
+    //        "392": "ThunderySnowShowers",
+    //        "395": "HeavySnowShowers"
+    //    }
+    //    readonly property var weather_symbol:{
+    //        "Unknown":             "✨",
+    //        "Cloudy":              "☁️",
+    //        "Fog":                 "🌫",
+    //        "HeavyRain":           "🌧",
+    //        "HeavyShowers":        "🌧",
+    //        "HeavySnow":           "❄️",
+    //        "HeavySnowShowers":    "❄️",
+    //        "LightRain":           "🌦",
+    //        "LightShowers":        "🌦",
+    //        "LightSleet":          "🌧",
+    //        "LightSleetShowers":   "🌧",
+    //        "LightSnow":           "🌨",
+    //        "LightSnowShowers":    "🌨",
+    //        "PartlyCloudy":        "⛅️",
+    //        "Sunny":               "☀️",
+    //        "ThunderyHeavyRain":   "🌩",
+    //        "ThunderyShowers":     "⛈",
+    //        "ThunderySnowShowers": "⛈",
+    //        "VeryCloudy": "☁️"
+    //    }
+}

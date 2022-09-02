@@ -62,5 +62,6 @@
         <file>PageScreenSaver1.qml</file>
         <file>PageTimer.qml</file>
         <file>PageClock.qml</file>
+        <file>PageFlashAnimation.qml</file>
     </qresource>
 </RCC>

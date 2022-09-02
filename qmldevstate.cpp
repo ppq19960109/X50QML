@@ -95,6 +95,7 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     stateType.append(QPair<QString,int>("RMovePotLowHeatSwitch",LINK_VALUE_TYPE_NUM));
 
     stateType.append(QPair<QString,int>("NtpTimestamp",LINK_VALUE_TYPE_NUM));
+    stateType.append(QPair<QString,int>("CookAssistRemind",LINK_VALUE_TYPE_NUM));
     localConnected=0;
     connect(&client, SIGNAL(sendData(const QByteArray)), this,SLOT(readData(const QByteArray)));
     connect(&client, &LocalClient::sendConnected, this,&QmlDevState::setLocalConnected);

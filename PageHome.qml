@@ -413,6 +413,20 @@ Item {
                     sleepStandby()
                 }
             }
+            else if("RStoveStatus"==key)
+            {
+                if(auxiliarySwitch>0)
+                {
+                    if(value==0)
+                    {
+                        timer_auxiliary.restart()
+                    }
+                    else
+                    {
+                        timer_auxiliary.stop()
+                    }
+                }
+            }
             else if("ErrorCodeShow"==key)
             {
                 if(lastErrorCodeShow!=value)
@@ -620,6 +634,17 @@ Item {
                 else
                 {
                     loaderMultistageHide()
+                }
+            }
+            else if("CookAssistRemind"==key)
+            {
+                if(value==0)
+                {
+                    loaderAutoTextShow("右灶火力档位过小，无法达到"+QmlDevState.state.RAuxiliaryTemp+"℃\n请将火力调至最大！")
+                }
+                else if(value==1)
+                {
+                    loaderAutoTextShow("右灶长时间无锅具，已将燃气断开。\n请将旋钮复位！")
                 }
             }
         }
