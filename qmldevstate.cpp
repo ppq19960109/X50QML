@@ -610,6 +610,11 @@ void QmlDevState::parsingData(QJsonObject& object)
                         QJsonValue timestamp =object_struct.value("timestamp");
                         cur["timestamp"]=timestamp.toInt();
                     }
+                    if(object_struct.contains("dishName"))
+                    {
+                        QJsonValue dishName =object_struct.value("dishName");
+                        cur["dishName"]=dishName.toString();
+                    }
                     history[index]=cur;
 
                     //                    std::sort(history.begin(), history.end(), compareId);
