@@ -65,12 +65,14 @@ Item {
                 color:"#fff"
                 font.pixelSize: 40
                 anchors.centerIn: parent
+                anchors.horizontalCenterOffset: -10
             }
             Image {
                 asynchronous:true
                 smooth:false
                 anchors.verticalCenter: parent.verticalCenter
-                anchors.right: parent.right
+                anchors.left: curVer.right
+                anchors.leftMargin: 30
                 source: themesPicturesPath+"icon_more.png"
             }
             onClicked: {
@@ -88,10 +90,9 @@ Item {
             Text{
                 id:checkText
                 text:versionCheckState ?"正在检查...":"已经是最新版本"
-                color:"#fff"
+                color:versionCheckState ?"#fff":themesTextColor
                 font.pixelSize: 35
-                anchors.left: parent.left
-                anchors.verticalCenter: parent.verticalCenter
+                anchors.centerIn: parent
             }
         }
 

@@ -173,8 +173,13 @@ Item {
         {
             if(isExistView("PageSteaming")==null)
             {
-                if(isExistView("PageSteamOvenConfig")!=null||isExistView("PageMultistage")!=null)
+                if(isCurrentView("PageSteamOvenConfig")===true||isCurrentView("PageMultistage")===true)
                     push_page(pageSteaming)
+                else if(currentCookId > 0 && (isCurrentView("PageSmartRecipes")===true||isCurrentView("PageCookDetails")===true))
+                {
+                    push_page(pageSteaming)
+                    currentCookId=0
+                }
             }
         }
     }
@@ -194,6 +199,7 @@ Item {
 
                 if(systemSettings.firstStartup===true)
                 {
+                    loaderFirstStartupShow()
                     systemSettings.firstStartup=false
                     SendFunc.enableWifi(true)
                 }
@@ -419,11 +425,13 @@ Item {
                 {
                     if(value==0)
                     {
-                        timer_auxiliary.restart()
+                        if(timer_auxiliary.running==false)
+                            timer_auxiliary.restart()
                     }
                     else
                     {
-                        timer_auxiliary.stop()
+                        if(timer_auxiliary.running==true)
+                            timer_auxiliary.stop()
                     }
                 }
             }

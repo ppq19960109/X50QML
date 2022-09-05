@@ -6,6 +6,7 @@ import "../"
 import "qrc:/CookFunc.js" as CookFunc
 
 Item {
+    property string name: "PageCookDetails"
     property var cookItem
     property var recipeDetail
     function steamStart(reserve)

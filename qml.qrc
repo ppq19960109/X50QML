@@ -63,5 +63,6 @@
         <file>PageTimer.qml</file>
         <file>PageClock.qml</file>
         <file>PageFlashAnimation.qml</file>
+        <file>PageFirstStartup.qml</file>
     </qresource>
 </RCC>

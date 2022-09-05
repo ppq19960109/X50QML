@@ -278,6 +278,20 @@ Item {
                         anchors.topMargin: 48
                     }
                     Text{
+                        visible: flashAnimation.flash==0
+                        PageFlashAnimation {
+                            id:flashAnimation
+                            running: {
+                                if(index==0)
+                                {
+                                    return lStOvState===workStateEnum.WORKSTATE_PAUSE||lStOvState===workStateEnum.WORKSTATE_PAUSE_RESERVE
+                                }
+                                else
+                                {
+                                    return rStOvState===workStateEnum.WORKSTATE_PAUSE||rStOvState===workStateEnum.WORKSTATE_PAUSE_RESERVE
+                                }
+                            }
+                        }
                         text:{
                             if(index==0)
                             {

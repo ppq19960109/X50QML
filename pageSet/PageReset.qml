@@ -4,6 +4,21 @@ import "../"
 import "qrc:/SendFunc.js" as SendFunc
 Item {
 
+    Component{
+        id:component_resetSuccess
+        PageDialogConfirm{
+            hintCenterText:"恢复出厂设置成功"
+            confirmText:"好的"
+            onCancel: {
+                loaderFirstStartupShow()
+                backTopPage()
+            }
+            onConfirm:{
+                loaderFirstStartupShow()
+                backTopPage()
+            }
+        }
+    }
     Connections { // 将目标对象信号与槽函数进行连接
         target: QmlDevState
         enabled:parent.visible
@@ -11,7 +26,7 @@ Item {
             console.log("PageReset:",key)
             if("Reset"==key)
             {
-                loaderWarnConfirmShow("恢复出厂设置成功")
+                loaderManual.sourceComponent=component_resetSuccess
             }
         }
     }

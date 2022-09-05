@@ -307,6 +307,7 @@ function setMultiCooking(list,orderTime,dishName,cookbookID)
         Data.CookbookParam=MultiStageContent
         Data.CookbookName=dishName
         Data.CookbookID=cookbookID
+        currentCookId=cookbookID
     }
     Data.LStOvOperation=workOperationEnum.START
     if(null != orderTime && orderTime > 0)

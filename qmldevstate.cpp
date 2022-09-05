@@ -387,7 +387,7 @@ void QmlDevState::parsingData(const QJsonObject& object)
                 else
                 {
 #endif    
-                    if("LStOvDoorState"==key || "LStOvMode"==key ||"LStOvState"==key ||"LStOvSetTemp"==key ||"LStOvRealTemp"==key ||"LStOvSetTimer"==key ||"LStOvOrderTimer"==key ||"LStOvSetTimerLeft"==key ||"RStOvDoorState"==key ||"RStOvMode"==key ||"RStOvState"==key ||"RStOvSetTemp"==key ||"RStOvRealTemp"==key ||"RStOvOrderTimer"==key ||"RStOvSetTimer"==key ||"RStOvSetTimerLeft"==key ||"RStOvOrderTimerLeft"==key||"MultiMode"==key||"HoodSpeed"==key||"HoodLight"==key)
+                    if("LStOvDoorState"==key || "LStOvMode"==key ||"LStOvSetTemp"==key ||"LStOvRealTemp"==key ||"LStOvSetTimer"==key ||"LStOvOrderTimer"==key ||"LStOvSetTimerLeft"==key ||"RStOvDoorState"==key ||"RStOvMode"==key ||"RStOvSetTemp"==key ||"RStOvRealTemp"==key ||"RStOvOrderTimer"==key ||"RStOvSetTimer"==key ||"RStOvSetTimerLeft"==key ||"RStOvOrderTimerLeft"==key||"MultiMode"==key||"HoodSpeed"==key||"HoodLight"==key)
                     {
                         if(stateMap[key]==value.toInt())
                             continue;

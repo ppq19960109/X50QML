@@ -4,10 +4,14 @@ import "qrc:/CookFunc.js" as CookFunc
 import "qrc:/SendFunc.js" as SendFunc
 import "../"
 Item {
-
+    property string name: "PageSmartRecipes"
     Component.onCompleted: {
         getRecipe(menuList.currentIndex)
     }
+    Component.onDestruction: {
+        currentCookId=0
+    }
+
     function getRecipe(index)
     {
         recipeListView.model=QmlDevState.getRecipe(index);

@@ -15,7 +15,7 @@ ApplicationWindow {
     id: window
     width: 1280
     height: 400
-//    visible: true
+    //    visible: true
     property int sysPower:-1
     property int productionTestStatus:0
     property int productionTestFlag:1
@@ -24,6 +24,7 @@ ApplicationWindow {
     property bool errorBuzzer:false
     property bool testMode:false
     property var decode_ssid:""
+    property int currentCookId:0
 
     property var smartSmokeSwitch: QmlDevState.state.SmartSmokeSwitch
     property var hoodSpeed: QmlDevState.state.HoodSpeed
@@ -239,7 +240,6 @@ ApplicationWindow {
         {
             systemSettings.brightness=200
         }
-        getCurrentTime(1640966400)
     }
     Connections { // 将目标对象信号与槽函数进行连接
         target: MNetwork
@@ -493,7 +493,10 @@ ApplicationWindow {
         loaderManual.item.cookWorkPos=cookWorkPos
         loaderManual.item.cookItem=cookItem
     }
-
+    function loaderFirstStartupShow(){
+        //        loaderManual.sourceComponent = null
+        loaderManual.source="PageFirstStartup.qml"
+    }
     Component{
         id:component_steam
         PageDialog{
@@ -597,7 +600,7 @@ ApplicationWindow {
         PageLoadingPopup{
             hintText:""
             onCancel: {
-                loaderManual.sourceComponent = undefined
+                loaderMainHide()
             }
         }
     }
@@ -633,7 +636,7 @@ ApplicationWindow {
             loaderAuto.sourceComponent = component_autoConfirm
         loaderAuto.item.topImageSrc=topImageSrc
         loaderAuto.item.hintCenterText=hintCenterText
-        loaderAuto.item.confirmText=cancelText
+        loaderAuto.item.cancelText=cancelText
         loaderAuto.item.confirmText=confirmText
     }
     function loaderAutoTextShow(text){
@@ -1014,7 +1017,10 @@ ApplicationWindow {
             return item.name === pageName
         })
     }
-
+    function isCurrentView(pageName) {
+        console.log("isCurrentView:",stackView.currentItem.name,pageName)
+        return stackView.currentItem.name === pageName
+    }
     function backPrePage() {
         if(stackView.depth>0)
             stackView.pop(StackView.Immediate)
