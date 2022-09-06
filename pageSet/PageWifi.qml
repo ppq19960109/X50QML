@@ -130,7 +130,7 @@ Item {
         }
         else
         {
-            if(wifiConnecting==false)
+            if(systemSettings.wifiEnable && wifiConnecting==false)
             {
                 QmlDevState.executeShell("(wpa_cli enable_network all) &")
             }
