@@ -128,7 +128,7 @@ Item {
             SendFunc.getCurWifi()
     }
     Component.onDestruction: {
-        if(wifiConnecting==false)
+        if(systemSettings.wifiEnable && wifiConnecting==false)
         {
             QmlDevState.executeShell("(wpa_cli enable_network all) &")
         }
@@ -144,7 +144,6 @@ Item {
             if(wifiConnected==true)
             {
                 QmlDevState.executeShell("(wpa_cli list_networks | tail -n +3 | grep -v 'CURRENT' | awk '{system(\"wpa_cli disable_network \" $1)}') &")
-
                 //                QmlDevState.executeShell("(wpa_cli list_networks | tail -n +3 | grep 'TEMP-DISABLED' | awk '{system(\"wpa_cli remove_network \" $1)}' && wpa_cli save_config) &")
             }
             getWifiInfo()
