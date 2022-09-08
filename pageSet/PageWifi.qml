@@ -342,7 +342,7 @@ Item {
                 anchors.fill: parent
                 onClicked: {
                     console.log("WiFi name:" + wifi_name.text)
-                    if(connected==0)
+                    if(connected!=1)
                     {
                         if(flags==0)
                         {
@@ -510,7 +510,7 @@ Item {
                     background: null
                     onClicked: {
                         console.log("connectBtn:" , wifi_ssid,textField.text,wifi_flags)
-                        if(permit_connect)
+                        if(permit_connect && wifiInputConnecting==false)
                         {
                             if(wifiConnecting==true)
                                 timer_wifi_connecting.restart()
@@ -520,6 +520,7 @@ Item {
                             {
                                 wifiModel.setProperty(0,"connected",0)
                                 wifiModel.move(index,0,1)
+                                index=0
                             }
                             wifiInputConnecting=true
                         }
@@ -567,8 +568,11 @@ Item {
                     else
                     {
                         permit_connect=false
-                        wifiInputConnecting=false
                     }
+                    if(wifiConnecting==true && wifiConnectInfo.psk===text)
+                        wifiInputConnecting=true
+                    else
+                        wifiInputConnecting=false
                 }
                 PageDivider{
                     anchors.bottom: parent.bottom

@@ -15,7 +15,7 @@ ApplicationWindow {
     id: window
     width: 1280
     height: 400
-    //    visible: true
+//    visible: true
     property int sysPower:-1
     property int productionTestStatus:0
     property int productionTestFlag:1
@@ -124,7 +124,7 @@ ApplicationWindow {
         property int sleepTime: 3
         property int screenSaverIndex:0
         //运行期间临时保存设置的亮度值，在收到开机状态是把该值重新设置回去 设置-屏幕亮度
-        property int brightness: 250
+        property int brightness: 200
         property bool wifiEnable: false
         property bool reboot: false
         property var cookDialog:[true,true,true,true,true,true,true]

@@ -55,8 +55,8 @@ Item {
         Item{
             readonly property int cookType:CookFunc.getCookType(modelData.cookSteps)
             readonly property var recipeDetail:QmlDevState.getRecipeDetails(modelData.recipeid)
-            width:recipeListView.currentIndex===index?180:152
-            height:recipeListView.currentIndex===index?258:210
+            width:recipeListView.currentIndex===index?174:152
+            height:recipeListView.currentIndex===index?252:210
             anchors.verticalCenter: parent.verticalCenter
             Image{
                 id:recipeImg
