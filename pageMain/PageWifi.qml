@@ -452,7 +452,7 @@ Item {
             clip: true
             //            highlightRangeMode: ListView.ApplyRange
             snapMode: ListView.SnapToItem
-            //            boundsBehavior:Flickable.StopAtBounds
+            boundsBehavior:Flickable.StopAtBounds
             highlightMoveDuration:0
             highlightMoveVelocity:-1
             footer: footerView
@@ -552,14 +552,17 @@ Item {
                     background: Item {}
                     onClicked: {
                         //                        console.log("Button connect:" , wifi_ssid,textField.text,wifi_flags)
-                        if(permit_connect)
+                        if(permit_connect && wifiInputConnecting==false)
                         {
+                            if(wifiConnecting==true)
+                                timer_wifi_connecting.restart()
                             SendFunc.connectWiFi(wifi_ssid,textField.text,wifi_flags)
                             wifiModel.setProperty(index,"connected",2)
                             if(index>0)
                             {
                                 wifiModel.setProperty(0,"connected",0)
                                 wifiModel.move(index,0,1)
+                                index=0
                             }
                             wifiInputConnecting=true
                         }
