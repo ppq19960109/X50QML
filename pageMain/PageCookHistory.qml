@@ -37,7 +37,7 @@ Item {
 
         if(recipeListView.visible===true)
         {
-//            recipeListView.currentIndex=1
+            //            recipeListView.currentIndex=1
             SendFunc.permitSteamStartStatus(1)
         }
     }
@@ -63,7 +63,7 @@ Item {
             element=historys[i]
             if(pos ===cookWorkPosEnum.ALL || element.cookPos===pos)
             {
-//                console.log("getHistory ",JSON.stringify(element))
+                //                console.log("getHistory ",JSON.stringify(element))
                 historyModel.append(element)
             }
         }
@@ -87,7 +87,7 @@ Item {
                 if(value.id==modelItem.id)
                 {
                     historyModel.remove(i,1)
-//                    console.log("PageCookHistory DeleteHistory",value.id,i)
+                    //                    console.log("PageCookHistory DeleteHistory",value.id,i)
                     if(historyModel.count==0)
                         SendFunc.permitSteamStartStatus(0)
                     break
@@ -122,15 +122,18 @@ Item {
         leftBtnText:edit?qsTr("完成"):qsTr("管理")
         leftBtnOpacity:noHistory.visible==true?0.6:1
         rightBtnText:qsTr("详情")
-        rightBtnOpacity:noHistory.visible==true?0.6:edit===true?0.6:1
+        rightBtnOpacity:(noHistory.visible==true||edit===true)?0.6:1
         onLeftClick:{
             if(noHistory.visible==false)
             {
                 edit=!edit
                 if(edit)
                 {
-                    recipeListView.currentIndex=-1
                     SendFunc.permitSteamStartStatus(0)
+                }
+                else
+                {
+                    SendFunc.permitSteamStartStatus(1)
                 }
             }
         }
@@ -180,7 +183,7 @@ Item {
             highlightMoveDuration:0
             highlightMoveVelocity:-1
             onCurrentIndexChanged:{
-                if(permitStartStatus==0)
+                if(permitStartStatus==0 && edit==false)
                 {
                     SendFunc.permitSteamStartStatus(1)
                 }
@@ -247,7 +250,7 @@ Item {
                         color:recipeListView.currentIndex===index?themesTextColor:collect===0?"#FFF":"#E5B9A1"
                     }
                     onClicked: {
-//                        console.log("onClicked",id,collect)
+                        //                        console.log("onClicked",id,collect)
                         recipeListView.currentIndex=index
                         if(edit)
                         {

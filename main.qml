@@ -94,7 +94,7 @@ ApplicationWindow {
         property int sleepTime: 3
 
         //运行期间临时保存设置的亮度值，在收到开机状态是把该值重新设置回去 设置-屏幕亮度
-        property int brightness: 250
+        property int brightness: 200
         property bool wifiEnable: false
         property bool reboot: false
 
@@ -136,7 +136,7 @@ ApplicationWindow {
         SendFunc.setToServer(Data)
 
         systemSettings.sleepTime=3
-        systemSettings.brightness=250
+        systemSettings.brightness=200
 
         //        SendFunc.enableWifi(true)
         systemSettings.wifiEnable=true
