@@ -8,7 +8,6 @@ import "qrc:/CookFunc.js" as CookFunc
 Item {
     property string name: "PageCookDetails"
     property var cookItem
-    property var recipeDetail
     function steamStart(reserve)
     {
         var cookSteps=JSON.parse(cookItem.cookSteps)
@@ -33,10 +32,9 @@ Item {
     }
 
     Component.onCompleted: {
-        recipeDetail=QmlDevState.getRecipeDetails(cookItem.recipeid)
-        recipeImg.source="file:"+recipeDetail[0]
+        recipeImg.source="file:"+cookItem.imgUrl
         dishName.text=cookItem.dishName
-        details.text=recipeDetail[1]
+        details.text=cookItem.ingredients
     }
 
     PageBackBar{
@@ -148,7 +146,7 @@ Item {
                             anchors.fill: parent
                             clip: true
                             Repeater {
-                                model:recipeDetail[2]
+                                model:cookItem.details
                                 Flickable {
                                     id: flick
                                     flickableDirection:Flickable.VerticalFlick

@@ -322,7 +322,22 @@ Item {
                         text:{
                             if(index==0)
                             {
-                                return QmlDevState.state.MultiMode===1?QmlDevState.state.CookbookName:CookFunc.workModeName(QmlDevState.state.LStOvMode)
+                                if(QmlDevState.state.MultiMode===1)
+                                {
+                                    var CookbookName=QmlDevState.state.CookbookName
+                                    if(CookbookName==="")
+                                    {
+                                        if(QmlDevState.state.CookbookID > 0)
+                                        {
+                                            var cookName=QmlDevState.getRecipeName(QmlDevState.state.CookbookID)
+                                            if(cookName!=="")
+                                                return cookName
+                                        }
+                                    }
+                                    else
+                                        return CookbookName
+                                }
+                                return CookFunc.workModeName(QmlDevState.state.LStOvMode)
                             }
                             else
                             {

@@ -19,7 +19,7 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     stateType.append(QPair<QString,int>("ErrorCode",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("ErrorCodeShow",LINK_VALUE_TYPE_NUM));
 
-    stateType.append(QPair<QString,int>("CookRecipe",LINK_VALUE_TYPE_STRUCT));
+    stateType.append(QPair<QString,int>("CookbookID",LINK_VALUE_TYPE_NUM));
 
     stateType.append(QPair<QString,int>("OTAState",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("OTAProgress",LINK_VALUE_TYPE_NUM));
@@ -100,6 +100,7 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     connect(&client, SIGNAL(sendData(const QByteArray)), this,SLOT(readData(const QByteArray)));
     connect(&client, &LocalClient::sendConnected, this,&QmlDevState::setLocalConnected);
 
+    setState("CookbookName","");
     setState("HoodSpeed",0);
     setState("HoodLight",0);
     setState("RStoveStatus",0);
@@ -145,42 +146,6 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
 
     setState("HoodSpeed",2);
     setState("UpdateLog","1、新增：产品详情页视频展示功能；\n2、新增：网站前台版权标识样式切换功能\n3、优化：会员中心社会化登陆功能，用户可通过扫码关注设定的公众号登录；\n4、优化：安装商城模块后，可在网站后台内容管理中直接添加和编辑商品；\n5、优化：用户购买版权标识修改许可后，后台版权");
-
-    QVariantMap info;
-    info.insert("id", 0);
-    info.insert("seqid", 3);
-    info.insert("recipeid", 117);
-    info.insert("cookPos", 0);
-    info.insert("dishName", "清蒸鱼");
-    info.insert("cookSteps", "[{\"device\":0,\"mode\":35,\"number\":1,\"temp\":100,\"time\":90}]");
-    info.insert("collect", 0);
-    info.insert("timestamp", 0);
-    info.insert("recipeType", 1);
-
-    recipe[0].append(info);
-    info["recipeid"]=426;
-    info["dishName"]="桂花蜂蜜烤南瓜蜂蜜烤南";
-    recipe[0].append(info);
-    info["recipeid"]=118;
-    info["dishName"]="腊肉蒸芋艿";
-    recipe[0].append(info);
-    info["recipeid"]=426;
-    info["dishName"]="蒜香茄子";
-    recipe[0].append(info);
-    info["recipeid"]=1006;
-    info["dishName"]="蒜香茄子";
-    recipe[0].append(info);
-    info["recipeid"]=427;
-    info["dishName"]="蒜香茄子";
-    recipe[0].append(info);
-
-    info["recipeid"]=118;
-    info["dishName"]="蒜蓉粉丝娃娃菜";
-    recipe[1].append(info);
-
-    info["recipeid"]=427;
-    info["dishName"]="蒜蓉粉丝娃菜";
-    recipe[1].append(info);
 #endif
 #endif
 }
@@ -191,38 +156,24 @@ QVariantList QmlDevState::getRecipe(const int index)
     return recipe[index];
 }
 
+QString QmlDevState::getRecipeName(const int recipeId)
+{
+    int i,j;
+    for(i=0;i<6;++i)
+    {
+        for(j=0;j<recipe[i].size();++j)
+        {
+           QVariantMap cur=recipe[i][j].toMap();
+           if(cur["recipeid"]==recipeId)
+               return cur["dishName"].toString();
+        }
+    }
+    return "";
+}
+
 void QmlDevState::startLocalConnect()
 {
     client.startConnectTimer();
-}
-
-int QmlDevState::coverHistory(const QJsonObject &object, QVariantMap &info)
-{
-    QJsonValue id =object.value("id");
-    QJsonValue seqid =object.value("seqid");
-    QJsonValue dishName =object.value("dishName");
-    QJsonValue cookSteps =object.value("cookSteps");
-    QJsonValue collect =object.value("collect");
-    QJsonValue timestamp =object.value("timestamp");
-    QJsonValue recipeid =object.value("recipeid");
-    QJsonValue recipeType =object.value("recipeType");
-    QJsonValue cookPos =object.value("cookPos");
-
-    info.insert("id",id.toInt());
-    info.insert("seqid",seqid.toInt());
-    info.insert("dishName",dishName.toString());
-    info.insert("cookSteps",cookSteps.toString());
-    info.insert("collect",collect.toInt());
-    info.insert("timestamp",timestamp.toInt());
-    info.insert("recipeid",recipeid.toInt());
-    info.insert("recipeType",recipeType.toInt());
-    info.insert("cookPos",cookPos.toInt());
-    return 0;
-}
-
-QVariantList QmlDevState::getRecipeDetails(const int recipeid)
-{
-    return recipeMap[recipeid];
 }
 
 int QmlDevState::executeShell(const QString cmd)
@@ -243,6 +194,7 @@ void QmlDevState::readRecipeDetails()
     QFile file("RecipesDetails.json");
     if(!file.open(QIODevice::ReadOnly | QIODevice::Text))
     {
+        qDebug() << "file open error";
         return;
     }
     QByteArray allArray = file.readAll();
@@ -265,10 +217,10 @@ void QmlDevState::readRecipeDetails()
         QJsonValue ingredients =obj.value("ingredients");
         QJsonArray details =obj.value("details").toArray();
         QJsonValue recipeid =obj.value("recipeid");
-        QVariantList list;
-        list.append(imgUrl.toString());
-        list.append(ingredients.toString());
-        list.append(details);
+        QJsonValue dishName =obj.value("dishName");
+        QJsonValue cookSteps =obj.value("cookSteps");
+        QJsonValue recipeType =obj.value("recipeType");
+        QJsonValue cookPos =obj.value("cookPos");
         //        QVariantList detailslist;
         //        for(int j=0;j<details.size();++j)
         //        {
@@ -276,7 +228,17 @@ void QmlDevState::readRecipeDetails()
         //        }
         //        list.append(detailslist);
         //         qDebug()<<"detailslist:"<<detailslist;
-        recipeMap.insert(recipeid.toInt(),list);
+
+        QVariantMap info;
+        info.insert("imgUrl",imgUrl.toString());
+        info.insert("ingredients",ingredients.toString());
+        info.insert("details",details);
+        info.insert("recipeid",recipeid.toInt());
+        info.insert("dishName",dishName.toString());
+        info.insert("cookSteps",cookSteps.toString());
+        info.insert("cookPos",cookPos.toInt());
+
+        recipe[recipeType.toInt()-1].append(info);
     }
     //        qDebug()<<"recipeMap:"<<recipeMap;
 }
@@ -296,11 +258,11 @@ int QmlDevState::uds_json_parse(const char *value,const int value_len)
         qDebug() << "QJsonDocument fromJson:"<< error.error<< ","<<error.errorString();
         return -1;
     }
-    //    if (!doucment.isObject())
-    //    {
-    //        qDebug() << "JSON Parse Error:";
-    //        return -1;
-    //    }
+    if (!doucment.isObject())
+    {
+        qDebug() << "JSON Parse Error:";
+        return -1;
+    }
     QJsonObject object = doucment.object();
     QJsonValue Type = object.value(JSONTYPE);
     //    if (!Type.isString())
@@ -433,25 +395,6 @@ void QmlDevState::parsingData(const QJsonObject& object)
                     setState("current",current.toInt());
                     setState("RemindText",RemindText.toString());
                     setState("remind",remind.toInt());
-                }
-                else if(key=="CookRecipe")
-                {
-                    QJsonArray array =value.toArray();
-                    QVariantMap info;
-
-                    for(int i=0;i< (int)(sizeof(recipe)/sizeof(recipe[0]));++i)
-                        recipe[i].clear();
-                    qDebug()<<"CookRecipe size:" <<array.size() << endl;
-
-
-                    for(int i=0;i<array.size();++i)
-                    {
-                        QJsonObject obj_array=array.at(i).toObject();
-                        coverHistory(obj_array,info);
-
-                        recipe[info["recipeType"].toInt()-1].append(info);
-                        qDebug()<<key <<":"<<info<< endl;
-                    }
                 }
             }
             else if(LINK_VALUE_TYPE_NULL==value_type)

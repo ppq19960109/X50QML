@@ -54,7 +54,6 @@ Item {
         id: recipeDelegate
         Item{
             readonly property int cookType:CookFunc.getCookType(modelData.cookSteps)
-            readonly property var recipeDetail:QmlDevState.getRecipeDetails(modelData.recipeid)
             width:recipeListView.currentIndex===index?174:152
             height:recipeListView.currentIndex===index?252:210
             anchors.verticalCenter: parent.verticalCenter
@@ -66,7 +65,7 @@ Item {
                 anchors.verticalCenter: parent.verticalCenter
                 asynchronous:true
                 smooth:false
-                source: recipeDetail.length!==0?("file:"+recipeDetail[0]):""
+                source: "file:"+modelData.imgUrl
             }
             Image{
                 asynchronous:true
@@ -134,9 +133,9 @@ Item {
             }
             ListView{
                 id:menuList
-                model:['蔬菜','肉类','水产','面点','烘培']
+                model:['蔬菜杂粮','家禽肉类','河海鲜类','烘焙甜点','其他食材']
                 width:parent.width
-                anchors.top:parent.top
+                anchors.top: parent.top
                 anchors.topMargin: 15
                 anchors.bottom: parent.bottom
                 orientation:ListView.Vertical

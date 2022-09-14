@@ -46,15 +46,12 @@ public:
 
     QVariantList recipe[6];
     Q_INVOKABLE QVariantList getRecipe(const int index);
-
+    Q_INVOKABLE QString getRecipeName(const int recipeId);
     Q_INVOKABLE void startLocalConnect();
-
-    int coverHistory(const QJsonObject& single,QVariantMap& info);
 
     LocalClient client;
     Q_INVOKABLE int sendToServer(QString data);
 
-    Q_INVOKABLE QVariantList getRecipeDetails(const int recipeid);
     Q_INVOKABLE int executeShell(const QString cmd);
     void selfStart();
 private:
@@ -64,7 +61,6 @@ private:
 
     QVector<QPair<QString,int>> stateType;
 
-    QMap<int,QVariantList> recipeMap;
     void readRecipeDetails();
     void parsingData(const QJsonObject& object);
     int uds_json_parse(const char *value,const int value_len);
