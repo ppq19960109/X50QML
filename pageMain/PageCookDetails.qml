@@ -32,7 +32,6 @@ Item {
     }
 
     Component.onCompleted: {
-        recipeImg.source="file:"+cookItem.imgUrl
         dishName.text=cookItem.dishName
         details.text=cookItem.ingredients
     }
@@ -51,19 +50,26 @@ Item {
 
         Item{
             id:leftContent
-            width: 160
-            height: 250
-            anchors.top:parent.top
-            anchors.topMargin: 60
-            anchors.left:parent.left
-            anchors.leftMargin: 60
+            width: 250
+            height: parent.height
+
             Image{
                 id:recipeImg
-                anchors.fill: parent
+//                width: tabBar.currentIndex==0?164:210
+//                height: tabBar.currentIndex==0?252:122
+                anchors.centerIn: parent
                 asynchronous:true
                 smooth:false
+                source: {
+                    if(tabBar.currentIndex==0)
+                        return "file:"+cookItem.imgUrl+"/0.png"
+                    else{
+                        return "file:"+cookItem.imgUrl+"/"+(swipeview.currentIndex+1)+".png"
+                    }
+                }
             }
             Image{
+                visible: tabBar.currentIndex==0
                 asynchronous:true
                 smooth:false
                 width: recipeImg.width
@@ -88,7 +94,6 @@ Item {
             width:730
             height:parent.height
             anchors.left: leftContent.right
-            anchors.leftMargin: 30
 
             TabBar {
                 id:tabBar
@@ -165,12 +170,14 @@ Item {
                                         anchors.top: parent.top
                                         anchors.topMargin: 35
                                         font.pixelSize: 30
+                                        lineHeight: 1.3
                                         color:"#fff"
                                         wrapMode: Text.WrapAnywhere
                                         text:modelData
                                     }
                                     ScrollBar.vertical:ScrollBar {
                                         anchors.right: parent.right
+                                        visible: flick.height < detail.height
                                         background:Rectangle{
                                             implicitWidth: 4
                                             color:"#000"

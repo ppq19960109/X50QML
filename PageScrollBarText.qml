@@ -15,7 +15,7 @@ Flickable {
         width: flick.width
         //                    height: flick.height
         font.pixelSize: 30
-//        lineHeight: 1.1
+        lineHeight: 1.3
         color:"#fff"
         wrapMode: Text.WrapAnywhere
     }
@@ -28,6 +28,8 @@ Flickable {
         anchors.bottomMargin: 10
         anchors.left: flick.right
         anchors.leftMargin: scrollBarLeftMargin
+        policy:ScrollBar.AsNeeded
+        visible: flick.height < details.height
 
         background:Rectangle{
             implicitWidth: 4

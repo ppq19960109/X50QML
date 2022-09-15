@@ -65,7 +65,7 @@ Item {
                 anchors.verticalCenter: parent.verticalCenter
                 asynchronous:true
                 smooth:false
-                source: "file:"+modelData.imgUrl
+                source: "file:"+modelData.imgUrl+"/0.png"
             }
             Image{
                 asynchronous:true
