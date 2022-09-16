@@ -30,7 +30,7 @@ Rectangle {
         cookSteps.push(steamOvenDelegate.getCurrentSteamOven())
 
         var cookItem =CookFunc.getDefCookItem()
-        cookItem.cookPos=cookWorkPosEnum.LEFT
+        cookItem.cookPos=cookWorkPos
         cookItem.dishName=CookFunc.getDishName(cookSteps)
         cookItem.cookSteps=JSON.stringify(cookSteps)
         if(reserve)

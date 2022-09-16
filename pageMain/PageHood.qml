@@ -188,7 +188,7 @@ Item {
                         visible: {
                             if(index==0)
                             {
-                                return lTimingState!==timingStateEnum.STOP||rTimingState!==timingStateEnum.STOP
+                                return lTimingState===timingStateEnum.RUN||rTimingState===timingStateEnum.RUN
                             }
                             else
                             {

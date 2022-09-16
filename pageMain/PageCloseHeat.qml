@@ -7,24 +7,26 @@ import "qrc:/SendFunc.js" as SendFunc
 Item {
     property var lTimingLeft: QmlDevState.state.LStoveTimingLeft
     property var rTimingLeft: QmlDevState.state.RStoveTimingLeft
-
+    property bool userCancel:false
     Connections { // 将目标对象信号与槽函数进行连接
         target: QmlDevState
         onStateChanged: { // 处理目标对象信号的槽函数
             console.log("PageCloseHeat:",key)
-            if("LStoveTimingState"==key)
+            //            if("LStoveTimingState"==key)
+            //            {
+            //                if(value===timingStateEnum.STOP && rTimingState===timingStateEnum.STOP)
+            //                {
+            //                    backPrePage()
+            //                }
+            //            }
+            //            else
+            if("RStoveTimingState"==key)
             {
-                if(value===timingStateEnum.STOP && rTimingState===timingStateEnum.STOP)
+                if(userCancel==true && value===timingStateEnum.STOP && lTimingState===timingStateEnum.STOP)
                 {
                     backPrePage()
                 }
-            }
-            else if("RStoveTimingState"==key)
-            {
-                if(value===timingStateEnum.STOP && lTimingState===timingStateEnum.STOP)
-                {
-                    backPrePage()
-                }
+                userCancel=false
             }
         }
     }
@@ -219,6 +221,7 @@ Item {
         }
         Data.DataReportReason=0
         SendFunc.setToServer(Data)
+        userCancel=true
     }
     Component{
         id:component_closeHeatReset
@@ -258,11 +261,11 @@ Item {
             visible: {
                 if(index==0)
                 {
-                    return lTimingState!==timingStateEnum.STOP
+                    return lTimingState===timingStateEnum.RUN||lTimingState===timingStateEnum.PAUSE
                 }
                 else
                 {
-                    return rTimingState!==timingStateEnum.STOP
+                    return rTimingState===timingStateEnum.RUN||lTimingState===timingStateEnum.PAUSE
                 }
             }
             anchors.verticalCenter: row.verticalCenter
@@ -292,6 +295,16 @@ Item {
         Repeater {
             model: ["左灶","右灶"]
             Button{
+                property int timingState: {
+                    if(index==0)
+                    {
+                        return lTimingState
+                    }
+                    else
+                    {
+                        return rTimingState
+                    }
+                }
                 width: 309
                 height: width
 
@@ -302,29 +315,20 @@ Item {
                 }
                 Item
                 {
-                    id:timingState
-                    visible: {
-                        if(index==0)
-                        {
-                            return lTimingState===timingStateEnum.STOP
-                        }
-                        else
-                        {
-                            return rTimingState===timingStateEnum.STOP
-                        }
-                    }
+                    id:timing
+                    visible: timingState===timingStateEnum.STOP||timingState===timingStateEnum.CONFIRM
                     anchors.fill: parent
                     Text{
                         text:modelData
-                        color:"#fff"
+                        color:timingState===timingStateEnum.STOP?"#fff":themesTextColor
                         font.pixelSize: 40
                         anchors.horizontalCenter: parent.horizontalCenter
                         anchors.top: parent.top
                         anchors.topMargin: 105
                     }
                     Text{
-                        text:"定时关火"
-                        color:"#fff"
+                        text:timingState===timingStateEnum.STOP?"定时关火":"关火完成"
+                        color:timingState===timingStateEnum.STOP?"#fff":themesTextColor
                         font.pixelSize: 30
                         anchors.horizontalCenter: parent.horizontalCenter
                         anchors.top: parent.top
@@ -333,7 +337,7 @@ Item {
                 }
                 Item
                 {
-                    visible:!timingState.visible
+                    visible:!timing.visible
                     anchors.fill: parent
                     Text{
                         text:modelData+"将在"

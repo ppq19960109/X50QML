@@ -356,8 +356,6 @@ Item {
                         {
                             if(value===workStateEnum.WORKSTATE_STOP)
                                 loaderDoorAutoHide(cookWorkPosEnum.RIGHT)
-                            else
-                                loaderDoorAutoShow("右腔门已关闭，是否继续烹饪？","结束烹饪","继续烹饪",cookWorkPosEnum.RIGHT)
                         }
                     }
                     if(lastRStOvState===workStateEnum.WORKSTATE_STOP)
@@ -881,7 +879,7 @@ Item {
                     }
                     Item
                     {
-                        visible: lTimingState!==timingStateEnum.STOP||rTimingState!==timingStateEnum.STOP
+                        visible: lTimingState===timingStateEnum.RUN||rTimingState===timingStateEnum.RUN
                         width: parent.width
                         height: 50
                         Rectangle{
