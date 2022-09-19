@@ -92,7 +92,7 @@ Item {
                 loaderMainHide()
             }
             onConfirm: {
-                systemReset()
+                systemSetReset()
                 loaderLoadingShow("重置设备中...",false)
             }
         }

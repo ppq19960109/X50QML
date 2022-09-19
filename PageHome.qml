@@ -8,7 +8,7 @@ Item {
 
     property int lastLStOvState:-1
     property int lastRStOvState:-1
-    property int lastErrorCodeShow:0
+    property int lastErrorCodeShow:-1
     property int lastHoodSpeed:0
     property int lastHoodLight:0
 
@@ -215,6 +215,7 @@ Item {
             console.log("page home onStateChanged",key,value)
             if("SysPower"==key)
             {
+//                console.log("systemSettings.reboot",systemSettings.reboot)
                 if(systemSettings.reboot==false)
                 {
                     if(value==0)
@@ -222,6 +223,7 @@ Item {
                         if(sysPower<0)
                         {
                             SendFunc.setSysPower(1)
+                            SendFunc.setBuzControl(buzControlEnum.SHORT)
                         }
                     }
                     else
@@ -260,6 +262,13 @@ Item {
             {
                 if(value>1640966400)
                     getCurrentTime(value)
+            }
+            else if("OTASlientUpgrade"==key)
+            {
+                if(value>0)
+                {
+                    gSlientUpgradeMinutes=getRandom(0,30)
+                }
             }
             else if("LStOvState"==key)
             {

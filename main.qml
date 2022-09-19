@@ -15,8 +15,8 @@ ApplicationWindow {
     id: window
     width: 1280
     height: 400
-//    visible: true
-    property int sysPower:-1
+        visible: true
+    property int sysPower:1
     property int productionTestStatus:0
     property int productionTestFlag:1
     property int demoModeStatus:0
@@ -60,14 +60,14 @@ ApplicationWindow {
     property bool sleepState: false
     property var wifiConnectInfo:{"ssid":"","psk":"","encryp":0}
     readonly property var multiModeEnum:{"NONE":0,"RECIPE":1,"MULTISTAGE":2}
-    readonly property var buzControlEnum:{"STOP":0,"SHORT":1,"SHORTTWO":2,"SCECONDS2":3,"OPEN":4,"SHORTFIVE":5}
+    readonly property var buzControlEnum:{"STOP":0,"SHORT":1,"SHORTTWO":2,"SCECONDS2":3,"OPEN":4,"SHORTFIVE":5,"SHORTTHREE":6}
 
     readonly property string themesPicturesPath:"file:themes/X8GCZ/"
     readonly property string themesWindowBackgroundColor:"#1A1A1A"
     readonly property string themesPopupWindowColor:"#333333"
     readonly property string themesTextColor:"#E68855"
     readonly property string themesTextColor2:"#A2A2A2"
-
+    property int gSlientUpgradeMinutes
     property var pattern: new RegExp("[\u4E00-\u9FA5]+")
     property var screenSaverInfo:{"month":"","date":"","hours":"","minutes":"","temp":"","lowTemp":"","highTemp":"","weatherId":0,"weather":"","holiday":""}
     readonly property var weeksEnum:["日","一","二","三","四","五","六"]
@@ -84,7 +84,7 @@ ApplicationWindow {
     property int gTemp
     property int gLowTemp
     property int gHighTemp
-    property string gWeatherId
+    property int gWeatherId:0
 
     property int gTimerTotalTime:0
     property int gTimerLeft:0
@@ -135,7 +135,8 @@ ApplicationWindow {
 
         onBrightnessChanged: {
             console.log("onBrightnessChanged...",systemSettings.brightness)
-            Backlight.backlightSet(systemSettings.brightness)
+            if(systemSettings.reboot==false)
+                Backlight.backlightSet(systemSettings.brightness)
         }
         onSleepTimeChanged: {
             console.log("onSleepTimeChanged...",systemSettings.sleepTime)
@@ -146,13 +147,29 @@ ApplicationWindow {
     function systemSync()
     {
         QmlDevState.executeShell("(sleep 2;sync) &")
+//        QmlDevState.executeQProcess("sync",[])
+    }
+    function systemRestart()
+    {
+//        SendFunc.setSysPower(0)
+//        systemPower(0)
+        systemSettings.reboot=true
+
+        QmlDevState.executeShell("(sleep 2;sync;sh /oem/marssenger/S100Marssenger restart) &")
+//        QmlDevState.executeQProcess("sh",["/oem/marssenger/S100Marssenger","restart"])
     }
     function generateTwoTime(time)
     {
         return time<10?("0"+time):time
     }
+    function getRandom(min,max)
+    {
+        var range=max-min
+        var rand=Math.random()
+        return (min+Math.round(rand*range))
+    }
 
-    function systemReset()
+    function systemSetReset()
     {
         var Data={}
         Data.reset = null
@@ -311,6 +328,20 @@ ApplicationWindow {
             {
                 if(gMinutes==0||gMinutes==5)
                     timeSync=0
+            }
+            if(gHours>=1 && gHours<=4)
+            {
+                if(sysPower==0)
+                {
+                    if(QmlDevState.state.OTASlientUpgrade>0 && gMinutes>=gSlientUpgradeMinutes)
+                    {
+                        systemRestart()
+                    }
+                }
+                else
+                {
+                    gSlientUpgradeMinutes=0
+                }
             }
 
             if(timeSync>=2)

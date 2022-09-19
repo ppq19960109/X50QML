@@ -27,6 +27,7 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     stateType.append(QPair<QString,int>("OTAPowerState",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("OTAPowerProgress",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("OTAPowerNewVersion",LINK_VALUE_TYPE_STRING));
+    stateType.append(QPair<QString,int>("OTASlientUpgrade",LINK_VALUE_TYPE_NUM));
 
     stateType.append(QPair<QString,int>("MultiMode",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("MultiStageState",LINK_VALUE_TYPE_STRUCT));
@@ -176,12 +177,18 @@ void QmlDevState::startLocalConnect()
     client.startConnectTimer();
 }
 
+int QmlDevState::executeQProcess(const QString cmd,const QStringList list)
+{
+    qDebug() << "executeQProcess:" << cmd << "list:" << list;
+//    process.start(cmd,list);
+//    return 0;
+    return QProcess::startDetached(cmd,list);
+}
+
 int QmlDevState::executeShell(const QString cmd)
 {
     qDebug() << "executeShell:" << cmd;
     //    QProcess::execute(cmd);
-    //    QProcess::startDetached("cmd");
-    //    process.start(cmd);
     //    qDebug() << "executeShell system:" << cmd.toUtf8().data();
     return system(cmd.toUtf8().constData());
 }

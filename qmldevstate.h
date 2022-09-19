@@ -8,7 +8,7 @@
 #include <QPair>
 #include <QVector>
 #include <QtQml>
-//#include <QProcess>
+#include <QProcess>
 #include "localclient.h"
 #include "qrcodeen.h"
 #include <cstdlib>
@@ -53,6 +53,7 @@ public:
     Q_INVOKABLE int sendToServer(QString data);
 
     Q_INVOKABLE int executeShell(const QString cmd);
+    Q_INVOKABLE int executeQProcess(const QString cmd,const QStringList list);
     void selfStart();
 private:
 

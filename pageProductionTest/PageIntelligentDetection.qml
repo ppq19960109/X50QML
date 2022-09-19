@@ -95,7 +95,7 @@ Item {
                     sequenceText.text=dataJson.data
                 }while(0)
                 resetText.visible=true
-                systemReset()
+                systemSetReset()
                 break;
             }
         }
