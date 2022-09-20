@@ -28,19 +28,21 @@ Item {
         steps.temp=tempPathView.model[tempPathView.currentIndex]
         steps.time=timePathView.model[timePathView.currentIndex]
         if(steamGearPathView.interactive)
-            steps.gear=steamGearPathView.currentIndex
+            steps.steamGear=steamGearPathView.currentIndex+1
 
         return steps
     }
     function modeChange(index,tempIndex,timeIndex,steamGearIndex)
     {
+        console.log("modeChange:",index,tempIndex,timeIndex,steamGearIndex)
         if(index===0)
         {
             steamGearPathView.model=["1档","2档","3档"]
+            steamGearPathView.currentIndex=1
             steamGearPathView.interactive=true
-            if(steamGearIndex!=null)
+            if(steamGearIndex>0)
             {
-                steamGearPathView.currentIndex=steamGearIndex
+                steamGearPathView.currentIndex=steamGearIndex-1
             }
         }
         else

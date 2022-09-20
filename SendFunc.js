@@ -252,6 +252,8 @@ function setCooking(list,orderTime,cookPos)
             Data.LStOvMode=list[0].mode
             Data.LStOvSetTimer=list[0].time
             Data.LStOvSetTemp=list[0].temp
+            if(list[0].steamGear!=null)
+                Data.LSteamGear=list[0].steamGear
         }
         Data.LStOvOperation=workOperationEnum.START
 
@@ -292,6 +294,8 @@ function setMultiCooking(list,orderTime,dishName,cookbookID)
         buf.Mode=step.mode
         buf.Temp=step.temp
         buf.Timer=step.time
+        if(step.steamGear!=null)
+            buf.steamGear=step.steamGear
         MultiStageContent.push(buf)
     }
 

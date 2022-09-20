@@ -25,6 +25,7 @@ Item {
             steps.mode=step.mode
             steps.temp=step.temp
             steps.time=step.time
+            steps.steamGear=step.steamGear
             steps.number=i+1
             cookSteps.push(steps)
         }
@@ -92,19 +93,19 @@ Item {
             mode: -1
             temp: -1
             time:-1
-            gear:-1
+            steamGear:-1
         }
         ListElement {
             mode: -1
             temp: -1
             time:-1
-            gear:-1
+            steamGear:-1
         }
         ListElement {
             mode: -1
             temp: -1
             time:-1
-            gear:-1
+            steamGear:-1
         }
     }
     // 定义delegate
@@ -199,7 +200,7 @@ Item {
                     source: themesPicturesPath+"icon_close.png"
                 }
                 onClicked: {
-                    mode=temp=time=gear=-1
+                    mode=temp=time=steamGear=-1
                     listModel.move(index,listModel.count-1,1)
                     --listLastIndex
                 }
@@ -217,7 +218,7 @@ Item {
                     source: themesPicturesPath+"icon_restart.png"
                 }
                 onClicked: {
-                    console.log("listDelegate restart",mode,temp,time,gear)
+                    console.log("listDelegate restart",mode,temp,time,steamGear)
                     loaderMultistageShow(index)
                 }
             }
@@ -304,7 +305,7 @@ Item {
                     modeIndex:CookFunc.leftWorkModeToIndex(listModel.get(index).mode)
                     tempIndex:listModel.get(index).temp
                     timeIndex:listModel.get(index).time
-                    steamGearIndex:listModel.get(index).gear
+                    steamGearIndex:listModel.get(index).steamGear
                 }
                 Item {
                     width:80+140*2
@@ -364,12 +365,12 @@ Item {
         enabled:loaderMultistage.sourceComponent!=null
         target: loaderMultistage.item
         onShowListData:{
-            console.log("onShowListData",index,listData.mode,listData.temp,listData.time)
+            console.log("onShowListData",index,listData.mode,listData.temp,listData.time,listData.steamGear)
 
             listModel.get(index).mode=listData.mode
             listModel.get(index).temp=listData.temp
             listModel.get(index).time=listData.time
-            listModel.get(index).gear=listData.gear==null?-1:listData.gear
+            listModel.get(index).steamGear=listData.steamGear==null?-1:listData.steamGear
             if(listLastIndex==index)
                 ++listLastIndex
         }

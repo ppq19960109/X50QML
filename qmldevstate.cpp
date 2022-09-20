@@ -42,6 +42,7 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     stateType.append(QPair<QString,int>("LStOvOrderTimer",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("LStOvSetTimerLeft",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("LStOvOrderTimerLeft",LINK_VALUE_TYPE_NUM));
+    stateType.append(QPair<QString,int>("LSteamGear",LINK_VALUE_TYPE_NUM));
 
     stateType.append(QPair<QString,int>("RStOvDoorState",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("RStOvMode",LINK_VALUE_TYPE_NUM));
