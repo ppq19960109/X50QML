@@ -4,22 +4,21 @@ function makeRequest()
     var doc = new XMLHttpRequest();
 
     doc.onreadystatechange = function() {
-        if (doc.readyState == XMLHttpRequest.HEADERS_RECEIVED) {
+        if (doc.readyState === XMLHttpRequest.HEADERS_RECEIVED) {
             console.log("HEADERS_RECEIVED Headers -->",doc.status,doc.statusText);
             console.log("getAllResponseHeaders:",doc.getAllResponseHeaders ());
             //            console.log("Last modified -->");
             //            console.log(doc.getResponseHeader ("Last-Modified"));
-        } else if (doc.readyState == XMLHttpRequest.DONE) {
+        } else if (doc.readyState === XMLHttpRequest.DONE) {
             //            var a = doc.responseXML.documentElement;
             //            for (var ii = 0; ii < a.childNodes.length; ++ii) {
             //                console.log(a.childNodes[ii].nodeName);
             //            }
             console.log("DONE -->",doc.status,doc.statusText);
             console.log("getAllResponseHeaders:",doc.getAllResponseHeaders ());
-            //            console.log("Last modified -->");
-            //            console.log(doc.getResponseHeader ("Last-Modified"));
-            //            data=JSON.parse(request.responseText.toString());
+
             console.log("responseText:",doc.responseText)
+            //            data=JSON.parse(request.responseText.toString());
         }
     }
     doc.open("GET", "http://mcook.marssenger.com/application/weather/day");
@@ -31,16 +30,16 @@ function weatherRequest(city)
     var doc = new XMLHttpRequest();
 
     doc.onreadystatechange = function() {
-        if (doc.readyState == XMLHttpRequest.HEADERS_RECEIVED) {
+        if (doc.readyState === XMLHttpRequest.HEADERS_RECEIVED) {
             console.log("Headers -->",doc.statusText);
             console.log(doc.getAllResponseHeaders ());
 
-        } else if (doc.readyState == XMLHttpRequest.DONE) {
+        } else if (doc.readyState === XMLHttpRequest.DONE) {
             //            var a = doc.responseXML.documentElement;
             //            for (var ii = 0; ii < a.childNodes.length; ++ii) {
             //                console.log(a.childNodes[ii].nodeName);
             //            }
-            console.log("Headers -->",doc.status,doc.statusText);
+            console.log("DONE -->",doc.status,doc.statusText);
             console.log(doc.getAllResponseHeaders ());
 
             console.log(doc.responseText.toString())
@@ -48,7 +47,7 @@ function weatherRequest(city)
             //            var curTemp=resp.current_condition[0].temp_C
             //            var curMinTemp=resp.weather[0].mintempC
             //            var curMaxTemp=resp.weather[0].maxtempC
-            //            console.log("today",curTemp,curMinTemp,curMaxTemp)
+            //            console.log("weather response",curTemp,curMinTemp,curMaxTemp)
         }
     }
     console.log("weatherRequest","https://wttr.in/"+city+"?format=j2");
@@ -294,8 +293,8 @@ function setMultiCooking(list,orderTime,dishName,cookbookID)
         buf.Mode=step.mode
         buf.Temp=step.temp
         buf.Timer=step.time
-        if(step.steamGear!=null)
-            buf.steamGear=step.steamGear
+        if(step.SteamGear!=null)
+            buf.SteamGear=step.steamGear
         MultiStageContent.push(buf)
     }
 

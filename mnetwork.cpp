@@ -29,11 +29,14 @@ void MNetwork::replyLocationFinished()
 {
     /* 获取信号发送者 */
     QNetworkReply *reply = (QNetworkReply *)sender();
-
+    qDebug()<< "replyLocationFinished error:" << reply->error() << "url:" << reply->url();
     /* 读取数据 */
-    QByteArray data =  reply->readAll();
-    qDebug()<< "replyLocationFinished:" << QString(data);
-    emit replyLocationData(data);
+    if(reply->error()==QNetworkReply::NoError)
+    {
+        QByteArray data =  reply->readAll();
+        qDebug()<< "replyLocationFinished:" << QString(data);
+        emit replyLocationData(data);
+    }
     /* 防止内存泄漏 */
     reply->deleteLater();
 }
@@ -55,11 +58,14 @@ void MNetwork::replyTimeFinished()
 {
     /* 获取信号发送者 */
     QNetworkReply *reply = (QNetworkReply *)sender();
-
+    qDebug()<< "error:" << reply->error() << "url:" << reply->url();
     /* 读取数据 */
-    QByteArray data =  reply->readAll();
-    qDebug()<< "replyTimeFinished:" << QString(data);
-    emit replyTimeData(data);
+    if(reply->error()==QNetworkReply::NoError)
+    {
+        QByteArray data =  reply->readAll();
+        qDebug()<< "replyTimeFinished replyTimeFinished:" << QString(data);
+        emit replyTimeData(data);
+    }
     /* 防止内存泄漏 */
     reply->deleteLater();
 }
