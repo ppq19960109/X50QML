@@ -201,7 +201,7 @@ Item {
                 anchors.topMargin: 26
 
                 clip: true
-                cacheItemCount:5
+                //cacheItemCount:5
                 currentIndex:0
                 pathItemCount:5
                 interactive: true

@@ -97,8 +97,10 @@ Item {
                         if(clickIndex==1)
                         {
                             var Data={}
-                            Data.RAuxiliarySwitch = 1
+                            Data.RAuxiliarySwitch = true
                             Data.RAuxiliaryTemp = tempPathView.model[tempPathView.currentIndex]
+                            if(oil_temp_switch.checked==false)
+                                Data.OilTempSwitch=true
                             SendFunc.setToServer(Data)
                             timer_auxiliary.restart()
                         }
@@ -198,15 +200,18 @@ Item {
                 anchors.bottomMargin: 30
                 source: themesPicturesPath+(checked ?"icon_switch_open.png":"icon_switch_close.png")
                 onClicked: {
-                    if(wifiConnected==false)
+                    if(checked==true)
                     {
-                        loaderWifiConfirmShow("当前无网络，连网后可生成烹饪曲线")
-                        return
+                        if(wifiConnected==false)
+                        {
+                            loaderWifiConfirmShow("当前无网络，连网后可生成烹饪曲线")
+                            return
+                        }
+                        loaderQrcodeShow("烹饪曲线已开启","下载火粉APP\n扫码查看您的烹饪曲线")
                     }
                     var Data={}
                     Data.CookingCurveSwitch = checked
                     SendFunc.setToServer(Data)
-                    loaderQrcodeShow("烹饪曲线已开启","下载火粉APP\n扫码查看您的烹饪曲线")
                 }
             }
         }

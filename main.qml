@@ -147,16 +147,16 @@ ApplicationWindow {
     function systemSync()
     {
         QmlDevState.executeShell("(sleep 2;sync) &")
-//        QmlDevState.executeQProcess("sync",[])
+        //        QmlDevState.executeQProcess("sync",[])
     }
     function systemRestart()
     {
-//        SendFunc.setSysPower(0)
-//        systemPower(0)
+        //        SendFunc.setSysPower(0)
+        //        systemPower(0)
         systemSettings.reboot=true
 
         QmlDevState.executeShell("(sleep 2;sync;sh /oem/marssenger/S100Marssenger restart) &")
-//        QmlDevState.executeQProcess("sh",["/oem/marssenger/S100Marssenger","restart"])
+        //        QmlDevState.executeQProcess("sh",["/oem/marssenger/S100Marssenger","restart"])
     }
     function generateTwoTime(time)
     {
@@ -835,10 +835,10 @@ ApplicationWindow {
         propagateComposedEvents: true
 
         onPressed: {
-            console.log("Window onPressed:",sysPower)
+            console.log("Window onPressed:",sysPower,mouse.accepted)
+            mouse.accepted=false
             if(sysPower > 0)
             {
-                mouse.accepted = false
                 timer_sleep.restart()
 
                 if(sleepState==true)
@@ -856,6 +856,10 @@ ApplicationWindow {
                 SendFunc.setSysPower(1)
                 mouse.accepted = true
             }
+        }
+        onReleased: {
+            console.log("Window onReleased:",mouse.accepted)
+            mouse.accepted=false
         }
     }
 
