@@ -198,8 +198,8 @@ Item {
                     Backlight.backlightSet(systemSettings.brightness)
                 }
                 SendFunc.setBuzControl(buzControlEnum.STOP)
-                SendFunc.setBuzControl(buzControlEnum.SHORT)
-
+//                SendFunc.setBuzControl(buzControlEnum.SHORT)
+                SendFunc.setProductionTestStatus(0)
                 //                else if(systemSettings.wifiEnable==false)
                 //                    SendFunc.enableWifi(false)
                 //                                loaderErrorShow("右腔干烧检测电路故障！","请拨打售后电话<font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员")
@@ -221,12 +221,20 @@ Item {
             {
                 if(systemSettings.reboot==false)
                 {
-                    if(sysPower<0 && value==0)
+                    if(value==0)
                     {
-                        SendFunc.setSysPower(1)
+                        if(sysPower<0)
+                        {
+                            SendFunc.setSysPower(1)
+                            SendFunc.setBuzControl(buzControlEnum.SHORT)
+                        }
                     }
-                    else if(value==1)
+                    else
                     {
+                        if(sysPower<0)
+                        {
+                            SendFunc.setBuzControl(buzControlEnum.SHORT)
+                        }
                         var errorCode=QmlDevState.state.ErrorCodeShow
                         if(errorCode!==0)
                         {
@@ -236,7 +244,6 @@ Item {
                         }
                     }
                 }
-
                 systemPower(value)
             }
             else if("ComSWVersion"==key)

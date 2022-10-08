@@ -108,7 +108,7 @@ Item {
         }
 
         doc.open("POST", "http://192.168.101.199:63136/iot/push/testing/result")
-        doc.timeout=5000
+        doc.timeout=4000
         doc.setRequestHeader("Content-Type", "application/json")
 
         var pk=QmlDevState.state.ProductKey

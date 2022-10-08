@@ -10,11 +10,13 @@ Item {
         systemPower(1)
         SendFunc.setSysPower(1)
         SendFunc.setBuzControl(buzControlEnum.SHORT)
+        SendFunc.setProductionTestStatus(1)
     }
     Component.onDestruction: {
         productionTestStatus=0
         systemPower(QmlDevState.state.SysPower)
         loaderErrorCodeShow(QmlDevState.state.ErrorCodeShow)
+        SendFunc.setProductionTestStatus(0)
     }
     StackView.onActivated:{
         var errorcode=QmlDevState.state.ErrorCodeShow
