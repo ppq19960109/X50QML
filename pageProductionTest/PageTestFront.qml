@@ -6,9 +6,11 @@ Item {
     Component.onCompleted: {
         productionTestStatus=1
         SendFunc.setBuzControl(buzControlEnum.SHORT)
+        SendFunc.setProductionTestStatus(1)
     }
     Component.onDestruction: {
         productionTestStatus=0
+        SendFunc.setProductionTestStatus(0)
     }
     PageBackBar{
         id:topBar

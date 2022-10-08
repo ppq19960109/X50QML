@@ -204,6 +204,7 @@ Item {
                     SendFunc.enableWifi(true)
                 }
                 SendFunc.setBuzControl(buzControlEnum.STOP)
+                SendFunc.setProductionTestStatus(0)
             }
             else
             {
@@ -240,7 +241,6 @@ Item {
                         }
                     }
                 }
-
                 systemPower(value)
             }
             else if("ComSWVersion"==key)

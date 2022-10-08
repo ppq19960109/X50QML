@@ -347,7 +347,7 @@ ApplicationWindow {
             if(timeSync>=2)
             {
                 ++timeSync
-                if(timeSync>60*3)
+                if(timeSync>60*4)
                     timeSync=0
             }
             if(timeSync<2)

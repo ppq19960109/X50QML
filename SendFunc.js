@@ -223,7 +223,12 @@ function setSysPower(operation)
     Data.DataReportReason=0
     setToServer(Data)
 }
-
+function setProductionTestStatus(status)
+{
+    var Data={}
+    Data.ProductionTestStatus=status
+    setToServer(Data)
+}
 function setCookOperation(device,operation)
 {
     var Data={}

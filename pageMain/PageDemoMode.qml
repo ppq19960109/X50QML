@@ -22,7 +22,6 @@ Item{
                 swipeview.currentIndex=0
             else
                 swipeview.currentIndex+=1
-
         }
     }
     SwipeView {
