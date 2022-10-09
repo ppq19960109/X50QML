@@ -298,7 +298,7 @@ function setMultiCooking(list,orderTime,dishName,cookbookID)
         buf.Mode=step.mode
         buf.Temp=step.temp
         buf.Timer=step.time
-        if(step.SteamGear!=null)
+        if(step.steamGear!=null)
             buf.SteamGear=step.steamGear
         MultiStageContent.push(buf)
     }

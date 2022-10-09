@@ -4,6 +4,7 @@ import QtQuick.Controls 2.5
 Image {
     property alias duration:rotation.duration
     id: busyImg
+    asynchronous:true
     RotationAnimator {
         id:rotation
         target: busyImg
@@ -16,8 +17,8 @@ Image {
             if(duration>0)
                 restart()
         }
-        onRunningChanged: {
-            console.log("onRunningChanged",running)
-        }
+//        onRunningChanged: {
+//            console.log("onRunningChanged",running)
+//        }
     }
 }

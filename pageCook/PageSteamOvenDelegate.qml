@@ -34,7 +34,7 @@ Item {
     }
     function modeChange(index,tempIndex,timeIndex,steamGearIndex)
     {
-        console.log("modeChange:",index,tempIndex,timeIndex,steamGearIndex)
+//        console.log("modeChange:",index,tempIndex,timeIndex,steamGearIndex)
         if(index===0)
         {
             steamGearPathView.model=["1档","2档","3档"]

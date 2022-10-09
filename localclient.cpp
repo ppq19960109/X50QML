@@ -153,9 +153,9 @@ void LocalClient::stateChangedHandler(QLocalSocket::LocalSocketState socketState
 
 void LocalClient::readyReadHandler()
 {
-    qDebug() << "recv_data bytesAvailable" << m_socket->bytesAvailable();
+//    qDebug() << "recv_data bytesAvailable" << m_socket->bytesAvailable();
     QByteArray recv_data=m_socket->readAll();
-    int recv_data_size=recv_data.size();
+    static int recv_data_size=recv_data.size();
     if(recv_data_size<=0)
     {
         qDebug() << "recv_data error";

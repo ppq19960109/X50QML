@@ -213,7 +213,7 @@ Item {
             }
         }
         onStateChanged: { // 处理目标对象信号的槽函数
-            console.log("page home onStateChanged",key,value)
+            console.log("pageHome onStateChanged",key,value)
             if("SysPower"==key)
             {
 //                console.log("systemSettings.reboot",systemSettings.reboot)

@@ -835,7 +835,7 @@ ApplicationWindow {
         propagateComposedEvents: true
 
         onPressed: {
-            console.log("Window onPressed:",sysPower,mouse.accepted)
+//            console.log("Window onPressed:",sysPower)
             mouse.accepted=false
             if(sysPower > 0)
             {

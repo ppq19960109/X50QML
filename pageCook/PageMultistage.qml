@@ -25,7 +25,8 @@ Item {
             steps.mode=step.mode
             steps.temp=step.temp
             steps.time=step.time
-            steps.steamGear=step.steamGear
+            if(step.steamGear>0)
+                steps.steamGear=step.steamGear
             steps.number=i+1
             cookSteps.push(steps)
         }

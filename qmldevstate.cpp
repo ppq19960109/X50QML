@@ -165,9 +165,9 @@ QString QmlDevState::getRecipeName(const int recipeId)
     {
         for(j=0;j<recipe[i].size();++j)
         {
-           QVariantMap cur=recipe[i][j].toMap();
-           if(cur["recipeid"]==recipeId)
-               return cur["dishName"].toString();
+            QVariantMap cur=recipe[i][j].toMap();
+            if(cur["recipeid"]==recipeId)
+                return cur["dishName"].toString();
         }
     }
     return "";
@@ -181,8 +181,8 @@ void QmlDevState::startLocalConnect()
 int QmlDevState::executeQProcess(const QString cmd,const QStringList list)
 {
     qDebug() << "executeQProcess:" << cmd << "list:" << list;
-//    process.start(cmd,list);
-//    return 0;
+    //    process.start(cmd,list);
+    //    return 0;
     return QProcess::startDetached(cmd,list);
 }
 
@@ -357,7 +357,7 @@ void QmlDevState::parsingData(const QJsonObject& object)
                 else
                 {
 #endif    
-                    if("LStOvDoorState"==key || "LStOvMode"==key ||"LStOvSetTemp"==key ||"LStOvRealTemp"==key ||"LStOvSetTimer"==key ||"LStOvOrderTimer"==key ||"LStOvSetTimerLeft"==key ||"RStOvDoorState"==key ||"RStOvMode"==key ||"RStOvSetTemp"==key ||"RStOvRealTemp"==key ||"RStOvOrderTimer"==key ||"RStOvSetTimer"==key ||"RStOvSetTimerLeft"==key ||"RStOvOrderTimerLeft"==key||"MultiMode"==key||"HoodSpeed"==key||"HoodLight"==key)
+                    if("LStOvState"==key ||"LStOvDoorState"==key || "LStOvMode"==key ||"LStOvSetTemp"==key ||"LStOvRealTemp"==key ||"LStOvSetTimer"==key ||"LStOvOrderTimer"==key ||"LStOvSetTimerLeft"==key ||"LStOvOrderTimerLeft"==key ||"LSteamGear"==key ||"RStOvState"==key ||"RStOvDoorState"==key ||"RStOvMode"==key ||"RStOvSetTemp"==key ||"RStOvRealTemp"==key ||"RStOvOrderTimer"==key ||"RStOvSetTimer"==key ||"RStOvSetTimerLeft"==key ||"RStOvOrderTimerLeft"==key||"MultiMode"==key||"HoodSpeed"==key||"HoodLight"==key)
                     {
                         if(stateMap[key]==value.toInt())
                             continue;
@@ -370,6 +370,11 @@ void QmlDevState::parsingData(const QJsonObject& object)
             else if(LINK_VALUE_TYPE_STRING==value_type)
             {
                 //                qDebug()<<"key:"<<key<<"value:"<<value.toString();
+                if("CookbookName"==key)
+                {
+                    if(stateMap[key]==value.toString())
+                        continue;
+                }
                 setState(key,value.toString());
 
                 if("QrCode"==key)
