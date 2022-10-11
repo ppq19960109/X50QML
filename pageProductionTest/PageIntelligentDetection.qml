@@ -7,6 +7,7 @@ import "qrc:/SendFunc.js" as SendFunc
 Item {
     property int step: 0
     property int rssi: 0
+    property bool quadState: false
     Timer{
         id:timer_wifi
         repeat: false
@@ -24,6 +25,10 @@ Item {
             else if(step>0 && step<=3)
             {
                 SendFunc.scanRWifi()
+            }
+            else if(step==6||step==7)
+            {
+                factoryRequest(rssi,quadState)
             }
         }
     }
@@ -57,10 +62,10 @@ Item {
     }
     function factoryRequest(signalStrength,quadruple)
     {
-        var doc = new XMLHttpRequest();
+        var doc = new XMLHttpRequest()
 
         doc.onreadystatechange = function() {
-            console.log("onreadystatechange:",doc.readyState);
+            console.log("onreadystatechange:",doc.readyState)
             switch(doc.readyState){
             case XMLHttpRequest.UNSENT://UNSENT
                 //do something
@@ -81,6 +86,13 @@ Item {
                 do{
                     if(doc.responseText=="")
                     {
+//                        if(step==6)
+//                        {
+//                            console.log("XMLHttpRequest again...")
+//                            step=7
+//                            timer_wifi.restart()
+//                            return
+//                        }
                         sequence.color="red"
                         sequenceText.text="产测上报异常"
                         break
@@ -95,27 +107,33 @@ Item {
                     sequence.color="green"
                     sequenceText.text=dataJson.data
                 }while(0)
+                step=7
                 resetText.visible=true
                 systemReset()
-                break;
+                break
             }
         }
+
+        doc.open("POST", "http://192.168.101.199:63136/iot/push/testing/result",false)
+
+        doc.timeout=4000
         doc.ontimeout = function() {
             console.log("ontimeout");
         }
         doc.onerror = function() {
             console.log("onerror",doc.status);
         }
-
-        doc.open("POST", "http://192.168.101.199:63136/iot/push/testing/result")
-        doc.timeout=4000
+        doc.onabort = function() {
+            console.log("onabort");
+        }
         doc.setRequestHeader("Content-Type", "application/json")
 
         var pk=QmlDevState.state.ProductKey
-        doc.setRequestHeader("pk", pk)
         var mac=QmlDevState.getNetworkMac().replace(/:/g,"").toLowerCase()
-        doc.setRequestHeader("mac", mac)
         var sign="1643338882000."+Qt.md5("1643338882000"+pk+mac+"mars")
+
+        doc.setRequestHeader("pk", pk)
+        doc.setRequestHeader("mac", mac)
         doc.setRequestHeader("sign", sign)
 
         console.log("Header:",pk,mac,sign)
@@ -126,9 +144,9 @@ Item {
         obj.versionPowerPanel=QmlDevState.state.PwrSWVersion//.replace(/\./g,"")
         obj.deviceName=QmlDevState.state.DeviceName
         obj.deviceSecret=QmlDevState.state.DeviceSecret
-        console.log("body:",JSON.stringify(obj))
-        doc.send(JSON.stringify(obj),)
-        sequenceText.visible=true
+        var body=JSON.stringify(obj)
+        console.log("body:",body)
+        doc.send(body)
     }
     function parseWifiList(sanR)
     {
@@ -172,7 +190,7 @@ Item {
         {
             step=4
             wifiConnectText.visible=true
-            //            SendFunc.connectWiFi("IoT-Test","12345678",1)
+//            SendFunc.connectWiFi("IoT-Test","12345678",1)
             SendFunc.connectWiFi(productionTestWIFISSID,productionTestWIFIPWD,1)
         }
     }
@@ -197,7 +215,6 @@ Item {
             }
             else if("WifiState"==key && step==4)
             {
-
                 if(value==2 || value==3|| value==5)
                 {
                     wifiConnect.color="red"
@@ -207,26 +224,32 @@ Item {
                 else if(value==4)
                 {
                     step=5
-                    wifiConnect.color="green"
-                    wifiConnectText.text="成功"
-
-                    quadText.visible=true
-                    if(QmlDevState.state.ProductKey=="" || QmlDevState.state.DeviceName==""|| QmlDevState.state.ProductSecret==""|| QmlDevState.state.DeviceSecret=="")
-                    {
-                        step=0xff
-                        quad.color="red"
-                        quadText.text="四元组缺失"
-                        factoryRequest(rssi,false)
-                    }
-                    else
-                    {
-                        quad.color="green"
-                        quadText.text="四元组正常"
-                        factoryRequest(rssi,true)
-                    }
                 }
             }
-            else if("Reset"==key && step==5)
+            else if("ssid"==key && step==5)
+            {
+                step=6
+                wifiConnect.color="green"
+                wifiConnectText.text="成功"
+
+                quadText.visible=true
+                if(QmlDevState.state.ProductKey=="" || QmlDevState.state.DeviceName==""|| QmlDevState.state.ProductSecret==""|| QmlDevState.state.DeviceSecret=="")
+                {
+                    step=0xff
+                    quad.color="red"
+                    quadText.text="四元组缺失"
+                    quadState=false
+                }
+                else
+                {
+                    quad.color="green"
+                    quadText.text="四元组正常"
+                    quadState=true
+                }
+                sequenceText.visible=true
+                timer_wifi.restart()
+            }
+            else if("Reset"==key && step==7)
             {
                 step=0xff
 
