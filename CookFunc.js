@@ -35,8 +35,20 @@ function leftWorkModeName(mode)
     case 120:
         name=leftWorkMode[10]
         break
-    case 121:
+    case 131:
         name=leftWorkMode[11]
+        break
+    case 132:
+        name=leftWorkMode[12]
+        break
+    case 133:
+        name=leftWorkMode[13]
+        break
+    case 134:
+        name=leftWorkMode[14]
+        break
+    case 121:
+        name=leftWorkMode[15]
         break
     default:
         name=leftWorkMode[0]
@@ -46,7 +58,7 @@ function leftWorkModeName(mode)
 }
 function leftWorkModeToIndex(mode)
 {
-//        console.log("leftWorkModeToIndex",mode)
+        console.log("leftWorkModeToIndex",mode)
     var index
     switch(mode)
     {
@@ -80,8 +92,20 @@ function leftWorkModeToIndex(mode)
     case 120:
         index=10
         break
-    case 121:
+    case 131:
         index=11
+        break
+    case 132:
+        index=12
+        break
+    case 133:
+        index=13
+        break
+    case 134:
+        index=14
+        break
+    case 121:
+        index=15
         break
     default:
         index=0

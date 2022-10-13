@@ -169,6 +169,7 @@ function setIceCooking(list,orderTime)
 {
     var Data={}
     Data.IceStOvMode=list.mode
+
     Data.IceStOvSetTimer=list.time
     Data.IceStOvSetTemp=list.temp
     Data.IceStOvOperation=workOperationEnum.START
@@ -180,6 +181,8 @@ function setMultiIceCooking(list,orderTime)
     console.log("setIceCooking")
     if(list.length==1)
     {
+        if(list[0].mode>=130)
+            list[0].mode=iceWorkMode
         if(list[0].pos!=rightDevice || list[0].mode!=iceWorkMode)
             return
         iceWorkStep.state=iceWorkOperaEnum.ICE
@@ -187,6 +190,10 @@ function setMultiIceCooking(list,orderTime)
     }
     else
     {
+        if(list[0].mode>=130)
+            list[0].mode=iceWorkMode
+        if(list[1].mode>=130)
+            list[1].mode=iceWorkMode
         if(list[0].pos==leftDevice && list[1].pos==rightDevice  && list[1].mode==iceWorkMode)
         {
             iceWorkStep.state=iceWorkOperaEnum.LEFT_ICE

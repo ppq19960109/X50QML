@@ -244,22 +244,19 @@ Item {
                 model: ListModel{
                     ListElement{name: "便捷早餐"
                         value:4
-                        cookSteps:"[{\"pos\":1,\"mode\":120,\"temp\":5,\"time\":30,\"number\":1},{\"pos\":1,\"mode\":100,\"temp\":100,\"time\":30,\"number\":2}]"}
+                        cookSteps:"[{\"pos\":1,\"mode\":120,\"temp\":5,\"time\":480,\"number\":1},{\"pos\":1,\"mode\":100,\"temp\":100,\"time\":20,\"number\":2}]"}
                     ListElement{name: "大菜预约"
                         value:4
                         cookSteps:"[{\"pos\":1,\"mode\":120,\"temp\":5,\"time\":480,\"number\":1},{\"pos\":1,\"mode\":100,\"temp\":100,\"time\":30,\"number\":2}]"}
                     ListElement{name: "冷卤"
                         value:3
-                        cookSteps:"[{\"pos\":1,\"mode\":100,\"temp\":100,\"time\":30,\"number\":1},{\"pos\":1,\"mode\":120,\"temp\":5,\"time\":120,\"number\":2}]"}
-                    ListElement{name: "气调冰镇"
+                        cookSteps:"[{\"pos\":1,\"mode\":100,\"temp\":100,\"time\":80,\"number\":1},{\"pos\":1,\"mode\":131,\"temp\":10,\"time\":360,\"number\":2}]"}
+                    ListElement{name: "冰鲜酸奶"
                         value:3
-                        cookSteps:"[{\"pos\":0,\"mode\":1,\"temp\":100,\"time\":30,\"number\":1},{\"pos\":1,\"mode\":120,\"temp\":5,\"time\":120,\"number\":2}]"}
-                    ListElement{name: "低温腌制"
+                        cookSteps:"[{\"pos\":0,\"mode\":134,\"temp\":35,\"time\":480,\"number\":1},{\"pos\":1,\"mode\":132,\"temp\":5,\"time\":180,\"number\":2}]"}
+                    ListElement{name: "生腌酱醉"
                         value:1
-                        cookSteps:"[{\"pos\":1,\"mode\":120,\"temp\":5,\"time\":120,\"number\":1}]"}
-                    ListElement{name: "冷藏提鲜"
-                        value:1
-                        cookSteps:"[{\"pos\":1,\"mode\":120,\"temp\":5,\"time\":120,\"number\":1}]"}
+                        cookSteps:"[{\"pos\":1,\"mode\":132,\"temp\":5,\"time\":240,\"number\":1}]"}
                 }
                 Button{
                     width:parent.width/3
