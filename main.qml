@@ -15,7 +15,7 @@ ApplicationWindow {
     id: window
     width: 1280
     height: 400
-//    visible: true
+    //    visible: true
     property int sysPower:-1
     property int productionTestStatus:0
     property int productionTestFlag:1
@@ -52,7 +52,7 @@ ApplicationWindow {
     readonly property var workStateEnum:{"WORKSTATE_STOP":0,"WORKSTATE_RESERVE":1,"WORKSTATE_PREHEAT":2,"WORKSTATE_RUN":3,"WORKSTATE_FINISH":4,"WORKSTATE_PAUSE":5,"WORKSTATE_PAUSE_RESERVE":6}
     readonly property var workStateChineseEnum:["停止","预约中","预热中","运行中","烹饪完成","暂停中","预约暂停中"]
     readonly property var workOperationEnum:{"START":0,"PAUSE":1,"CANCEL":2,"CONFIRM":3,"RUN_NOW":4}
-
+    readonly property var otaStateEnum:{"OTA_IDLE":0,"OTA_NO_FIRMWARE":1,"OTA_NEW_FIRMWARE":2,"OTA_DOWNLOAD_START":3,"OTA_DOWNLOAD_FAIL":4,"OTA_DOWNLOAD_SUCCESS":5,"OTA_INSTALL_START":6,"OTA_INSTALL_FAIL":7,"OTA_INSTALL_SUCCESS":8}
     readonly property var timingStateEnum:{"STOP":0,"RUN":1,"PAUSE":2,"CONFIRM":3}
     readonly property var timingOperationEnum:{"START":1,"CANCEL":2}
     property bool wifiConnecting: false
@@ -458,8 +458,13 @@ ApplicationWindow {
             {
                 if((QmlDevState.state.RStOvState === workStateEnum.WORKSTATE_STOP || QmlDevState.state.RStOvState === workStateEnum.WORKSTATE_FINISH || QmlDevState.state.RStOvState === workStateEnum.WORKSTATE_RESERVE || QmlDevState.state.RStOvState === workStateEnum.WORKSTATE_PAUSE_RESERVE) && (QmlDevState.state.LStOvState === workStateEnum.WORKSTATE_STOP || QmlDevState.state.LStOvState === workStateEnum.WORKSTATE_FINISH || QmlDevState.state.LStOvState === workStateEnum.WORKSTATE_RESERVE || QmlDevState.state.LStOvState === workStateEnum.WORKSTATE_PAUSE_RESERVE ))
                 {
-                    screenSleep()
-                    return
+                    var OTAState=QmlDevState.state.OTAState
+                    var OTAPowerState=QmlDevState.state.OTAPowerState
+                    if(OTAState!=otaStateEnum.OTA_DOWNLOAD_START && OTAState!=otaStateEnum.OTA_INSTALL_START && OTAPowerState!=otaStateEnum.OTA_DOWNLOAD_START && OTAPowerState!=otaStateEnum.OTA_INSTALL_START)
+                    {
+                        screenSleep()
+                        return
+                    }
                 }
             }
             sleepState=false
@@ -835,7 +840,7 @@ ApplicationWindow {
         propagateComposedEvents: true
 
         onPressed: {
-//            console.log("Window onPressed:",sysPower)
+            //            console.log("Window onPressed:",sysPower)
             mouse.accepted=false
             if(sysPower > 0)
             {
@@ -875,7 +880,9 @@ ApplicationWindow {
 
             loaderScreenSaverHide()
             timer_sleep.restart()
+            return 0
         }
+        return 1
     }
     ListModel {
         id: wifiModel

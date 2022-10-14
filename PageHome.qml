@@ -77,6 +77,8 @@ Item {
         }
     }
     function loaderUpdatePowerConfirmShow(){
+        if(sleepWakeup())
+            standbyWakeup()
         loaderAuto.sourceComponent = component_updatePowerConfirm
     }
 
@@ -216,7 +218,7 @@ Item {
             console.log("pageHome onStateChanged",key,value)
             if("SysPower"==key)
             {
-//                console.log("systemSettings.reboot",systemSettings.reboot)
+                //                console.log("systemSettings.reboot",systemSettings.reboot)
                 if(systemSettings.reboot==false)
                 {
                     if(value==0)
@@ -255,6 +257,7 @@ Item {
             {
                 if(value===QmlDevState.state.OTAPowerNewVersion)
                 {
+                    SendFunc.setSysPower(1)
                     loaderUpdateResultShow("电源板已更新至最新版本\n"+value)
                 }
             }
@@ -565,44 +568,38 @@ Item {
             }
             else if("OTAState"==key)
             {
-                if(value==1)
-                {
-                }
-                else if(value==2)
+                if(value==otaStateEnum.OTA_NEW_FIRMWARE)
                 {
                     loaderUpdateConfirmShow()
                 }
-                else if(value==3)
+                else if(value==otaStateEnum.OTA_DOWNLOAD_START)
                 {
                     loaderUpdateShow("通讯板")
                 }
-                else if(value==4)
+                else if(value==otaStateEnum.OTA_DOWNLOAD_FAIL)
                 {
-                    loaderUpdateResultShow("通讯板系统下载失败")
+                    loaderUpdateResultShow("通讯板升级失败")
                 }
-                else if(value==8)
+                else if(value==otaStateEnum.OTA_INSTALL_SUCCESS)
                 {
                     systemSettings.otaSuccess=true
                 }
             }
             else if("OTAPowerState"==key)
             {
-                if(value==1)
-                {
-                }
-                else if(value==2)
+                if(value==otaStateEnum.OTA_NEW_FIRMWARE)
                 {
                     loaderUpdatePowerConfirmShow()
                 }
-                else if(value==3)
+                else if(value==otaStateEnum.OTA_DOWNLOAD_START)
                 {
                     loaderUpdateShow("电源板")
                 }
-                else if(value==4)
+                else if(value==otaStateEnum.OTA_DOWNLOAD_FAIL)
                 {
-                    loaderUpdateResultShow("电源板系统下载失败")
+                    loaderUpdateResultShow("电源板升级失败")
                 }
-                else if(value==8)
+                else if(value==otaStateEnum.OTA_INSTALL_SUCCESS)
                 {
 
                 }

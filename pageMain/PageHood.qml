@@ -61,7 +61,7 @@ Item {
                             }
                             else
                             {
-                                return hoodSpeed===10
+                                return hoodSpeed===4
                             }
                         }
                         asynchronous:true
@@ -86,10 +86,10 @@ Item {
                     }
                     else
                     {
-                        if(hoodSpeed===10)
+                        if(hoodSpeed===4)
                             SendFunc.setHoodSpeed(0)
                         else
-                            SendFunc.setHoodSpeed(10)
+                            SendFunc.setHoodSpeed(4)
                     }
                 }
             }

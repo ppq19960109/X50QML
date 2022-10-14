@@ -4,7 +4,7 @@ import QtQuick.Layouts 1.12
 import "../"
 import "qrc:/SendFunc.js" as SendFunc
 Item {
-    property bool versionCheckState: false
+    property int versionCheckState: 0
 
     Component {
         id: pageReleaseNotes
@@ -20,20 +20,25 @@ Item {
             {
                 if(value==1)
                 {
-                    versionCheckState=false
+                    --versionCheckState
                 }
                 else if(value==2)
                 {
                     checkStatus.visible=false
-                    versionCheckState=false
+                    --versionCheckState
                 }
             }
-            else if(("OTAProgress"==key))
+            else if("OTAPowerState"==key)
             {
-            }
-            else if(("OTANewVersion"==key))
-            {
-
+                if(value==1)
+                {
+                    --versionCheckState
+                }
+                else if(value==2)
+                {
+                    checkStatus.visible=false
+                    --versionCheckState
+                }
             }
         }
     }
@@ -89,8 +94,8 @@ Item {
             visible: false
             Text{
                 id:checkText
-                text:versionCheckState ?"正在检查...":"已经是最新版本"
-                color:versionCheckState ?"#fff":themesTextColor
+                text:versionCheckState>0 ?"正在检查...":"已经是最新版本"
+                color:versionCheckState>0?"#fff":themesTextColor
                 font.pixelSize: 35
                 anchors.centerIn: parent
             }
@@ -102,18 +107,18 @@ Item {
             anchors.bottom: parent.bottom
             anchors.bottomMargin: 35
             anchors.horizontalCenter: parent.horizontalCenter
-            enabled: versionCheckState==false
+            enabled: versionCheckState==0
             background:Rectangle{
                 width:176
                 height:50
                 anchors.centerIn: parent
-                color:versionCheckState==true?"transparent":themesTextColor2
+                color:versionCheckState>0?"transparent":themesTextColor2
                 border.color: themesTextColor2
                 radius: height/2
             }
             Text{
                 text:"检查更新"
-                color:versionCheckState==true?themesTextColor2:"#000"
+                color:versionCheckState>0?themesTextColor2:"#000"
                 font.pixelSize: 30
                 anchors.centerIn: parent
             }
@@ -121,8 +126,9 @@ Item {
                 if(wifiConnected)
                 {
                     checkStatus.visible=true
-                    versionCheckState=true
+                    versionCheckState=2
                     SendFunc.otaRquest(0)
+                    SendFunc.otaPowerRquest(0)
                 }
                 else
                 {
