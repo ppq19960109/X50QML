@@ -59,6 +59,13 @@ Item {
             }
         }
     }
+    function setTimeout(callback,timeout){
+        var timer = Qt.createQmlObject("import QtQuick 2.12; Timer {}", window)
+        timer.interval = timeout
+        timer.repeat = false
+        timer.triggered.connect(callback)
+        timer.restart()
+    }
     function factoryRequest(signalStrength,quadruple)
     {
         var doc = new XMLHttpRequest();
@@ -114,8 +121,8 @@ Item {
         doc.onabort = function() {
             console.log("onabort");
         }
-        doc.open("POST", "http://192.168.101.199:63036/iot/push/testing/result",false)
-        doc.timeout=4000
+        doc.open("POST", "http://192.168.101.199:63036/iot/push/testing/result",true)
+        doc.timeout=5000
         doc.setRequestHeader("Content-Type", "application/json")
 
         var pk=QmlDevState.state.ProductKey
@@ -133,8 +140,14 @@ Item {
         obj.versionPowerPanel=QmlDevState.state.PwrSWVersion.replace(/\./g,"")
         obj.deviceName=QmlDevState.state.DeviceName
         obj.deviceSecret=QmlDevState.state.DeviceSecret
-        console.log("body:",JSON.stringify(obj))
-        doc.send(JSON.stringify(obj))
+        var body=JSON.stringify(obj)
+        console.log("body:",body)
+        setTimeout(function(){
+            console.log("timer abort...")
+            if(doc!=null)
+                doc.abort();//请求中止
+        },5000)
+        doc.send(body)
     }
     function parseWifiList(sanR)
     {
