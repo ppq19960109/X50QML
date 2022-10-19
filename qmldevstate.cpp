@@ -120,6 +120,7 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     setState("LStoveTimingState",0);
     setState("LStoveTimingLeft",0);
     setState("LStoveTimingSet",0);
+    setState("RMovePotLowHeatSwitch",0);
     //    setState("MultiMode",2);
     //    setState("cnt",3);
     //    setState("current",1);

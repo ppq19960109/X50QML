@@ -4,6 +4,34 @@ import "../"
 import "qrc:/pageCook"
 import "qrc:/SendFunc.js" as SendFunc
 Item {
+    Connections { // 将目标对象信号与槽函数进行连接
+        target: QmlDevState
+        onStateChanged: { // 处理目标对象信号的槽函数
+            //            console.log("page PageSmartCook:",key,value)
+            if("RAuxiliarySwitch"==key)
+            {
+                auxiliaryPageSwitch.checked=value
+            }
+            else if("CookingCurveSwitch"==key)
+            {
+                cookingCurvePageSwitch.checked=value
+            }
+            else if("OilTempSwitch"==key)
+            {
+                oilTempPageSwitch.checked=value
+            }
+            else if("RMovePotLowHeatSwitch"==key)
+            {
+                lowHeatPageSwitch.checked=value
+            }
+        }
+    }
+    Component.onCompleted: {
+        auxiliaryPageSwitch.checked=auxiliarySwitch
+        cookingCurvePageSwitch.checked=QmlDevState.state.CookingCurveSwitch
+        oilTempPageSwitch.checked=QmlDevState.state.OilTempSwitch
+        lowHeatPageSwitch.checked=QmlDevState.state.RMovePotLowHeatSwitch
+    }
 
     Component{
         id:component_tempControl
@@ -99,10 +127,14 @@ Item {
                             var Data={}
                             Data.RAuxiliarySwitch = true
                             Data.RAuxiliaryTemp = tempPathView.model[tempPathView.currentIndex]
-                            if(oil_temp_switch.checked==false)
+                            if(oilTempPageSwitch.checked==false)
                                 Data.OilTempSwitch=true
                             SendFunc.setToServer(Data)
                             timer_auxiliary.restart()
+                        }
+                        else
+                        {
+                            auxiliaryPageSwitch.checked=false
                         }
                         loaderMainHide()
                     }
@@ -158,7 +190,8 @@ Item {
                 anchors.topMargin: 84
             }
             PageSwitch {
-                checked:auxiliarySwitch
+                id:auxiliaryPageSwitch
+                checked:false
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.bottom: parent.bottom
                 anchors.bottomMargin: 30
@@ -194,7 +227,8 @@ Item {
                 horizontalAlignment:Text.AlignHCenter
             }
             PageSwitch {
-                checked: QmlDevState.state.CookingCurveSwitch
+                id:cookingCurvePageSwitch
+                checked: false
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.bottom: parent.bottom
                 anchors.bottomMargin: 30
@@ -205,6 +239,7 @@ Item {
                         if(wifiConnected==false)
                         {
                             loaderWifiConfirmShow("当前无网络，连网后可生成烹饪曲线")
+                            cookingCurvePageSwitch.checked=false
                             return
                         }
                         loaderQrcodeShow("烹饪曲线已开启","下载火粉APP\n扫码查看您的烹饪曲线")
@@ -220,7 +255,7 @@ Item {
             height:parent.height
             color: "#000"
             Image {
-                visible: oil_temp_switch.checked==false
+                visible: oilTempPageSwitch.checked==false
                 asynchronous:true
                 smooth:false
                 source: themesPicturesPath+"oil_temp.png"
@@ -235,7 +270,7 @@ Item {
                 horizontalAlignment:Text.AlignHCenter
             }
             Text{
-                visible: oil_temp_switch.checked==true
+                visible: oilTempPageSwitch.checked==true
                 text:"当前油温参考\n左灶 "+QmlDevState.state.LOilTemp+"℃\n右灶 "+QmlDevState.state.ROilTemp+"℃"
                 color:themesTextColor
                 font.pixelSize: 24
@@ -244,8 +279,8 @@ Item {
                 anchors.topMargin: 84
             }
             PageSwitch {
-                id:oil_temp_switch
-                checked: QmlDevState.state.OilTempSwitch
+                id:oilTempPageSwitch
+                checked: false
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.bottom: parent.bottom
                 anchors.bottomMargin: 30
@@ -265,7 +300,7 @@ Item {
                 hintCenterText:"开启后锅具离开灶具，火力变小\n离开3分钟以上，自动熄火"
                 checkboxVisible:true
                 onCancel:{
-                    lowHeatSwitch.checked=false
+                    lowHeatPageSwitch.checked=false
                     loaderMainHide()
                 }
                 onConfirm:{
@@ -299,8 +334,8 @@ Item {
                 horizontalAlignment:Text.AlignHCenter
             }
             PageSwitch {
-                id:lowHeatSwitch
-                checked: QmlDevState.state.RMovePotLowHeatSwitch
+                id:lowHeatPageSwitch
+                checked: false
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.bottom: parent.bottom
                 anchors.bottomMargin: 30
