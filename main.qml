@@ -414,7 +414,7 @@ ApplicationWindow {
             {
                 if(sleepStandby()===0)
                     return
-                timer_standby.interval=8*60000
+                timer_standby.interval=3*60000
                 timer_standby.restart()
             }
         }
@@ -442,7 +442,7 @@ ApplicationWindow {
         loaderScreenSaverShow()
 
         productionTestFlag=0
-        timer_standby.interval=10*60000
+        timer_standby.interval=3*60000
         timer_standby.restart()
     }
 
