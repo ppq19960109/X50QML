@@ -60,6 +60,14 @@ Item {
             }
         }
     }
+
+    function setTimeout(callback,timeout){
+        var timer = Qt.createQmlObject("import QtQuick 2.12; Timer {}", window)
+        timer.interval = timeout
+        timer.repeat = false
+        timer.triggered.connect(callback)
+        timer.restart()
+    }
     function factoryRequest(signalStrength,quadruple)
     {
         var doc = new XMLHttpRequest()
@@ -86,13 +94,13 @@ Item {
                 do{
                     if(doc.responseText=="")
                     {
-//                        if(step==6)
-//                        {
-//                            console.log("XMLHttpRequest again...")
-//                            step=7
-//                            timer_wifi.restart()
-//                            return
-//                        }
+                        //                        if(step==6)
+                        //                        {
+                        //                            console.log("XMLHttpRequest again...")
+                        //                            step=7
+                        //                            timer_wifi.restart()
+                        //                            return
+                        //                        }
                         sequence.color="red"
                         sequenceText.text="产测上报异常"
                         break
@@ -114,9 +122,9 @@ Item {
             }
         }
 
-        doc.open("POST", "http://192.168.101.199:63136/iot/push/testing/result",false)
+        doc.open("POST", "http://192.168.101.199:63136/iot/push/testing/result",true)
 
-        doc.timeout=4000
+        doc.timeout=5000
         doc.ontimeout = function() {
             console.log("ontimeout");
         }
@@ -146,6 +154,11 @@ Item {
         obj.deviceSecret=QmlDevState.state.DeviceSecret
         var body=JSON.stringify(obj)
         console.log("body:",body)
+        setTimeout(function(){
+            console.log("timer abort...")
+            if(doc!=null)
+                doc.abort();//请求中止
+        },5000)
         doc.send(body)
     }
     function parseWifiList(sanR)
