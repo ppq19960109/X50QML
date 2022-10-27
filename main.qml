@@ -444,13 +444,14 @@ ApplicationWindow {
         productionTestFlag=0
         timer_standby.interval=3*60000
         timer_standby.restart()
+//        SendFunc.setSysPower(0)
     }
 
     Timer{
         id:timer_sleep
         repeat: false
         running: systemSettings.sleepSwitch && sysPower == 1
-        interval: systemSettings.sleepTime*60000
+        interval: systemSettings.sleepTime*62000
         triggeredOnStart: false
         onTriggered: {
             console.log("timer_sleep onTriggered...")

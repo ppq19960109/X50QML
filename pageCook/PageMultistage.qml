@@ -7,6 +7,7 @@ import "../"
 Item {
     property string name: "PageMultistage"
     property int listLastIndex:0
+    property int listClickIndex:0
 
     Component.onDestruction: {
         loaderMainHide()
@@ -219,7 +220,7 @@ Item {
                     source: themesPicturesPath+"icon_restart.png"
                 }
                 onClicked: {
-                    console.log("listDelegate restart",mode,temp,time,steamGear)
+                    console.log("listDelegate restart",mode,temp,time,steamGear,index,listLastIndex)
                     loaderMultistageShow(index)
                 }
             }
@@ -253,7 +254,6 @@ Item {
     Component{
         id:component_tanchuang
         Item {
-            property int index:0
             property alias modeIndex:steamOvenDelegate.modeIndex
             property alias tempIndex:steamOvenDelegate.tempIndex
             property alias timeIndex:steamOvenDelegate.timeIndex
@@ -303,10 +303,11 @@ Item {
                     modeItemCount:3
                     tempItemCount:3
                     timeItemCount:3
-                    modeIndex:CookFunc.leftWorkModeToIndex(listModel.get(index).mode)
-                    tempIndex:listModel.get(index).temp
-                    timeIndex:listModel.get(index).time
-                    steamGearIndex:listModel.get(index).steamGear
+                    modeIndex:CookFunc.leftWorkModeToIndex(listModel.get(listClickIndex).mode)
+                    tempIndex:listModel.get(listClickIndex).temp
+                    timeIndex:listModel.get(listClickIndex).time
+                    steamGearIndex:listModel.get(listClickIndex).steamGear
+
                 }
                 Item {
                     width:80+140*2
@@ -347,7 +348,7 @@ Item {
                             anchors.centerIn: parent
                         }
                         onClicked: {
-                            showListData(index,steamOvenDelegate.getCurrentSteamOven())
+                            showListData(listClickIndex,steamOvenDelegate.getCurrentSteamOven())
                             loaderMultistageHide()
                         }
                     }
@@ -377,8 +378,8 @@ Item {
         }
     }
     function loaderMultistageShow(index){
+        listClickIndex=index
         loaderMultistage.sourceComponent = component_tanchuang
-        loaderMultistage.item.index=index
     }
     function loaderMultistageHide(){
         loaderMultistage.sourceComponent = undefined
