@@ -19,7 +19,7 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     stateType.append(QPair<QString,int>("ErrorCode",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("ErrorCodeShow",LINK_VALUE_TYPE_NUM));
 
-    stateType.append(QPair<QString,int>("CookbookID",LINK_VALUE_TYPE_NUM));
+    stateType.append(QPair<QString,int>("LCookbookID",LINK_VALUE_TYPE_NUM));
 
     stateType.append(QPair<QString,int>("OTAState",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("OTAProgress",LINK_VALUE_TYPE_NUM));
@@ -29,9 +29,11 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     stateType.append(QPair<QString,int>("OTAPowerNewVersion",LINK_VALUE_TYPE_STRING));
     stateType.append(QPair<QString,int>("OTASlientUpgrade",LINK_VALUE_TYPE_NUM));
 
-    stateType.append(QPair<QString,int>("MultiMode",LINK_VALUE_TYPE_NUM));
-    stateType.append(QPair<QString,int>("MultiStageState",LINK_VALUE_TYPE_STRUCT));
-    stateType.append(QPair<QString,int>("CookbookName",LINK_VALUE_TYPE_STRING));
+    stateType.append(QPair<QString,int>("LMultiMode",LINK_VALUE_TYPE_NUM));
+    stateType.append(QPair<QString,int>("LMultiStageState",LINK_VALUE_TYPE_STRUCT));
+    stateType.append(QPair<QString,int>("LCookbookName",LINK_VALUE_TYPE_STRING));
+    stateType.append(QPair<QString,int>("RMultiMode",LINK_VALUE_TYPE_NUM));
+    stateType.append(QPair<QString,int>("RMultiStageState",LINK_VALUE_TYPE_STRUCT));
 
     stateType.append(QPair<QString,int>("LStOvDoorState",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("LStOvMode",LINK_VALUE_TYPE_NUM));
@@ -56,8 +58,7 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
 
     stateType.append(QPair<QString,int>("LStoveStatus",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("RStoveStatus",LINK_VALUE_TYPE_NUM));
-    //    stateType.append(QPair<QString,int>("LStoveFireStatus",LINK_VALUE_TYPE_NUM));
-    //    stateType.append(QPair<QString,int>("RStoveFireStatus",LINK_VALUE_TYPE_NUM));
+
     stateType.append(QPair<QString,int>("LStoveTimingSet",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("LStoveTimingLeft",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("LStoveTimingState",LINK_VALUE_TYPE_NUM));
@@ -102,7 +103,7 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     connect(&client, SIGNAL(sendData(const QByteArray)), this,SLOT(readData(const QByteArray)));
     connect(&client, &LocalClient::sendConnected, this,&QmlDevState::setLocalConnected);
 
-    setState("CookbookName","");
+    setState("LCookbookName","");
     setState("HoodSpeed",0);
     setState("HoodLight",0);
     setState("RStoveStatus",0);
@@ -121,9 +122,7 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     setState("LStoveTimingLeft",0);
     setState("LStoveTimingSet",0);
     setState("RMovePotLowHeatSwitch",0);
-    //    setState("MultiMode",2);
-    //    setState("cnt",3);
-    //    setState("current",1);
+
 #ifndef USE_TCP
 #ifndef USE_RK3308
     setState("SysPower",1);
@@ -143,9 +142,6 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     setState("RStOvSetTimerLeft",0);
     setState("RStOvRealTemp",0);
     setState("RStOvOrderTimerLeft",0);
-
-    setState("cnt",0);
-    setState("current",1);
 
     setState("HoodSpeed",2);
     setState("UpdateLog","1、新增：产品详情页视频展示功能；\n2、新增：网站前台版权标识样式切换功能\n3、优化：会员中心社会化登陆功能，用户可通过扫码关注设定的公众号登录；\n4、优化：安装商城模块后，可在网站后台内容管理中直接添加和编辑商品；\n5、优化：用户购买版权标识修改许可后，后台版权");
@@ -358,7 +354,7 @@ void QmlDevState::parsingData(const QJsonObject& object)
                 else
                 {
 #endif    
-                    if("LStOvState"==key ||"LStOvDoorState"==key || "LStOvMode"==key ||"LStOvSetTemp"==key ||"LStOvRealTemp"==key ||"LStOvSetTimer"==key ||"LStOvOrderTimer"==key ||"LStOvSetTimerLeft"==key ||"LStOvOrderTimerLeft"==key ||"LSteamGear"==key ||"RStOvState"==key ||"RStOvDoorState"==key ||"RStOvMode"==key ||"RStOvSetTemp"==key ||"RStOvRealTemp"==key ||"RStOvOrderTimer"==key ||"RStOvSetTimer"==key ||"RStOvSetTimerLeft"==key ||"RStOvOrderTimerLeft"==key||"MultiMode"==key||"HoodSpeed"==key||"HoodLight"==key)
+                    if("LStOvState"==key ||"LStOvDoorState"==key || "LStOvMode"==key ||"LStOvSetTemp"==key ||"LStOvRealTemp"==key ||"LStOvSetTimer"==key ||"LStOvOrderTimer"==key ||"LStOvSetTimerLeft"==key ||"LStOvOrderTimerLeft"==key ||"LSteamGear"==key ||"RStOvState"==key ||"RStOvDoorState"==key ||"RStOvMode"==key ||"RStOvSetTemp"==key ||"RStOvRealTemp"==key ||"RStOvOrderTimer"==key ||"RStOvSetTimer"==key ||"RStOvSetTimerLeft"==key ||"RStOvOrderTimerLeft"==key||"LMultiMode"==key||"HoodSpeed"==key||"HoodLight"==key)
                     {
                         if(stateMap[key]==value.toInt())
                             continue;
@@ -371,7 +367,7 @@ void QmlDevState::parsingData(const QJsonObject& object)
             else if(LINK_VALUE_TYPE_STRING==value_type)
             {
                 //                qDebug()<<"key:"<<key<<"value:"<<value.toString();
-                if("CookbookName"==key)
+                if("LCookbookName"==key)
                 {
                     if(stateMap[key]==value.toString())
                         continue;
@@ -393,11 +389,10 @@ void QmlDevState::parsingData(const QJsonObject& object)
                     QJsonValue bssid =object_struct.value("bssid");
                     QJsonValue ip_address =object_struct.value("ip_address");
                     QJsonValue mac_address =object_struct.value("mac_address");
-                    setState("ssid",ssid.toString());
-                    setState("bssid",bssid.toString());
-                    qDebug()<<"key:"<<"bssid"<<"value:"<<bssid.toString();
+                    setState("Wifissid",ssid.toString());
+                    setState("Wifibssid",bssid.toString());
                 }
-                else if(key=="MultiStageState")
+                else if(key=="LMultiStageState")
                 {
                     QJsonObject object_struct =value.toObject();
                     QJsonValue cnt =object_struct.value("cnt");
@@ -405,10 +400,23 @@ void QmlDevState::parsingData(const QJsonObject& object)
                     QJsonValue remind =object_struct.value("remind");
                     QJsonValue RemindText =object_struct.value("RemindText");
 
-                    setState("cnt",cnt.toInt());
-                    setState("current",current.toInt());
-                    setState("RemindText",RemindText.toString());
-                    setState("remind",remind.toInt());
+                    setState("LMultiTotalStep",cnt.toInt());
+                    setState("LMultiCurrentStep",current.toInt());
+                    setState("LMultiRemindText",RemindText.toString());
+                    setState("LMultiRemind",remind.toInt());
+                }
+                else if(key=="RMultiStageState")
+                {
+                    QJsonObject object_struct =value.toObject();
+                    QJsonValue cnt =object_struct.value("cnt");
+                    QJsonValue current =object_struct.value("current");
+                    QJsonValue remind =object_struct.value("remind");
+                    QJsonValue RemindText =object_struct.value("RemindText");
+
+                    setState("RMultiTotalStep",cnt.toInt());
+                    setState("RMultiCurrentStep",current.toInt());
+                    setState("RMultiRemindText",RemindText.toString());
+                    setState("RMultiRemind",remind.toInt());
                 }
             }
             else if(LINK_VALUE_TYPE_NULL==value_type)

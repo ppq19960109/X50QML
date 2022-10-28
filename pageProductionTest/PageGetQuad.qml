@@ -48,7 +48,7 @@ Item {
                     productionTest.visible=true
                 }
             }
-            else if(step==0 && "ssid"==key)
+            else if(step==0 && "Wifissid"==key)
             {
                 if(wifiConnected==true)
                 {

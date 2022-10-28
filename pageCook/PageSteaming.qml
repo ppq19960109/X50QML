@@ -322,20 +322,20 @@ Item {
                         text:{
                             if(index==0)
                             {
-                                if(QmlDevState.state.MultiMode===1)
+                                if(QmlDevState.state.LMultiMode===1)
                                 {
-                                    var CookbookName=QmlDevState.state.CookbookName
-                                    if(CookbookName==="")
+                                    var LCookbookName=QmlDevState.state.LCookbookName
+                                    if(LCookbookName==="")
                                     {
-                                        if(QmlDevState.state.CookbookID > 0)
+                                        if(QmlDevState.state.LCookbookID > 0)
                                         {
-                                            var cookName=QmlDevState.getRecipeName(QmlDevState.state.CookbookID)
+                                            var cookName=QmlDevState.getRecipeName(QmlDevState.state.LCookbookID)
                                             if(cookName!=="")
                                                 return cookName
                                         }
                                     }
                                     else
-                                        return CookbookName
+                                        return LCookbookName
                                 }
                                 return CookFunc.workModeName(QmlDevState.state.LStOvMode)
                             }
@@ -385,7 +385,7 @@ Item {
                         text:{
                             if(index==0)
                             {
-                                return QmlDevState.state.MultiMode===1?QmlDevState.state.CookbookName:CookFunc.workModeName(QmlDevState.state.LStOvMode)
+                                return QmlDevState.state.LMultiMode===1?QmlDevState.state.LCookbookName:CookFunc.workModeName(QmlDevState.state.LStOvMode)
                             }
                             else
                             {
@@ -429,9 +429,9 @@ Item {
                 }
                 PageIndicator {
                     id:indicator
-                    visible: index==0 && QmlDevState.state.MultiMode > 0
-                    count: QmlDevState.state.cnt
-                    currentIndex: QmlDevState.state.current-1
+                    visible: index==0 && QmlDevState.state.LMultiMode > 0
+                    count: QmlDevState.state.LMultiTotalStep
+                    currentIndex: QmlDevState.state.LMultiCurrentStep-1
                     anchors.bottom: parent.bottom
                     anchors.bottomMargin: 35
                     anchors.horizontalCenter: parent.horizontalCenter

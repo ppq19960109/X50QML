@@ -9,7 +9,7 @@ Item {
         getRecipe(menuList.currentIndex)
     }
     Component.onDestruction: {
-        currentCookId=0
+        lCurrentCookId=0
     }
 
     function getRecipe(index)
@@ -36,8 +36,6 @@ Item {
             }
         }
         startCooking(cookItem,cookSteps)
-        cookSteps=undefined
-        cookItem=undefined
     }
     PageBackBar{
         id:topBar

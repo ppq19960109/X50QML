@@ -252,7 +252,7 @@ function setCooking(list,orderTime,cookPos)
     {
         if(list!=null)
         {
-            Data.MultiMode=multiModeEnum.NONE
+            Data.LMultiMode=multiModeEnum.NONE
             Data.LStOvMode=list[0].mode
             Data.LStOvSetTimer=list[0].time
             Data.LStOvSetTemp=list[0].temp
@@ -285,7 +285,7 @@ function setCooking(list,orderTime,cookPos)
     setToServer(Data)
 }
 
-function setMultiCooking(list,orderTime,dishName,cookbookID)
+function setMultiCooking(list,orderTime,cookPos,dishName,cookbookID)
 {
     console.log("setMultiCooking")
     var Data={}
@@ -302,25 +302,47 @@ function setMultiCooking(list,orderTime,dishName,cookbookID)
             buf.SteamGear=step.steamGear
         MultiStageContent.push(buf)
     }
-
-    if(null == cookbookID || null == dishName)
+    if(cookPos===cookWorkPosEnum.LEFT)
     {
-        Data.MultiMode=multiModeEnum.MULTISTAGE
-        Data.MultiStageContent=MultiStageContent
-        //        Data.CookbookID=0
+        if(null == cookbookID || null == dishName)
+        {
+            Data.LMultiMode=multiModeEnum.MULTISTAGE
+            Data.LMultiStageContent=MultiStageContent
+        }
+        else
+        {
+            Data.LMultiMode=multiModeEnum.RECIPE
+            Data.LCookbookParam=MultiStageContent
+            Data.LCookbookName=dishName
+            Data.LCookbookID=cookbookID
+            lCurrentCookId=cookbookID
+        }
+        Data.LStOvOperation=workOperationEnum.START
+        if(null != orderTime && orderTime > 0)
+        {
+            Data.LStOvOrderTimer=orderTime
+        }
     }
     else
     {
-        Data.MultiMode=multiModeEnum.RECIPE
-        Data.CookbookParam=MultiStageContent
-        Data.CookbookName=dishName
-        Data.CookbookID=cookbookID
-        currentCookId=cookbookID
-    }
-    Data.LStOvOperation=workOperationEnum.START
-    if(null != orderTime && orderTime > 0)
-    {
-        Data.LStOvOrderTimer=orderTime
+        if(null == cookbookID || null == dishName)
+        {
+            Data.RMultiMode=multiModeEnum.MULTISTAGE
+            Data.RMultiStageContent=MultiStageContent
+        }
+        else
+        {
+            Data.RMultiMode=multiModeEnum.RECIPE
+            Data.RCookbookParam=MultiStageContent
+            Data.RCookbookName=dishName
+            Data.RCookbookID=cookbookID
+            rCurrentCookId=cookbookID
+        }
+        Data.RStOvOperation=workOperationEnum.START
+        if(null != orderTime && orderTime > 0)
+        {
+            Data.RStOvOrderTimer=orderTime
+        }
     }
     Data.DataReportReason=0
     setToServer(Data)

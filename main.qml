@@ -15,7 +15,7 @@ ApplicationWindow {
     id: window
     width: 1280
     height: 400
-//    visible: true
+    //    visible: true
     property int sysPower:-1
     property int productionTestStatus:0
     property int productionTestFlag:1
@@ -24,7 +24,8 @@ ApplicationWindow {
     property bool errorBuzzer:false
     property bool testMode:false
     property var decode_ssid:""
-    property int currentCookId:0
+    property int lCurrentCookId:0
+    property int rCurrentCookId:0
 
     property var smartSmokeSwitch: QmlDevState.state.SmartSmokeSwitch
     property var hoodSpeed: QmlDevState.state.HoodSpeed
@@ -444,7 +445,7 @@ ApplicationWindow {
         productionTestFlag=0
         timer_standby.interval=3*60000
         timer_standby.restart()
-//        SendFunc.setSysPower(0)
+        //        SendFunc.setSysPower(0)
     }
 
     Timer{
@@ -1134,19 +1135,22 @@ ApplicationWindow {
             {
                 if(root.recipeid>0)
                 {
-                    SendFunc.setMultiCooking(cookSteps,root.orderTime,root.dishName,root.recipeid)
+                    SendFunc.setMultiCooking(cookSteps,root.orderTime,root.cookPos,root.dishName,root.recipeid)
                 }
                 else
                 {
-                    SendFunc.setMultiCooking(cookSteps,root.orderTime)
+                    SendFunc.setMultiCooking(cookSteps,root.orderTime,root.cookPos)
                 }
+                //            if(cookWorkPosEnum.LEFT===root.cookPos)
+                //                                {
                 //            QmlDevState.setState("LStOvState",1)
                 //            QmlDevState.setState("LStOvMode",cookSteps[0].mode)
                 //            QmlDevState.setState("LStOvRealTemp",cookSteps[0].temp)
                 //            QmlDevState.setState("LStOvOrderTimerLeft",cookSteps[0].time)
 
-                //            QmlDevState.setState("cnt",cookSteps.length)
-                //            QmlDevState.setState("current",2)
+                //            QmlDevState.setState("LMultiTotalStep",cookSteps.length)
+                //            QmlDevState.setState("LMultiCurrentStep",2)
+                //            }
             }
         }
         let page=isExistView("PageSteaming")

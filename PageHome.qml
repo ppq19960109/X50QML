@@ -177,10 +177,10 @@ Item {
             {
                 if(isCurrentView("PageSteamOvenConfig")===true||isCurrentView("PageMultistage")===true)
                     push_page(pageSteaming)
-                else if(currentCookId > 0 && (isCurrentView("PageSmartRecipes")===true||isCurrentView("PageCookDetails")===true))
+                else if(lCurrentCookId > 0 && (isCurrentView("PageSmartRecipes")===true||isCurrentView("PageCookDetails")===true))
                 {
                     push_page(pageSteaming)
-                    currentCookId=0
+                    lCurrentCookId=0
                 }
             }
         }
@@ -508,7 +508,7 @@ Item {
                 }
                 console.log("WifiState",value,wifiConnected,wifiConnecting)
             }
-            else if("ssid"==key)
+            else if("Wifissid"==key)
             {
                 if(wifiConnected==true && wifiConnectInfo.ssid!="")
                 {
@@ -637,11 +637,11 @@ Item {
                     parseWifiList()
                 }
             }
-            else if("remind"==key)
+            else if("LMultiRemind"==key)
             {
-                if(value>0 && QmlDevState.state.MultiMode === 1)
+                if(value>0 && QmlDevState.state.LMultiMode === 1)
                 {
-                    loaderMultistageShow(QmlDevState.state.RemindText)
+                    loaderMultistageShow(QmlDevState.state.LMultiRemindText)
                 }
                 else
                 {
@@ -669,7 +669,7 @@ Item {
         wifiModel.clear()
         var result={}
         var element
-        var bssid=QmlDevState.state.bssid
+        var bssid=QmlDevState.state.Wifibssid
         for(var i = 0; i < root.length; ++i) {
             element=root[i]
             if(element.ssid==="")

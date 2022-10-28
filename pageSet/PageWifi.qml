@@ -93,7 +93,7 @@ Item {
                     }
                 }
             }
-            else if("ssid"==key)
+            else if("Wifissid"==key)
             {
                 if(wifiConnected==true && wifiConnectInfo.ssid!=="")
                 {

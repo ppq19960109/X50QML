@@ -228,7 +228,7 @@ Item {
                     step=5
                 }
             }
-            else if("ssid"==key && step==5)
+            else if("Wifissid"==key && step==5)
             {
                 step=6
                 wifiConnect.color="green"
