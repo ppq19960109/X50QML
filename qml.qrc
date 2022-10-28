@@ -64,5 +64,7 @@
         <file>PageClock.qml</file>
         <file>PageFlashAnimation.qml</file>
         <file>PageFirstStartup.qml</file>
+        <file>pageCook/PageIce.qml</file>
+        <file>pageCook/PageTempTimeDelegate.qml</file>
     </qresource>
 </RCC>

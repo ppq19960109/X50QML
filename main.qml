@@ -15,8 +15,8 @@ ApplicationWindow {
     id: window
     width: 1280
     height: 400
-    //    visible: true
-    property int sysPower:-1
+        visible: true
+    property int sysPower:1
     property int productionTestStatus:0
     property int productionTestFlag:1
     property int demoModeStatus:0
@@ -42,13 +42,13 @@ ApplicationWindow {
     readonly property var cookWorkPosEnum:{"LEFT":0,"RIGHT":1,"ALL":2,"ASSIST":3}
     readonly property var cookModeUncheckedImg: ["icon_steame_unchecked.png","icon_bake_unchecked.png","icon_multistage_unchecked.png"]
     readonly property var cookModecheckedImg: ["icon_steame_checked.png","icon_bake_checked.png","icon_multistage_checked.png"]
-    readonly property var workModeEnum: ["未设定", "经典蒸", "鲜嫩蒸", "高温蒸", "热风烧烤", "上下加热", "立体热风", "蒸汽嫩烤", "空气炸", "解冻","发酵","保温"]
-    readonly property var workModeNumberEnum:[0,1,3,4,35,36,38,40,42,65,66,68]
+    readonly property var workModeEnum: ["未设定", "经典蒸", "鲜嫩蒸", "高温蒸", "热风烧烤", "上下加热", "立体热风", "蒸汽嫩烤", "空气炸", "解冻","发酵","保温","制冷保鲜"]
+    readonly property var workModeNumberEnum:[0,1,3,4,35,36,38,40,42,65,66,68,120]
 
     readonly property var leftWorkModeModelEnum:[{"modelData":7,"temp":150,"time":60,"minTemp":50,"maxTemp":200},{"modelData":4,"temp":200,"time":60,"minTemp":50,"maxTemp":230},{"modelData":8,"temp":220,"time":30,"minTemp":200,"maxTemp":230,"maxTime":180},{"modelData":3,"temp":120,"time":20,"minTemp":101,"maxTemp":120},{"modelData":5,"temp":180,"time":120,"minTemp":50,"maxTemp":230}
         ,{"modelData":6,"temp":180,"time":120,"minTemp":50,"maxTemp":230}]
     readonly property var rightWorkModeModelEnum:[{"modelData":1,"temp":100,"time":30,"minTemp":40,"maxTemp":100},{"modelData":3,"temp":120,"time":20,"minTemp":101,"maxTemp":105},{"modelData":2,"temp":90,"time":15,"minTemp":80,"maxTemp":100}]
-    readonly property var rightAssistWorkModeModelEnum:[{"modelData":10,"temp":35,"time":60,"minTemp":30,"maxTemp":50},{"modelData":9,"temp":40,"time":30,"minTemp":30,"maxTemp":50},{"modelData":11,"temp":60,"time":60,"minTemp":50,"maxTemp":105}]
+    readonly property var rightAssistWorkModeModelEnum:[{"modelData":10,"temp":35,"time":60,"minTemp":30,"maxTemp":50},{"modelData":9,"temp":40,"time":30,"minTemp":30,"maxTemp":50},{"modelData":11,"temp":60,"time":60,"minTemp":50,"maxTemp":105},{"modelData":12,"temp":5,"time":240,"minTemp":5,"maxTemp":15,"maxTime":720}]
 
     readonly property var workStateEnum:{"WORKSTATE_STOP":0,"WORKSTATE_RESERVE":1,"WORKSTATE_PREHEAT":2,"WORKSTATE_RUN":3,"WORKSTATE_FINISH":4,"WORKSTATE_PAUSE":5,"WORKSTATE_PAUSE_RESERVE":6}
     readonly property var workStateChineseEnum:["停止","预约中","预热中","运行中","烹饪完成","暂停中","预约暂停中"]
@@ -1055,6 +1055,10 @@ ApplicationWindow {
     Component {
         id: pageDemoMode
         PageDemoMode {}
+    }
+    Component {
+        id: pageIce
+        PageIce {}
     }
     function isExistView(pageName) {
         return stackView.find(function(item,index){

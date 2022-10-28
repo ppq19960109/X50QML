@@ -37,6 +37,9 @@ function workModeName(mode)
     case 68:
         name=workModeEnum[11]
         break
+    case 120:
+        name=workModeEnum[12]
+        break
     default:
         name=workModeEnum[0]
         break
@@ -72,7 +75,38 @@ function leftWorkModeToIndex(mode)
     }
     return index
 }
-
+function getWorkModeModel(mode)
+{
+    let modeModel
+    switch(mode)
+    {
+    case 1:
+        modeModel=rightWorkModeModelEnum[0]
+        break
+    case 3:
+        modeModel=rightWorkModeModelEnum[2]
+        break
+    case 4:
+        modeModel=rightWorkModeModelEnum[1]
+        break
+    case 65:
+        modeModel=rightAssistWorkModeModelEnum[1]
+        break
+    case 66:
+        modeModel=rightAssistWorkModeModelEnum[0]
+        break
+    case 68:
+        modeModel=rightAssistWorkModeModelEnum[2]
+        break
+    case 120:
+        modeModel=rightAssistWorkModeModelEnum[3]
+        break
+    default:
+        modeModel=rightWorkModeModelEnum[0]
+        break
+    }
+    return modeModel
+}
 function getCookTimeIndex(time)
 {
     if(time <= 120)

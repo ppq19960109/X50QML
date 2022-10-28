@@ -3,54 +3,25 @@ import QtQuick.Controls 2.5
 import "../"
 import "qrc:/CookFunc.js" as CookFunc
 Item {
-
-    property alias modeModel:modePathView.model
-    //    property alias tempModel:tempPathView.model
-    //    property alias timeModel:timePathView.model
-    property alias modeItemCount:modePathView.pathItemCount
     property alias tempItemCount:tempPathView.pathItemCount
     property alias timeItemCount:timePathView.pathItemCount
-    property alias modeWidth:modePathView.width
     property alias tempWidth:tempPathView.width
     property alias timeWidth:timePathView.width
-    property alias steamGearVisible:steamGearPathView.visible
-    property int modeIndex:-1
+    property int mode:-1
     property int tempIndex:-1
     property int timeIndex:-1
-    property int steamGearIndex:-1
 
-    readonly property var workModeImg: ["", "icon_1", "icon_3","icon_4", "icon_35", "icon_36", "icon_38", "icon_40", "icon_42", "icon_65", "icon_66", "icon_68", "icon_1"]
-
-    function getCurrentSteamOven()
+    function getCurrentState()
     {
         var steps={}
-        steps.mode=workModeNumberEnum[modePathView.model[modePathView.currentIndex].modelData]
         steps.temp=tempPathView.model[tempPathView.currentIndex]
         steps.time=timePathView.model[timePathView.currentIndex]
-        if(steamGearPathView.interactive)
-            steps.steamGear=steamGearPathView.currentIndex+1
-
         return steps
     }
-    function modeChange(index,tempIndex,timeIndex,steamGearIndex)
+    function modeChange(mode,tempIndex,timeIndex)
     {
-//        console.log("modeChange:",index,tempIndex,timeIndex,steamGearIndex)
-        if(index===0)
-        {
-            steamGearPathView.model=["1档","2档","3档"]
-            steamGearPathView.currentIndex=1
-            steamGearPathView.interactive=true
-            if(steamGearIndex>0)
-            {
-                steamGearPathView.currentIndex=steamGearIndex-1
-            }
-        }
-        else
-        {
-            steamGearPathView.model=["—"]
-            steamGearPathView.interactive=false
-        }
-        var modeItem=modePathView.model[index]
+//        console.log("modeChange:",mode,tempIndex,timeIndex,steamGearIndex)
+        var modeItem=CookFunc.getWorkModeModel(mode)
 
         var minTemp=modeItem.minTemp
         var maxTemp=modeItem.maxTemp
@@ -91,15 +62,7 @@ Item {
         }
     }
     Component.onCompleted:{
-        if(modeIndex>=0)
-        {
-            modePathView.currentIndex=modeIndex
-            modeChange(modeIndex,tempIndex,timeIndex,steamGearIndex)
-        }
-        else
-        {
-            modeChange(modePathView.currentIndex)
-        }
+          modeChange(mode,tempIndex,timeIndex)
     }
     PageDivider{
         anchors.top:parent.top
@@ -112,26 +75,15 @@ Item {
     Row {
         width: parent.width
         height:parent.height
-        spacing: 20
-
-        PageCookPathView {
-            id:modePathView
-            width: 291
-            height:parent.height
-            delegateType:1
-            currentIndex:0
-            pathItemCount:3
-            Image {
-                anchors.fill: parent
-                visible: parent.moving
-                asynchronous:true
-                smooth:false
-                source: themesPicturesPath+"steamoven/"+"mode_roll_background.png"
-            }
-            onIndexChanged: {
-                console.log("model onValueChanged:",index,model[index].modelData)
-                modeChange(index)
-            }
+        spacing: 50
+        Text{
+            width: 180
+            text:CookFunc.workModeName(mode)
+            color:"#fff"
+            font.pixelSize: 30
+            anchors.verticalCenter: parent.verticalCenter
+            horizontalAlignment:Text.AlignHCenter
+            verticalAlignment:Text.AlignVCenter
         }
         PageCookPathView {
             id:tempPathView
@@ -151,6 +103,14 @@ Item {
                 font.pixelSize: 24
                 anchors.centerIn: parent
                 anchors.horizontalCenterOffset: 60
+            }
+            Text{
+                text:qsTr("温度")
+                color:themesTextColor2
+                font.pixelSize: 30
+                anchors.horizontalCenter:parent.horizontalCenter
+                anchors.top: parent.top
+                anchors.topMargin: -20
             }
         }
         PageCookPathView {
@@ -172,28 +132,13 @@ Item {
                 anchors.centerIn: parent
                 anchors.horizontalCenterOffset: 65
             }
-        }
-        PageCookPathView {
-            id:steamGearPathView
-            width: 180
-            height:parent.height
-            pathItemCount:3
-            model:["1档","2档","3档"]
-            Image {
-                anchors.fill: parent
-                visible: parent.moving
-                asynchronous:true
-                smooth:false
-                anchors.centerIn: parent
-                source: themesPicturesPath+"steamoven/"+"roll_background.png"
-            }
             Text{
-                visible: modePathView.currentIndex==0
-                text:qsTr("蒸汽")
-                color:themesTextColor
-                font.pixelSize: 24
-                anchors.centerIn: parent
-                anchors.horizontalCenterOffset: 60
+                text:qsTr("时间")
+                color:themesTextColor2
+                font.pixelSize: 30
+                anchors.horizontalCenter:parent.horizontalCenter
+                anchors.top: parent.top
+                anchors.topMargin: -20
             }
         }
     }

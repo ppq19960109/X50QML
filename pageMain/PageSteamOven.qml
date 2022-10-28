@@ -14,16 +14,16 @@ Item {
         currentIndex:1
     }
     Row {
-        width: 344*3+26*2
+        width: 262*3+294+10*3
         height: 266
         anchors.top: topBar.bottom
         anchors.topMargin: 17
         anchors.horizontalCenter: parent.horizontalCenter
-        spacing: 26
+        spacing: 10
         Repeater {
-            model: [{"background":"left_steam_oven_background.png","text":"left_steam_oven_text.png"}, {"background":"right_steam_background.png","text":"right_steam_text.png"}]
+            model: [{"background":"/ice/multistage_cook_background.png","text":"multistage_cook_text.png"},{"background":"left_steam_oven_background.png","text":"/ice/left_steam_oven_text.png"}, {"background":"right_steam_background.png","text":"/ice/right_steam_text.png"}]
             Button{
-                width: 344
+                width: 262
                 height:parent.height
 
                 background:Image {
@@ -86,31 +86,35 @@ Item {
                     lineHeight:0.6
                 }
                 onClicked: {
-
-                    if(index==0)
-                    {
+                    switch (index){
+                    case 0:
+                        if(lStOvState!==workStateEnum.WORKSTATE_STOP)
+                            push_page(pageSteaming)
+                        else
+                            push_page(pageMultistage)
+                        break
+                    case 1:
                         if(lStOvState!==workStateEnum.WORKSTATE_STOP)
                             push_page(pageSteaming)
                         else
                             push_page(pageSteamOvenConfig,{cookWorkPos:cookWorkPosEnum.LEFT})
-                    }
-                    else
-                    {
+                        break
+                    case 2:
                         if(rStOvState!==workStateEnum.WORKSTATE_STOP)
                             push_page(pageSteaming)
                         else
                             push_page(pageSteamOvenConfig,{cookWorkPos:cookWorkPosEnum.RIGHT})
+                        break
                     }
-
                 }
             }
         }
         Column{
-            width: 344
+            width: 294
             height:parent.height
             spacing: 6
             Repeater {
-                model: [{"background":"assist_cook_background.png","text":"assist_cook_text.png"}, {"background":"multistage_cook_background.png","text":"multistage_cook_text.png"}]
+                model: [{"background":"multistage_cook_background.png","text":"/ice/ice_cook_text.png"},{"background":"assist_cook_background.png","text":"assist_cook_text.png"}]
                 Button{
                     width: parent.width
                     height:130
@@ -132,14 +136,14 @@ Item {
                             if(rStOvState!==workStateEnum.WORKSTATE_STOP)
                                 push_page(pageSteaming)
                             else
-                                push_page(pageSteamOvenConfig,{cookWorkPos:cookWorkPosEnum.ASSIST})
+                                push_page(pageIce)
                         }
                         else
                         {
-                            if(lStOvState!==workStateEnum.WORKSTATE_STOP)
+                            if(rStOvState!==workStateEnum.WORKSTATE_STOP)
                                 push_page(pageSteaming)
                             else
-                                push_page(pageMultistage)
+                                push_page(pageSteamOvenConfig,{cookWorkPos:cookWorkPosEnum.ASSIST})
                         }
                     }
                 }
