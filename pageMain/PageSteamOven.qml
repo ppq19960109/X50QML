@@ -43,7 +43,7 @@ Item {
                 {
                     id:workStatus
                     visible: {
-                        if(index==0)
+                        if(index<=1)
                         {
                             return lStOvState!==workStateEnum.WORKSTATE_STOP
                         }

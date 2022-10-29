@@ -389,7 +389,7 @@ Item {
                             }
                             else
                             {
-                                return CookFunc.workModeName(QmlDevState.state.RStOvMode)
+                                return QmlDevState.state.RMultiMode===1?QmlDevState.state.RCookbookName:CookFunc.workModeName(QmlDevState.state.RStOvMode)
                             }
                         }
                         color:themesTextColor2
@@ -429,9 +429,36 @@ Item {
                 }
                 PageIndicator {
                     id:indicator
-                    visible: index==0 && QmlDevState.state.LMultiMode > 0
-                    count: QmlDevState.state.LMultiTotalStep
-                    currentIndex: QmlDevState.state.LMultiCurrentStep-1
+                    visible:{
+                        if(index==0)
+                        {
+                            return QmlDevState.state.LMultiMode > 0
+                        }
+                        else
+                        {
+                            return QmlDevState.state.RMultiMode > 0
+                        }
+                    }
+                    count: {
+                        if(index==0)
+                        {
+                            return QmlDevState.state.LMultiTotalStep
+                        }
+                        else
+                        {
+                            return QmlDevState.state.RMultiTotalStep
+                        }
+                    }
+                    currentIndex: {
+                        if(index==0)
+                        {
+                            return QmlDevState.state.LMultiCurrentStep-1
+                        }
+                        else
+                        {
+                            return QmlDevState.state.RMultiCurrentStep-1
+                        }
+                    }
                     anchors.bottom: parent.bottom
                     anchors.bottomMargin: 35
                     anchors.horizontalCenter: parent.horizontalCenter

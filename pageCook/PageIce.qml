@@ -6,7 +6,6 @@ import "qrc:/CookFunc.js" as CookFunc
 import "../"
 Item {
     property string name: "PageMultistage"
-    property int listLastIndex:0
     property int listClickIndex:0
     readonly property var modeStepsEnum:[[{"mode":120,"temp":5,"time":240}],[{"mode":120,"temp":5,"time":480},{"mode":1,"temp":100,"time":30}],[{"mode":120,"temp":5,"time":480},{"mode":1,"temp":100,"time":20}],[{"mode":1,"temp":100,"time":80},{"mode":120,"temp":10,"time":360}],[{"mode":66,"temp":35,"time":300},{"mode":120,"temp":5,"time":80}]]
     property var modeSteps
@@ -20,25 +19,22 @@ Item {
 
     function steamStart(reserve)
     {
-        if(listLastIndex==0)
-            return
         var cookSteps = []
         var step
-        for(var i = 0; i < listLastIndex; ++i)
+        for(var i = 0; i < listModel.count; ++i)
         {
             step=listModel.get(i)
             var steps={}
             steps.mode=step.mode
             steps.temp=step.temp
             steps.time=step.time
-            if(step.steamGear>0)
-                steps.steamGear=step.steamGear
+
             steps.number=i+1
             cookSteps.push(steps)
         }
 
         var cookItem =CookFunc.getDefCookItem()
-        cookItem.cookPos=cookWorkPosEnum.LEFT
+        cookItem.cookPos=cookWorkPosEnum.RIGHT
         cookItem.dishName=CookFunc.getDishName(cookSteps)
         cookItem.cookSteps=JSON.stringify(cookSteps)
 
@@ -48,18 +44,16 @@ Item {
         }
         else
         {
-            if(systemSettings.cookDialog[3] === true)
-            {
-                if(CookFunc.isSteam(cookSteps))
-                    loaderSteamShow("请将食物放入左腔，水箱中加满水","开始",cookItem,3)
-                else
-                    loaderSteamShow("当前模式需要预热\n请您在左腔预热完成后再放入食材","开始",cookItem,3)
-                return
-            }
+//            if(systemSettings.cookDialog[3] === true)
+//            {
+//                if(CookFunc.isSteam(cookSteps))
+//                    loaderSteamShow("请将食物放入右腔，水箱中加满水","开始",cookItem,3)
+//                else
+//                    loaderSteamShow("当前模式需要预热\n请您在右腔预热完成后再放入食材","开始",cookItem,3)
+//                return
+//            }
             startCooking(cookItem,cookSteps)
         }
-        cookSteps=undefined
-        cookItem=undefined
     }
 
     PageBackBar{
@@ -126,7 +120,7 @@ Item {
                     anchors.left: parent.left
                     anchors.leftMargin: 370
                     anchors.verticalCenter: parent.verticalCenter
-                    text:Math.floor(temp/60)+"时"+Math.floor(temp%60)+"分"
+                    text:Math.floor(time/60)+"时"+Math.floor(time%60)+"分"
                 }
                 Image {
                     anchors.left: parent.left
@@ -247,9 +241,9 @@ Item {
                 PageTempTimeDelegate {
                     id:tempTimeDelegate
                     width:180*3+50*2
-                    height: parent.height-80
+                    height: parent.height-100
                     anchors.top: parent.top
-                    anchors.topMargin: 30
+                    anchors.topMargin: 50
                     anchors.left: parent.left
                     anchors.leftMargin: 70
                     tempWidth:180
@@ -318,14 +312,10 @@ Item {
         enabled:loaderMultistage.sourceComponent!=null
         target: loaderMultistage.item
         onShowListData:{
-            console.log("onShowListData",index,listData.mode,listData.temp,listData.time,listData.steamGear)
+            console.log("onShowListData",index,listData.temp,listData.time)
 
-            listModel.get(index).mode=listData.mode
             listModel.get(index).temp=listData.temp
             listModel.get(index).time=listData.time
-            listModel.get(index).steamGear=listData.steamGear==null?-1:listData.steamGear
-            if(listLastIndex==index)
-                ++listLastIndex
         }
     }
     function loaderMultistageShow(index){

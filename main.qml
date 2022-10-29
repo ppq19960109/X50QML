@@ -15,8 +15,8 @@ ApplicationWindow {
     id: window
     width: 1280
     height: 400
-        visible: true
-    property int sysPower:1
+//        visible: true
+    property int sysPower:-1
     property int productionTestStatus:0
     property int productionTestFlag:1
     property int demoModeStatus:0

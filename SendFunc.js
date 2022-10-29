@@ -270,6 +270,7 @@ function setCooking(list,orderTime,cookPos)
     {
         if(list!=null)
         {
+            Data.RMultiMode=multiModeEnum.NONE
             Data.RStOvMode=list[0].mode
             Data.RStOvSetTimer=list[0].time
             Data.RStOvSetTemp=list[0].temp

@@ -110,7 +110,7 @@ Item {
                 font.pixelSize: 30
                 anchors.horizontalCenter:parent.horizontalCenter
                 anchors.top: parent.top
-                anchors.topMargin: -20
+                anchors.topMargin: -40
             }
         }
         PageCookPathView {
@@ -138,7 +138,7 @@ Item {
                 font.pixelSize: 30
                 anchors.horizontalCenter:parent.horizontalCenter
                 anchors.top: parent.top
-                anchors.topMargin: -20
+                anchors.topMargin: -40
             }
         }
     }
