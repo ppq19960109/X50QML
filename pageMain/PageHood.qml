@@ -3,7 +3,7 @@ import QtQuick.Controls 2.5
 import "../"
 import "qrc:/SendFunc.js" as SendFunc
 Item {
-
+    property string name: "PageHood"
     PageBackBar{
         id:topBar
         anchors.top:parent.top

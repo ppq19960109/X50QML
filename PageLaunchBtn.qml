@@ -2,10 +2,11 @@ import QtQuick 2.0
 import QtQuick.Controls 2.5
 
 Item {
+    property alias reserveVisible:reserveBtn.visible
     signal startUp()
     signal reserve()
     width:140
-    height: 50*2+54
+    height: reserveBtn.visible?50*2+54:50
 
     Button {
         width:parent.width
@@ -26,6 +27,7 @@ Item {
         }
     }
     Button {
+        id:reserveBtn
         width:parent.width
         height: 50
         anchors.bottom: parent.bottom

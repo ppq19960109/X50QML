@@ -177,10 +177,10 @@ Item {
             {
                 if(isCurrentView("PageSteamOvenConfig")===true||isCurrentView("PageMultistage")===true)
                     push_page(pageSteaming)
-                else if(lCurrentCookId > 0 && (isCurrentView("PageSmartRecipes")===true||isCurrentView("PageCookDetails")===true))
+                else if(isCurrentView("PageSmartRecipes")===true||isCurrentView("PageCookDetails")===true)
                 {
-                    push_page(pageSteaming)
-                    lCurrentCookId=0
+                    if(smartRecipesIndex!=1)
+                        push_page(pageSteaming)
                 }
             }
         }
@@ -657,6 +657,14 @@ Item {
                 else if(value==1)
                 {
                     loaderAutoTextShow("右灶长时间无锅具，已将燃气断开。\n请将旋钮复位！")
+                }
+            }
+            else if("RAuxiliarySwitch"==key)
+            {
+                if(value>0)
+                {
+                    if(smartRecipesIndex==1)
+                        push_page(pageSmartCook)
                 }
             }
         }

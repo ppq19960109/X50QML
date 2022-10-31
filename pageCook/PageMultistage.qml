@@ -9,6 +9,13 @@ Item {
     property int listLastIndex:0
     property int listClickIndex:0
 
+    Component.onCompleted: {
+        console.log("PageMultistage onCompleted")
+        if(systemSettings.multistageRemind === true)
+        {
+            loaderManual.sourceComponent=component_remind
+        }
+    }
     Component.onDestruction: {
         loaderMainHide()
     }
@@ -73,13 +80,6 @@ Item {
                     systemSettings.multistageRemind=false
                 loaderManual.sourceComponent = undefined
             }
-        }
-    }
-    Component.onCompleted: {
-        console.log("PageMultistage onCompleted")
-        if(systemSettings.multistageRemind === true)
-        {
-            loaderManual.sourceComponent=component_remind
         }
     }
 

@@ -270,6 +270,7 @@ function setCooking(list,orderTime,cookPos)
     {
         if(list!=null)
         {
+            Data.RMultiMode=multiModeEnum.NONE
             Data.RStOvMode=list[0].mode
             Data.RStOvSetTimer=list[0].time
             Data.RStOvSetTemp=list[0].temp
@@ -315,7 +316,6 @@ function setMultiCooking(list,orderTime,cookPos,dishName,cookbookID)
             Data.LCookbookParam=MultiStageContent
             Data.LCookbookName=dishName
             Data.LCookbookID=cookbookID
-            lCurrentCookId=cookbookID
         }
         Data.LStOvOperation=workOperationEnum.START
         if(null != orderTime && orderTime > 0)
@@ -336,7 +336,6 @@ function setMultiCooking(list,orderTime,cookPos,dishName,cookbookID)
             Data.RCookbookParam=MultiStageContent
             Data.RCookbookName=dishName
             Data.RCookbookID=cookbookID
-            rCurrentCookId=cookbookID
         }
         Data.RStOvOperation=workOperationEnum.START
         if(null != orderTime && orderTime > 0)

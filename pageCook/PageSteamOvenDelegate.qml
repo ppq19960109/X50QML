@@ -91,7 +91,6 @@ Item {
         }
     }
     Component.onCompleted:{
-
         if(modeIndex>=0)
         {
             modePathView.currentIndex=modeIndex

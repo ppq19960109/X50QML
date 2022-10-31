@@ -24,8 +24,7 @@ ApplicationWindow {
     property bool errorBuzzer:false
     property bool testMode:false
     property var decode_ssid:""
-    property int lCurrentCookId:0
-    property int rCurrentCookId:0
+    property int smartRecipesIndex:0
 
     property var smartSmokeSwitch: QmlDevState.state.SmartSmokeSwitch
     property var hoodSpeed: QmlDevState.state.HoodSpeed
