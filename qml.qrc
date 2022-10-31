@@ -66,5 +66,7 @@
         <file>PageFirstStartup.qml</file>
         <file>pageCook/PageIce.qml</file>
         <file>pageCook/PageTempTimeDelegate.qml</file>
+        <file>pageMain/PageLeftRecipes.qml</file>
+        <file>pageMain/PageRightRecipes.qml</file>
     </qresource>
 </RCC>

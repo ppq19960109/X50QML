@@ -268,7 +268,12 @@ Item {
                             }
                             else
                             {
-                                return workStateChineseEnum[rStOvState]
+                                if(QmlDevState.state.RStOvMode===120 && rStOvState===workStateEnum.WORKSTATE_PREHEAT)
+                                {
+                                    return "预冷中"
+                                }
+                                else
+                                    return workStateChineseEnum[rStOvState]
                             }
                         }
                         color:themesTextColor
