@@ -64,5 +64,8 @@
         <file>PageClock.qml</file>
         <file>PageFlashAnimation.qml</file>
         <file>PageFirstStartup.qml</file>
+        <file>pageCook/PageTempTimeDelegate.qml</file>
+        <file>pageMain/PageRightRecipes.qml</file>
+        <file>pageMain/PageLeftRecipes.qml</file>
     </qresource>
 </RCC>
