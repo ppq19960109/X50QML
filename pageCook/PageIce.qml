@@ -7,7 +7,7 @@ import "../"
 Item {
     property string name: "PageMultistage"
     property int listClickIndex:0
-    readonly property var modeStepsEnum:[[{"mode":120,"temp":5,"time":240}],[{"mode":120,"temp":5,"time":480},{"mode":1,"temp":100,"time":30}],[{"mode":120,"temp":5,"time":480},{"mode":1,"temp":100,"time":20}],[{"mode":1,"temp":100,"time":80},{"mode":120,"temp":10,"time":360}],[{"mode":66,"temp":35,"time":300},{"mode":120,"temp":5,"time":80}]]
+    readonly property var modeStepsEnum:[[{"mode":120,"temp":5,"time":240}],[{"mode":120,"temp":5,"time":480},{"mode":1,"temp":100,"time":30}],[{"mode":120,"temp":5,"time":480},{"mode":1,"temp":100,"time":20}],[{"mode":1,"temp":100,"time":80},{"mode":120,"temp":10,"time":360}],[{"mode":66,"temp":35,"time":300},{"mode":120,"temp":5,"time":80}],[{"mode":120,"temp":5,"time":180},{"mode":1,"temp":100,"time":60},{"mode":120,"temp":5,"time":240}]]
     property var modeSteps
     Component.onCompleted: {
         console.log("PageIce onCompleted")
@@ -148,7 +148,7 @@ Item {
 
             ListView{
                 id:menuList
-                model:['生腌酱醉','大菜预约','便捷早餐','冷卤','酸奶发酵']
+                model:['生腌酱醉','大菜预约','便捷早餐','冷卤','酸奶发酵','冰镇甜汤']
                 width:parent.width
                 anchors.top: parent.top
                 anchors.topMargin: 10
@@ -158,7 +158,7 @@ Item {
                 interactive:false
                 delegate:Button {
                     width:parent.width
-                    height:65
+                    height:54
                     background:null
                     Text{
                         text: modelData
