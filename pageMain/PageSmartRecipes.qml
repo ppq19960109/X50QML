@@ -63,13 +63,13 @@ Item {
         anchors.bottom: parent.bottom
         currentIndex: tabBar.currentIndex
         PageLeftRecipes{
-            anchors.fill:parent
+
         }
         PageRightRecipes{
-            anchors.fill:parent
+
         }
         PageRightRecipes{
-            anchors.fill:parent
+
         }
         onCurrentIndexChanged: {
             smartRecipesIndex=currentIndex
