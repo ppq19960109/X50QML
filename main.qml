@@ -444,7 +444,6 @@ ApplicationWindow {
         productionTestFlag=0
         timer_standby.interval=3*60000
         timer_standby.restart()
-        //        SendFunc.setSysPower(0)
     }
 
     Timer{
