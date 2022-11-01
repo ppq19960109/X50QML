@@ -101,6 +101,8 @@ function addWifiInfo(wifiInfo)
         newWifiInfo.encryp=wifiInfo.encryp
         console.log("add ssid:",newWifiInfo.ssid)
         wifiPasswdArray.push(newWifiInfo)
+        if(wifiPasswdArray.length>10)
+            wifiPasswdArray.splice(0,1)
     }
     systemSettings.wifiPasswdArray=wifiPasswdArray
     wifiConnectInfo.psk=""
@@ -113,7 +115,7 @@ function getWifiInfo(ssid)
     var wifiPasswdArray=systemSettings.wifiPasswdArray
     if(typeof wifiPasswdArray!="object")
     {
-//        console.log("wifiPasswdArray not Object")
+        //        console.log("wifiPasswdArray not Object")
         return
     }
     var i,element
@@ -126,7 +128,7 @@ function getWifiInfo(ssid)
             wifiInfo.ssid=element.ssid
             wifiInfo.psk=element.psk
             wifiInfo.encryp=element.encryp
-//            console.log("get ssid:",wifiInfo.ssid,wifiInfo.psk,wifiInfo.encryp)
+            //            console.log("get ssid:",wifiInfo.ssid,wifiInfo.psk,wifiInfo.encryp)
             return wifiInfo
         }
     }
