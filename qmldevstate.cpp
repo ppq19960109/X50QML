@@ -55,6 +55,7 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     stateType.append(QPair<QString,int>("RStOvSetTimer",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("RStOvSetTimerLeft",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("RStOvOrderTimerLeft",LINK_VALUE_TYPE_NUM));
+    stateType.append(QPair<QString,int>("RIceSteamID",LINK_VALUE_TYPE_NUM));
 
     stateType.append(QPair<QString,int>("LStoveStatus",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("RStoveStatus",LINK_VALUE_TYPE_NUM));

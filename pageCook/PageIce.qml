@@ -7,7 +7,7 @@ import "../"
 Item {
     property string name: "PageMultistage"
     property int listClickIndex:0
-    readonly property var modeStepsEnum:[[{"mode":120,"temp":5,"time":240}],[{"mode":120,"temp":5,"time":480},{"mode":1,"temp":100,"time":30}],[{"mode":120,"temp":5,"time":480},{"mode":1,"temp":100,"time":20}],[{"mode":1,"temp":100,"time":80},{"mode":120,"temp":10,"time":360}],[{"mode":66,"temp":35,"time":300},{"mode":120,"temp":5,"time":80}],[{"mode":120,"temp":5,"time":180},{"mode":1,"temp":100,"time":60},{"mode":120,"temp":5,"time":240}]]
+    readonly property var modeStepsEnum:[[{"iceSteam":0,"mode":120,"temp":5,"time":240}],[{"iceSteam":2,"mode":120,"temp":5,"time":480},{"mode":1,"temp":100,"time":30}],[{"iceSteam":2,"mode":120,"temp":5,"time":480},{"mode":1,"temp":100,"time":20}],[{"mode":1,"temp":100,"time":80},{"iceSteam":1,"mode":120,"temp":10,"time":360}],[{"mode":66,"temp":35,"time":300},{"iceSteam":0,"mode":120,"temp":5,"time":80}],[{"iceSteam":3,"mode":120,"temp":5,"time":180},{"mode":1,"temp":100,"time":60},{"iceSteam":0,"mode":120,"temp":5,"time":240}]]
     property var modeSteps
     Component.onCompleted: {
         console.log("PageIce onCompleted")
@@ -28,7 +28,8 @@ Item {
             steps.mode=step.mode
             steps.temp=step.temp
             steps.time=step.time
-
+            if(step.iceSteam!=null)
+                steps.iceSteamID=step.iceSteam
             steps.number=i+1
             cookSteps.push(steps)
         }
@@ -44,14 +45,14 @@ Item {
         }
         else
         {
-//            if(systemSettings.cookDialog[3] === true)
-//            {
-//                if(CookFunc.isSteam(cookSteps))
-//                    loaderSteamShow("请将食物放入右腔，水箱中加满水","开始",cookItem,3)
-//                else
-//                    loaderSteamShow("当前模式需要预热\n请您在右腔预热完成后再放入食材","开始",cookItem,3)
-//                return
-//            }
+            //            if(systemSettings.cookDialog[3] === true)
+            //            {
+            //                if(CookFunc.isSteam(cookSteps))
+            //                    loaderSteamShow("请将食物放入右腔，水箱中加满水","开始",cookItem,3)
+            //                else
+            //                    loaderSteamShow("当前模式需要预热\n请您在右腔预热完成后再放入食材","开始",cookItem,3)
+            //                return
+            //            }
             startCooking(cookItem,cookSteps)
         }
     }
@@ -104,7 +105,7 @@ Item {
                     anchors.left: parent.left
                     anchors.leftMargin: 20
                     anchors.verticalCenter: parent.verticalCenter
-                    text: qsTr(CookFunc.workModeName(mode))
+                    text: mode==iceSteamMode?iceSteamEnum[iceSteam]:qsTr(CookFunc.workModeName(mode))
                 }
                 Text{
                     color:"#000"
@@ -250,6 +251,7 @@ Item {
                     timeWidth:180
                     tempItemCount:3
                     timeItemCount:3
+                    modeName:mode==iceSteamMode?iceSteamEnum[listModel.get(listClickIndex).iceSteam]:null
                     mode:listModel.get(listClickIndex).mode
                     tempIndex:listModel.get(listClickIndex).temp
                     timeIndex:listModel.get(listClickIndex).time

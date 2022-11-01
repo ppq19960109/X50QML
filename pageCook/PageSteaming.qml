@@ -346,7 +346,21 @@ Item {
                             }
                             else
                             {
-                                return CookFunc.workModeName(QmlDevState.state.RStOvMode)
+                                if(QmlDevState.state.RMultiMode===1)
+                                {
+                                    var RCookbookName=QmlDevState.state.RCookbookName
+                                    if(RCookbookName==="")
+                                    {
+                                    }
+                                    else
+                                        return RCookbookName
+                                }
+                                var RStOvMode=QmlDevState.state.RStOvMode
+                                if(RStOvMode===iceSteamMode)
+                                {
+                                    return iceSteamEnum[QmlDevState.state.RIceSteamID]
+                                }
+                                return CookFunc.workModeName(RStOvMode)
                             }
                         }
                         color:themesTextColor2
