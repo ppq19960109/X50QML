@@ -8,6 +8,7 @@ Item {
     property alias tempWidth:tempPathView.width
     property alias timeWidth:timePathView.width
     property int mode:-1
+    property string modeName
     property int tempIndex:-1
     property int timeIndex:-1
 
@@ -78,7 +79,7 @@ Item {
         spacing: 50
         Text{
             width: 180
-            text:CookFunc.workModeName(mode)
+            text:modeName==null?CookFunc.workModeName(mode):modeName
             color:"#fff"
             font.pixelSize: 30
             anchors.verticalCenter: parent.verticalCenter

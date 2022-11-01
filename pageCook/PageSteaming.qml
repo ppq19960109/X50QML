@@ -341,6 +341,15 @@ Item {
                             }
                             else
                             {
+                                if(QmlDevState.state.RMultiMode===1)
+                                {
+                                    var RCookbookName=QmlDevState.state.RCookbookName
+                                    if(RCookbookName==="")
+                                    {
+                                    }
+                                    else
+                                        return RCookbookName
+                                }
                                 return CookFunc.workModeName(QmlDevState.state.RStOvMode)
                             }
                         }
