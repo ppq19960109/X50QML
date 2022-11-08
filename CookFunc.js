@@ -35,16 +35,16 @@ function leftWorkModeName(mode)
     case 120:
         name=leftWorkMode[10]
         break
-    case 131:
+    case 130:
         name=leftWorkMode[11]
         break
-    case 132:
+    case 131:
         name=leftWorkMode[12]
         break
-    case 133:
+    case 132:
         name=leftWorkMode[13]
         break
-    case 134:
+    case 133:
         name=leftWorkMode[14]
         break
     case 121:
@@ -92,16 +92,16 @@ function leftWorkModeToIndex(mode)
     case 120:
         index=10
         break
-    case 131:
+    case 130:
         index=11
         break
-    case 132:
+    case 131:
         index=12
         break
-    case 133:
+    case 132:
         index=13
         break
-    case 134:
+    case 133:
         index=14
         break
     case 121:

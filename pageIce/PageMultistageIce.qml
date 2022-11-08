@@ -253,7 +253,7 @@ Item {
                         cookSteps:"[{\"pos\":1,\"mode\":100,\"temp\":100,\"time\":80,\"number\":1},{\"pos\":1,\"mode\":131,\"temp\":10,\"time\":360,\"number\":2}]"}
                     ListElement{name: "冰鲜酸奶"
                         value:3
-                        cookSteps:"[{\"pos\":0,\"mode\":134,\"temp\":35,\"time\":480,\"number\":1},{\"pos\":1,\"mode\":132,\"temp\":5,\"time\":180,\"number\":2}]"}
+                        cookSteps:"[{\"pos\":1,\"mode\":130,\"temp\":35,\"time\":480,\"number\":1},{\"pos\":1,\"mode\":132,\"temp\":5,\"time\":180,\"number\":2}]"}
                     ListElement{name: "生腌酱醉"
                         value:1
                         cookSteps:"[{\"pos\":1,\"mode\":132,\"temp\":5,\"time\":240,\"number\":1}]"}

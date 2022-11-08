@@ -190,10 +190,16 @@ function setMultiIceCooking(list,orderTime)
     }
     else
     {
-        if(list[0].mode>=130)
+        if(list[0].mode>=131)
             list[0].mode=iceWorkMode
-        if(list[1].mode>=130)
+        else if(list[0].mode==130)
+            list[0].mode=100
+
+        if(list[1].mode>=131)
             list[1].mode=iceWorkMode
+        else if(list[1].mode==130)
+            list[1].mode=100
+
         if(list[0].pos==leftDevice && list[1].pos==rightDevice  && list[1].mode==iceWorkMode)
         {
             iceWorkStep.state=iceWorkOperaEnum.LEFT_ICE
