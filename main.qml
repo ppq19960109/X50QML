@@ -41,7 +41,7 @@ ApplicationWindow {
     readonly property var cookWorkPosEnum:{"LEFT":0,"RIGHT":1,"ALL":2,"ASSIST":3}
     readonly property var cookModeUncheckedImg: ["icon_steame_unchecked.png","icon_bake_unchecked.png","icon_multistage_unchecked.png"]
     readonly property var cookModecheckedImg: ["icon_steame_checked.png","icon_bake_checked.png","icon_multistage_checked.png"]
-    readonly property var workModeEnum: ["未设定", "经典蒸", "鲜嫩蒸", "高温蒸", "热风烧烤", "上下加热", "立体热风", "蒸汽嫩烤", "空气炸", "解冻","发酵","保温"]
+    readonly property var workModeEnum: ["未设定", "经典蒸", "鲜嫩蒸", "高温蒸", "热风烧烤", "上下加热", "立体热风", "蒸汽嫩烤", "空气速炸", "解冻","发酵","保温"]
     readonly property var workModeNumberEnum:[0,1,3,4,35,36,38,40,42,65,66,68]
 
     readonly property var leftWorkModeModelEnum:[{"modelData":7,"temp":150,"time":60,"minTemp":50,"maxTemp":200},{"modelData":4,"temp":200,"time":60,"minTemp":50,"maxTemp":230},{"modelData":8,"temp":220,"time":30,"minTemp":200,"maxTemp":230,"maxTime":180},{"modelData":3,"temp":120,"time":20,"minTemp":101,"maxTemp":120},{"modelData":5,"temp":180,"time":120,"minTemp":50,"maxTemp":230}
@@ -157,6 +157,15 @@ ApplicationWindow {
 
         QmlDevState.executeShell("(sleep 2;sync;sh /oem/marssenger/S100Marssenger restart) &")
         //        QmlDevState.executeQProcess("sh",["/oem/marssenger/S100Marssenger","restart"])
+    }
+    function get_current_version(comVer,pwrVer)
+    {
+        if(comVer==null)
+            comVer=QmlDevState.state.ComSWVersion
+        if(pwrVer==null)
+            pwrVer=QmlDevState.state.PwrSWVersion
+
+        return comVer+"."+pwrVer.replace(/\./g,'')
     }
     function generateTwoTime(time)
     {
@@ -867,22 +876,34 @@ ApplicationWindow {
             mouse.accepted=false
         }
     }
-
     function standbyWakeup(){
         systemPower(2)
     }
-    function sleepWakeup(){
-        if(sysPower > 0 && sleepState==true)
+    function sysPowerWakeup(){
+        if(sleepWakeup()===1)
         {
-            sleepState=false
-            if(productionTestFlag==0 && timer_standby.running==true)
-                timer_standby.stop()
-
-            loaderScreenSaverHide()
-            timer_sleep.restart()
-            return 0
+            SendFunc.setSysPower(1)
         }
-        return 1
+    }
+    function sleepWakeup(){
+        if(sysPower > 0)
+        {
+            if(sleepState==true)
+            {
+                sleepState=false
+                if(productionTestFlag==0 && timer_standby.running==true)
+                    timer_standby.stop()
+
+                loaderScreenSaverHide()
+                timer_sleep.restart()
+                return 0
+            }
+        }
+        else
+        {
+            return 1
+        }
+        return 2
     }
     ListModel {
         id: wifiModel
@@ -1159,7 +1180,9 @@ ApplicationWindow {
     function loaderErrorCodeShow(value,dir)
     {
         if(value!==0)
-            sleepWakeup()
+        {
+            sysPowerWakeup()
+        }
         if(productionTestStatus==0xff)
             return
         switch (value) {
@@ -1187,10 +1210,8 @@ ApplicationWindow {
             break
         case 7:
             loaderErrorShow("烟机进风口出现火情！","请及时关闭灶具旋钮 等待温度降低后使用",false)
-            standbyWakeup()
             break
         case 8:
-            SendFunc.setSysPower(1)
             loaderErrorShow("燃气泄漏","燃气有泄露风险\n请立即关闭灶具旋钮\n关闭总阀并开窗通气",false)
             break
         case 9:
