@@ -216,8 +216,8 @@ ApplicationWindow {
             systemSettings.brightness=200
         }
 
-//        SendFunc.makeRequest()
-//                SendFunc.weatherRequest("杭州")
+        //        SendFunc.makeRequest()
+        //                SendFunc.weatherRequest("杭州")
     }
     background:Rectangle {
         color: themesWindowBackgroundColor
@@ -1124,7 +1124,11 @@ ApplicationWindow {
         //console.log("loaderErrorCodeShow",value)
         //SendFunc.setSysPower(1)
         if(value!=0)
+        {
             sleepWakeup()
+            if(sysPower<=0)
+                SendFunc.setSysPower(1)
+        }
         if(productionTestStatus==0xff)
             return
         switch (value) {
@@ -1152,19 +1156,15 @@ ApplicationWindow {
             break
         case 7:
             loaderErrorShow("烟机进风口出现火情！","请及时关闭灶具旋钮\n等待温度降低后使用",false)
-            standbyWakeup()
             break
         case 8:
-            SendFunc.setSysPower(1)
-            if(sysPower>0 && systemSettings.reboot==false)
-                loaderErrorShow("燃气泄漏","燃气有泄露风险\n请立即关闭灶具旋钮\n关闭总阀并开窗通气",false)
+            loaderErrorShow("燃气泄漏","燃气有泄露风险\n请立即关闭灶具旋钮\n关闭总阀并开窗通气",false)
             break
         case 9:
             if(dir==null && productionTestStatus!=1)
             {
-                SendFunc.setSysPower(1)
-                loaderErrorShow("电源板串口故障！","请拨打售后电话<font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员",false);
                 standbyWakeup()
+                loaderErrorShow("电源板串口故障！","请拨打售后电话<font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员",false);
             }
             break
         case 10:
