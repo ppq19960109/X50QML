@@ -46,7 +46,7 @@ Item {
         id:component_updateConfirm
         PageDialogConfirm{
             hintTopText:"系统更新"
-            hintCenterText:"检测到最新版本 "+QmlDevState.state.OTANewVersion+"\n请问是否立即更新?"
+            hintCenterText:"检测到最新版本 "+get_current_version(QmlDevState.state.OTANewVersion,null)+"\n请问是否立即更新?"
             cancelText:"取消"
             confirmText:"升级"
             onCancel: {
@@ -58,6 +58,7 @@ Item {
         }
     }
     function loaderUpdateConfirmShow(){
+        sysPowerWakeup()
         loaderAuto.sourceComponent = component_updateConfirm
     }
 
@@ -65,7 +66,7 @@ Item {
         id:component_updatePowerConfirm
         PageDialogConfirm{
             hintTopText:"系统更新"
-            hintCenterText:"检测到最新版本 "+QmlDevState.state.OTAPowerNewVersion+"\n请问是否立即更新?"
+            hintCenterText:"检测到最新版本 "+get_current_version(null,QmlDevState.state.OTAPowerNewVersion)+"\n请问是否立即更新?"
             cancelText:"取消"
             confirmText:"升级"
             onCancel: {
@@ -77,8 +78,7 @@ Item {
         }
     }
     function loaderUpdatePowerConfirmShow(){
-        if(sleepWakeup())
-            standbyWakeup()
+        sysPowerWakeup()
         loaderAuto.sourceComponent = component_updatePowerConfirm
     }
 
@@ -250,7 +250,7 @@ Item {
                 if(systemSettings.otaSuccess==true)
                 {
                     systemSettings.otaSuccess=false
-                    loaderUpdateResultShow("通讯板已更新至最新版本\n"+value)
+                    loaderUpdateResultShow("通讯板已更新至最新版本\n"+get_current_version(value,null))
                 }
             }
             else if("PwrSWVersion"==key)
@@ -258,7 +258,7 @@ Item {
                 if(value===QmlDevState.state.OTAPowerNewVersion)
                 {
                     SendFunc.setSysPower(1)
-                    loaderUpdateResultShow("电源板已更新至最新版本\n"+value)
+                    loaderUpdateResultShow("电源板已更新至最新版本\n"+get_current_version(null,value))
                 }
             }
             else if("NtpTimestamp"==key)

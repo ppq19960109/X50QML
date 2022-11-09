@@ -66,7 +66,7 @@ Item {
             background:Item{}
             Text{
                 id:curVer
-                text:"当前版本 "+QmlDevState.state.ComSWVersion
+                text:"当前版本 "+get_current_version()
                 color:"#fff"
                 font.pixelSize: 40
                 anchors.centerIn: parent
