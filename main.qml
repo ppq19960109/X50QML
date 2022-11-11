@@ -14,7 +14,7 @@ ApplicationWindow {
     id: window
     width: 800
     height: 480
-    //visible: true
+    visible: false //true false
     property int sysPower:-1
     property int permitStartStatus:0
     property int productionTestStatus:0
@@ -108,8 +108,11 @@ ApplicationWindow {
         //            console.log("onFirstStartupChanged....",systemSettings.firstStartup)
         //        }
         onBrightnessChanged: {
-            //            console.log("onBrightnessChanged....",systemSettings.brightness)
-            Backlight.backlightSet(systemSettings.brightness)
+            if(window.visible==true)
+            {
+                console.log("onBrightnessChanged....",systemSettings.brightness)
+                Backlight.backlightSet(systemSettings.brightness)
+            }
         }
         //        onWifiEnableChanged: {
         //            console.log("onWifiEnableChanged....",systemSettings.wifiEnable)
@@ -118,9 +121,12 @@ ApplicationWindow {
         //            console.log("onWifiPasswdArrayChanged....",JSON.stringify(systemSettings.wifiPasswdArray))
         //        }
         onSleepTimeChanged: {
-            //            console.log("onSleepTimeChanged",systemSettings.sleepTime)
-            timer_window.interval=systemSettings.sleepTime*60000
-            timer_window.restart()
+            if(window.visible==true)
+            {
+                console.log("onSleepTimeChanged",systemSettings.sleepTime)
+                timer_window.interval=systemSettings.sleepTime*60000
+                timer_window.restart()
+            }
         }
     }
     function systemSync()
