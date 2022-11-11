@@ -564,6 +564,7 @@ Item {
                 }
                 else if(value==8)
                 {
+                    systemSettings.reboot=true
                     systemSettings.otaSuccess=true
                     //                    loaderUpdateResultShow("系统已更新至最新版本 "+QmlDevState.state.OTANewVersion)
                 }
