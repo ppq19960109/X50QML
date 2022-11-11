@@ -15,7 +15,7 @@ ApplicationWindow {
     id: window
     width: 1280
     height: 400
-    //    visible: true
+    visible: false //true false
     property int sysPower:-1
     property int productionTestStatus:0
     property int productionTestFlag:1
@@ -134,14 +134,19 @@ ApplicationWindow {
         property bool otaSuccess:false
 
         onBrightnessChanged: {
-            console.log("onBrightnessChanged...",systemSettings.brightness)
-            if(systemSettings.reboot==false)
+            if(window.visible==true)
+            {
+                console.log("onBrightnessChanged...",systemSettings.brightness)
                 Backlight.backlightSet(systemSettings.brightness)
+            }
         }
         onSleepTimeChanged: {
-            console.log("onSleepTimeChanged...",systemSettings.sleepTime)
-            timer_sleep.interval=systemSettings.sleepTime*60000
-            timer_sleep.restart()
+            if(window.visible==true)
+            {
+                console.log("onSleepTimeChanged...",systemSettings.sleepTime)
+                timer_sleep.interval=systemSettings.sleepTime*60000
+                timer_sleep.restart()
+            }
         }
     }
     function systemSync()
@@ -154,7 +159,6 @@ ApplicationWindow {
         //        SendFunc.setSysPower(0)
         //        systemPower(0)
         systemSettings.reboot=true
-
         QmlDevState.executeShell("(sleep 2;sync;sh /oem/marssenger/S100Marssenger restart) &")
         //        QmlDevState.executeQProcess("sh",["/oem/marssenger/S100Marssenger","restart"])
     }

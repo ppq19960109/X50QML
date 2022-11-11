@@ -582,6 +582,7 @@ Item {
                 }
                 else if(value==otaStateEnum.OTA_INSTALL_SUCCESS)
                 {
+                    systemSettings.reboot=true
                     systemSettings.otaSuccess=true
                 }
             }
