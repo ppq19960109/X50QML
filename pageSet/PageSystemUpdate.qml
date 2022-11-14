@@ -25,7 +25,7 @@ Item {
                 else if(value==2)
                 {
                     checkStatus.visible=false
-                    --versionCheckState
+                    versionCheckState=0
                 }
             }
             else if("OTAPowerState"==key)
@@ -37,7 +37,7 @@ Item {
                 else if(value==2)
                 {
                     checkStatus.visible=false
-                    --versionCheckState
+                    versionCheckState=0
                 }
             }
         }
