@@ -171,7 +171,7 @@ ApplicationWindow {
         if(pwrVer==null)
             pwrVer=QmlDevState.state.PwrSWVersion
 
-        return comVer+"."+pwrVer.replace(/\./g,'')
+        return comVer.replace(/(.*)\./,'$1')+"."+pwrVer.replace(/\./g,'')
     }
     function generateTwoTime(time)
     {

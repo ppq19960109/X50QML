@@ -26,7 +26,7 @@ Item {
             anchors.top: parent.top
             anchors.topMargin: 20
             anchors.horizontalCenter: parent.horizontalCenter
-            text:"V"+QmlDevState.state.ComSWVersion+" 更新日志"
+            text:"V"+get_current_version()+" 更新日志"
             color:"#fff"
             font.pixelSize: 30
         }
