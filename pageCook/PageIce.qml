@@ -7,7 +7,7 @@ import "../"
 Item {
     property string name: "PageMultistage"
     property int listClickIndex:0
-    readonly property var modeStepsEnum:[[{"iceSteam":0,"mode":120,"temp":5,"time":240}],[{"iceSteam":2,"mode":120,"temp":5,"time":480},{"mode":1,"temp":100,"time":30}],[{"iceSteam":2,"mode":120,"temp":5,"time":480},{"mode":1,"temp":100,"time":20}],[{"mode":1,"temp":100,"time":80},{"iceSteam":1,"mode":120,"temp":10,"time":360}],[{"mode":66,"temp":35,"time":300},{"iceSteam":0,"mode":120,"temp":5,"time":80}],[{"iceSteam":3,"mode":120,"temp":5,"time":180},{"mode":1,"temp":100,"time":60},{"iceSteam":0,"mode":120,"temp":5,"time":240}]]
+    readonly property var modeStepsEnum:[[{"iceSteam":0,"mode":120,"temp":5,"time":240}],[{"iceSteam":2,"mode":120,"temp":5,"time":480},{"mode":1,"temp":100,"time":30}],[{"iceSteam":2,"mode":120,"temp":5,"time":480},{"mode":1,"temp":100,"time":20}],[{"mode":1,"temp":100,"time":80},{"iceSteam":1,"mode":120,"temp":10,"time":360}],[{"mode":66,"temp":40,"time":480},{"iceSteam":0,"mode":120,"temp":5,"time":120}],[{"iceSteam":3,"mode":120,"temp":5,"time":180},{"mode":1,"temp":100,"time":60},{"iceSteam":0,"mode":120,"temp":5,"time":240}]]
     property var modeSteps
     Component.onCompleted: {
         console.log("PageIce onCompleted")
@@ -149,7 +149,7 @@ Item {
 
             ListView{
                 id:menuList
-                model:['生腌酱醉','大菜预约','便捷早餐','冷卤','酸奶发酵','冰镇甜汤']
+                model:['生腌酱醉','大菜预约','便捷早餐','冷卤','冰鲜酸奶','冰镇甜汤']
                 width:parent.width
                 anchors.top: parent.top
                 anchors.topMargin: 10
