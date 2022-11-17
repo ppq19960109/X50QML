@@ -20,7 +20,8 @@ Item {
             {
                 if(value==1)
                 {
-                    --versionCheckState
+                    if(versionCheckState>0)
+                        --versionCheckState
                 }
                 else if(value==2)
                 {
@@ -32,7 +33,8 @@ Item {
             {
                 if(value==1)
                 {
-                    --versionCheckState
+                    if(versionCheckState>0)
+                        --versionCheckState
                 }
                 else if(value==2)
                 {
@@ -81,7 +83,7 @@ Item {
                 source: themesPicturesPath+"icon_more.png"
             }
             onClicked: {
-                  loaderManual.sourceComponent = pageReleaseNotes
+                loaderManual.sourceComponent = pageReleaseNotes
             }
         }
         Item{
