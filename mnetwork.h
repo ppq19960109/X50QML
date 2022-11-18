@@ -6,6 +6,8 @@
 #include <QNetworkReply>
 #include <QNetworkAccessManager>
 #include <QDebug>
+#include <QNetworkInterface>
+
 class MNetwork : public QObject
 {
     Q_OBJECT
@@ -17,6 +19,8 @@ public:
     Q_INVOKABLE void weatherRequest(QString city);
     Q_INVOKABLE void locationRequest();
     Q_INVOKABLE void timeRequest();
+
+    Q_INVOKABLE QString getIpFromName(QString name);
 signals:
     void replyLocationData(QString value);
     void replyTimeData(QString value);

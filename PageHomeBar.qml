@@ -104,7 +104,6 @@ ToolBar {
                 source: themesPicturesPath+(stackView.depth>1?"icon_home.png":"icon_sleep.png")
             }
             onClicked: {
-
                 if(stackView.depth>1)
                     backTopPage()
                 else

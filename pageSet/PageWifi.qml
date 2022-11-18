@@ -228,12 +228,27 @@ Item {
             }
 
             Text {
+                id:title
                 text: qsTr("WiFi")
                 color: "#fff"
                 font.pixelSize: 30
                 anchors.left: parent.left
                 anchors.leftMargin: 30
                 anchors.verticalCenter: wifi_switch.verticalCenter
+                MouseArea{
+                    anchors.fill: parent
+                    onDoubleClicked: {
+                        ipText.text=MNetwork.getIpFromName("wlan0")
+                    }
+                }
+            }
+            Text {
+                id:ipText
+                color: "#fff"
+                font.pixelSize: 30
+                anchors.left: title.right
+                anchors.leftMargin: 30
+                anchors.verticalCenter: title.verticalCenter
             }
             PageSwitch {
                 id: wifi_switch
