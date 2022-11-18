@@ -95,3 +95,42 @@ void MNetwork::replyWeatherFinished()
     /* 防止内存泄漏 */
     reply->deleteLater();
 }
+
+QString MNetwork::getIpFromName(QString name)
+{
+    QString ipaddr;
+    //通过QNetworkInterface类来获取本机的IP地址和网络接口信息
+    QList<QNetworkInterface> list = QNetworkInterface::allInterfaces();
+    //获取所有网络接口的列表
+    foreach(QNetworkInterface interface,list)
+    {
+        QString interfaceName=interface.name();
+        //遍历每一个网络接口
+        qDebug() << "Device: "<<interfaceName;
+        if(name!=interfaceName)
+            continue;
+        //设备名
+        qDebug() << "HardwareAddress:"<<interface.hardwareAddress();
+        //硬件地址
+        QList<QNetworkAddressEntry> entryList = interface.addressEntries();
+        //获取IP地址条目列表，每个条目中包含一个IP地址，一个子网掩码和一个广播地址
+        foreach(QNetworkAddressEntry entry,entryList)
+        {
+            QHostAddress ip=entry.ip();
+            if(ip.protocol()!=QAbstractSocket::IPv4Protocol)
+                continue;
+            ipaddr=ip.toString();
+            //遍历每一个IP地址条目
+            qDebug()<<"IP Address: "<<ipaddr;
+
+            //子网掩码
+            qDebug()<<"Netmask: "<<entry.netmask().toString();
+
+            //广播地址
+            qDebug()<<"Broadcast: "<<entry.broadcast().toString() << endl;
+            break;
+        }
+        break;
+    }
+    return ipaddr;
+}

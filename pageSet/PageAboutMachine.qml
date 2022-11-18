@@ -130,7 +130,6 @@ Item {
                 }
                 onExited:{
                     console.warn("onExited")
-
                 }
             }
         }
