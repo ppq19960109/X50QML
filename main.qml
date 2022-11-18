@@ -15,8 +15,8 @@ ApplicationWindow {
     id: window
     width: 1280
     height: 400
-    visible: true //true false
-    property int sysPower:1
+    visible: false //true false
+    property int sysPower:-1
     property int productionTestStatus:0
     property int productionTestFlag:1
     property int demoModeStatus:0
@@ -234,7 +234,7 @@ ApplicationWindow {
             gTimerLeft=0
             Backlight.backlightSet(0)
             timer_sleep.stop()
-            loaderMainHide()
+
             if(productionTestFlag==0 && timer_standby.running==true)
                 timer_standby.stop()
             backTopPage()
@@ -1101,6 +1101,7 @@ ApplicationWindow {
     }
 
     function backTopPage() {
+        loaderMainHide()
         stackView.pop(null,StackView.Immediate)
         console.log("backTopPage stackView depth:"+stackView.depth)
     }

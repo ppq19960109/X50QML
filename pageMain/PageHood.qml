@@ -65,7 +65,7 @@ Item {
                             }
                         }
                         asynchronous:true
-                        smooth:false
+//                        smooth:false
                         source: themesPicturesPath+"icon_runing.png"
                         RotationAnimation on rotation {
                             from: 0
@@ -196,7 +196,7 @@ Item {
                             }
                         }
                         asynchronous:true
-                        smooth:false
+//                        smooth:false
                         source: themesPicturesPath+"icon_runing.png"
                         RotationAnimation on rotation {
                             from: 0

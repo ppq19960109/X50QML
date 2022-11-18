@@ -65,7 +65,7 @@ Item {
                     visible: workStatus.visible
                     anchors.centerIn: workStatus
                     asynchronous:true
-                    smooth:false
+//                    smooth:false
                     source: themesPicturesPath+"icon_runing.png"
                     RotationAnimation on rotation {
                         from: 0
