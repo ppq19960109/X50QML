@@ -232,7 +232,7 @@ ApplicationWindow {
             gTimerLeft=0
             Backlight.backlightSet(0)
             timer_sleep.stop()
-            loaderMainHide()
+
             if(productionTestFlag==0 && timer_standby.running==true)
                 timer_standby.stop()
             backTopPage()
@@ -1095,6 +1095,7 @@ ApplicationWindow {
     }
 
     function backTopPage() {
+        loaderMainHide()
         stackView.pop(null,StackView.Immediate)
         console.log("backTopPage stackView depth:"+stackView.depth)
     }

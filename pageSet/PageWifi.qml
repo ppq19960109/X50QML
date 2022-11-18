@@ -152,6 +152,7 @@ Item {
         {
             pageVisible(visible)
         }
+        loaderWifiInputHide()
     }
     Component.onCompleted: {
         completed_state=true
