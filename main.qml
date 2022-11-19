@@ -124,7 +124,7 @@ ApplicationWindow {
         //设置-休眠时间(范围:1-5,单位:分钟 )
         property bool sleepSwitch: true
         property int sleepTime: 3
-        property int screenSaverIndex:0
+        property int screenSaverIndex:2
         //运行期间临时保存设置的亮度值，在收到开机状态是把该值重新设置回去 设置-屏幕亮度
         property int brightness: 200
         property bool wifiEnable: false
@@ -243,6 +243,11 @@ ApplicationWindow {
             window.visible=true
         sysPower=power
     }
+    function recipesLoadSteamingPage()
+    {
+        if(lStOvState>0 && smartRecipesIndex==0)
+            push_page(pageSteaming)
+    }
 
     Component.onCompleted: {
         console.warn("Window onCompleted: ",Qt.fontFamilies())
@@ -348,6 +353,7 @@ ApplicationWindow {
             {
                 if(sysPower==0)
                 {
+                    console.log("OTASlientUpgrade",gMinutes,gSlientUpgradeMinutes)
                     if(QmlDevState.state.OTASlientUpgrade>0 && gMinutes>=gSlientUpgradeMinutes)
                     {
                         systemRestart()

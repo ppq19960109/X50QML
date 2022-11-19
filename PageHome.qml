@@ -179,7 +179,7 @@ Item {
                     push_page(pageSteaming)
                 else if(isCurrentView("PageSmartRecipes")===true||isCurrentView("PageCookDetails")===true)
                 {
-                    if(smartRecipesIndex!=1)
+                    if(smartRecipesIndex==0)
                         push_page(pageSteaming)
                 }
             }
@@ -270,7 +270,9 @@ Item {
             {
                 if(value>0)
                 {
+                    systemSettings.reboot=true
                     gSlientUpgradeMinutes=getRandom(0,30)
+                    console.log("OTASlientUpgrade gSlientUpgradeMinutes:",gSlientUpgradeMinutes)
                 }
             }
             else if("LStOvState"==key)
