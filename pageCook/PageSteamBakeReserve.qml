@@ -9,6 +9,7 @@ Item {
     function steamStart()
     {
 //        console.log("PageSteamBakeReserve",hourPathView.model[hourPathView.currentIndex],minutePathView.model[minutePathView.currentIndex])
+        root=JSON.parse(JSON.stringify(root))
         root.orderTime=hourPathView.currentIndex*60+minutePathView.currentIndex
         if(root.cookSteps=="")
         {
