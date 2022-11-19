@@ -345,4 +345,5 @@ function setMultiCooking(list,orderTime,cookPos,dishName,cookbookID)
     }
     Data.DataReportReason=0
     setToServer(Data)
+    recipesLoadSteamingPage()
 }
