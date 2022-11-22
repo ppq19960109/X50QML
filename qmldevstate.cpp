@@ -128,6 +128,7 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
 #ifndef USE_TCP
 #ifndef USE_RK3308
     setState("SysPower",1);
+    setState("OTASlientUpgrade",0);
     setState("LoadPowerState",7);
 
     setState("RStoveStatus",1);
@@ -215,6 +216,13 @@ void QmlDevState::readRecipeDetails()
         return;
     }
     QJsonObject object = doucment.object();
+
+    QJsonValue url=object.value("marsUrl");
+    if(url==QJsonValue::Undefined)
+        marsUrl="http://mcook.marssenger.com";
+    else
+        marsUrl=url.toString();
+
     QJsonArray recipes = object.value("recipes").toArray();
     qDebug()<<"recipes:"<<recipes.size();
     for(int i=0;i<recipes.size();++i)

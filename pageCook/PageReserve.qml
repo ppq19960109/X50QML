@@ -12,7 +12,7 @@ Item {
         }
         hourPathView.model=hourArray
         var minuteArray = []
-        for(i=0; i<= 60; ++i) {
+        for(i=0; i< 60; ++i) {
             minuteArray.push(i)
         }
         minutePathView.model=minuteArray
@@ -163,6 +163,13 @@ Item {
                 onClicked: {
                     if(cookItem!=null)
                     {
+//                        Object.defineProperty(cookItem, 'orderTime', {
+//                                                  configurable: false,
+//                                                  writable: false,
+//                                              })
+//                        console.log("getOwnPropertyDescriptor:",JSON.stringify(Object.getOwnPropertyDescriptors(cookItem)))
+//                        var newObj = Object.assign({},cookItem)
+//                        console.log("newObj:",JSON.stringify(newObj))
                         cookItem.orderTime=hourPathView.currentIndex*60+minutePathView.currentIndex
                         var cookSteps=JSON.parse(cookItem.cookSteps)
                         startCooking(cookItem,cookSteps)

@@ -235,15 +235,19 @@ Item {
                         {
                             SendFunc.setBuzControl(buzControlEnum.SHORT)
                         }
-                        if(errorCodeShow!==0)
-                        {
-                            if(errorCodeShow===6)
-                                errorBuzzer=true
-                            loaderErrorCodeShow(errorCodeShow)
-                        }
+
                     }
                 }
                 systemPower(value)
+                if(systemSettings.reboot==false)
+                {
+                    if(errorCodeShow!=null && errorCodeShow!==0)
+                    {
+                        if(errorCodeShow===6)
+                            errorBuzzer=true
+                        loaderErrorCodeShow(errorCodeShow)
+                    }
+                }
             }
             else if("ComSWVersion"==key)
             {

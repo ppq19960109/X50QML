@@ -151,6 +151,13 @@ ApplicationWindow {
             }
         }
     }
+    function cloneObj(obj) {
+        var newObj = {}
+        for (var key in obj) {
+            newObj[key] = obj[key]
+        }
+        return newObj
+    }
     function systemSync()
     {
         QmlDevState.executeShell("(sleep 2;sync) &")
@@ -158,10 +165,9 @@ ApplicationWindow {
     }
     function systemRestart()
     {
-        //        SendFunc.setSysPower(0)
-        //        systemPower(0)
-        systemSettings.reboot=true
-        QmlDevState.executeShell("(sleep 2;sync;sh /oem/marssenger/S100Marssenger restart) &")
+        //        QmlDevState.executeShell("(sync;sleep 1;sh /oem/marssenger/S100Marssenger restart) &")
+        SendFunc.otaSlientUpgrade(1)
+        QmlDevState.executeShell("(sync;sleep 1;reboot -f) &")
         //        QmlDevState.executeQProcess("sh",["/oem/marssenger/S100Marssenger","restart"])
     }
     function get_current_version(comVer,pwrVer)
@@ -254,8 +260,8 @@ ApplicationWindow {
 
         //        var pattern = new RegExp("[\u4E00-\u9FA5]+")
         //        var str='\\xE6\\x95\\xB0\\xE6\\x8D\\xae'
-        //        console.warn("Window onCompleted1: ",str,str.replace('\\x','%'),decodeURI(str.replace(/\\x/g,'%')))
-        //                console.warn("Window onCompleted test: ",encodeURI("a1数b2据C3"),encodeURIComponent("a1数b2据C3"),decodeURI("a1%E6%95%B0b2%E6%8D%AEC3"),decodeURIComponent("a1%E6%95%B0b2%E6%8D%AEC3"),pattern.test("数据a1"),pattern.test("adwe445-._"))
+        //        console.warn("Window onCompleted test1: ",str,str.replace('\\x','%'),decodeURI(str.replace(/\\x/g,'%')))
+        //        console.warn("Window onCompleted test2: ",encodeURI("a1数b2据C3"),encodeURIComponent("a1数b2据C3"),decodeURI("a1%E6%95%B0b2%E6%8D%AEC3"),decodeURIComponent("a1%E6%95%B0b2%E6%8D%AEC3"),pattern.test("数据a1"),pattern.test("adwe445-._"))
 
         push_page(pageHome)
         //                push_page(pageTestFront)

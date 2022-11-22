@@ -21,6 +21,7 @@ public:
     Q_INVOKABLE void timeRequest();
 
     Q_INVOKABLE QString getIpFromName(QString name);
+    QString marsUrl;
 signals:
     void replyLocationData(QString value);
     void replyTimeData(QString value);

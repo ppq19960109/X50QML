@@ -96,6 +96,12 @@ function loadPowerSet(value)
     Data.LoadPowerSet = value
     setToServer(Data)
 }
+function otaSlientUpgrade(request)
+{
+    var Data={}
+    Data.OTASlientUpgrade = request
+    setToServer(Data)
+}
 function otaRquest(request)
 {
     var Data={}
