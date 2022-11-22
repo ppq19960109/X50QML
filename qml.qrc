@@ -105,5 +105,10 @@
         <file>x50/icon_runing_background.png</file>
         <file>x50/icon_right_runing.png</file>
         <file>x50/icon_left_runing.png</file>
+        <file>PageGatingBtn.qml</file>
+        <file>pangu/PagePangu.qml</file>
+        <file>pangu/PageShortcutMode.qml</file>
+        <file>pangu/PageRecipes.qml</file>
+        <file>pangu/PagePreparedDish.qml</file>
     </qresource>
 </RCC>

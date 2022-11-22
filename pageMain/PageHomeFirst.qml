@@ -55,13 +55,13 @@ Item {
                 asynchronous:true
                 smooth:false
                 anchors.top: parent.top
-                anchors.topMargin: 40
+                anchors.topMargin: 28
                 anchors.horizontalCenter: parent.horizontalCenter
-                source: themesImagesPath+"homefirst-button2-image.png"
+                source: themesImagesPanguPath+"homefirst-button2-image.png"
             }
 
             onClicked: {
-                load_page("pageSteamBakeBase",{"device":cookWorkPosEnum.RIGHT})
+                load_page("pagePangu")
             }
         }
     }

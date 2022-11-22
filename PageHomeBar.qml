@@ -89,17 +89,7 @@ Item {
         //            }
         //        }
 
-        PageRotationImg {
-            property int speed:QmlDevState.state.HoodSpeed
-            anchors.centerIn: parent
-            visible: speed!=0
-            duration: {
-                return speed==0?0:(4-speed)*1500
-            }
-            source: {
-                return speed===0?"":(themesImagesPath+"icon_wind_"+speed+".png")
-            }
-        }
+        PageGatingBtn{}
 
         ToolButton {
             id:closeHeat

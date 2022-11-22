@@ -67,7 +67,7 @@ function setToServer(Data)
     root.Type="SET"
     root.Data=Data
     var json=JSON.stringify(root)
-    //    console.info("setToServer:",json)
+    console.info("setToServer:",json)
     QmlDevState.sendToServer(json)
     json=undefined
     root=undefined

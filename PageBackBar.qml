@@ -99,6 +99,7 @@ Item {
                 leftClick()
             }
         }
+        PageGatingBtn{}
         //right
         ToolButton{
             id:rightBtn

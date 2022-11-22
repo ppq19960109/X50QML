@@ -94,6 +94,8 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     stateType.append(QPair<QString,int>("LoadPowerState",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("PCBInput",LINK_VALUE_TYPE_ARRAY));
 
+    stateType.append(QPair<QString,int>("Gating",LINK_VALUE_TYPE_NUM));
+
     localConnected=0;
     connect(&client, SIGNAL(sendData(QByteArray)), this,SLOT(readData(QByteArray)));
     connect(&client, &LocalClient::sendConnected, this,&QmlDevState::setLocalConnected);
@@ -102,6 +104,7 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     setState("HoodLight",0);
     setState("RStoveStatus",0);
 #ifndef USE_RK3308
+    setState("Gating",0);
     setState("SysPower",1);
     setState("LoadPowerState",7);
 
@@ -144,8 +147,7 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     info["recipeid"]=118;
     info["dishName"]="腊肉蒸芋艿";
     recipe[0].append(info);
-    info["recipeid"]=1;
-
+    info["recipeid"]=118;
     info["dishName"]="蒜香茄子";
     recipe[0].append(info);
 

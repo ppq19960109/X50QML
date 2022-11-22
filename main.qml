@@ -7,6 +7,7 @@ import "pageCook"
 import "pageMain"
 import "pageSet"
 import "pageProductionTest"
+import "pangu"
 
 import "qrc:/SendFunc.js" as SendFunc
 import "qrc:/WifiFunc.js" as WifiFunc
@@ -14,8 +15,8 @@ ApplicationWindow {
     id: window
     width: 800
     height: 480
-    visible: false //true false
-    property int sysPower:-1
+    visible: true //true false
+    property int sysPower:1
     property int permitStartStatus:0
     property int productionTestStatus:0
     property int productionTestFlag:1
@@ -53,6 +54,7 @@ ApplicationWindow {
     readonly property var buzControlEnum:{"STOP":0,"SHORT":1,"SHORTTWO":2,"SCECONDS2":3,"OPEN":4,"SHORTFIVE":5}
 
     property string themesImagesPath:"file:themes/default/"
+    readonly property string themesImagesPanguPath:"file:themes/default/pangu/"
     readonly property string themesWindowBackgroundColor:"#1A1A1A"
     readonly property string themesPopupWindowColor:"#333333"
     readonly property string themesTextColor:"#E68855"
@@ -930,7 +932,10 @@ ApplicationWindow {
         id: pageDemoMode
         PageDemoMode {}
     }
-
+    Component {
+        id: pagePangu
+        PagePangu {}
+    }
     function isExistView(pageName) {
         //        console.log("isExistView:",pageName)
         return stackView.find(function(item,index){
@@ -1056,6 +1061,9 @@ ApplicationWindow {
             break;
         case "pageDemoMode":
             stackView.push(pageDemoMode,StackView.Immediate)
+            break;
+        case "pagePangu":
+            stackView.push(pagePangu,StackView.Immediate)
             break;
         }
 

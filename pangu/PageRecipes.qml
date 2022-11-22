@@ -1,0 +1,98 @@
+import QtQuick 2.12
+import QtQuick.Controls 2.5
+
+import "qrc:/CookFunc.js" as CookFunc
+import "qrc:/SendFunc.js" as SendFunc
+
+Item {
+    Component.onCompleted: {
+        getRecipe(0)
+        SendFunc.permitSteamStartStatus(1)
+    }
+    function getRecipe(index)
+    {
+        recipeListView.model=QmlDevState.getRecipe(index);
+    }
+    ListView{
+        id: recipeListView
+        //                model:listModel
+        width:parent.width-20
+        height:parent.height
+        anchors.left: parent.left
+        anchors.top:parent.top
+        cacheBuffer:2
+        orientation:ListView.Horizontal
+        //                highlightRangeMode: ListView.ApplyRange//StrictlyEnforceRange
+        boundsBehavior:Flickable.StopAtBounds
+        //snapMode: ListView.SnapToItem //SnapToItem SnapOneItem
+        clip: true
+        currentIndex:0
+        highlightMoveDuration:0
+        highlightMoveVelocity:-1
+        delegate: Item{
+            readonly property int cookType:CookFunc.getCookType(modelData.cookSteps)
+            readonly property var recipeDetail:QmlDevState.getRecipeDetails(modelData.recipeid)
+            width:240
+            height:330
+            anchors.verticalCenter: parent.verticalCenter
+
+            Image{
+                id:recipeImg
+                anchors.right: parent.right
+                asynchronous:true
+                smooth:false
+                sourceSize.width: 220
+                sourceSize.height: 330
+                source: recipeDetail.length!=0?("file:"+recipeDetail[0]):""
+            }
+            Image{
+                asynchronous:true
+                smooth:false
+                width: recipeBtn.width
+                anchors.bottom: recipeBtn.bottom
+                anchors.horizontalCenter: recipeBtn.horizontalCenter
+                source: themesImagesPath+"recipename-background.png"
+
+                Text{
+                    width:parent.width-20
+                    text: modelData.dishName
+                    font.pixelSize: 34
+                    anchors.centerIn: parent
+                    color:"#fff"
+                    horizontalAlignment:Text.AlignHCenter
+                    verticalAlignment:Text.AlignVCenter
+                    elide:Text.ElideRight
+                }
+            }
+            Image{
+                asynchronous:true
+                smooth:false
+                anchors.top: recipeBtn.top
+                anchors.left: recipeBtn.left
+                sourceSize.width: 88
+                sourceSize.height: 48
+                source: themesImagesPath+cookModeImg[cookType]
+            }
+            Button {
+                id:recipeBtn
+                width:220
+                height:330
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.horizontalCenter: recipeImg.horizontalCenter
+                background: Rectangle{
+                    color:"transparent"
+                    radius: 4
+                    border.width: 4
+                    border.color: recipeListView.currentIndex===index?themesTextColor:"transparent"
+                }
+
+                onClicked: {
+                    if(recipeListView.currentIndex!=index)
+                        recipeListView.currentIndex=index
+                    else
+                        load_page("pageCookDetails",{"root":recipeListView.model[recipeListView.currentIndex]})
+                }
+            }
+        }
+    }
+}
