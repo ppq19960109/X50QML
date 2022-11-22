@@ -19,8 +19,8 @@ void MNetwork::locationRequest() {
     conf.setPeerVerifyMode(QSslSocket::VerifyNone);
     conf.setProtocol(QSsl::AnyProtocol);
     request.setSslConfiguration(conf);
-
-    request.setUrl(QUrl("http://mcook.marssenger.com/application/weather/day"));
+    qDebug()<< "locationRequest start";
+    request.setUrl(QUrl(marsUrl+"/application/weather/day"));
     QNetworkReply* reply = networkAccessManager->get(request);
     connect(reply, SIGNAL(finished()),this, SLOT(replyLocationFinished()));
 }
@@ -48,8 +48,8 @@ void MNetwork::timeRequest() {
     conf.setPeerVerifyMode(QSslSocket::VerifyNone);
     conf.setProtocol(QSsl::AnyProtocol);
     request.setSslConfiguration(conf);
-
-    request.setUrl(QUrl("http://mcook.marssenger.com/application/time/day"));
+    qDebug()<< "timeRequest start";
+    request.setUrl(QUrl(marsUrl+"/application/time/day"));
     QNetworkReply* reply = networkAccessManager->get(request);
     connect(reply, SIGNAL(finished()),this, SLOT(replyTimeFinished()));
 }

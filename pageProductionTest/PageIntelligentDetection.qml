@@ -146,7 +146,7 @@ Item {
             console.log("timer abort...")
             if(doc!=null)
                 doc.abort();//请求中止
-        },5000)
+        },6000)
         doc.send(body)
     }
     function parseWifiList(sanR)
@@ -158,21 +158,11 @@ Item {
             element=root[i]
             if(element.ssid===productionTestWIFISSID)
             {
-                wifiSignalText.visible=true
-                rssi=element.rssi
-                if(rssi <= -75)
-                {
-                    wifiSignal.color="red"
-                }
-                else
-                {
-                    wifiSignal.color="green"
-                }
-                wifiSignalText.text=element.rssi+"db"
-                break
+                if(rssi==0 || rssi < element.rssi)
+                    rssi=element.rssi
             }
         }
-        if(i == root.length)
+        if(rssi == 0)
         {
             if(step < 3)
             {
@@ -186,14 +176,21 @@ Item {
             step=0xff
             return
         }
-
-        if(root[i].rssi > -75)
+        wifiSignalText.visible=true
+        if(rssi < -75)
         {
-            step=4
-            wifiConnectText.visible=true
-            //            SendFunc.connectWiFi("IoT-Test","12345678",1)
-            SendFunc.connectWiFi(productionTestWIFISSID,productionTestWIFIPWD,1)
+            wifiSignal.color="red"
         }
+        else
+        {
+            wifiSignal.color="green"
+        }
+        wifiSignalText.text=element.rssi+"db"
+
+        step=4
+        wifiConnectText.visible=true
+        //            SendFunc.connectWiFi("IoT-Test","12345678",1)
+        SendFunc.connectWiFi(productionTestWIFISSID,productionTestWIFIPWD,1)
     }
 
     Connections { // 将目标对象信号与槽函数进行连接

@@ -45,7 +45,7 @@ int main(int argc, char *argv[])
     QmlDevState* qmlDevState =new QmlDevState(&app);
 
     MNetwork* mNetwork =new MNetwork(&app);
-
+    mNetwork->marsUrl=qmlDevState->marsUrl;
     // app qml settings
     app.setOrganizationName("Marssenger"); //1
     app.setOrganizationDomain("Marssenger.com"); //2

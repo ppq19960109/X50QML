@@ -55,6 +55,7 @@ public:
     Q_INVOKABLE int executeShell(const QString cmd);
     Q_INVOKABLE int executeQProcess(const QString cmd,const QStringList list);
     void selfStart();
+    QString marsUrl;
 private:
 
     int localConnected;

@@ -5,7 +5,7 @@ import "../"
 import "qrc:/SendFunc.js" as SendFunc
 Item {
     property int versionCheckState: 0
-
+    property var otaSlientUpgrade: QmlDevState.state.OTASlientUpgrade
     Component {
         id: pageReleaseNotes
         PageReleaseNotes {}
@@ -88,15 +88,19 @@ Item {
         }
         Item{
             id:checkStatus
-            width: 180
+            width: 500
             height: 50
             anchors.top: parent.top
             anchors.topMargin: 195
             anchors.horizontalCenter: parent.horizontalCenter
-            visible: false
+            visible: otaSlientUpgrade>0?true:false
             Text{
                 id:checkText
-                text:versionCheckState>0 ?"正在检查...":"已经是最新版本"
+                text:{
+                    if(otaSlientUpgrade>0)
+                        return "已准备好最新版本，重启安装更新"
+                    return versionCheckState>0 ?"正在检查...":"已经是最新版本"
+                }
                 color:versionCheckState>0?"#fff":themesTextColor
                 font.pixelSize: 35
                 anchors.centerIn: parent
@@ -119,12 +123,21 @@ Item {
                 radius: height/2
             }
             Text{
-                text:"检查更新"
+                id:updateBtnText
+                text:otaSlientUpgrade>0?"重启":"检查更新"
                 color:versionCheckState>0?themesTextColor2:"#000"
                 font.pixelSize: 30
                 anchors.centerIn: parent
             }
             onClicked: {
+                if(otaSlientUpgrade>0)
+                {
+                    QmlDevState.setState("OTASlientUpgrade",0)
+                    updateBtnText.text="重启中"
+                    systemRestart()
+                    return
+                }
+
                 if(wifiConnected)
                 {
                     checkStatus.visible=true
