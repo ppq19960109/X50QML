@@ -198,7 +198,7 @@ Item {
                     Backlight.backlightSet(systemSettings.brightness)
                 }
                 SendFunc.setBuzControl(buzControlEnum.STOP)
-//                SendFunc.setBuzControl(buzControlEnum.SHORT)
+                //                SendFunc.setBuzControl(buzControlEnum.SHORT)
                 SendFunc.setProductionTestStatus(0)
                 //                else if(systemSettings.wifiEnable==false)
                 //                    SendFunc.enableWifi(false)
@@ -235,16 +235,19 @@ Item {
                         {
                             SendFunc.setBuzControl(buzControlEnum.SHORT)
                         }
-                        var errorCode=QmlDevState.state.ErrorCodeShow
-                        if(errorCode!==0)
-                        {
-                            if(errorCode===6)
-                                errorBuzzer=true
-                            loaderErrorCodeShow(errorCode)
-                        }
                     }
                 }
                 systemPower(value)
+                if(systemSettings.reboot==false)
+                {
+                    var errorCode=QmlDevState.state.ErrorCodeShow
+                    if(errorCode!=null && errorCode!==0)
+                    {
+                        if(errorCode===6)
+                            errorBuzzer=true
+                        loaderErrorCodeShow(errorCode)
+                    }
+                }
             }
             else if("ComSWVersion"==key)
             {

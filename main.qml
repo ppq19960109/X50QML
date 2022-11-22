@@ -1127,7 +1127,7 @@ ApplicationWindow {
 
     function loaderErrorCodeShow(value,dir)
     {
-        //console.log("loaderErrorCodeShow",value)
+        console.log("loaderErrorCodeShow",value)
         //SendFunc.setSysPower(1)
         if(value!=0)
         {
