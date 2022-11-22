@@ -158,7 +158,7 @@ Item {
             console.log("timer abort...")
             if(doc!=null)
                 doc.abort();//请求中止
-        },5000)
+        },6000)
         doc.send(body)
     }
     function parseWifiList(sanR)
@@ -189,7 +189,7 @@ Item {
             return
         }
         wifiSignalText.visible=true
-        if(rssi <= -75)
+        if(rssi < -75)
         {
             wifiSignal.color="red"
         }
@@ -199,7 +199,7 @@ Item {
         }
         wifiSignalText.text=element.rssi+"db"
 
-        if(root[i].rssi > -75)
+        if(root[i].rssi >= -75)
         {
             step=4
             wifiConnectText.visible=true
