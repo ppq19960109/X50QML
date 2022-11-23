@@ -1,7 +1,15 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.5
-
+import "qrc:/SendFunc.js" as SendFunc
 Item{
+    onVisibleChanged: {
+        console.log("PageShortcutMode onVisibleChanged",visible)
+        if(visible)
+        {
+            SendFunc.permitSteamStartStatus(0)
+        }
+    }
+
     GridView{
         width: parent.width
         height: 300
@@ -31,6 +39,12 @@ Item{
 
                 onClicked: {
                     console.log("PageShortcutMode index",index)
+                    switch(index)
+                    {
+                    case 0:
+                        load_page("pageModeCustom")
+                        break
+                    }
                 }
             }
         }

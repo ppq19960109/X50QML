@@ -9,6 +9,7 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
 {
     //    QProcess::execute("cd /oem && ./logoapp");
     readRecipeDetails();
+    readPanguRecipes();
 
     stateType.append(QPair<QString,int>("WifiCurConnected",LINK_VALUE_TYPE_STRUCT));
     stateType.append(QPair<QString,int>("WifiState",LINK_VALUE_TYPE_NUM));
@@ -284,7 +285,10 @@ QVariantList QmlDevState::getRecipeDetails(const int recipeid)
 {
     return recipeMap[recipeid];
 }
-
+QVariantList QmlDevState::getPanguRecipe(const int index)
+{
+    return panguRecipes[index];
+}
 void QmlDevState::executeShell(const QString cmd)
 {
     qDebug() << "executeShell:" << cmd;
@@ -361,6 +365,49 @@ void QmlDevState::readRecipeDetails()
         recipeMap.insert(recipeid.toInt(),list);
     }
     //    qDebug()<<"recipeMap:"<<recipeMap;
+}
+
+void QmlDevState::readPanguRecipes()
+{
+    QFile file("RecipesPangu.json");
+    if(!file.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+        return;
+    }
+    QByteArray allArray = file.readAll();
+    file.close();
+
+    QJsonParseError error;
+    QJsonDocument doucment = QJsonDocument::fromJson(allArray,&error);
+    if(error.error!=QJsonParseError::NoError)
+    {
+        qDebug() << "QJsonDocument fromJson:"<< error.error<< ","<<error.errorString();
+        return;
+    }
+    QJsonObject object = doucment.object();
+    QJsonArray recipes = object.value("recipes").toArray();
+    qDebug()<<"recipes:"<<recipes.size();
+    for(int i=0;i<recipes.size();++i)
+    {
+        QJsonObject obj=recipes.at(i).toObject();
+        QJsonValue dishName =obj.value("dishName");
+        QJsonValue imgUrl =obj.value("imgUrl");
+        QJsonValue cookSteps =obj.value("cookSteps");
+        QJsonValue details =obj.value("details");
+        QJsonValue cookType =obj.value("cookType");
+        QJsonValue repeat =obj.value("repeat");
+        int recipeType =obj.value("recipeType").toInt();
+        QVariantMap info;
+        info.insert("dishName",dishName.toString());
+        info.insert("imgUrl",imgUrl.toString());
+        info.insert("details",details.toString());
+        info.insert("cookType",cookType.toInt());
+        info.insert("recipeType",recipeType);
+        info.insert("cookSteps",cookSteps.toArray());
+        info.insert("repeat",repeat.toInt());
+        panguRecipes[recipeType-1].append(info);
+    }
+        qDebug()<<"panguRecipes:"<<panguRecipes[0];
 }
 
 int QmlDevState::sendToServer(QString data)

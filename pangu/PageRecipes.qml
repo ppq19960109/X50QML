@@ -5,13 +5,12 @@ import "qrc:/CookFunc.js" as CookFunc
 import "qrc:/SendFunc.js" as SendFunc
 
 Item {
-    Component.onCompleted: {
-        getRecipe(0)
-        SendFunc.permitSteamStartStatus(1)
-    }
-    function getRecipe(index)
-    {
-        recipeListView.model=QmlDevState.getRecipe(index);
+    property alias model:recipeListView.model
+    onVisibleChanged: {
+        if(visible)
+        {
+            SendFunc.permitSteamStartStatus(1)
+        }
     }
     ListView{
         id: recipeListView
@@ -30,8 +29,6 @@ Item {
         highlightMoveDuration:0
         highlightMoveVelocity:-1
         delegate: Item{
-            readonly property int cookType:CookFunc.getCookType(modelData.cookSteps)
-            readonly property var recipeDetail:QmlDevState.getRecipeDetails(modelData.recipeid)
             width:240
             height:330
             anchors.verticalCenter: parent.verticalCenter
@@ -43,7 +40,7 @@ Item {
                 smooth:false
                 sourceSize.width: 220
                 sourceSize.height: 330
-                source: recipeDetail.length!=0?("file:"+recipeDetail[0]):""
+                source: "file:"+modelData.imgUrl
             }
             Image{
                 asynchronous:true
@@ -71,7 +68,7 @@ Item {
                 anchors.left: recipeBtn.left
                 sourceSize.width: 88
                 sourceSize.height: 48
-                source: themesImagesPath+cookModeImg[cookType]
+                source: themesImagesPath+cookModeImg[modelData.cookType]
             }
             Button {
                 id:recipeBtn
@@ -90,7 +87,7 @@ Item {
                     if(recipeListView.currentIndex!=index)
                         recipeListView.currentIndex=index
                     else
-                        load_page("pageCookDetails",{"root":recipeListView.model[recipeListView.currentIndex]})
+                        load_page("pageRecipeDetails",{"root":recipeListView.model[recipeListView.currentIndex]})
                 }
             }
         }

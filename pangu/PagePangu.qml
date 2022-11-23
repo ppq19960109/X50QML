@@ -88,8 +88,17 @@ Item {
             anchors.right: parent.right
             currentIndex: menuList.currentIndex
             PageShortcutMode{}
-            PageRecipes{}
-            PagePreparedDish{}
+            PageRecipes{
+                Component.onCompleted: {
+                    model=QmlDevState.getPanguRecipe(0);
+                }
+            }
+            PageRecipes{
+                Component.onCompleted: {
+                    model=QmlDevState.getPanguRecipe(1);
+                }
+            }
+            //            PagePreparedDish{}
         }
     }
 

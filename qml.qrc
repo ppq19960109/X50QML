@@ -110,5 +110,8 @@
         <file>pangu/PageShortcutMode.qml</file>
         <file>pangu/PageRecipes.qml</file>
         <file>pangu/PagePreparedDish.qml</file>
+        <file>pangu/PageRecipeDetails.qml</file>
+        <file>pangu/PagePanguReserve.qml</file>
+        <file>pangu/PageModeCustom.qml</file>
     </qresource>
 </RCC>

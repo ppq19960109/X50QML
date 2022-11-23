@@ -122,6 +122,7 @@ function getDefHistory()
     param.orderTime=0
     return param
 }
+
 function isSteam(cookSteps)
 {
     var step

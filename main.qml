@@ -936,6 +936,18 @@ ApplicationWindow {
         id: pagePangu
         PagePangu {}
     }
+    Component {
+        id: pageRecipeDetails
+        PageRecipeDetails {}
+    }
+    Component {
+        id: pagePanguReserve
+        PagePanguReserve {}
+    }
+    Component {
+        id: pageModeCustom
+        PageModeCustom {}
+    }
     function isExistView(pageName) {
         //        console.log("isExistView:",pageName)
         return stackView.find(function(item,index){
@@ -1065,6 +1077,15 @@ ApplicationWindow {
         case "pagePangu":
             stackView.push(pagePangu,StackView.Immediate)
             break;
+        case "pageRecipeDetails":
+            stackView.push(pageRecipeDetails,args,StackView.Immediate)
+            break;
+        case "pagePanguReserve": //页面
+            stackView.push(pagePanguReserve, args,StackView.Immediate)
+            break;
+        case "pageModeCustom":
+            stackView.push(pageModeCustom, args,StackView.Immediate)
+            break;
         }
 
         console.log("stackView depth:"+stackView.depth)
@@ -1131,6 +1152,21 @@ ApplicationWindow {
         if(page!==null)
             backPage(page)
         SendFunc.permitSteamStartStatus(0)
+    }
+    function startPanguCooking(root,cookSteps)
+    {
+        if(root.recipeType>0 || root.recipeid>0)
+        {
+            SendFunc.setPanguMultiCooking(cookSteps,root.orderTime,root.dishName,root.recipeid)
+        }
+        else
+        {
+            SendFunc.setPanguMultiCooking(cookSteps,root.orderTime)
+        }
+        var page=isExistView("pageSteamBakeRun")
+        if(page!==null)
+            backPage(page)
+        //        SendFunc.permitSteamStartStatus(0)
     }
 
     function loaderErrorCodeShow(value,dir)

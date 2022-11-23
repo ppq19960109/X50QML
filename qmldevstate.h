@@ -53,6 +53,8 @@ public:
     //    static QmlDevState *qmlAttachedProperties(QObject *);
     QVariantList recipe[6];
     Q_INVOKABLE QVariantList getRecipe(const int index);
+    QVariantList panguRecipes[2];
+    Q_INVOKABLE QVariantList getPanguRecipe(const int index);
 
     QVariantList history;
     Q_INVOKABLE QVariantList getHistory();
@@ -81,6 +83,7 @@ private:
 
     QMap<int,QVariantList> recipeMap;
     void readRecipeDetails();
+    void readPanguRecipes();
     void parsingData(QJsonObject& object);
     int uds_json_parse(const char *value,const int value_len);
 signals:
