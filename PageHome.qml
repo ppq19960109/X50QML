@@ -152,6 +152,10 @@ Item {
         loaderAuto.sourceComponent = component_update
     }
     function loaderUpdateProgress(value){
+        if(value>0 && loaderAuto.sourceComponent !== component_update)
+        {
+            loaderAuto.sourceComponent = component_update
+        }
         if(loaderAuto.sourceComponent === component_update)
             loaderAuto.item.updateProgress=value
     }
