@@ -29,16 +29,30 @@ Rectangle {
         //back图标
         ToolButton {
             id:backBtn
-            width:80
+            width:50+name.width
             height:parent.height
             anchors.left:parent.left
             anchors.verticalCenter: parent.verticalCenter
 
-            background: Image{
+            background: null
+            Image{
+                id:backImg
                 asynchronous:true
                 smooth:false
-                anchors.centerIn: parent
+                anchors.left: parent.left
+                anchors.leftMargin:20
+                anchors.verticalCenter: parent.verticalCenter
                 source: themesPicturesPath+"back_button_background.png"
+            }
+            Text{
+                id:name
+                anchors.left:backImg.right
+                anchors.leftMargin:10
+                anchors.verticalCenter: parent.verticalCenter
+                color:themesTextColor2
+                font.pixelSize: 24
+                //textFormat: Text.AutoText
+                //textFormat: Text.RichText
             }
             onClicked: {
                 if(customClose==true)
@@ -46,16 +60,6 @@ Rectangle {
                 else
                     backPrePage()
             }
-        }
-
-        Text{
-            id:name
-            anchors.left:backBtn.right
-            anchors.verticalCenter: parent.verticalCenter
-            color:themesTextColor2
-            font.pixelSize: 24
-            //textFormat: Text.AutoText
-            //textFormat: Text.RichText
         }
         Text{
             id:centerText
