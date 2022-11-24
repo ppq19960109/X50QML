@@ -151,6 +151,10 @@ Item {
         loaderAuto.item.titleText=text+"升级中,请勿断电!"
     }
     function loaderUpdateProgress(value){
+        if(value>0 && loaderAuto.sourceComponent !== component_update)
+        {
+            loaderAuto.sourceComponent = component_update
+        }
         if(loaderAuto.sourceComponent === component_update)
             loaderAuto.item.updateProgress=value
     }
@@ -201,9 +205,9 @@ Item {
 
                 if(systemSettings.firstStartup===true)
                 {
-                    loaderFirstStartupShow()
                     systemSettings.firstStartup=false
                     SendFunc.enableWifi(true)
+                    loaderFirstStartupShow()
                 }
                 SendFunc.setBuzControl(buzControlEnum.STOP)
                 SendFunc.setProductionTestStatus(0)

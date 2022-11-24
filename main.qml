@@ -194,7 +194,7 @@ ApplicationWindow {
         Data.reset = null
         Data.LocalOperate = 0xa4
         SendFunc.setToServer(Data)
-
+        systemSettings.firstStartup=false
         systemSettings.sleepTime=3
         systemSettings.brightness=200
 

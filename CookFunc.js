@@ -126,7 +126,7 @@ function getDefCookItem()
 {
     var cookItem = {}
     cookItem.dishName=""
-    cookItem.cookSteps=""
+    cookItem.cookSteps=null
     cookItem.recipeid=0
     cookItem.cookPos=0
     cookItem.orderTime=0
