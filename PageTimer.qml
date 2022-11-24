@@ -4,25 +4,27 @@ import "pageCook"
 Item {
     property bool runing: timer_alarm.running
     Component.onCompleted: {
-        if(gTimerLeft==0)
-        {
-            var i
-            var array = []
-            for(i=0; i<= 12; ++i) {
-                array.push(i)
-            }
-            hourPathView.model=array
-            array = []
-            for(i=0; i< 60; ++i) {
-                array.push(i)
-            }
-            minutePathView.model=array
-
-            secondsPathView.model=array
+        var i
+        var array = []
+        for(i=0; i< 24; ++i) {
+            array.push(i)
         }
+        hourPathView.model=array
+        array = []
+        for(i=0; i< 60; ++i) {
+            array.push(i)
+        }
+        minutePathView.model=array
+        secondsPathView.model=array
     }
     MouseArea{
         anchors.fill: parent
+    }
+    anchors.fill: parent
+    Rectangle{
+        anchors.fill: parent
+        color: "#000"
+        opacity: 0.6
     }
     //内容
     Rectangle{
@@ -167,6 +169,8 @@ Item {
                 }
                 onClicked: {
                     gTimerLeft=gTimerTotalTime=hourPathView.currentIndex*3600+minutePathView.currentIndex*60+secondsPathView.currentIndex
+                    if(gTimerLeft==0)
+                        return
                     timer_alarm.restart()
                 }
             }
@@ -222,6 +226,18 @@ Item {
                 outerRing:false
                 percent:{
                     return 100-Math.floor(100*gTimerLeft/gTimerTotalTime)
+                }
+            }
+            MouseArea{
+                anchors.fill: parent
+                onClicked: {
+                    if(runing==false)
+                    {
+                        hourPathView.currentIndex=generateTwoTime(Math.floor(gTimerLeft/3600))
+                        minutePathView.currentIndex=generateTwoTime(Math.floor(gTimerLeft%3600/60))
+                        secondsPathView.currentIndex=generateTwoTime(gTimerLeft%60)
+                        gTimerLeft=0
+                    }
                 }
             }
         }

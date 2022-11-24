@@ -44,8 +44,8 @@ ApplicationWindow {
     readonly property var workModeEnum: ["未设定", "经典蒸", "鲜嫩蒸", "高温蒸", "热风烧烤", "上下加热", "立体热风", "蒸汽嫩烤", "空气速炸", "解冻","发酵","保温"]
     readonly property var workModeNumberEnum:[0,1,3,4,35,36,38,40,42,65,66,68]
 
-    readonly property var leftWorkModeModelEnum:[{"modelData":7,"temp":150,"time":60,"minTemp":50,"maxTemp":200},{"modelData":4,"temp":200,"time":60,"minTemp":50,"maxTemp":230},{"modelData":8,"temp":220,"time":30,"minTemp":200,"maxTemp":230,"maxTime":180},{"modelData":3,"temp":120,"time":20,"minTemp":101,"maxTemp":120},{"modelData":5,"temp":180,"time":120,"minTemp":50,"maxTemp":230}
-        ,{"modelData":6,"temp":180,"time":120,"minTemp":50,"maxTemp":230}]
+    readonly property var leftWorkModeModelEnum:[{"modelData":7,"temp":150,"time":30,"minTemp":50,"maxTemp":200},{"modelData":4,"temp":200,"time":30,"minTemp":50,"maxTemp":230},{"modelData":8,"temp":220,"time":30,"minTemp":200,"maxTemp":230,"maxTime":180},{"modelData":3,"temp":120,"time":20,"minTemp":101,"maxTemp":120},{"modelData":5,"temp":180,"time":30,"minTemp":50,"maxTemp":230}
+        ,{"modelData":6,"temp":180,"time":30,"minTemp":50,"maxTemp":230}]
     readonly property var rightWorkModeModelEnum:[{"modelData":1,"temp":100,"time":30,"minTemp":40,"maxTemp":100},{"modelData":3,"temp":120,"time":20,"minTemp":101,"maxTemp":105},{"modelData":2,"temp":90,"time":15,"minTemp":80,"maxTemp":100}]
     readonly property var rightAssistWorkModeModelEnum:[{"modelData":10,"temp":35,"time":60,"minTemp":30,"maxTemp":50},{"modelData":9,"temp":40,"time":30,"minTemp":30,"maxTemp":50},{"modelData":11,"temp":60,"time":60,"minTemp":50,"maxTemp":105}]
 
@@ -500,12 +500,12 @@ ApplicationWindow {
         id:timer_alarm
         repeat: gTimerLeft > 0
         running: gTimerLeft > 0
-        interval: 2000
+        interval: 1000
         triggeredOnStart: false
         onTriggered: {
             console.log("timer_alarm onTriggered...")
             if(gTimerLeft>0)
-                gTimerLeft-=2
+                --gTimerLeft
             if(gTimerLeft<=0)
             {
                 gTimerLeft=0
@@ -704,7 +704,7 @@ ApplicationWindow {
         loaderAutoConfirmShow(text,"","好的",themesPicturesPath+"icon_warn.png")
     }
     function loaderAutoCompleteShow(text){
-        loaderAutoConfirmShow(text,"","好的",themesPicturesPath+"icon_checked.png")
+        loaderAutoConfirmShow(text,"","好的",themesPicturesPath+"icon_preheat.png")
     }
     function loaderAutoConfirmHide(){
         if(loaderAuto.sourceComponent === component_autoConfirm)
@@ -756,7 +756,7 @@ ApplicationWindow {
         id:component_doorAuto
         PageDialogConfirm{
             onCancel: {
-                if(cancelText!="")
+                if(index>0)
                 {
                     SendFunc.setCookOperation(cookWorkPos,workOperationEnum.CANCEL)
                 }
@@ -797,7 +797,7 @@ ApplicationWindow {
     Component{
         id:component_hoodoff
         PageDialogConfirm{
-            hintCenterText:"灶具已关闭，烟机将延时<br/><b><font color='#E68855'>"+QmlDevState.state.HoodOffLeftTime+"分钟</font></b>后关闭，清除余烟"
+            hintCenterText:"烟机将延时<br/><b><font color='#E68855'>"+QmlDevState.state.HoodOffLeftTime+"分钟</font></b>后关闭，清除余烟"
             cancelText:"好的"
             confirmText:"立即关闭("+QmlDevState.state.HoodOffLeftTime+"分钟)"
             confirmBtnWidth:130

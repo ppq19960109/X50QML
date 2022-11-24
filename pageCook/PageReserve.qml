@@ -20,7 +20,15 @@ Item {
     Component.onDestruction: {
         cookItem=null
     }
-
+    MouseArea{
+        anchors.fill: parent
+    }
+    anchors.fill: parent
+    Rectangle{
+        anchors.fill: parent
+        color: "#000"
+        opacity: 0.6
+    }
     //内容
     Rectangle{
         width:730

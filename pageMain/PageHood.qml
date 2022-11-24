@@ -61,7 +61,7 @@ Item {
                             }
                             else
                             {
-                                return hoodSpeed===4
+                                return hoodSpeed===4 && smartSmokeSwitch===0
                             }
                         }
                         asynchronous:true

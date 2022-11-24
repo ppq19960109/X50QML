@@ -19,6 +19,8 @@ Item {
     property int timeIndex:-1
     property int steamGearIndex:-1
 
+    property int workPos:cookWorkPosEnum.LEFT
+    property int addPathViewWidth:0
     readonly property var workModeImg: ["", "icon_1", "icon_3","icon_4", "icon_35", "icon_36", "icon_38", "icon_40", "icon_42", "icon_65", "icon_66", "icon_68"]
 
     function getCurrentSteamOven()
@@ -34,21 +36,28 @@ Item {
     }
     function modeChange(index,tempIndex,timeIndex,steamGearIndex)
     {
-//        console.log("modeChange:",index,tempIndex,timeIndex,steamGearIndex)
-        if(index===0)
+        //        console.log("modeChange:",index,tempIndex,timeIndex,steamGearIndex)
+        if(workPos===cookWorkPosEnum.LEFT)
         {
-            steamGearPathView.model=["1档","2档","3档"]
-            steamGearPathView.currentIndex=1
-            steamGearPathView.interactive=true
-            if(steamGearIndex>0)
+            if(index===0)
             {
-                steamGearPathView.currentIndex=steamGearIndex-1
+                addPathViewWidth=0
+                steamGearPathView.visible=true
+                steamGearPathView.currentIndex=1
+                //                steamGearPathView.model=["1档","2档","3档"]
+                //                steamGearPathView.interactive=true
+                if(steamGearIndex>0)
+                {
+                    steamGearPathView.currentIndex=steamGearIndex-1
+                }
             }
-        }
-        else
-        {
-            steamGearPathView.model=["—"]
-            steamGearPathView.interactive=false
+            else
+            {
+                addPathViewWidth=60
+                steamGearPathView.visible=false
+                //                steamGearPathView.model=["—"]
+                //                steamGearPathView.interactive=false
+            }
         }
         var modeItem=modePathView.model[index]
 
@@ -116,7 +125,7 @@ Item {
 
         PageCookPathView {
             id:modePathView
-            width: 291
+            width: 290+addPathViewWidth
             height:parent.height
             delegateType:1
             currentIndex:0
@@ -135,7 +144,7 @@ Item {
         }
         PageCookPathView {
             id:tempPathView
-            width: 180
+            width: (workPos===cookWorkPosEnum.LEFT?180:226) + addPathViewWidth
             height:parent.height
             Image {
                 anchors.fill: parent
@@ -155,7 +164,7 @@ Item {
         }
         PageCookPathView {
             id:timePathView
-            width: 180
+            width: (workPos===cookWorkPosEnum.LEFT?180:226) + addPathViewWidth
             height:parent.height
             Image {
                 anchors.fill: parent
@@ -175,6 +184,7 @@ Item {
         }
         PageCookPathView {
             id:steamGearPathView
+            visible: workPos===cookWorkPosEnum.LEFT
             width: 180
             height:parent.height
             pathItemCount:3
@@ -188,7 +198,6 @@ Item {
                 source: themesPicturesPath+"steamoven/"+"roll_background.png"
             }
             Text{
-                visible: modePathView.currentIndex==0
                 text:qsTr("蒸汽")
                 color:themesTextColor
                 font.pixelSize: 24

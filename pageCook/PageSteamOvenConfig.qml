@@ -110,11 +110,8 @@ Rectangle {
             anchors.left: parent.left
             anchors.leftMargin: cookWorkPos===cookWorkPosEnum.LEFT?40:100
             modeModel:leftWorkModeModelEnum
-            modeWidth:291
-            tempWidth:cookWorkPos===cookWorkPosEnum.LEFT?180:226
-            timeWidth:cookWorkPos===cookWorkPosEnum.LEFT?180:226
-            steamGearVisible:cookWorkPos===cookWorkPosEnum.LEFT?true:false
             modeItemCount:cookWorkPos===cookWorkPosEnum.LEFT?5:3
+            workPos:cookWorkPos
         }
     }
 

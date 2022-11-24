@@ -262,6 +262,12 @@ Item {
             MouseArea{
                 anchors.fill: parent
             }
+            anchors.fill: parent
+            Rectangle{
+                anchors.fill: parent
+                color: "#000"
+                opacity: 0.6
+            }
             Rectangle {
                 width: 1066
                 height: 351
@@ -296,10 +302,6 @@ Item {
                     anchors.left: parent.left
                     anchors.leftMargin: 60
                     modeModel:leftWorkModeModelEnum
-                    modeWidth:291
-                    tempWidth:180
-                    timeWidth:180
-                    steamGearVisible:true
                     modeItemCount:3
                     tempItemCount:3
                     timeItemCount:3
@@ -307,7 +309,7 @@ Item {
                     tempIndex:listModel.get(listClickIndex).temp
                     timeIndex:listModel.get(listClickIndex).time
                     steamGearIndex:listModel.get(listClickIndex).steamGear
-
+                    workPos:cookWorkPosEnum.LEFT
                 }
                 Item {
                     width:80+140*2

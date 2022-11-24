@@ -669,6 +669,10 @@ Item {
                 {
                     loaderAutoTextShow("右灶长时间无锅具，已将燃气断开。\n请将旋钮复位！")
                 }
+                else if(value==2)
+                {
+                    loaderAutoTextShow("烟机档位发生变化，智能排烟已为您自动关闭")
+                }
             }
             else if("RAuxiliarySwitch"==key)
             {
@@ -889,9 +893,11 @@ Item {
                         }
                         Text{
                             text:{
-                                if(hoodSpeed>=3)
+                                if(hoodSpeed>3)
+                                    return "爆炒"
+                                else if(hoodSpeed===3)
                                     return "高速"
-                                else if(hoodSpeed==2)
+                                else if(hoodSpeed===2)
                                     return "中速"
                                 else
                                     return "低速"

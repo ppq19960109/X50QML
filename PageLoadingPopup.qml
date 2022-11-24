@@ -12,7 +12,11 @@ Item {
         anchors.fill: parent
     }
     anchors.fill: parent
-
+    Rectangle{
+        anchors.fill: parent
+        color: "#000"
+        opacity: 0.6
+    }
     Rectangle {
         id:hint
         anchors.centerIn: parent

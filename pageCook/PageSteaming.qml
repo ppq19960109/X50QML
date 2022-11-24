@@ -17,6 +17,8 @@ Item {
     property var rStOvOrderTimer: QmlDevState.state.RStOvOrderTimer
     property var lStOvOrderTimerLeft: QmlDevState.state.LStOvOrderTimerLeft
     property var rStOvOrderTimerLeft: QmlDevState.state.RStOvOrderTimerLeft
+    property var lStOvMode: QmlDevState.state.LStOvMode
+    property var rStOvMode: QmlDevState.state.RStOvMode
 
     Component{
         id:component_cancelSteam
@@ -337,7 +339,10 @@ Item {
                                     else
                                         return LCookbookName
                                 }
-                                return CookFunc.workModeName(QmlDevState.state.LStOvMode)
+                                if(lStOvMode===40)
+                                    return CookFunc.workModeName(lStOvMode)+QmlDevState.state.LSteamGear+"档"
+                                else
+                                    return CookFunc.workModeName(lStOvMode)
                             }
                             else
                             {
@@ -350,7 +355,7 @@ Item {
                                     else
                                         return RCookbookName
                                 }
-                                return CookFunc.workModeName(QmlDevState.state.RStOvMode)
+                                return CookFunc.workModeName(rStOvMode)
                             }
                         }
                         color:themesTextColor2
@@ -394,11 +399,11 @@ Item {
                         text:{
                             if(index==0)
                             {
-                                return QmlDevState.state.LMultiMode===1?QmlDevState.state.LCookbookName:CookFunc.workModeName(QmlDevState.state.LStOvMode)
+                                return QmlDevState.state.LMultiMode===1?QmlDevState.state.LCookbookName:CookFunc.workModeName(lStOvMode)
                             }
                             else
                             {
-                                return QmlDevState.state.RMultiMode===1?QmlDevState.state.RCookbookName:CookFunc.workModeName(QmlDevState.state.RStOvMode)
+                                return QmlDevState.state.RMultiMode===1?QmlDevState.state.RCookbookName:CookFunc.workModeName(rStOvMode)
                             }
                         }
                         color:themesTextColor2
