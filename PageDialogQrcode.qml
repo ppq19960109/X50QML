@@ -3,6 +3,7 @@ import QtQuick.Controls 2.5
 Item {
     property alias hintTopText: hintTop.text
     property alias hintCenterText: hintCenter.text
+    property alias qrcodeSource: qrcode.source
     signal cancel()
     MouseArea{
         anchors.fill: parent

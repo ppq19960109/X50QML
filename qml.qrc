@@ -14,7 +14,6 @@
         <file>pageSet/PageReset.qml</file>
         <file>pageSet/PageSystemUpdate.qml</file>
         <file>pageSet/PageAboutMachine.qml</file>
-        <file>pageSet/PageAfterGuide.qml</file>
         <file>pageSet/PageSlider.qml</file>
         <file>PageDialog.qml</file>
         <file>pageSet/PageReleaseNotes.qml</file>

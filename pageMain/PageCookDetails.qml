@@ -156,7 +156,7 @@ Item {
                                     id: flick
                                     flickableDirection:Flickable.VerticalFlick
                                     contentWidth: detail.width
-                                    contentHeight: detail.height
+                                    contentHeight: detail.height+30
                                     clip: true
                                     boundsBehavior:Flickable.StopAtBounds
                                     Text {
@@ -168,16 +168,16 @@ Item {
                                         id:detail
                                         width: flick.width-30
                                         anchors.top: parent.top
-                                        anchors.topMargin: 35
+                                        anchors.topMargin: 30
                                         font.pixelSize: 30
-                                        lineHeight: 1.3
+                                        lineHeight: 1.2
                                         color:"#fff"
                                         wrapMode: Text.WrapAnywhere
                                         text:modelData
                                     }
                                     ScrollBar.vertical:ScrollBar {
                                         anchors.right: parent.right
-                                        visible: flick.height < detail.height
+                                        visible: flick.height < contentHeight
                                         background:Rectangle{
                                             implicitWidth: 4
                                             color:"#000"

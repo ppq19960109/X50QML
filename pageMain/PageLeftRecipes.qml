@@ -14,6 +14,11 @@ Item {
     }
     function steamStart(reserve)
     {
+        if(lStOvState!==workStateEnum.WORKSTATE_STOP && lStOvState!==workStateEnum.WORKSTATE_FINISH)
+        {
+            loaderWarnConfirmShow("左腔正在烹饪\n暂时无法启动智慧菜谱");
+            return
+        }
         var cookItem=recipeListView.model[recipeListView.currentIndex]
         var cookSteps=JSON.parse(cookItem.cookSteps)
         if(reserve)
@@ -30,8 +35,8 @@ Item {
                     loaderSteamShow("当前模式需要预热\n请您在左腔预热完成后再放入食材","开始",cookItem,4)
                 return
             }
+            startCooking(cookItem,cookSteps)
         }
-        startCooking(cookItem,cookSteps)
     }
 
     Component {

@@ -95,7 +95,7 @@ Item {
                     anchors.left:parent.left
                     anchors.leftMargin: 720
                     anchors.verticalCenter: parent.verticalCenter
-                    checked:true
+                    checked:systemSettings.sleepSwitch
 
                     onClicked: {
                         console.log("onCheckedChanged:", checked)
@@ -115,7 +115,7 @@ Item {
 
                 Text{
                     color:"#fff"
-                    text:qsTr( systemSettings.sleepTime+"分钟")
+                    text:qsTr("1分钟")
                     font.pixelSize:30
                     anchors.right: screenSlider.left
                     anchors.rightMargin:15

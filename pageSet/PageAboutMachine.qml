@@ -85,7 +85,7 @@ Item {
         id: infoDelegate
         Item{
             width: parent.width
-            height: 75
+            height: 65
             Text{
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.left: parent.left
@@ -135,23 +135,22 @@ Item {
         }
     }
     //内容
-    Item{
+    Column{
         anchors.fill: parent
         anchors.leftMargin: 30
         anchors.rightMargin: 30
         ListView {
             id: listView
             width: parent.width
-            height: listView.model.count*75
-            anchors.top: parent.top
-            anchors.horizontalCenter: parent.horizontalCenter
+            height: listView.model.count*65
+//            anchors.top: parent.top
+//            anchors.horizontalCenter: parent.horizontalCenter
             interactive: false
             delegate: infoDelegate
         }
         Button{
             width: parent.width
-            height: 80
-            anchors.top: listView.bottom
+            height: 75
             PageDivider{
                 anchors.bottom: parent.bottom
             }
@@ -174,9 +173,7 @@ Item {
                 anchors.rightMargin: 10
                 source: themesPicturesPath+"icon_more.png"
             }
-
             onClicked: {
-
                 if( timer_qrcode.running==false)
                 {
                     if(QmlDevState.state.DeviceSecret==="")
@@ -203,7 +200,34 @@ Item {
                 }
             }
         }
-
+        Button{
+            width: parent.width
+            height: 65
+            PageDivider{
+                anchors.bottom: parent.bottom
+            }
+            background:Item{}
+            Text{
+                text:"联系我们"
+                color:"#fff"
+                font.pixelSize: 30
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.left: parent.left
+                horizontalAlignment:Text.AlignHCenter
+                verticalAlignment:Text.AlignVCenter
+            }
+            Image {
+                asynchronous:true
+                smooth:false
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.right: parent.right
+                anchors.rightMargin: 10
+                source: themesPicturesPath+"icon_more.png"
+            }
+            onClicked: {
+                loaderAfterGuide()
+            }
+        }
     }
 
 }

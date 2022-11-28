@@ -7,7 +7,7 @@ Item {
     Component.onCompleted: {
         var i
         var hourArray = []
-        for(i=0; i<= 12; ++i) {
+        for(i=0; i< 24; ++i) {
             hourArray.push(i)
         }
         hourPathView.model=hourArray

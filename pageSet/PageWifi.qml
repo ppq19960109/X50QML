@@ -186,7 +186,7 @@ Item {
                 }
                 else if(scan_count==3)
                 {
-                    timer_wifi_scan.interval=7000
+                    timer_wifi_scan.interval=8000
                 }
                 if(wifiConnecting==false)
                 {

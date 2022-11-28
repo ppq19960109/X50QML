@@ -25,6 +25,7 @@ ApplicationWindow {
     property bool testMode:false
     property var decode_ssid:""
     property int smartRecipesIndex:0
+    property int pageSetIndex:0
 
     property var smartSmokeSwitch: QmlDevState.state.SmartSmokeSwitch
     property var hoodSpeed: QmlDevState.state.HoodSpeed
@@ -71,7 +72,7 @@ ApplicationWindow {
     property var pattern: new RegExp("[\u4E00-\u9FA5]+")
     property var screenSaverInfo:{"month":"","date":"","hours":"","minutes":"","temp":"","lowTemp":"","highTemp":"","weatherId":0,"weather":"","holiday":""}
     readonly property var weeksEnum:["日","一","二","三","四","五","六"]
-    readonly property var weatherEnum:["晴","阴","多云","大雨","中雨","小雨","雷雨","大风","雪","雾","雨夹雪"]
+    readonly property var weatherEnum:["未知","晴","阴","多云","大雨","中雨","小雨","雷雨","大风","雪","雾","雨夹雪"]
 
     property int timeSync:0
     property int gYear
@@ -247,11 +248,11 @@ ApplicationWindow {
             window.visible=true
         sysPower=power
     }
-    function recipesLoadSteamingPage()
-    {
-        if(lStOvState>0 && smartRecipesIndex==0)
-            push_page(pageSteaming)
-    }
+    //    function recipesLoadSteamingPage()
+    //    {
+    //        if(lStOvState>0 && smartRecipesIndex==0)
+    //            push_page(pageSteaming)
+    //    }
 
     Component.onCompleted: {
         console.warn("Window onCompleted: ",Qt.fontFamilies())
@@ -296,7 +297,7 @@ ApplicationWindow {
             gTemp=resp.data.temp
             gLowTemp=resp.data.lowTemp
             gHighTemp=resp.data.highTemp
-            gWeatherId=resp.data.weatherId
+            gWeatherId=resp.data.weatherTypeId
             //            MNetwork.weatherRequest(resp.data.cityName);//杭州
         }
         onReplyTimeData:{
@@ -592,7 +593,6 @@ ApplicationWindow {
             loaderManual.sourceComponent = undefined
     }
 
-
     Component{
         id:component_qrcode
         PageDialogQrcode{
@@ -624,6 +624,19 @@ ApplicationWindow {
     function loaderQrcodeHide(){
         if(loaderManual.sourceComponent===component_qrcode)
             loaderManual.sourceComponent = undefined
+    }
+    Component{
+        id:component_afterGuide
+        PageDialogQrcode{
+            onCancel: {
+                loaderManual.sourceComponent = undefined
+            }
+        }
+    }
+    function loaderAfterGuide(){
+        loaderManual.sourceComponent = component_afterGuide
+        loaderManual.item.hintCenterText="扫码查看设备使用说明\n售后电话:400-888-8490"
+        loaderManual.item.qrcodeSource=themesPicturesPath+"AfterSalesQrCode.png"
     }
 
     Component{
@@ -1177,16 +1190,18 @@ ApplicationWindow {
                 {
                     SendFunc.setMultiCooking(cookSteps,root.orderTime,root.cookPos)
                 }
-                //            if(cookWorkPosEnum.LEFT===root.cookPos)
-                //                                {
-                //            QmlDevState.setState("LStOvState",1)
-                //            QmlDevState.setState("LStOvMode",cookSteps[0].mode)
-                //            QmlDevState.setState("LStOvRealTemp",cookSteps[0].temp)
-                //            QmlDevState.setState("LStOvOrderTimerLeft",cookSteps[0].time)
+                //                if(cookWorkPosEnum.LEFT===root.cookPos)
+                //                {
+                //                    QmlDevState.setState("LStOvState",1)
+                //                    QmlDevState.setState("LStOvMode",cookSteps[0].mode)
+                //                    QmlDevState.setState("LStOvRealTemp",cookSteps[0].temp)
+                //                    QmlDevState.setState("LStOvOrderTimerLeft",cookSteps[0].time)
+                //                    QmlDevState.setState("LMultiMode",1)
+                //                    QmlDevState.setState("LCookbookName","蒜蓉粉丝娃娃菜蒜蓉粉丝娃娃菜")
 
-                //            QmlDevState.setState("LMultiTotalStep",cookSteps.length)
-                //            QmlDevState.setState("LMultiCurrentStep",2)
-                //            }
+                //                    QmlDevState.setState("LMultiTotalStep",cookSteps.length)
+                //                    QmlDevState.setState("LMultiCurrentStep",2)
+                //                }
             }
         }
         let page=isExistView("PageSteaming")

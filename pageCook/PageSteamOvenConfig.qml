@@ -75,8 +75,6 @@ Rectangle {
             }
             startCooking(cookItem,cookSteps)
         }
-        cookSteps=undefined
-        cookItem=undefined
     }
 
     PageBackBar{

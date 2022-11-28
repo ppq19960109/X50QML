@@ -4,7 +4,10 @@ import QtQuick.Layouts 1.12
 import "../"
 Item {
     property string name: "PageSet"
-    property int pageSetIndex:0
+    Component.onDestruction: {
+        pageSetIndex=0
+    }
+
     PageBackBar{
         id:topBar
         anchors.top:parent.top

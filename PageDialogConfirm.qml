@@ -70,6 +70,7 @@ Item {
             font.pixelSize: 30
             horizontalAlignment: Text.AlignHCenter
             wrapMode:Text.WrapAnywhere
+            lineHeight:1.3
             text:""
         }
         Button {

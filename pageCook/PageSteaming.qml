@@ -320,49 +320,81 @@ Item {
                         anchors.top: parent.top
                         anchors.topMargin: 98
                     }
-                    Text{
-                        text:{
-                            if(index==0)
-                            {
-                                if(QmlDevState.state.LMultiMode===1)
-                                {
-                                    var LCookbookName=QmlDevState.state.LCookbookName
-                                    if(LCookbookName==="")
-                                    {
-                                        if(QmlDevState.state.LCookbookID > 0)
-                                        {
-                                            var cookName=QmlDevState.getRecipeName(QmlDevState.state.LCookbookID)
-                                            if(cookName!=="")
-                                                return cookName
-                                        }
-                                    }
-                                    else
-                                        return LCookbookName
-                                }
-                                if(lStOvMode===40)
-                                    return CookFunc.workModeName(lStOvMode)+QmlDevState.state.LSteamGear+"档"
-                                else
-                                    return CookFunc.workModeName(lStOvMode)
-                            }
-                            else
-                            {
-                                if(QmlDevState.state.RMultiMode===1)
-                                {
-                                    var RCookbookName=QmlDevState.state.RCookbookName
-                                    if(RCookbookName==="")
-                                    {
-                                    }
-                                    else
-                                        return RCookbookName
-                                }
-                                return CookFunc.workModeName(rStOvMode)
-                            }
-                        }
-                        color:themesTextColor2
-                        font.pixelSize: 30
+                    Item
+                    {
+                        width: 220
+                        height: 40
                         anchors.horizontalCenter: parent.horizontalCenter
                         anchors.top: parent.top
                         anchors.topMargin: 161
+                        clip: true
+                        Text{
+                            id:modeName
+                            width: parent.width
+                            horizontalAlignment:modeName.contentWidth>parent.width?Text.AlignLeft:Text.AlignHCenter
+                            text:{
+                                if(index==0)
+                                {
+                                    if(QmlDevState.state.LMultiMode===1)
+                                    {
+                                        var LCookbookName=QmlDevState.state.LCookbookName
+                                        if(LCookbookName==="")
+                                        {
+                                            if(QmlDevState.state.LCookbookID > 0)
+                                            {
+                                                var cookName=QmlDevState.getRecipeName(QmlDevState.state.LCookbookID)
+                                                if(cookName!=="")
+                                                    return cookName
+                                            }
+                                        }
+                                        else
+                                            return LCookbookName
+                                    }
+                                    if(lStOvMode===40)
+                                        return CookFunc.workModeName(lStOvMode)+QmlDevState.state.LSteamGear+"档"
+                                    else
+                                        return CookFunc.workModeName(lStOvMode)
+                                }
+                                else
+                                {
+                                    if(QmlDevState.state.RMultiMode===1)
+                                    {
+                                        var RCookbookName=QmlDevState.state.RCookbookName
+                                        if(RCookbookName==="")
+                                        {
+                                        }
+                                        else
+                                            return RCookbookName
+                                    }
+                                    return CookFunc.workModeName(rStOvMode)
+                                }
+                            }
+                            color:themesTextColor2
+                            font.pixelSize: 30
+                        }
+                        PropertyAnimation {
+                            id:textAnimation
+                            target: modeName
+                            property: "x"
+                            from: 0
+                            to: -(modeName.contentWidth-width)
+                            duration: 8000
+                            loops: 1
+                            running: false
+                            easing.type: Easing.Linear
+                            onFinished:{
+                                modeName.x=0
+                            }
+                        }
+                        Timer{
+                            repeat: running
+                            running: modeName.contentWidth>width
+                            interval: 60000
+                            triggeredOnStart: true
+                            onTriggered: {
+                                textAnimation.restart()
+                            }
+                        }
                     }
                     Text{
                         text:{
@@ -520,7 +552,7 @@ Item {
                 onClicked: {
                     if(index==0)
                     {
-
+                        console.log("onClicked:",modeName.x,modeName.width,modeName.contentWidth)
                     }
                     else
                     {
