@@ -39,8 +39,8 @@ ApplicationWindow {
         ,{"modelData":8,"temp":60,"time":30,"minTemp":50,"maxTemp":120}]
     readonly property var rightWorkModeModelEnum:[{"modelData":9,"temp":100,"time":30,"minTemp":40,"maxTemp":100}]
 
-    readonly property var workStateEnum:{"WORKSTATE_STOP":0,"WORKSTATE_RESERVE":1,"WORKSTATE_PREHEAT":2,"WORKSTATE_RUN":3,"WORKSTATE_FINISH":4,"WORKSTATE_PAUSE":5,"WORKSTATE_PAUSE_RESERVE":6}
-    readonly property var workStateArray:["停止","预约中","预热中","运行中","烹饪完成","暂停中","预约暂停中"]
+    readonly property var workStateEnum:{"WORKSTATE_STOP":0,"WORKSTATE_RESERVE":1,"WORKSTATE_PREHEAT":2,"WORKSTATE_RUN":3,"WORKSTATE_FINISH":4,"WORKSTATE_PAUSE":5,"WORKSTATE_PAUSE_RESERVE":6,"WORKSTATE_WATER":7,"WORKSTATE_CLEAN":8}
+    readonly property var workStateArray:["停止","预约中","预热中","运行中","烹饪完成","暂停中","预约暂停中","进水中","清洁中"]
 
     readonly property var workOperationEnum:{"START":0,"PAUSE":1,"CANCEL":2,"CONFIRM":3,"RUN_NOW":4}
 

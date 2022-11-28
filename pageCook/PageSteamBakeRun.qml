@@ -299,7 +299,7 @@ Rectangle {
 
             workColor:"#DE932F"
             workState:QmlDevState.state.RStOvState
-            workMode:workState===workStateEnum.WORKSTATE_STOP?qsTr("右腔烹饪"):CookFunc.leftWorkModeName(QmlDevState.state.RStOvMode)
+            workMode:workState===workStateEnum.WORKSTATE_STOP?qsTr("右腔烹饪"):"智能模式"
             canvasDiameter:width
             setTimeLeft:QmlDevState.state.RStOvSetTimerLeft
             orderTimeLeft:QmlDevState.state.RStOvOrderTimerLeft

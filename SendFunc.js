@@ -334,14 +334,13 @@ function setPanguMultiCooking(list,orderTime,dishName,cookbookID)
     var Data={}
 
     Data.RMultiStageContent=list
-    if(null == cookbookID || null == dishName)
+    if(null == dishName)
     {
-
+        Data.RCookbookName=""
     }
     else
     {
-        Data.CookbookName=dishName
-        Data.CookbookID=cookbookID
+        Data.RCookbookName=dishName
     }
     Data.RStOvOperation=workOperationEnum.START
     if(undefined !== orderTime && orderTime > 0)
