@@ -407,7 +407,7 @@ void QmlDevState::readPanguRecipes()
         info.insert("repeat",repeat.toInt());
         panguRecipes[recipeType-1].append(info);
     }
-        qDebug()<<"panguRecipes:"<<panguRecipes[0];
+    qDebug()<<"panguRecipes:"<<panguRecipes[0];
 }
 
 int QmlDevState::sendToServer(QString data)
@@ -526,13 +526,17 @@ void QmlDevState::parsingData(QJsonObject& object)
                 else if(key=="ErrorCodeShow")
                     setState(key,0);
                 else
+                {
 #endif    
                     if("LStOvDoorState"==key || "LStOvMode"==key ||"LStOvState"==key ||"LStOvSetTemp"==key ||"LStOvRealTemp"==key ||"LStOvSetTimer"==key ||"LStOvOrderTimer"==key ||"LStOvSetTimerLeft"==key ||"RStOvDoorState"==key ||"RStOvMode"==key ||"RStOvState"==key ||"RStOvSetTemp"==key ||"RStOvRealTemp"==key ||"RStOvOrderTimer"==key ||"RStOvSetTimer"==key ||"RStOvSetTimerLeft"==key ||"RStOvOrderTimerLeft"==key||"MultiMode"==key||"HoodSpeed"==key||"HoodLight"==key)
                     {
                         if(stateMap[key]==value.toInt())
                             continue;
                     }
-                setState(key,value.toInt());
+                    setState(key,value.toInt());
+#ifdef SYSPOWER_RK3308
+                }
+#endif
             }
             else if(LINK_VALUE_TYPE_STRING==value_type)
             {
