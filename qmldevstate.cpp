@@ -407,7 +407,7 @@ void QmlDevState::readPanguRecipes()
         info.insert("repeat",repeat.toInt());
         panguRecipes[recipeType-1].append(info);
     }
-    qDebug()<<"panguRecipes:"<<panguRecipes[0];
+//    qDebug()<<"panguRecipes:"<<panguRecipes[0];
 }
 
 int QmlDevState::sendToServer(QString data)

@@ -30,7 +30,7 @@ Item {
             updatePaint()
     }
     onPercentChanged: {
-        if(workState === workStateEnum.WORKSTATE_RESERVE||workState === workStateEnum.WORKSTATE_RUN||workState === workStateEnum.WORKSTATE_PAUSE||workState === workStateEnum.WORKSTATE_PAUSE_RESERVE)
+        if(workState !== workStateEnum.WORKSTATE_STOP && workState !== workStateEnum.WORKSTATE_FINISH && workState !== workStateEnum.WORKSTATE_PREHEAT)
         {
             updatePaint()
         }
@@ -207,7 +207,7 @@ Item {
 //                textFormat: Text.RichText
                 anchors.top:parent.top
                 anchors.horizontalCenter: parent.horizontalCenter
-                anchors.horizontalCenterOffset:(workState === workStateEnum.WORKSTATE_PREHEAT||workState === workStateEnum.WORKSTATE_RUN||workState === workStateEnum.WORKSTATE_PAUSE)?-20:0
+                anchors.horizontalCenterOffset:(workState === workStateEnum.WORKSTATE_RESERVE||workState === workStateEnum.WORKSTATE_PAUSE_RESERVE)?0:-20
                 color:workColor
                 font.pixelSize: 70
                 //                font.bold: (workState === workStateEnum.WORKSTATE_RUN|| workState === workStateEnum.WORKSTATE_PAUSE)?true:false

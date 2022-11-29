@@ -6,10 +6,28 @@ import "qrc:/SendFunc.js" as SendFunc
 
 Item {
     property alias model:recipeListView.model
+    Connections { // 将目标对象信号与槽函数进行连接
+        id:connections
+        enabled:false
+        target: QmlDevState
+        onStateChanged: { // 处理目标对象信号的槽函数
+            if("SteamStart"==key)
+            {
+                var root=recipeListView.model[recipeListView.currentIndex]
+                startPanguCooking(root,root.cookSteps)
+            }
+        }
+    }
+
     onVisibleChanged: {
         if(visible)
         {
+            connections.enabled=true
             SendFunc.permitSteamStartStatus(1)
+        }
+        else
+        {
+            connections.enabled=false
         }
     }
     ListView{

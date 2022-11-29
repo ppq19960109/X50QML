@@ -13,7 +13,7 @@ Item {
         var steps={}
 
         steps.temp=parseInt(tempPathView.model[tempPathView.currentIndex])
-        steps.time=parseInt(timePathView.model[timePathView.currentIndex])
+        steps.time=parseInt(timePathView.model[timePathView.currentIndex])*60
         steps.motorSpeed=parseInt(speedPathView.model[speedPathView.currentIndex])
         steps.waterTime=parseInt(waterPathView.model[waterPathView.currentIndex])
         steps.mode=17

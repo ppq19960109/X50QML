@@ -301,9 +301,9 @@ Rectangle {
             workState:QmlDevState.state.RStOvState
             workMode:workState===workStateEnum.WORKSTATE_STOP?qsTr("右腔烹饪"):"智能模式"
             canvasDiameter:width
-            setTimeLeft:QmlDevState.state.RStOvSetTimerLeft
+            setTimeLeft:QmlDevState.state.RStOvSetTimerLeft/60
             orderTimeLeft:QmlDevState.state.RStOvOrderTimerLeft
-            percent:(workState === workStateEnum.WORKSTATE_RESERVE|| workState === workStateEnum.WORKSTATE_PAUSE_RESERVE)?(100-100*orderTimeLeft/QmlDevState.state.RStOvOrderTimer):(100-100*setTimeLeft/QmlDevState.state.RStOvSetTimer)
+            percent:(workState === workStateEnum.WORKSTATE_RESERVE|| workState === workStateEnum.WORKSTATE_PAUSE_RESERVE)?(100-100*orderTimeLeft/QmlDevState.state.RStOvOrderTimer):(100-Math.floor(100*QmlDevState.state.RStOvSetTimerLeft/QmlDevState.state.RStOvSetTimer))
             workTime:
             {
                 if(workState === workStateEnum.WORKSTATE_PREHEAT)

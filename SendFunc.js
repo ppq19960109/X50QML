@@ -332,7 +332,6 @@ function setMultiCooking(list,orderTime,dishName,cookbookID)
 function setPanguMultiCooking(list,orderTime,dishName,cookbookID)
 {
     var Data={}
-
     Data.RMultiStageContent=list
     if(null == dishName)
     {
