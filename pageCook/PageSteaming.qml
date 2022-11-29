@@ -552,11 +552,25 @@ Item {
                 onClicked: {
                     if(index==0)
                     {
-                        console.log("onClicked:",modeName.x,modeName.width,modeName.contentWidth)
+                        if(lStOvState===workStateEnum.WORKSTATE_PAUSE)
+                        {
+
+                        }
+                        else if(lStOvState===workStateEnum.WORKSTATE_PAUSE_RESERVE)
+                        {
+
+                        }
                     }
                     else
                     {
+                        if(rStOvState===workStateEnum.WORKSTATE_PAUSE)
+                        {
 
+                        }
+                        else if(rStOvState===workStateEnum.WORKSTATE_PAUSE_RESERVE)
+                        {
+
+                        }
                     }
                 }
             }

@@ -345,7 +345,7 @@ ApplicationWindow {
         repeat: true
         running: true
         interval: 20000
-        triggeredOnStart: false
+        triggeredOnStart: true
         onTriggered: {
             console.log("timer_time onTriggered")
             getCurrentTime()
@@ -476,7 +476,7 @@ ApplicationWindow {
         id:timer_sleep
         repeat: false
         running: systemSettings.sleepSwitch && sysPower == 1
-        interval: systemSettings.sleepTime*62000
+        interval: systemSettings.sleepTime*60000
         triggeredOnStart: false
         onTriggered: {
             console.log("timer_sleep onTriggered...")
@@ -810,7 +810,7 @@ ApplicationWindow {
     Component{
         id:component_hoodoff
         PageDialogConfirm{
-            hintCenterText:"烟机将延时<br/><b><font color='#E68855'>"+QmlDevState.state.HoodOffLeftTime+"分钟</font></b>后关闭，清除余烟"
+            hintCenterText:"烟机自动延时<br/><b><font color='#E68855'>"+QmlDevState.state.HoodOffLeftTime+"分钟</font></b>后关闭，清除余烟"
             cancelText:"好的"
             confirmText:"立即关闭("+QmlDevState.state.HoodOffLeftTime+"分钟)"
             confirmBtnWidth:130
@@ -882,7 +882,8 @@ ApplicationWindow {
             mouse.accepted=false
             if(sysPower > 0)
             {
-                timer_sleep.restart()
+                if(systemSettings.sleepSwitch)
+                    timer_sleep.restart()
 
                 if(sleepState==true)
                 {

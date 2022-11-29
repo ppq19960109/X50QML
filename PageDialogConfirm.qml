@@ -104,7 +104,7 @@ Item {
             width:140+10+confirmBtnWidth
             height:50+10
             anchors.bottom:parent.bottom
-            anchors.bottomMargin: 20
+            anchors.bottomMargin: 25
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.horizontalCenterOffset: cancelBtn.visible ? 130 : 0
             Text{

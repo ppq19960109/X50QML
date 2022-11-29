@@ -34,6 +34,7 @@ Item {
         target: window
         enabled:root.visible
         onWifiConnectingChanged:{
+            console.log("page wifi onWifiConnectingChanged:",systemSettings.wifiEnable,wifiConnecting,wifiConnectInfo.ssid)
             if(wifiConnecting==true)
                 timer_wifi_connecting.restart()
             else

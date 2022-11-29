@@ -35,6 +35,8 @@ Item {
         Item {
             property int cookWorkPos:0
             property var clickFunc:null
+            property alias hourIndex:hourPathView.currentIndex
+            property alias minuteIndex:minutePathView.currentIndex
             Component.onCompleted: {
                 let i
                 let hourArray = []
@@ -182,11 +184,16 @@ Item {
         }
     }
 
-    function loaderCloseHeat(cookWorkPos,clickFunc)
+    function loaderCloseHeat(cookWorkPos,clickFunc,time)
     {
         loaderManual.sourceComponent = component_closeHeat
         loaderManual.item.cookWorkPos=cookWorkPos
         loaderManual.item.clickFunc=clickFunc
+        if(time!=null)
+        {
+            loaderManual.item.hourIndex=time/60
+            loaderManual.item.minuteIndex=time%60
+        }
     }
 
     function startTurnOffFire(dir,time)
@@ -276,7 +283,18 @@ Item {
             models: ["重置","取消"]
             onClick: {
                 if(clickIndex==0)
-                    loaderCloseHeat(index,startTurnOffFire)
+                {
+                    let timingTime
+                    if(index==0)
+                    {
+                        timingTime=lTimingLeft
+                    }
+                    else
+                    {
+                        timingTime=rTimingLeft
+                    }
+                    loaderCloseHeat(index,startTurnOffFire,timingTime)
+                }
                 else
                     loaderCloseHeatReset("是否取消"+modelData+"定时关火？","否","是",index)
             }

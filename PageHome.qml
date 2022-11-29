@@ -479,6 +479,7 @@ Item {
                 systemSettings.wifiEnable=value
                 if(value==0)
                 {
+                    wifiConnectInfo.ssid=""
                     wifiConnected=false
                     wifiModel.clear()
                 }
@@ -547,14 +548,20 @@ Item {
             else if("LStoveTimingState"==key)
             {
                 if(value === timingStateEnum.CONFIRM)
+                {
                     loaderAutoTextShow("左灶定时结束，请将灶具旋钮复位")
+                    SendFunc.setBuzControl(buzControlEnum.SHORTTHREE)
+                }
                 else if(value === timingStateEnum.STOP)
                     loaderStoveAutoPopupHide("左灶定时")
             }
             else if("RStoveTimingState"==key)
             {
                 if(value === timingStateEnum.CONFIRM)
+                {
                     loaderAutoTextShow("右灶定时结束，请将灶具旋钮复位")
+                    SendFunc.setBuzControl(buzControlEnum.SHORTTHREE)
+                }
                 else if(value === timingStateEnum.STOP)
                     loaderStoveAutoPopupHide("右灶定时")
             }

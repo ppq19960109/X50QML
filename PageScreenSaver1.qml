@@ -31,7 +31,7 @@ Item {
             if(index==2)
                 return gYear+"年"+gMonth+"月"+gDate+"日 星期"+weeksEnum[gDay]
             else
-                return gMonth+"月"+gDate+"日 周"+weeksEnum[gDay]+" "+gHoliday
+                return gMonth+"月"+gDate+"日 周"+weeksEnum[gDay]+" "+(wifiConnected?gHoliday:"")
         }
     }
 }

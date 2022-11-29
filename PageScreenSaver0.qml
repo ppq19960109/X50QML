@@ -6,16 +6,6 @@ Rectangle {
         anchors.fill: parent
     }
     Text{
-        color:"#fff"
-        font.pixelSize: 60
-        anchors.top: parent.top
-        anchors.topMargin: 150
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.horizontalCenterOffset: 30
-        text: "|"
-    }
-
-    Text{
         id:time
         color:"#fff"
         font.pixelSize: 150
@@ -24,61 +14,71 @@ Rectangle {
         anchors.left: parent.left
         anchors.leftMargin: 200
         text: gTimeText
-
     }
-
     Text{
         color:"#fff"
         font.pixelSize: 38
         anchors.top: parent.top
         anchors.topMargin: 250
         anchors.horizontalCenter: time.horizontalCenter
-        text: gMonth+"月"+gDate+"日 周"+weeksEnum[gDay]+" "+gHoliday
+        text: gMonth+"月"+gDate+"日 周"+weeksEnum[gDay]+" "+(wifiConnected?gHoliday:"")
     }
+    Item {
+        anchors.fill: parent
+        visible: wifiConnected
+        Text{
+            color:"#fff"
+            font.pixelSize: 60
+            anchors.top: parent.top
+            anchors.topMargin: 150
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.horizontalCenterOffset: 30
+            text: "|"
+        }
+        Image {
+            id:icon_weather
+            anchors.top:parent.top
+            anchors.topMargin: 110
+            anchors.left: parent.left
+            anchors.leftMargin: 715
+            source: themesPicturesPath+"weather/"+gWeatherId+".png"
+        }
 
-    Image {
-        id:icon_weather
-        anchors.top:parent.top
-        anchors.topMargin: 110
-        anchors.left: parent.left
-        anchors.leftMargin: 715
-        source: themesPicturesPath+"weather/"+gWeatherId+".png"
-    }
+        Text{
+            color:"#fff"
+            font.pixelSize: 55
+            anchors.top: parent.top
+            anchors.topMargin: 230
+            anchors.horizontalCenter: icon_weather.horizontalCenter
+            text:weatherEnum[gWeatherId]
+        }
 
-    Text{
-        color:"#fff"
-        font.pixelSize: 55
-        anchors.top: parent.top
-        anchors.topMargin: 230
-        anchors.horizontalCenter: icon_weather.horizontalCenter
-        text:weatherEnum[gWeatherId]
-    }
-
-    Text{
-        id:temp
-        color:"#fff"
-        font.pixelSize: 150
-        anchors.top: parent.top
-        anchors.topMargin: 80
-        anchors.left: parent.left
-        anchors.leftMargin: 845
-        text: gTemp
-    }
-    Text{
-        color:"#fff"
-        font.pixelSize: 45
-        anchors.top: parent.top
-        anchors.topMargin: 105
-        anchors.left: parent.left
-        anchors.leftMargin: 1030
-        text: "℃"
-    }
-    Text{
-        color:"#fff"
-        font.pixelSize: 55
-        anchors.top: parent.top
-        anchors.topMargin: 240
-        anchors.horizontalCenter: temp.horizontalCenter
-        text: gLowTemp+"/"+gHighTemp
+        Text{
+            id:temp
+            color:"#fff"
+            font.pixelSize: 150
+            anchors.top: parent.top
+            anchors.topMargin: 80
+            anchors.left: parent.left
+            anchors.leftMargin: 845
+            text: gTemp
+        }
+        Text{
+            color:"#fff"
+            font.pixelSize: 45
+            anchors.top: parent.top
+            anchors.topMargin: 105
+            anchors.left: temp.right
+            anchors.leftMargin: 20
+            text: "℃"
+        }
+        Text{
+            color:"#fff"
+            font.pixelSize: 55
+            anchors.top: parent.top
+            anchors.topMargin: 240
+            anchors.horizontalCenter: temp.horizontalCenter
+            text: gLowTemp+"/"+gHighTemp
+        }
     }
 }

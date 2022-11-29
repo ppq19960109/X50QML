@@ -31,7 +31,7 @@ Item {
         Text{
             id:hintTop
             anchors.top: parent.top
-            anchors.topMargin: 30
+            anchors.topMargin: 25
             anchors.horizontalCenter: parent.horizontalCenter
             color:"white"
             font.pixelSize: 30
@@ -41,7 +41,7 @@ Item {
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.horizontalCenterOffset: -150
             anchors.top: parent.top
-            anchors.topMargin: 80
+            anchors.topMargin: 70
             width: 200
             height: 200
             cache:false
