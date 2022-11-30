@@ -96,6 +96,8 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     stateType.append(QPair<QString,int>("PCBInput",LINK_VALUE_TYPE_ARRAY));
 
     stateType.append(QPair<QString,int>("Gating",LINK_VALUE_TYPE_NUM));
+    stateType.append(QPair<QString,int>("Weight",LINK_VALUE_TYPE_NUM));
+    stateType.append(QPair<QString,int>("RCookbookName",LINK_VALUE_TYPE_STRING));
 
     localConnected=0;
     connect(&client, SIGNAL(sendData(QByteArray)), this,SLOT(readData(QByteArray)));
@@ -104,8 +106,9 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     setState("HoodSpeed",0);
     setState("HoodLight",0);
     setState("RStoveStatus",0);
-#ifndef USE_RK3308
+    setState("Weight",1);
     setState("Gating",0);
+#ifndef USE_RK3308
     setState("SysPower",1);
     setState("LoadPowerState",7);
 

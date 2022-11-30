@@ -948,6 +948,10 @@ ApplicationWindow {
         id: pageModeCustom
         PageModeCustom {}
     }
+    Component {
+        id: pageWeighing
+        PageWeighing {}
+    }
     function isExistView(pageName) {
         //        console.log("isExistView:",pageName)
         return stackView.find(function(item,index){
@@ -1085,6 +1089,9 @@ ApplicationWindow {
             break;
         case "pageModeCustom":
             stackView.push(pageModeCustom, args,StackView.Immediate)
+            break;
+        case "pageWeighing":
+            stackView.push(pageWeighing, args,StackView.Immediate)
             break;
         }
 

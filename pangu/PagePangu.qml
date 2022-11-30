@@ -98,7 +98,6 @@ Item {
                     model=QmlDevState.getPanguRecipe(1);
                 }
             }
-            //            PagePreparedDish{}
         }
     }
 
