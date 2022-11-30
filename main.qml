@@ -45,12 +45,11 @@ ApplicationWindow {
     readonly property var workModeEnum: ["未设定", "经典蒸", "鲜嫩蒸", "高温蒸", "热风烧烤", "上下加热", "立体热风", "蒸汽嫩烤", "空气速炸", "解冻","发酵","保温"]
     readonly property var workModeNumberEnum:[0,1,3,4,35,36,38,40,42,65,66,68]
 
-    readonly property var leftWorkModeModelEnum:[{"modelData":7,"temp":150,"time":30,"minTemp":50,"maxTemp":200},{"modelData":4,"temp":200,"time":30,"minTemp":50,"maxTemp":230},{"modelData":8,"temp":220,"time":30,"minTemp":200,"maxTemp":230,"maxTime":180},{"modelData":3,"temp":120,"time":20,"minTemp":101,"maxTemp":120},{"modelData":5,"temp":180,"time":30,"minTemp":50,"maxTemp":230}
-        ,{"modelData":6,"temp":180,"time":30,"minTemp":50,"maxTemp":230}]
+    readonly property var leftWorkModeModelEnum:[{"modelData":5,"temp":180,"time":30,"minTemp":50,"maxTemp":230},{"modelData":7,"temp":150,"time":30,"minTemp":50,"maxTemp":200},{"modelData":6,"temp":180,"time":30,"minTemp":50,"maxTemp":230},{"modelData":4,"temp":200,"time":30,"minTemp":50,"maxTemp":230},{"modelData":3,"temp":120,"time":20,"minTemp":101,"maxTemp":120},{"modelData":8,"temp":220,"time":30,"minTemp":200,"maxTemp":230,"maxTime":180}]
     readonly property var rightWorkModeModelEnum:[{"modelData":1,"temp":100,"time":30,"minTemp":40,"maxTemp":100},{"modelData":3,"temp":120,"time":20,"minTemp":101,"maxTemp":105},{"modelData":2,"temp":90,"time":15,"minTemp":80,"maxTemp":100}]
     readonly property var rightAssistWorkModeModelEnum:[{"modelData":10,"temp":35,"time":60,"minTemp":30,"maxTemp":50},{"modelData":9,"temp":40,"time":30,"minTemp":30,"maxTemp":50},{"modelData":11,"temp":60,"time":60,"minTemp":50,"maxTemp":105}]
 
-    readonly property var workStateEnum:{"WORKSTATE_STOP":0,"WORKSTATE_RESERVE":1,"WORKSTATE_PREHEAT":2,"WORKSTATE_RUN":3,"WORKSTATE_FINISH":4,"WORKSTATE_PAUSE":5,"WORKSTATE_PAUSE_RESERVE":6}
+    readonly property var workStateEnum:{"WORKSTATE_STOP":0,"WORKSTATE_RESERVE":1,"WORKSTATE_PREHEAT":2,"WORKSTATE_RUN":3,"WORKSTATE_FINISH":4,"WORKSTATE_PAUSE":5,"WORKSTATE_PAUSE_RESERVE":6,"WORKSTATE_PAUSE_PREHEAT":7}
     readonly property var workStateChineseEnum:["停止","预约中","预热中","运行中","烹饪完成","暂停中","预约暂停中"]
     readonly property var workOperationEnum:{"START":0,"PAUSE":1,"CANCEL":2,"CONFIRM":3,"RUN_NOW":4}
     readonly property var otaStateEnum:{"OTA_IDLE":0,"OTA_NO_FIRMWARE":1,"OTA_NEW_FIRMWARE":2,"OTA_DOWNLOAD_START":3,"OTA_DOWNLOAD_FAIL":4,"OTA_DOWNLOAD_SUCCESS":5,"OTA_INSTALL_START":6,"OTA_INSTALL_FAIL":7,"OTA_INSTALL_SUCCESS":8}
@@ -188,7 +187,18 @@ ApplicationWindow {
         var rand=Math.random()
         return (min+Math.round(rand*range))
     }
-
+    function openWifiPage()
+    {
+        console.log("openWifiPage....")
+        var page=isExistView("PageSet")
+        if(page==null)
+            push_page(pageSet)
+        else
+        {
+            backPage(page)
+        }
+        pageSetIndex=1
+    }
     function systemSetReset()
     {
         var Data={}
@@ -480,7 +490,7 @@ ApplicationWindow {
         triggeredOnStart: false
         onTriggered: {
             console.log("timer_sleep onTriggered...")
-            if(productionTestStatus==0 && demoModeStatus==0 && wifiConnecting==false && QmlDevState.localConnected > 0 && errorCodeShow === 0)
+            if(productionTestStatus==0 && demoModeStatus==0 && wifiConnecting==false && QmlDevState.localConnected > 0 && errorCodeShow === 0 && QmlDevState.state.LStoveStatus === 0 && QmlDevState.state.RStoveStatus === 0)
             {
                 if((QmlDevState.state.RStOvState === workStateEnum.WORKSTATE_STOP || QmlDevState.state.RStOvState === workStateEnum.WORKSTATE_FINISH || QmlDevState.state.RStOvState === workStateEnum.WORKSTATE_RESERVE || QmlDevState.state.RStOvState === workStateEnum.WORKSTATE_PAUSE_RESERVE) && (QmlDevState.state.LStOvState === workStateEnum.WORKSTATE_STOP || QmlDevState.state.LStOvState === workStateEnum.WORKSTATE_FINISH || QmlDevState.state.LStOvState === workStateEnum.WORKSTATE_RESERVE || QmlDevState.state.LStOvState === workStateEnum.WORKSTATE_PAUSE_RESERVE ))
                 {
@@ -618,7 +628,7 @@ ApplicationWindow {
         }
         else
         {
-            loaderWifiConfirmShow("当前设备离线，请检查网络")
+            loaderCheckWifiShow("当前设备离线，请检查网络")
         }
     }
     function loaderQrcodeHide(){
@@ -668,6 +678,28 @@ ApplicationWindow {
     }
     function loaderWifiConfirmShow(text){
         loaderWarnManualShow(text,"","好的",themesPicturesPath+"icon_wifi_warn.png")
+    }
+    Component{
+        id:component_wifiManual
+        PageDialogConfirm{
+            onCancel: {
+                loaderMainHide()
+            }
+            onConfirm:{
+                openWifiPage()
+                loaderMainHide()
+            }
+        }
+    }
+    function loaderCheckWifiShow(text){
+        if(loaderManual.sourceComponent !== component_wifiManual)
+        {
+            loaderManual.sourceComponent = component_wifiManual
+        }
+        loaderManual.item.topImageSrc=themesPicturesPath+"icon_wifi_warn.png"
+        loaderManual.item.hintCenterText=text
+        loaderManual.item.cancelText="取消"
+        loaderManual.item.confirmText="检查网络"
     }
     Component{
         id:component_loading
@@ -1160,26 +1192,28 @@ ApplicationWindow {
             if(cookSteps.length===1 && (undefined === cookSteps[0].number || 0 === cookSteps[0].number))
             {
                 SendFunc.setCooking(cookSteps,root.orderTime,root.cookPos)
-                //                                if(cookWorkPosEnum.LEFT===root.cookPos)
-                //                                {
-                //                                    QmlDevState.setState("LStOvState",5)
-                //                                    QmlDevState.setState("LStOvMode",cookSteps[0].mode)
-                //                                    QmlDevState.setState("LStOvSetTemp",cookSteps[0].temp)
-                //                                    QmlDevState.setState("LStOvRealTemp",cookSteps[0].temp)
-                //                                    QmlDevState.setState("LStOvSetTimer",cookSteps[0].time)
-                //                                    QmlDevState.setState("LStOvSetTimerLeft",cookSteps[0].time/4)
-                //                                    QmlDevState.setState("LStOvOrderTimer",cookSteps[0].time)
-                //                                    QmlDevState.setState("LStOvOrderTimerLeft",cookSteps[0].time)
-                //                                }
-                //                                else
-                //                                {
-                //                                    QmlDevState.setState("RStOvState",1)
-                //                                    QmlDevState.setState("RStOvRealTemp",cookSteps[0].temp)
-                //                                    QmlDevState.setState("RStOvSetTimerLeft",cookSteps[0].time)
-                //                                    QmlDevState.setState("RStOvSetTimer",cookSteps[0].time)
-                //                                    QmlDevState.setState("RStOvOrderTimer",cookSteps[0].time)
-                //                                    QmlDevState.setState("RStOvOrderTimerLeft",cookSteps[0].time/2)
-                //                                }
+                //                if(cookWorkPosEnum.LEFT===root.cookPos)
+                //                {
+                //                    QmlDevState.setState("LStOvState",workStateEnum.WORKSTATE_PAUSE_RESERVE)
+                //                    QmlDevState.setState("LStOvMode",cookSteps[0].mode)
+                //                    QmlDevState.setState("LStOvSetTemp",cookSteps[0].temp)
+                //                    QmlDevState.setState("LStOvRealTemp",cookSteps[0].temp)
+                //                    QmlDevState.setState("LStOvSetTimer",cookSteps[0].time)
+                //                    QmlDevState.setState("LStOvSetTimerLeft",cookSteps[0].time/2)
+                //                    QmlDevState.setState("LStOvOrderTimer",cookSteps[0].time)
+                //                    QmlDevState.setState("LStOvOrderTimerLeft",cookSteps[0].time)
+                //                    QmlDevState.setState("LSteamGear",cookSteps[0].steamGear)
+                //                }
+                //                else
+                //                {
+                //                    QmlDevState.setState("RStOvState",workStateEnum.WORKSTATE_PAUSE)
+                //                    QmlDevState.setState("RStOvMode",cookSteps[0].mode)
+                //                    QmlDevState.setState("RStOvRealTemp",cookSteps[0].temp)
+                //                    QmlDevState.setState("RStOvSetTimerLeft",cookSteps[0].time)
+                //                    QmlDevState.setState("RStOvSetTimer",cookSteps[0].time)
+                //                    QmlDevState.setState("RStOvOrderTimer",cookSteps[0].time)
+                //                    QmlDevState.setState("RStOvOrderTimerLeft",cookSteps[0].time/2)
+                //                }
             }
             else
             {

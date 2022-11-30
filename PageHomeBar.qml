@@ -42,14 +42,7 @@ ToolBar {
                 source: themesPicturesPath+(wifiConnected==true?"icon_wifi_connected.png":"icon_wifi_disconnect.png")
             }
             onClicked: {
-                var page=isExistView("PageSet")
-                pageSetIndex=4
-                if(page==null)
-                    push_page(pageSet)
-                else
-                {
-                    backPage(page)
-                }
+                openWifiPage()
             }
         }
         ToolButton {

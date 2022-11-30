@@ -29,17 +29,18 @@ Item {
         steps.mode=workModeNumberEnum[modePathView.model[modePathView.currentIndex].modelData]
         steps.temp=tempPathView.model[tempPathView.currentIndex]
         steps.time=timePathView.model[timePathView.currentIndex]
-        if(steamGearPathView.interactive)
+        if(steamGearPathView.visible)
             steps.steamGear=steamGearPathView.currentIndex+1
 
         return steps
     }
-    function modeChange(index,tempIndex,timeIndex,steamGearIndex)
+    function modeChange(modeIndex,tempIndex,timeIndex,steamGearIndex)
     {
-        //        console.log("modeChange:",index,tempIndex,timeIndex,steamGearIndex)
+        console.log("modeChange:",modeIndex,tempIndex,timeIndex,steamGearIndex)
+
         if(workPos===cookWorkPosEnum.LEFT)
         {
-            if(index===0)
+            if(modeIndex===1)
             {
                 addPathViewWidth=0
                 steamGearPathView.visible=true
@@ -59,7 +60,11 @@ Item {
                 //                steamGearPathView.interactive=false
             }
         }
-        var modeItem=modePathView.model[index]
+        else
+            steamGearPathView.visible=false
+
+        modePathView.currentIndex=modeIndex
+        var modeItem=modePathView.model[modeIndex]
 
         var minTemp=modeItem.minTemp
         var maxTemp=modeItem.maxTemp
@@ -102,7 +107,6 @@ Item {
     Component.onCompleted:{
         if(modeIndex>=0)
         {
-            modePathView.currentIndex=modeIndex
             modeChange(modeIndex,tempIndex,timeIndex,steamGearIndex)
         }
         else
@@ -125,7 +129,7 @@ Item {
 
         PageCookPathView {
             id:modePathView
-            width: 290+addPathViewWidth
+            width: 290
             height:parent.height
             delegateType:1
             currentIndex:0
@@ -184,7 +188,6 @@ Item {
         }
         PageCookPathView {
             id:steamGearPathView
-            visible: workPos===cookWorkPosEnum.LEFT
             width: 180
             height:parent.height
             pathItemCount:3

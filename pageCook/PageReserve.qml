@@ -171,15 +171,17 @@ Item {
                 onClicked: {
                     if(cookItem!=null)
                     {
-//                        Object.defineProperty(cookItem, 'orderTime', {
-//                                                  configurable: false,
-//                                                  writable: false,
-//                                              })
-//                        console.log("getOwnPropertyDescriptor:",JSON.stringify(Object.getOwnPropertyDescriptors(cookItem)))
-//                        var newObj = Object.assign({},cookItem)
-//                        console.log("newObj:",JSON.stringify(newObj))
+                        //                        Object.defineProperty(cookItem, 'orderTime', {
+                        //                                                  configurable: false,
+                        //                                                  writable: false,
+                        //                                              })
+                        //                        console.log("getOwnPropertyDescriptor:",JSON.stringify(Object.getOwnPropertyDescriptors(cookItem)))
+                        //                        var newObj = Object.assign({},cookItem)
+                        //                        console.log("newObj:",JSON.stringify(newObj))
                         cookItem.orderTime=hourPathView.currentIndex*60+minutePathView.currentIndex
-                        var cookSteps=JSON.parse(cookItem.cookSteps)
+                        var cookSteps=null
+                        if(cookItem.cookSteps!=null)
+                            cookSteps=JSON.parse(cookItem.cookSteps)
                         startCooking(cookItem,cookSteps)
                     }
                     cookSteps=undefined

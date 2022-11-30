@@ -246,7 +246,7 @@ Item {
                     {
                         if(wifiConnected==false)
                         {
-                            loaderWifiConfirmShow("当前无网络，连网后可生成烹饪曲线")
+                            loaderCheckWifiShow("当前无网络，连网后可生成烹饪曲线")
                             cookingCurvePageSwitch.checked=false
                             return
                         }

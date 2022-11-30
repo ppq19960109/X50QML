@@ -550,31 +550,175 @@ Item {
                     }
                 }
                 onClicked: {
+                    var cookItem
                     if(index==0)
                     {
+                        if(QmlDevState.state.LMultiMode!==0)
+                            return
                         if(lStOvState===workStateEnum.WORKSTATE_PAUSE)
                         {
-
+                            loaderPauseSteamShow(cookWorkPosEnum.LEFT)
                         }
                         else if(lStOvState===workStateEnum.WORKSTATE_PAUSE_RESERVE)
                         {
-
+                            cookItem =CookFunc.getDefCookItem()
+                            cookItem.cookPos=cookWorkPosEnum.LEFT
+                            loaderCookReserve(cookItem.cookPos,cookItem)
                         }
                     }
                     else
                     {
+                        if(QmlDevState.state.RMultiMode!==0)
+                            return
                         if(rStOvState===workStateEnum.WORKSTATE_PAUSE)
                         {
-
+                            loaderPauseSteamShow(cookWorkPosEnum.RIGHT)
                         }
                         else if(rStOvState===workStateEnum.WORKSTATE_PAUSE_RESERVE)
                         {
-
+                            cookItem =CookFunc.getDefCookItem()
+                            cookItem.cookPos=cookWorkPosEnum.RIGHT
+                            loaderCookReserve(cookItem.cookPos,cookItem)
                         }
                     }
                 }
             }
         }
     }
+    Component{
+        id:component_pauseSteam
+        Item {
+            property alias modeModel: steamOvenDelegate.modeModel
+            property alias workPos: steamOvenDelegate.workPos
+            function modeChange(modeIndex,tempIndex,timeIndex,steamGearIndex)
+            {
+                steamOvenDelegate.modeChange(modeIndex,tempIndex,timeIndex,steamGearIndex)
+            }
+            MouseArea{
+                anchors.fill: parent
+            }
+            anchors.fill: parent
+            Rectangle{
+                anchors.fill: parent
+                color: "#000"
+                opacity: 0.6
+            }
+            Rectangle {
+                width: 1066
+                height: 351
+                anchors.centerIn: parent
+                color: "#333333"
+                radius: 4
 
+                Button {
+                    width:closeImg.width+50
+                    height:closeImg.height+50
+                    anchors.top:parent.top
+                    anchors.right:parent.right
+                    Image {
+                        id:closeImg
+                        asynchronous:true
+                        smooth:false
+                        anchors.centerIn: parent
+                        source: themesPicturesPath+"icon_window_close.png"
+                    }
+                    background: null
+                    onClicked: {
+                        loaderPauseSteamHide()
+                    }
+                }
+                PageSteamOvenDelegate {
+                    id:steamOvenDelegate
+                    width:291+180*3+20*3
+                    height: parent.height-70
+                    anchors.top: parent.top
+                    anchors.topMargin: 15
+                    anchors.left: parent.left
+                    anchors.leftMargin: 60
+                    modeItemCount:3
+                    tempItemCount:3
+                    timeItemCount:3
+                }
+                Item {
+                    width:80+140*2
+                    height: 50
+                    anchors.bottom: parent.bottom
+                    anchors.bottomMargin: 20
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    Button {
+                        width:140
+                        height: 50
+                        anchors.left: parent.left
+                        background: Rectangle{
+                            color:themesTextColor2
+                            radius: 25
+                        }
+                        Text{
+                            text:qsTr("取消")
+                            color:"#000"
+                            font.pixelSize: 34
+                            anchors.centerIn: parent
+                        }
+                        onClicked: {
+                            loaderPauseSteamHide()
+                        }
+                    }
+                    Button {
+                        width:140
+                        height: 50
+                        anchors.right: parent.right
+                        background: Rectangle{
+                            color:themesTextColor2
+                            radius: 25
+                        }
+                        Text{
+                            text:qsTr("确定")
+                            color:"#000"
+                            font.pixelSize: 34
+                            anchors.centerIn: parent
+                        }
+                        onClicked: {
+                            var cookSteps = []
+                            cookSteps.push(steamOvenDelegate.getCurrentSteamOven())
+
+                            var cookItem =CookFunc.getDefCookItem()
+                            cookItem.cookPos=workPos
+                            cookItem.dishName=CookFunc.getDishName(cookSteps)
+                            cookItem.cookSteps=JSON.stringify(cookSteps)
+                            startCooking(cookItem,cookSteps)
+                            loaderPauseSteamHide()
+                        }
+                    }
+                }
+            }
+        }
+    }
+    function loaderPauseSteamShow(dir){
+        var modeIndex,tempIndex,timeIndex,steamGearIndex=0
+        loaderManual.sourceComponent = component_pauseSteam
+        loaderManual.item.workPos=dir
+        if(dir===cookWorkPosEnum.LEFT)
+        {
+            modeIndex=CookFunc.leftWorkModeToIndex(lStOvMode)
+            tempIndex=QmlDevState.state.LStOvSetTemp
+            timeIndex=lStOvSetTimer
+            steamGearIndex=QmlDevState.state.LSteamGear
+
+            loaderManual.item.modeModel=leftWorkModeModelEnum
+            loaderManual.item.modeChange(modeIndex,tempIndex,timeIndex,steamGearIndex)
+        }
+        else
+        {
+            modeIndex=CookFunc.rightWorkModeToIndex(rStOvMode)
+            tempIndex=QmlDevState.state.RStOvSetTemp
+            timeIndex=rStOvSetTimer
+
+            loaderManual.item.modeModel=CookFunc.getrRightModeModel(rStOvMode)
+        }
+        loaderManual.item.modeChange(modeIndex,tempIndex,timeIndex,steamGearIndex)
+    }
+    function loaderPauseSteamHide(){
+        if(loaderManual.sourceComponent===component_pauseSteam)
+            loaderManual.sourceComponent = undefined
+    }
 }

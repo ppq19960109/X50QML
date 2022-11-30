@@ -2,6 +2,7 @@ import QtQuick 2.12
 import QtQuick.Controls 2.5
 import "../"
 Item {
+    readonly property var screenSaverEnum: ["深色", "山峰", "家庭", "美食"]
     Component {
         id: pageClock
         PageClock {}
@@ -34,190 +35,195 @@ Item {
                     color: themesTextColor
                 }
             }
-
-            Item{
-                id:light
-                width:parent.width
-                height: 100
-                anchors.top: parent.top
-                Text{
-                    anchors.left: parent.left
-                    anchors.verticalCenter: parent.verticalCenter
-                    color:"#fff"
-                    text:qsTr("亮度")
-                    font.pixelSize:30
-                }
-                Image{
-                    asynchronous:true
-                    source: themesPicturesPath+"icon_light_small.png"
-                    anchors.right: lightSlider.left
-                    anchors.rightMargin:15
-                    anchors.verticalCenter: parent.verticalCenter
-                }
-                PageSlider {
-                    id:lightSlider
-                    width: 590
-                    anchors.left:parent.left
-                    anchors.leftMargin: 150
-                    anchors.verticalCenter: parent.verticalCenter
-                    stepSize: 2
-                    from: 1
-                    to: 255
-                    value: Backlight.backlightGet()
-                    onValueChanged: {
-                        systemSettings.brightness=value
+            Column
+            {
+                anchors.fill: parent
+                Item{
+                    id:light
+                    width:parent.width
+                    height: 100
+                    Text{
+                        anchors.left: parent.left
+                        anchors.verticalCenter: parent.verticalCenter
+                        color:"#fff"
+                        text:qsTr("亮度")
+                        font.pixelSize:30
+                    }
+                    Image{
+                        asynchronous:true
+                        source: themesPicturesPath+"icon_light_small.png"
+                        anchors.right: lightSlider.left
+                        anchors.rightMargin:15
+                        anchors.verticalCenter: parent.verticalCenter
+                    }
+                    PageSlider {
+                        id:lightSlider
+                        width: 590
+                        anchors.left:parent.left
+                        anchors.leftMargin: 150
+                        anchors.verticalCenter: parent.verticalCenter
+                        stepSize: 2
+                        from: 1
+                        to: 255
+                        value: Backlight.backlightGet()
+                        onValueChanged: {
+                            systemSettings.brightness=value
+                        }
+                    }
+                    Image{
+                        asynchronous:true
+                        source: themesPicturesPath+"icon_light_big.png"
+                        anchors.left: lightSlider.right
+                        anchors.leftMargin:15
+                        anchors.verticalCenter: parent.verticalCenter
+                    }
+                    PageDivider{
+                        anchors.bottom: parent.bottom
                     }
                 }
-                Image{
-                    asynchronous:true
-                    source: themesPicturesPath+"icon_light_big.png"
-                    anchors.left: lightSlider.right
-                    anchors.leftMargin:15
-                    anchors.verticalCenter: parent.verticalCenter
+                Item{
+                    id:screenSwitch
+                    width:parent.width
+                    height: 100
+                    Text{
+                        anchors.left: parent.left
+                        anchors.verticalCenter: parent.verticalCenter
+                        color:"#fff"
+                        text:qsTr("息屏")
+                        font.pixelSize:30
+                    }
+                    PageSwitch {
+                        anchors.left:parent.left
+                        anchors.leftMargin: 720
+                        anchors.verticalCenter: parent.verticalCenter
+                        checked:systemSettings.sleepSwitch
+
+                        onClicked: {
+                            console.log("onCheckedChanged:", checked)
+                            systemSettings.sleepSwitch=checked
+                        }
+                    }
+                    PageDivider{
+                        anchors.bottom: parent.bottom
+                    }
                 }
-                PageDivider{
-                    anchors.bottom: parent.bottom
+                Item{
+                    id:screen
+                    visible: systemSettings.sleepSwitch
+                    width:parent.width
+                    height: 100
+
+                    Text{
+                        color:"#fff"
+                        text:qsTr("1分钟")
+                        font.pixelSize:30
+                        anchors.right: screenSlider.left
+                        anchors.rightMargin:15
+                        anchors.verticalCenter: parent.verticalCenter
+                    }
+                    PageSlider {
+                        id:screenSlider
+                        width: 590
+                        anchors.left:parent.left
+                        anchors.leftMargin: 150
+                        anchors.verticalCenter: parent.verticalCenter
+                        stepSize: 1
+                        from: 1
+                        to: 5
+                        value: systemSettings.sleepTime
+                        displayText:value+"分钟"
+                        onValueChanged: {
+                            console.log("screenSlider:",value)
+                            systemSettings.sleepTime=value
+                        }
+                    }
+                    Text{
+                        color:"#fff"
+                        text:qsTr("5分钟")
+                        font.pixelSize:30
+                        anchors.left: screenSlider.right
+                        anchors.leftMargin:15
+                        anchors.verticalCenter: parent.verticalCenter
+                    }
+                    PageDivider{
+                        anchors.bottom: parent.bottom
+                    }
                 }
-            }
-            Item{
-                id:screenSwitch
-                width:parent.width
-                height: 100
-                anchors.top: light.bottom
-                Text{
-                    anchors.left: parent.left
-                    anchors.verticalCenter: parent.verticalCenter
-                    color:"#fff"
-                    text:qsTr("息屏")
-                    font.pixelSize:30
+                Button{
+                    id:time
+                    width: parent.width
+                    height: 100
+
+                    PageDivider{
+                        anchors.bottom: parent.bottom
+                    }
+                    background:null
+                    Text{
+                        text:"时间"
+                        color:"#fff"
+                        font.pixelSize: 30
+                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.left: parent.left
+
+                    }
+                    Text{
+                        text:gTimeText
+                        color:wifiConnected?"#fff":themesTextColor2
+                        font.pixelSize: 30
+                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.right: parent.right
+                        anchors.rightMargin: 70
+                    }
+                    Image {
+                        visible: wifiConnected == false
+                        asynchronous:true
+                        smooth:false
+                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.right: parent.right
+                        anchors.rightMargin: 35
+                        source: themesPicturesPath+"icon_more.png"
+                    }
+                    onClicked: {
+                        if(wifiConnected==false)
+                            loaderManual.sourceComponent = pageClock
+                    }
                 }
-                PageSwitch {
-                    anchors.left:parent.left
-                    anchors.leftMargin: 720
-                    anchors.verticalCenter: parent.verticalCenter
-                    checked:systemSettings.sleepSwitch
+                Button{
+                    width: parent.width
+                    height: 100
+
+                    PageDivider{
+                        anchors.bottom: parent.bottom
+                    }
+                    background:null
+                    Text{
+                        text:"屏保"
+                        color:"#fff"
+                        font.pixelSize: 30
+                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.left: parent.left
+                    }
+                    Text{
+                        text:screenSaverEnum[systemSettings.screenSaverIndex]
+                        color:"#fff"
+                        font.pixelSize: 30
+                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.right: parent.right
+                        anchors.rightMargin: 70
+                    }
+                    Image {
+                        asynchronous:true
+                        smooth:false
+                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.right: parent.right
+                        anchors.rightMargin: 35
+                        source: themesPicturesPath+"icon_more.png"
+                    }
 
                     onClicked: {
-                        console.log("onCheckedChanged:", checked)
-                        systemSettings.sleepSwitch=checked
+                        localSet.visible=false
+                        screen_saver.visible=true
                     }
-                }
-                PageDivider{
-                    anchors.bottom: parent.bottom
-                }
-            }
-            Item{
-                id:screen
-                visible: systemSettings.sleepSwitch
-                width:parent.width
-                height: 100
-                anchors.top: screenSwitch.bottom
-
-                Text{
-                    color:"#fff"
-                    text:qsTr("1分钟")
-                    font.pixelSize:30
-                    anchors.right: screenSlider.left
-                    anchors.rightMargin:15
-                    anchors.verticalCenter: parent.verticalCenter
-                }
-                PageSlider {
-                    id:screenSlider
-                    width: 590
-                    anchors.left:parent.left
-                    anchors.leftMargin: 150
-                    anchors.verticalCenter: parent.verticalCenter
-                    stepSize: 1
-                    from: 1
-                    to: 5
-                    value: systemSettings.sleepTime
-                    displayText:value+"分钟"
-                    onValueChanged: {
-                        console.log("screenSlider:",value)
-                        systemSettings.sleepTime=value
-                    }
-                }
-                Text{
-                    color:"#fff"
-                    text:qsTr("5分钟")
-                    font.pixelSize:30
-                    anchors.left: screenSlider.right
-                    anchors.leftMargin:15
-                    anchors.verticalCenter: parent.verticalCenter
-                }
-                PageDivider{
-                    anchors.bottom: parent.bottom
-                }
-            }
-            Button{
-                id:time
-                width: parent.width
-                height: 100
-                anchors.top: screen.bottom
-
-                PageDivider{
-                    anchors.bottom: parent.bottom
-                }
-                background:null
-                Text{
-                    text:"时间"
-                    color:"#fff"
-                    font.pixelSize: 30
-                    anchors.verticalCenter: parent.verticalCenter
-                    anchors.left: parent.left
-
-                }
-                Text{
-                    text:gTimeText
-                    color:wifiConnected?"#fff":themesTextColor2
-                    font.pixelSize: 30
-                    anchors.verticalCenter: parent.verticalCenter
-                    anchors.right: parent.right
-                    anchors.rightMargin: 70
-                }
-                Image {
-                    visible: wifiConnected == false
-                    asynchronous:true
-                    smooth:false
-                    anchors.verticalCenter: parent.verticalCenter
-                    anchors.right: parent.right
-                    anchors.rightMargin: 35
-                    source: themesPicturesPath+"icon_more.png"
-                }
-                onClicked: {
-                    if(wifiConnected==false)
-                        loaderManual.sourceComponent = pageClock
-                }
-            }
-            Button{
-                width: parent.width
-                height: 100
-                anchors.top: time.bottom
-
-                PageDivider{
-                    anchors.bottom: parent.bottom
-                }
-                background:null
-                Text{
-                    text:"屏保"
-                    color:"#fff"
-                    font.pixelSize: 30
-                    anchors.verticalCenter: parent.verticalCenter
-                    anchors.left: parent.left
-
-                }
-                Image {
-                    asynchronous:true
-                    smooth:false
-                    anchors.verticalCenter: parent.verticalCenter
-                    anchors.right: parent.right
-                    anchors.rightMargin: 35
-                    source: themesPicturesPath+"icon_more.png"
-                }
-
-                onClicked: {
-                    localSet.visible=false
-                    screen_saver.visible=true
                 }
             }
         }

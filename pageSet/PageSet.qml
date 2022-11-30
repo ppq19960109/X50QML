@@ -19,7 +19,7 @@ Item {
         anchors.bottom: parent.bottom
         ListView{
             id:menuList
-            model:['本机设置','恢复出厂设置','系统更新','关于本机','网络']
+            model:['本机设置','网络连接','关于本机','系统更新','恢复出厂设置']
             width:206
             anchors.top:parent.top
             anchors.topMargin: 15
@@ -45,7 +45,7 @@ Item {
                 }
                 onClicked: {
                     if(menuList.currentIndex!=index)
-                        menuList.currentIndex=index
+                        pageSetIndex=index
                 }
             }
         }
@@ -56,10 +56,10 @@ Item {
             anchors.right: parent.right
             currentIndex: menuList.currentIndex
             PageLocalSettings {}
-            PageReset {}
-            PageSystemUpdate {}
-            PageAboutMachine {}
             PageWifi {}
+            PageAboutMachine {}
+            PageSystemUpdate {}
+            PageReset {}
         }
     }
 }

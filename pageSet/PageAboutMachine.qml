@@ -191,7 +191,7 @@ Item {
                     }
                     else
                     {
-                        loaderWifiConfirmShow("当前设备离线，请检查网络")
+                        loaderCheckWifiShow("当前设备离线，请检查网络")
                     }
                 }
                 else

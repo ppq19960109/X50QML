@@ -259,6 +259,7 @@ Item {
                 {
                     systemSettings.otaSuccess=false
                     loaderUpdateResultShow("通讯板已更新至最新版本\n"+get_current_version(value,null))
+                    systemSync()
                 }
             }
             else if("PwrSWVersion"==key)

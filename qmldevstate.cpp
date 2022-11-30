@@ -126,6 +126,7 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     setState("RMovePotLowHeatSwitch",0);
     setState("ComSWVersion","1.0");
     setState("PwrSWVersion","1.0");
+    setState("RMultiMode",0);
 #ifndef USE_TCP
 #ifndef USE_RK3308
     setState("SysPower",1);

@@ -254,11 +254,11 @@ Item {
     Component{
         id:component_tanchuang
         Item {
-            property alias modeIndex:steamOvenDelegate.modeIndex
-            property alias tempIndex:steamOvenDelegate.tempIndex
-            property alias timeIndex:steamOvenDelegate.timeIndex
-            property alias steamGearIndex:steamOvenDelegate.steamGearIndex
             signal showListData(int index,var listData)
+            function modeChange(modeIndex,tempIndex,timeIndex,steamGearIndex)
+            {
+                steamOvenDelegate.modeChange(modeIndex,tempIndex,timeIndex,steamGearIndex)
+            }
             MouseArea{
                 anchors.fill: parent
             }
@@ -305,10 +305,6 @@ Item {
                     modeItemCount:3
                     tempItemCount:3
                     timeItemCount:3
-                    modeIndex:CookFunc.leftWorkModeToIndex(listModel.get(listClickIndex).mode)
-                    tempIndex:listModel.get(listClickIndex).temp
-                    timeIndex:listModel.get(listClickIndex).time
-                    steamGearIndex:listModel.get(listClickIndex).steamGear
                     workPos:cookWorkPosEnum.LEFT
                 }
                 Item {
@@ -382,6 +378,11 @@ Item {
     function loaderMultistageShow(index){
         listClickIndex=index
         loaderMultistage.sourceComponent = component_tanchuang
+        var model=listModel.get(listClickIndex)
+        if(model.mode>=0)
+        {
+            loaderMultistage.item.modeChange(CookFunc.leftWorkModeToIndex(model.mode),model.temp,model.time,model.steamGear)
+        }
     }
     function loaderMultistageHide(){
         loaderMultistage.sourceComponent = undefined

@@ -49,28 +49,78 @@ function leftWorkModeToIndex(mode)
     switch(mode)
     {
     case 40:
-        index=0
-        break
-    case 35:
         index=1
         break
-    case 42:
-        index=2
-        break
-    case 4:
+    case 35:
         index=3
         break
-    case 36:
+    case 42:
+        index=5
+        break
+    case 4:
         index=4
         break
+    case 36:
+        index=0
+        break
     case 38:
-        index=5
+        index=2
         break
     default:
         index=mode
         break
     }
     return index
+}
+function rightWorkModeToIndex(mode)
+{
+    let index
+    switch(mode)
+    {
+    case 1:
+        index=0
+        break
+    case 3:
+        index=2
+        break
+    case 4:
+        index=1
+        break
+    case 65:
+        index=1
+        break
+    case 66:
+        index=0
+        break
+    case 68:
+        index=2
+        break
+    default:
+        index=0
+        break
+    }
+    return index
+}
+function getrRightModeModel(mode)
+{
+    let modeModel
+    switch(mode)
+    {
+    case 1:
+    case 3:
+    case 4:
+        modeModel=rightWorkModeModelEnum
+        break
+    case 65:
+    case 66:
+    case 68:
+        modeModel=rightAssistWorkModeModelEnum
+        break
+    default:
+        modeModel=rightWorkModeModelEnum
+        break
+    }
+    return modeModel
 }
 function getWorkModeModel(mode)
 {
