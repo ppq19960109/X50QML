@@ -1,54 +1,56 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.5
-Rectangle {
-    color: "#000"
+Item {
+
     MouseArea{
         anchors.fill: parent
+    }
+    Image {
+        source: themesPicturesPath+"screen_saver0.png"
     }
     Text{
         id:time
         color:"#fff"
-        font.pixelSize: 150
+        font.pixelSize: 120
         anchors.top: parent.top
-        anchors.topMargin: 80
+        anchors.topMargin: 95
         anchors.left: parent.left
-        anchors.leftMargin: 200
+        anchors.leftMargin: 220
         text: gTimeText
     }
     Text{
         color:"#fff"
-        font.pixelSize: 38
+        font.pixelSize: 32
         anchors.top: parent.top
         anchors.topMargin: 250
         anchors.horizontalCenter: time.horizontalCenter
         text: gMonth+"月"+gDate+"日 周"+weeksEnum[gDay]+" "+(wifiConnected?gHoliday:"")
     }
+    Text{
+        color:"#fff"
+        opacity: 0.5
+        font.pixelSize: 40
+        anchors.centerIn: parent
+        text: "|"
+    }
     Item {
         anchors.fill: parent
         visible: wifiConnected
-        Text{
-            color:"#fff"
-            font.pixelSize: 60
-            anchors.top: parent.top
-            anchors.topMargin: 150
-            anchors.horizontalCenter: parent.horizontalCenter
-            anchors.horizontalCenterOffset: 30
-            text: "|"
-        }
         Image {
             id:icon_weather
             anchors.top:parent.top
             anchors.topMargin: 110
             anchors.left: parent.left
-            anchors.leftMargin: 715
+            anchors.leftMargin: 740
             source: themesPicturesPath+"weather/"+gWeatherId+".png"
         }
 
         Text{
+            id:weather_text
             color:"#fff"
-            font.pixelSize: 55
+            font.pixelSize: 32
             anchors.top: parent.top
-            anchors.topMargin: 230
+            anchors.topMargin: 255
             anchors.horizontalCenter: icon_weather.horizontalCenter
             text:weatherEnum[gWeatherId]
         }
@@ -56,27 +58,25 @@ Rectangle {
         Text{
             id:temp
             color:"#fff"
-            font.pixelSize: 150
-            anchors.top: parent.top
-            anchors.topMargin: 80
-            anchors.left: parent.left
-            anchors.leftMargin: 845
+            font.pixelSize: 120
+            anchors.verticalCenter: icon_weather.verticalCenter
+            anchors.left: icon_weather.right
+            anchors.leftMargin: 40
             text: gTemp
         }
         Text{
             color:"#fff"
-            font.pixelSize: 45
-            anchors.top: parent.top
-            anchors.topMargin: 105
+            font.pixelSize: 35
+            anchors.top: temp.top
+            anchors.topMargin: 20
             anchors.left: temp.right
-            anchors.leftMargin: 20
+            anchors.leftMargin: 15
             text: "℃"
         }
         Text{
             color:"#fff"
-            font.pixelSize: 55
-            anchors.top: parent.top
-            anchors.topMargin: 240
+            font.pixelSize: 32
+            anchors.verticalCenter: weather_text.verticalCenter
             anchors.horizontalCenter: temp.horizontalCenter
             text: gLowTemp+"/"+gHighTemp
         }
