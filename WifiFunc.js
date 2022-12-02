@@ -101,7 +101,7 @@ function addWifiInfo(wifiInfo)
         newWifiInfo.encryp=wifiInfo.encryp
         console.log("add ssid:",newWifiInfo.ssid)
         wifiPasswdArray.push(newWifiInfo)
-        if(wifiPasswdArray.length>10)
+        if(wifiPasswdArray.length > 5)
             wifiPasswdArray.splice(0,1)
     }
     systemSettings.wifiPasswdArray=wifiPasswdArray

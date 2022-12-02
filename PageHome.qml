@@ -504,6 +504,7 @@ Item {
                     if(value==2 || value==3||value==5)
                     {
                         QmlDevState.executeShell("(wpa_cli reconfigure) &")
+                        WifiFunc.deleteWifiInfo(wifiConnectInfo)
                         if(wifiPageStatus==false)
                         {
                             wifiConnectInfo.ssid=""

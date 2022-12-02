@@ -189,7 +189,7 @@ function connectWiFi(ssid,psk,encryp)
     wifiConnecting=true
     wifiConnected=false
     setToServer(Data)
-    deleteWifissid(ssid)
+    //deleteWifissid(ssid)
 }
 function getWifiState()
 {
@@ -315,6 +315,7 @@ function setMultiCooking(list,orderTime,cookPos,dishName,cookbookID)
         {
             Data.LMultiMode=multiModeEnum.MULTISTAGE
             Data.LMultiStageContent=MultiStageContent
+            lMultiStageContent=list
         }
         else
         {

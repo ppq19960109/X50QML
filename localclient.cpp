@@ -36,7 +36,7 @@ void LocalClient::startConnectTimer()
 {
     //#ifdef USE_RK3308
     if(!timer->isActive())
-        timer->start(1500);
+        timer->start(1000);
     //#endif
 }
 int LocalClient::seqid=0;

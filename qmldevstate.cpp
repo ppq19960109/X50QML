@@ -8,18 +8,16 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     //    QProcess::execute("cd /oem && ./logoapp");
     readRecipeDetails();
 
+    stateType.append(QPair<QString,int>("SysPower",LINK_VALUE_TYPE_NUM));
+    stateType.append(QPair<QString,int>("PwrSWVersion",LINK_VALUE_TYPE_STRING));
+    stateType.append(QPair<QString,int>("ComSWVersion",LINK_VALUE_TYPE_STRING));
+    stateType.append(QPair<QString,int>("ErrorCode",LINK_VALUE_TYPE_NUM));
+    stateType.append(QPair<QString,int>("ErrorCodeShow",LINK_VALUE_TYPE_NUM));
+
     stateType.append(QPair<QString,int>("WifiCurConnected",LINK_VALUE_TYPE_STRUCT));
     stateType.append(QPair<QString,int>("WifiState",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("WifiEnable",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("WifiScanR",LINK_VALUE_TYPE_STRING));
-
-    stateType.append(QPair<QString,int>("PwrSWVersion",LINK_VALUE_TYPE_STRING));
-    stateType.append(QPair<QString,int>("ComSWVersion",LINK_VALUE_TYPE_STRING));
-    stateType.append(QPair<QString,int>("SysPower",LINK_VALUE_TYPE_NUM));
-    stateType.append(QPair<QString,int>("ErrorCode",LINK_VALUE_TYPE_NUM));
-    stateType.append(QPair<QString,int>("ErrorCodeShow",LINK_VALUE_TYPE_NUM));
-
-    stateType.append(QPair<QString,int>("LCookbookID",LINK_VALUE_TYPE_NUM));
 
     stateType.append(QPair<QString,int>("OTAState",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("OTAProgress",LINK_VALUE_TYPE_NUM));
@@ -31,6 +29,7 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
 
     stateType.append(QPair<QString,int>("LMultiMode",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("LMultiStageState",LINK_VALUE_TYPE_STRUCT));
+    stateType.append(QPair<QString,int>("LCookbookID",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("LCookbookName",LINK_VALUE_TYPE_STRING));
     stateType.append(QPair<QString,int>("RMultiMode",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("RMultiStageState",LINK_VALUE_TYPE_STRUCT));

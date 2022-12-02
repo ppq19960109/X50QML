@@ -67,5 +67,6 @@
         <file>pageMain/PageLeftRecipes.qml</file>
         <file>pageMain/PageRightRecipes.qml</file>
         <file>PageFps.qml</file>
+        <file>pageCook/PageMultistageShow.qml</file>
     </qresource>
 </RCC>

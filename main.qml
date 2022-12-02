@@ -26,6 +26,7 @@ ApplicationWindow {
     property var decode_ssid:""
     property int smartRecipesIndex:0
     property int pageSetIndex:0
+    property var lMultiStageContent
 
     property var smartSmokeSwitch: QmlDevState.state.SmartSmokeSwitch
     property var hoodSpeed: QmlDevState.state.HoodSpeed
@@ -265,7 +266,7 @@ ApplicationWindow {
     //    }
 
     Component.onCompleted: {
-        console.warn("Window onCompleted: ",Qt.fontFamilies())
+        console.log("Window onCompleted:")
 
         //        var pattern = new RegExp("[\u4E00-\u9FA5]+")
         //        var str='\\xE6\\x95\\xB0\\xE6\\x8D\\xae'
@@ -276,18 +277,18 @@ ApplicationWindow {
         //                push_page(pageTestFront)
         //        push_page(pageDemoMode)
         //push_page(pageGetQuad)
-        if(systemSettings.wifiPasswdArray!=null)
-        {
-            console.log("systemSettings.wifiPasswdArray",systemSettings.wifiPasswdArray.length)
-            var element
-            for(var i = 0; i < systemSettings.wifiPasswdArray.length; ++i)
-            {
-                element=systemSettings.wifiPasswdArray[i]
-                console.log("ssid:",element.ssid)
-                console.log("psk:",element.psk)
-                console.log("encryp:",element.encryp)
-            }
-        }
+        //        if(systemSettings.wifiPasswdArray!=null)
+        //        {
+        //            console.log("systemSettings.wifiPasswdArray",systemSettings.wifiPasswdArray.length)
+        //            var element
+        //            for(var i = 0; i < systemSettings.wifiPasswdArray.length; ++i)
+        //            {
+        //                element=systemSettings.wifiPasswdArray[i]
+        //                console.log("ssid:",element.ssid)
+        //                console.log("psk:",element.psk)
+        //                console.log("encryp:",element.encryp)
+        //            }
+        //        }
         if(systemSettings.brightness<1 || systemSettings.brightness>255)
         {
             systemSettings.brightness=200
@@ -1136,6 +1137,10 @@ ApplicationWindow {
     Component {
         id: pageDemoMode
         PageDemoMode {}
+    }
+    Component {
+        id: pageMultistageShow
+        PageMultistageShow {}
     }
     function isExistView(pageName) {
         return stackView.find(function(item,index){

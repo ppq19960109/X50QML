@@ -553,32 +553,38 @@ Item {
                     var cookItem
                     if(index==0)
                     {
-                        if(QmlDevState.state.LMultiMode!==0)
-                            return
-                        if(lStOvState===workStateEnum.WORKSTATE_PAUSE)
+                        if(QmlDevState.state.LMultiMode===multiModeEnum.NONE)
                         {
-                            loaderPauseSteamShow(cookWorkPosEnum.LEFT)
+                            if(lStOvState===workStateEnum.WORKSTATE_PAUSE)
+                            {
+                                loaderPauseSteamShow(cookWorkPosEnum.LEFT)
+                            }
+                            else if(lStOvState===workStateEnum.WORKSTATE_PAUSE_RESERVE)
+                            {
+                                cookItem =CookFunc.getDefCookItem()
+                                cookItem.cookPos=cookWorkPosEnum.LEFT
+                                loaderCookReserve(cookItem.cookPos,cookItem)
+                            }
                         }
-                        else if(lStOvState===workStateEnum.WORKSTATE_PAUSE_RESERVE)
+                        else if(QmlDevState.state.LMultiMode===multiModeEnum.MULTISTAGE && lStOvState!==workStateEnum.WORKSTATE_STOP && lStOvState!==workStateEnum.WORKSTATE_FINISH && lMultiStageContent!=null)
                         {
-                            cookItem =CookFunc.getDefCookItem()
-                            cookItem.cookPos=cookWorkPosEnum.LEFT
-                            loaderCookReserve(cookItem.cookPos,cookItem)
+                            push_page(pageMultistageShow)
                         }
                     }
                     else
                     {
-                        if(QmlDevState.state.RMultiMode!==0)
-                            return
-                        if(rStOvState===workStateEnum.WORKSTATE_PAUSE)
+                        if(QmlDevState.state.RMultiMode===multiModeEnum.NONE)
                         {
-                            loaderPauseSteamShow(cookWorkPosEnum.RIGHT)
-                        }
-                        else if(rStOvState===workStateEnum.WORKSTATE_PAUSE_RESERVE)
-                        {
-                            cookItem =CookFunc.getDefCookItem()
-                            cookItem.cookPos=cookWorkPosEnum.RIGHT
-                            loaderCookReserve(cookItem.cookPos,cookItem)
+                            if(rStOvState===workStateEnum.WORKSTATE_PAUSE)
+                            {
+                                loaderPauseSteamShow(cookWorkPosEnum.RIGHT)
+                            }
+                            else if(rStOvState===workStateEnum.WORKSTATE_PAUSE_RESERVE)
+                            {
+                                cookItem =CookFunc.getDefCookItem()
+                                cookItem.cookPos=cookWorkPosEnum.RIGHT
+                                loaderCookReserve(cookItem.cookPos,cookItem)
+                            }
                         }
                     }
                 }

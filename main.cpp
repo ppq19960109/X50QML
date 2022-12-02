@@ -51,25 +51,22 @@ int main(int argc, char *argv[])
     app.setOrganizationDomain("Marssenger.com"); //2
     app.setApplicationName("X8GCZ01"); //3
 
-    int fontId = QFontDatabase::addApplicationFont("SourceHanSansCN-Regular.ttf");
-    //    int fontId = QFontDatabase::addApplicationFont("simfang.ttf");
-    QStringList fontFamilies = QFontDatabase::applicationFontFamilies(fontId);
-    qDebug()<<"fontfamilies: "<<fontFamilies;
+    //    int fontId = QFontDatabase::addApplicationFont("SourceHanSansCN-Regular.ttf");
+    //    QStringList fontFamilies = QFontDatabase::applicationFontFamilies(fontId);
+    //    qDebug()<<"fontfamilies: "<<fontFamilies;
 
     qDebug()<<"FontsLocation"<<QStandardPaths::standardLocations(QStandardPaths::FontsLocation);
+    //    QFontDatabase fdb;
+    //    QStringList fontList = fdb.families();
+    //    for(int i = 0; i < fontList.size(); ++i){
+    //        qDebug() << "font name" << i << ": " << fontList.at(i);
+    //    }
 
     QFont font;
-    font.setFamily("SimHei");//设置全局字体 "Source Han Sans CN" SimHei
+    font.setFamily("Source Han Sans CN");//设置全局字体 "Source Han Sans CN" SimHei
     app.setFont(font);
     //中文支持
-
     QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF-8"));
-
-    //        QFontDatabase fdb;
-    //        QStringList fontList = fdb.families();
-    //        for(int i = 0; i < fontList.size(); ++i){
-    //            qDebug() << "font name" << i << ": " << fontList.at(i);
-    //        }
 
     QQmlApplicationEngine engine;
 
