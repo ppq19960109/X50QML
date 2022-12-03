@@ -203,12 +203,6 @@ Item {
                 SendFunc.getAllToServer()
                 loaderErrorHide()
 
-                if(systemSettings.firstStartup===true)
-                {
-                    systemSettings.firstStartup=false
-                    SendFunc.enableWifi(true)
-                    loaderFirstStartupShow()
-                }
                 SendFunc.setBuzControl(buzControlEnum.STOP)
                 SendFunc.setProductionTestStatus(0)
             }
@@ -251,6 +245,13 @@ Item {
                             errorBuzzer=true
                         loaderErrorCodeShow(errorCodeShow)
                     }
+                }
+                if(systemSettings.firstStartup===true)
+                {
+                    systemSettings.firstStartup=false
+                    systemSync()
+                    SendFunc.enableWifi(true)
+                    loaderFirstStartupShow()
                 }
             }
             else if("ComSWVersion"==key)

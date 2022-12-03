@@ -377,8 +377,8 @@ Item {
                             target: modeName
                             property: "x"
                             from: 0
-                            to: -(modeName.contentWidth-width)
-                            duration: 8000
+                            to: -(modeName.contentWidth-modeName.width)
+                            duration: 5000
                             loops: 1
                             running: false
                             easing.type: Easing.Linear
@@ -388,7 +388,7 @@ Item {
                         }
                         Timer{
                             repeat: running
-                            running: modeName.contentWidth>width
+                            running: modeName.contentWidth>modeName.width
                             interval: 60000
                             triggeredOnStart: true
                             onTriggered: {

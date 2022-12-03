@@ -101,8 +101,7 @@ Item {
                 radius: height/2
             }
             onClicked: {
-                if(isExistView("PageSet")==null)
-                    push_page(pageSet,{pageSetIndex:4})
+                openWifiPage()
                 loaderMainHide()
             }
         }
