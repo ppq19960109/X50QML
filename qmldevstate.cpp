@@ -95,7 +95,7 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     stateType.append(QPair<QString,int>("LoadPowerState",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("PCBInput",LINK_VALUE_TYPE_ARRAY));
 
-    stateType.append(QPair<QString,int>("Gating",LINK_VALUE_TYPE_NUM));
+    stateType.append(QPair<QString,int>("PushRod",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("Weight",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("RCookbookName",LINK_VALUE_TYPE_STRING));
 
@@ -107,7 +107,7 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     setState("HoodLight",0);
     setState("RStoveStatus",0);
     setState("Weight",1);
-    setState("Gating",0);
+    setState("PushRod",0);
 #ifndef USE_RK3308
     setState("SysPower",1);
     setState("LoadPowerState",7);
