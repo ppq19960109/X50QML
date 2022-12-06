@@ -129,7 +129,13 @@ Item {
                         {
                             if(stOvState===workStateEnum.WORKSTATE_STOP)
                                 push_page(pageSteamOvenConfig,{cookWorkPos:index})
-                            else if(stOvState===workStateEnum.WORKSTATE_PAUSE||stOvState===workStateEnum.WORKSTATE_PAUSE_RESERVE)
+                            else if(stOvState===workStateEnum.WORKSTATE_PAUSE)
+                            {
+                                if(errorCodeShow!==0)
+                                    loaderErrorCodeShow(errorCodeShow,index)
+                                SendFunc.setCookOperation(index,workOperationEnum.START)
+                            }
+                            else if(stOvState===workStateEnum.WORKSTATE_PAUSE_RESERVE)
                                 SendFunc.setCookOperation(index,workOperationEnum.START)
                             else
                                 SendFunc.setCookOperation(index,workOperationEnum.PAUSE)

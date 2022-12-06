@@ -25,10 +25,8 @@ Item {
                     loaderSteamShow("当前模式需要预热\n请您在左腔预热完成后再放入食材","开始",cookItem,5)
                 return
             }
+            startCooking(cookItem,cookSteps)
         }
-        startCooking(cookItem,cookSteps)
-        cookSteps=undefined
-        //        cookItem=undefined
     }
 
     Component.onCompleted: {
