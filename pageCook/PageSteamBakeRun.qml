@@ -29,11 +29,12 @@ Rectangle {
     }
 
     function cookConfirm(){
+        console.log("cookConfirm",leftProgressBar.workState,rightProgressBar.workState)
         if(leftProgressBar.workState===workStateEnum.WORKSTATE_FINISH)
         {
             SendFunc.setCookOperation(cookWorkPosEnum.LEFT,workOperationEnum.CONFIRM)
         }
-        if(rightProgressBar.workState===workStateEnum.WORKSTATE_FINISH)
+        if(rightProgressBar.workState===workStateEnum.WORKSTATE_FINISH||rightProgressBar.workState===workStateEnum.WORKSTATE_CLEAN_FINISH)
         {
             SendFunc.setCookOperation(cookWorkPosEnum.RIGHT,workOperationEnum.CONFIRM)
         }
@@ -301,7 +302,7 @@ Rectangle {
             workState:QmlDevState.state.RStOvState
             workMode:workState===workStateEnum.WORKSTATE_STOP?qsTr("右腔烹饪"):"智能模式"
             canvasDiameter:width
-            setTimeLeft:QmlDevState.state.RStOvSetTimerLeft/60
+            setTimeLeft:Math.ceil(QmlDevState.state.RStOvSetTimerLeft/60)
             orderTimeLeft:QmlDevState.state.RStOvOrderTimerLeft
             percent:(workState === workStateEnum.WORKSTATE_RESERVE|| workState === workStateEnum.WORKSTATE_PAUSE_RESERVE)?(100-100*orderTimeLeft/QmlDevState.state.RStOvOrderTimer):(100-Math.floor(100*QmlDevState.state.RStOvSetTimerLeft/QmlDevState.state.RStOvSetTimer))
             workTime:
@@ -320,7 +321,7 @@ Rectangle {
                     return setTimeLeft
                 }
             }
-            workTemp:qsTr(QmlDevState.state.RStOvSetTemp+"℃")
+            workTemp:qsTr(QmlDevState.state.RStOvRealTemp+"℃ "+QmlDevState.state.RStOvSetTemp+"℃")
             MouseArea{
                 anchors.fill: parent
                 propagateComposedEvents: true
@@ -353,15 +354,21 @@ Rectangle {
                     }
                 }
                 onPressed: {
-                    if(rightProgressBar.workState === workStateEnum.WORKSTATE_FINISH)
+                    if(rightProgressBar.workState === workStateEnum.WORKSTATE_FINISH||rightProgressBar.workState === workStateEnum.WORKSTATE_CLEAN_FINISH)
                         mouse.accepted = false
                 }
                 onReleased: {
-                    if(rightProgressBar.workState === workStateEnum.WORKSTATE_FINISH)
+                    if(rightProgressBar.workState === workStateEnum.WORKSTATE_FINISH||rightProgressBar.workState === workStateEnum.WORKSTATE_CLEAN_FINISH)
                         mouse.accepted = false
                 }
             }
-            onConfirm:cookConfirm()
+            onConfirm:{
+                if(index==0)
+                    cookConfirm()
+                else
+                    load_page("pagePanguClear")
+
+            }
             onWorkStateChanged: {
                 if(workState===workStateEnum.WORKSTATE_STOP || workState === workStateEnum.WORKSTATE_FINISH)
                 {
@@ -370,7 +377,7 @@ Rectangle {
             }
         }
         Button{
-            visible: rightProgressBar.workState !== workStateEnum.WORKSTATE_STOP && rightProgressBar.workState !== workStateEnum.WORKSTATE_FINISH
+            visible: rightProgressBar.workState !== workStateEnum.WORKSTATE_STOP && rightProgressBar.workState !== workStateEnum.WORKSTATE_FINISH && rightProgressBar.workState !== workStateEnum.WORKSTATE_CLEAN_FINISH
             width:90
             height: width
             anchors.left: rightProgressBar.left
@@ -389,7 +396,7 @@ Rectangle {
             }
         }
         Button{
-            visible: rightProgressBar.workState !== workStateEnum.WORKSTATE_STOP  && rightProgressBar.workState !== workStateEnum.WORKSTATE_FINISH
+            visible: rightProgressBar.workState !== workStateEnum.WORKSTATE_STOP  && rightProgressBar.workState !== workStateEnum.WORKSTATE_FINISH && rightProgressBar.workState !== workStateEnum.WORKSTATE_CLEAN_FINISH
             width:90
             height: width
             anchors.right: rightProgressBar.right

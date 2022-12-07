@@ -23,6 +23,7 @@ ApplicationWindow {
     property int demoModeStatus:0
     property bool steamingStatus:false
     property bool errorBuzzer:false
+    property int curClearMode:0
 
     //    readonly property string uiVersion:"1.1"
     readonly property string productionTestWIFISSID:"moduletest"
@@ -39,8 +40,8 @@ ApplicationWindow {
         ,{"modelData":8,"temp":60,"time":30,"minTemp":50,"maxTemp":120}]
     readonly property var rightWorkModeModelEnum:[{"modelData":9,"temp":100,"time":30,"minTemp":40,"maxTemp":100}]
 
-    readonly property var workStateEnum:{"WORKSTATE_STOP":0,"WORKSTATE_RESERVE":1,"WORKSTATE_PREHEAT":2,"WORKSTATE_RUN":3,"WORKSTATE_FINISH":4,"WORKSTATE_PAUSE":5,"WORKSTATE_PAUSE_RESERVE":6,"WORKSTATE_WATER":7,"WORKSTATE_CLEAN":8}
-    readonly property var workStateArray:["停止","预约中","预热中","运行中","烹饪完成","暂停中","预约暂停中","进水中","清洁中"]
+    readonly property var workStateEnum:{"WORKSTATE_STOP":0,"WORKSTATE_RESERVE":1,"WORKSTATE_PREHEAT":2,"WORKSTATE_RUN":3,"WORKSTATE_FINISH":4,"WORKSTATE_PAUSE":5,"WORKSTATE_PAUSE_RESERVE":6,"WORKSTATE_WATER":7,"WORKSTATE_CLEAN":8,"WORKSTATE_CLEAN_FINISH":9}
+    readonly property var workStateArray:["停止","预约中","预热中","运行中","烹饪完成","暂停中","预约暂停中","进水中","清洁中","清洁完成"]
 
     readonly property var workOperationEnum:{"START":0,"PAUSE":1,"CANCEL":2,"CONFIRM":3,"RUN_NOW":4}
 
@@ -952,6 +953,10 @@ ApplicationWindow {
         id: pageWeighing
         PageWeighing {}
     }
+    Component {
+        id: pagePanguClear
+        PagePanguClear {}
+    }
     function isExistView(pageName) {
         //        console.log("isExistView:",pageName)
         return stackView.find(function(item,index){
@@ -1093,6 +1098,9 @@ ApplicationWindow {
         case "pageWeighing":
             stackView.push(pageWeighing, args,StackView.Immediate)
             break;
+        case "pagePanguClear":
+            stackView.push(pagePanguClear, args,StackView.Immediate)
+            break;
         }
 
         console.log("stackView depth:"+stackView.depth)
@@ -1115,26 +1123,26 @@ ApplicationWindow {
             if(cookSteps.length===1 && (undefined === cookSteps[0].number || 0 === cookSteps[0].number))
             {
                 SendFunc.setCooking(cookSteps,root.orderTime,root.cookPos)
-                //                                if(cookWorkPosEnum.LEFT===root.cookPos)
-                //                                {
-                //                                    QmlDevState.setState("LStOvState",2)
-                //                                    QmlDevState.setState("LStOvMode",cookSteps[0].mode)
-                //                                    QmlDevState.setState("LStOvSetTemp",cookSteps[0].temp)
-                //                                    QmlDevState.setState("LStOvRealTemp",cookSteps[0].temp)
-                //                                    QmlDevState.setState("LStOvSetTimer",cookSteps[0].time)
-                //                                    QmlDevState.setState("LStOvSetTimerLeft",cookSteps[0].time/4)
-                //                                    QmlDevState.setState("LStOvOrderTimer",cookSteps[0].time)
-                //                                    QmlDevState.setState("LStOvOrderTimerLeft",cookSteps[0].time)
-                //                                }
-                //                                else
-                //                                {
-                //                                    QmlDevState.setState("RStOvState",1)
-                //                                    QmlDevState.setState("RStOvRealTemp",cookSteps[0].temp)
-                //                                    QmlDevState.setState("RStOvSetTimerLeft",cookSteps[0].time)
-                //                                    QmlDevState.setState("RStOvSetTimer",cookSteps[0].time)
-                //                                    QmlDevState.setState("RStOvOrderTimer",cookSteps[0].time)
-                //                                    QmlDevState.setState("RStOvOrderTimerLeft",cookSteps[0].time/2)
-                //                                }
+                //                if(cookWorkPosEnum.LEFT===root.cookPos)
+                //                {
+                //                    QmlDevState.setState("LStOvState",2)
+                //                    QmlDevState.setState("LStOvMode",cookSteps[0].mode)
+                //                    QmlDevState.setState("LStOvSetTemp",cookSteps[0].temp)
+                //                    QmlDevState.setState("LStOvRealTemp",cookSteps[0].temp)
+                //                    QmlDevState.setState("LStOvSetTimer",cookSteps[0].time)
+                //                    QmlDevState.setState("LStOvSetTimerLeft",cookSteps[0].time/4)
+                //                    QmlDevState.setState("LStOvOrderTimer",cookSteps[0].time)
+                //                    QmlDevState.setState("LStOvOrderTimerLeft",cookSteps[0].time)
+                //                }
+                //                else
+                //                {
+                QmlDevState.setState("RStOvState",workStateEnum.WORKSTATE_CLEAN_FINISH)
+                QmlDevState.setState("RStOvRealTemp",cookSteps[0].temp)
+                QmlDevState.setState("RStOvSetTimerLeft",cookSteps[0].time)
+                QmlDevState.setState("RStOvSetTimer",cookSteps[0].time)
+                QmlDevState.setState("RStOvOrderTimer",cookSteps[0].time)
+                QmlDevState.setState("RStOvOrderTimerLeft",cookSteps[0].time/2)
+                //                }
             }
             else
             {
@@ -1168,6 +1176,9 @@ ApplicationWindow {
         }
         else
         {
+            curClearMode=0
+            if(root.clearMode!=null)
+                curClearMode=root.clearMode
             SendFunc.setPanguMultiCooking(cookSteps,root.orderTime)
         }
         var page=isExistView("pageSteamBakeRun")

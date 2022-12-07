@@ -48,13 +48,15 @@ public:
     void setLocalConnected(const int connected);
     int getLocalConnected() const;
 
-    void setState(const QString& name,const QVariant& value);
+    Q_INVOKABLE void setState(const QString& name,const QVariant& value);
     QVariantMap getState();
     //    static QmlDevState *qmlAttachedProperties(QObject *);
     QVariantList recipe[6];
     Q_INVOKABLE QVariantList getRecipe(const int index);
     QVariantList panguRecipes[2];
     Q_INVOKABLE QVariantList getPanguRecipe(const int index);
+    QVariantList clearMode;
+    Q_INVOKABLE QVariantList getClearMode();
 
     QVariantList history;
     Q_INVOKABLE QVariantList getHistory();

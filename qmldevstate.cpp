@@ -292,6 +292,11 @@ QVariantList QmlDevState::getPanguRecipe(const int index)
 {
     return panguRecipes[index];
 }
+
+QVariantList QmlDevState::getClearMode()
+{
+    return clearMode;
+}
 void QmlDevState::executeShell(const QString cmd)
 {
     qDebug() << "executeShell:" << cmd;
@@ -398,19 +403,31 @@ void QmlDevState::readPanguRecipes()
         QJsonValue cookSteps =obj.value("cookSteps");
         QJsonValue details =obj.value("details");
         QJsonValue cookType =obj.value("cookType");
-        QJsonValue repeat =obj.value("repeat");
+        QJsonValue clearMode =obj.value("clearMode");
         int recipeType =obj.value("recipeType").toInt();
         QVariantMap info;
         info.insert("dishName",dishName.toString());
         info.insert("imgUrl",imgUrl.toString());
         info.insert("details",details.toString());
         info.insert("cookType",cookType.toInt());
+        info.insert("clearMode",clearMode.toInt());
         info.insert("recipeType",recipeType);
         info.insert("cookSteps",cookSteps.toArray());
-        info.insert("repeat",repeat.toInt());
         panguRecipes[recipeType-1].append(info);
     }
 //    qDebug()<<"panguRecipes:"<<panguRecipes[0];
+    QJsonArray clear = object.value("clear").toArray();
+    qDebug()<<"clear:"<<clear.size();
+    for(int i=0;i<clear.size();++i)
+    {
+        QJsonObject obj=clear.at(i).toObject();
+        QJsonValue dishName =obj.value("dishName");
+        QJsonValue cookSteps =obj.value("cookSteps");
+        QVariantMap info;
+        info.insert("dishName",dishName.toString());
+        info.insert("cookSteps",cookSteps.toArray());
+        clearMode.append(info);
+    }
 }
 
 int QmlDevState::sendToServer(QString data)

@@ -119,6 +119,7 @@ function getDefHistory()
     param.recipeid=0
     param.recipeType=0
     param.cookPos=0
+    param.clearMode=0
     param.orderTime=0
     return param
 }

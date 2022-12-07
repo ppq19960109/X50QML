@@ -30,7 +30,7 @@ Item {
         anchors.bottom: topBar.top
         Item{
             id:leftContent
-            width:190
+            width:195
             height:parent.height
 
             ListView{
@@ -61,7 +61,7 @@ Item {
 
                         Text{
                             text: modelData
-                            font.pixelSize: menuList.currentIndex===index?45:35
+                            font.pixelSize: menuList.currentIndex===index?40:35
                             anchors.centerIn: parent
                             color:menuList.currentIndex===index?themesTextColor:themesTextColor2
                         }

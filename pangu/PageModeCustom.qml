@@ -15,13 +15,14 @@ Item {
         steps.temp=parseInt(tempPathView.model[tempPathView.currentIndex])
         steps.time=parseInt(timePathView.model[timePathView.currentIndex])*60
         steps.motorSpeed=parseInt(speedPathView.model[speedPathView.currentIndex])
-        steps.waterTime=parseInt(waterPathView.model[waterPathView.currentIndex])
-        steps.mode=17
+        steps.waterTime=Math.ceil(parseInt(waterPathView.model[waterPathView.currentIndex])/11)
+        steps.mode=3
         steps.fire=5
         steps.motorDir=0
         steps.fan=1
         steps.hoodSpeed=1
         steps.repeat=0
+        steps.repeatStep=0
         list.push(steps)
 
         var para =CookFunc.getDefHistory()
@@ -65,7 +66,7 @@ Item {
             array.push(i+"分钟")
         }
         timePathView.model=array
-        timePathView.currentIndex=19
+        timePathView.currentIndex=9
         array = new Array
         for( i=0; i<= 20; ++i) {
             array.push(i+"档")
@@ -77,7 +78,7 @@ Item {
             array.push(i+"ml")
         }
         waterPathView.model=array
-        waterPathView.currentIndex=100
+        waterPathView.currentIndex=0
 
         SendFunc.permitSteamStartStatus(1)
     }

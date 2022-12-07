@@ -19,7 +19,7 @@ Item {
     property alias workTime:time.text
     property alias workTemp:temp.text
 
-    signal confirm()
+    signal confirm(int index)
     function updatePaint()
     {
         canvas.requestPaint()
@@ -59,7 +59,7 @@ Item {
     property real r: canvas.width/2-lineWidth/2
     Canvas{
         id: canvas
-        visible: !(workState === workStateEnum.WORKSTATE_FINISH||workState === workStateEnum.WORKSTATE_STOP||workState === workStateEnum.WORKSTATE_PREHEAT)
+        visible: !(workState === workStateEnum.WORKSTATE_FINISH||workState === workStateEnum.WORKSTATE_CLEAN_FINISH||workState === workStateEnum.WORKSTATE_STOP||workState === workStateEnum.WORKSTATE_PREHEAT)
         width: canvasDiameter
         height: width
 //        canvasSize.width:canvasDiameter
@@ -69,7 +69,7 @@ Item {
         //renderTarget:Canvas.FramebufferObject
         anchors.centerIn: parent
         onPaint: {
-            if(workState === workStateEnum.WORKSTATE_FINISH||workState === workStateEnum.WORKSTATE_STOP||workState === workStateEnum.WORKSTATE_PREHEAT)
+            if(workState === workStateEnum.WORKSTATE_FINISH||workState === workStateEnum.WORKSTATE_CLEAN_FINISH||workState === workStateEnum.WORKSTATE_STOP||workState === workStateEnum.WORKSTATE_PREHEAT)
             {
                 return
             }
@@ -185,11 +185,11 @@ Item {
 
         Text{
             id:state
-            color:(workState === workStateEnum.WORKSTATE_FINISH) ?workColor:"#D7D7D7"
+            color:(workState === workStateEnum.WORKSTATE_FINISH||workState === workStateEnum.WORKSTATE_CLEAN_FINISH) ?workColor:"#D7D7D7"
             visible: workState !== workStateEnum.WORKSTATE_STOP
-            font.pixelSize:(workState === workStateEnum.WORKSTATE_FINISH) ? 45:32
+            font.pixelSize:(workState === workStateEnum.WORKSTATE_FINISH||workState === workStateEnum.WORKSTATE_CLEAN_FINISH) ? 45:32
             anchors.top:parent.top
-            anchors.topMargin: (workState === workStateEnum.WORKSTATE_FINISH) ? 116:75
+            anchors.topMargin: 75
             anchors.horizontalCenter: parent.horizontalCenter
             //            horizontalAlignment :Text.AlignHCenter
             //            verticalAlignment :Text.AlignHCenter
@@ -197,7 +197,7 @@ Item {
         }
         Item
         {
-            visible: !(workState === workStateEnum.WORKSTATE_FINISH||workState === workStateEnum.WORKSTATE_STOP)
+            visible: !(workState === workStateEnum.WORKSTATE_FINISH||workState === workStateEnum.WORKSTATE_CLEAN_FINISH||workState === workStateEnum.WORKSTATE_STOP)
             anchors.top:parent.top
             anchors.topMargin:115
             anchors.horizontalCenter: parent.horizontalCenter
@@ -234,11 +234,34 @@ Item {
             }
         }
         Button{
-            visible: workState === workStateEnum.WORKSTATE_FINISH
+            visible: workState === workStateEnum.WORKSTATE_FINISH && device != 0
             width:120
-            height: 60
+            height: 50
             anchors.top: parent.top
-            anchors.topMargin: 185
+            anchors.topMargin: 145
+            anchors.horizontalCenter: parent.horizontalCenter
+            background:Rectangle{
+                color:"#484848"
+                radius: 8
+            }
+            Text{
+                color:"white"
+                font.pixelSize: 28
+                anchors.centerIn: parent
+                //                horizontalAlignment :Text.AlignHCenter
+                //                verticalAlignment :Text.AlignHCenter
+                text: qsTr("清洁模式")
+            }
+            onClicked:{
+                confirm(1)
+            }
+        }
+        Button{
+           visible: workState === workStateEnum.WORKSTATE_FINISH || workState === workStateEnum.WORKSTATE_CLEAN_FINISH
+            width:120
+            height: 50
+            anchors.top: parent.top
+            anchors.topMargin: 205
             anchors.horizontalCenter: parent.horizontalCenter
             background:Rectangle{
                 color:"#484848"
@@ -253,7 +276,7 @@ Item {
                 text: qsTr("返回")
             }
             onClicked:{
-                confirm()
+                confirm(0)
             }
         }
         Image {
@@ -266,7 +289,7 @@ Item {
         Text{
             id:mode
             width:200
-            visible: workState !== workStateEnum.WORKSTATE_FINISH
+            visible: workState !== workStateEnum.WORKSTATE_FINISH && workState !== workStateEnum.WORKSTATE_CLEAN_FINISH
             color:themesTextColor2
             font.pixelSize: workState === workStateEnum.WORKSTATE_STOP?32:30
             anchors.top:parent.top
@@ -278,7 +301,7 @@ Item {
         }
         Text{
             id:temp
-            visible: !(workState === workStateEnum.WORKSTATE_FINISH||workState === workStateEnum.WORKSTATE_STOP)
+            visible: !(workState === workStateEnum.WORKSTATE_FINISH||workState === workStateEnum.WORKSTATE_CLEAN_FINISH||workState === workStateEnum.WORKSTATE_STOP)
             anchors.top: parent.top
             anchors.topMargin: 230
             anchors.horizontalCenter: parent.horizontalCenter

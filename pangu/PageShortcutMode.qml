@@ -18,7 +18,7 @@ Item{
         cellHeight: height/2
         flow:GridView.FlowTopToBottom
         clip: true
-        model:["+自定义","称重","五谷豆浆","烧肉","揉面","慢炖","干磨","低温慢煮","榨汁","煮饭","清洗"]
+        model:["+自定义","称重","清洗","五谷豆浆","烧肉","揉面","慢炖","干磨","低温慢煮","榨汁","煮饭"]
         delegate:Item{
             width: 250
             height: parent.height/2
@@ -46,6 +46,9 @@ Item{
                         break
                     case 1:
                         load_page("pageWeighing")
+                        break
+                    case 2:
+                        load_page("pagePanguClear")
                         break
                     }
                 }
