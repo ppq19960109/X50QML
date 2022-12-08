@@ -114,6 +114,14 @@ function otaPowerRquest(request)
     Data.OTAPowerRquest = request
     setToServer(Data)
 }
+function tempControlRquest(temp)
+{
+    var Data={}
+    Data.RAuxiliarySwitch = true
+    Data.RAuxiliaryTemp = temp
+    SendFunc.setToServer(Data)
+    timer_auxiliary.restart()
+}
 function enableWifi(enable)
 {
     var Data={}

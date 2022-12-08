@@ -124,13 +124,12 @@ Item {
                     onClick: {
                         if(clickIndex==1)
                         {
-                            var Data={}
-                            Data.RAuxiliarySwitch = true
-                            Data.RAuxiliaryTemp = tempPathView.model[tempPathView.currentIndex]
-                            if(oilTempPageSwitch.checked==false)
-                                Data.OilTempSwitch=true
-                            SendFunc.setToServer(Data)
-                            timer_auxiliary.restart()
+//                            var Data={}
+//                            Data.RAuxiliarySwitch = true
+//                            Data.RAuxiliaryTemp = tempPathView.model[tempPathView.currentIndex]
+//                            SendFunc.setToServer(Data)
+//                            timer_auxiliary.restart()
+                            SendFunc.tempControlRquest(tempPathView.model[tempPathView.currentIndex])
                         }
                         else
                         {

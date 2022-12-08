@@ -10,34 +10,18 @@ Item {
 
     function getRecipe(index)
     {
-        recipeListView.model=QmlDevState.getRecipe(index);
+        recipeListView.model=QmlDevState.getTempRecipes(index);
     }
     function steamStart(reserve)
     {
         var cookItem=recipeListView.model[recipeListView.currentIndex]
-        var cookSteps=JSON.parse(cookItem.cookSteps)
-        if(reserve)
-        {
-            loaderCookReserve(cookWorkPosEnum.LEFT,cookItem)
-        }
-        else
-        {
-            if(systemSettings.cookDialog[4] === true)
-            {
-                if(CookFunc.isSteam(cookSteps))
-                    loaderSteamShow("请将食物放入左腔，水箱中加满水","开始",cookItem,4)
-                else
-                    loaderSteamShow("当前模式需要预热\n请您在左腔预热完成后再放入食材","开始",cookItem,4)
-                return
-            }
-        }
-        startCooking(cookItem,cookSteps)
+
+        SendFunc.tempControlRquest(cookItem.temp)
     }
 
     Component {
         id: recipeDelegate
         Item{
-            readonly property int cookType:CookFunc.getCookType(modelData.cookSteps)
             width:recipeListView.currentIndex===index?174:152
             height:recipeListView.currentIndex===index?252:210
             anchors.verticalCenter: parent.verticalCenter
@@ -75,7 +59,13 @@ Item {
                 smooth:false
                 anchors.top: recipeImg.top
                 anchors.left: recipeImg.left
-                source: themesPicturesPath+cookModeUncheckedImg[cookType]
+                source: themesPicturesPath+(recipeListView.currentIndex===index?"icon_temp_checked.png":"icon_temp_unchecked.png")
+                Text{
+                    text: modelData.temp+"℃"
+                    font.pixelSize: recipeListView.currentIndex===index?24:17
+                    anchors.centerIn: parent
+                    color:"#fff"
+                }
             }
             Button {
                 width: parent.width-10
@@ -115,11 +105,10 @@ Item {
             }
             ListView{
                 id:menuList
-                model:['蔬菜杂粮','家禽肉类','河海鲜类','烘焙甜点','其他食材']
+                model:['油炸菜','水煮菜','香煎菜','清炒菜']
                 width:parent.width
-                anchors.top: parent.top
-                anchors.topMargin: 15
-                anchors.bottom: parent.bottom
+                height: 62*4
+                anchors.verticalCenter: parent.verticalCenter
                 orientation:ListView.Vertical
                 currentIndex:0
                 interactive:false
@@ -185,7 +174,7 @@ Item {
                 clip: true
                 //cacheItemCount:5
                 currentIndex:0
-                pathItemCount:5
+                pathItemCount:3
                 interactive: true
                 preferredHighlightBegin: 0.5;
                 preferredHighlightEnd: 0.5;
@@ -207,11 +196,9 @@ Item {
                 anchors.verticalCenter: recipeListView.verticalCenter
                 anchors.right: parent.right
                 anchors.rightMargin: 30
+                reserveVisible:false
                 onStartUp:{
                     steamStart(false)
-                }
-                onReserve:{
-                    steamStart(true)
                 }
             }
 

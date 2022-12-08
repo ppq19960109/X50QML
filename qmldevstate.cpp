@@ -174,6 +174,11 @@ QString QmlDevState::getRecipeName(const int recipeId)
     return "";
 }
 
+QVariantList QmlDevState::getTempRecipes(const int index)
+{
+    return tempRecipes[index];
+}
+
 void QmlDevState::startLocalConnect()
 {
     client.startConnectTimer();
@@ -257,6 +262,29 @@ void QmlDevState::readRecipeDetails()
         recipe[recipeType.toInt()-1].append(info);
     }
     //        qDebug()<<"recipeMap:"<<recipeMap;
+    recipes = object.value("tempRecipes").toArray();
+    qDebug()<<"tempRecipes:"<<recipes.size();
+    for(int i=0;i<recipes.size();++i)
+    {
+        QJsonObject obj=recipes.at(i).toObject();
+        QJsonValue imgUrl =obj.value("imgUrl");
+        QJsonValue ingredients =obj.value("ingredients");
+        QJsonArray details =obj.value("details").toArray();
+        QJsonValue dishName =obj.value("dishName");
+        QJsonValue temp =obj.value("temp");
+        QJsonValue recipeType =obj.value("recipeType");
+        QJsonValue cookPos =obj.value("cookPos");
+
+        QVariantMap info;
+        info.insert("imgUrl",imgUrl.toString());
+        info.insert("ingredients",ingredients.toString());
+        info.insert("details",details);
+        info.insert("dishName",dishName.toString());
+        info.insert("temp",temp.toInt());
+        info.insert("cookPos",cookPos.toInt());
+
+        tempRecipes[recipeType.toInt()-1].append(info);
+    }
 }
 
 int QmlDevState::sendToServer(QString data)

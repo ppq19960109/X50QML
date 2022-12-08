@@ -47,6 +47,9 @@ public:
     QVariantList recipe[6];
     Q_INVOKABLE QVariantList getRecipe(const int index);
     Q_INVOKABLE QString getRecipeName(const int recipeId);
+
+    QVariantList tempRecipes[4];
+    Q_INVOKABLE QVariantList getTempRecipes(const int index);
     Q_INVOKABLE void startLocalConnect();
 
     LocalClient client;

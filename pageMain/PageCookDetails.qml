@@ -4,28 +4,35 @@ import QtQuick.Layouts 1.12
 import "qrc:/pageCook"
 import "../"
 import "qrc:/CookFunc.js" as CookFunc
-
+import "qrc:/SendFunc.js" as SendFunc
 Item {
     property string name: "PageCookDetails"
     property var cookItem
     function steamStart(reserve)
     {
-        var cookSteps=JSON.parse(cookItem.cookSteps)
-        if(reserve)
+        if(cookItem.cookPos===cookWorkPosEnum.LEFT)
         {
-            loaderCookReserve(cookWorkPosEnum.LEFT,cookItem)
+            var cookSteps=JSON.parse(cookItem.cookSteps)
+            if(reserve)
+            {
+                loaderCookReserve(cookWorkPosEnum.LEFT,cookItem)
+            }
+            else
+            {
+                if(systemSettings.cookDialog[5] === true)
+                {
+                    if(CookFunc.isSteam(cookSteps))
+                        loaderSteamShow("请将食物放入左腔，水箱中加满水","开始",cookItem,5)
+                    else
+                        loaderSteamShow("当前模式需要预热\n请您在左腔预热完成后再放入食材","开始",cookItem,5)
+                    return
+                }
+                startCooking(cookItem,cookSteps)
+            }
         }
         else
         {
-            if(systemSettings.cookDialog[5] === true)
-            {
-                if(CookFunc.isSteam(cookSteps))
-                    loaderSteamShow("请将食物放入左腔，水箱中加满水","开始",cookItem,5)
-                else
-                    loaderSteamShow("当前模式需要预热\n请您在左腔预热完成后再放入食材","开始",cookItem,5)
-                return
-            }
-            startCooking(cookItem,cookSteps)
+            SendFunc.tempControlRquest(cookItem.temp)
         }
     }
 
@@ -53,8 +60,8 @@ Item {
 
             Image{
                 id:recipeImg
-//                width: tabBar.currentIndex==0?164:210
-//                height: tabBar.currentIndex==0?252:122
+                //                width: tabBar.currentIndex==0?164:210
+                //                height: tabBar.currentIndex==0?252:122
                 anchors.centerIn: parent
                 asynchronous:true
                 smooth:false
@@ -220,6 +227,7 @@ Item {
             anchors.verticalCenter: parent.verticalCenter
             anchors.right: parent.right
             anchors.rightMargin: 30
+            reserveVisible:cookItem.cookPos===cookWorkPosEnum.LEFT
             onStartUp:{
                 steamStart(false)
             }

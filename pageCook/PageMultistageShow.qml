@@ -89,7 +89,7 @@ Item {
                     anchors.top: parent.top
                     anchors.topMargin: 130
                     anchors.horizontalCenter: parent.horizontalCenter
-                    text: qsTr(CookFunc.workModeName(modelData.mode))
+                    text: CookFunc.workModeName(modelData.mode)+(modelData.steamGear!=null?modelData.steamGear+"档":"")
                 }
                 Text{
                     color:themesTextColor2
