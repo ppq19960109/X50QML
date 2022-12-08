@@ -46,7 +46,7 @@ Item {
 
             recipe.visible=true
             topBar.name=root.dishName
-            cookTime.text="烹饪用时："+getCookTime(cookSteps)+"分钟"
+//                cookTime.text="烹饪用时："+getCookTime(cookSteps)+"分钟"
         }
         else
         {
