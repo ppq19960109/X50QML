@@ -96,7 +96,7 @@ Item {
                         {
                             if(lStOvState===workStateEnum.WORKSTATE_STOP)
                                 return ["左腔蒸烤","多段烹饪","智慧菜谱"]
-                            else if(lStOvState===workStateEnum.WORKSTATE_PAUSE)
+                            else if(lStOvState===workStateEnum.WORKSTATE_PAUSE||lStOvState===workStateEnum.WORKSTATE_PAUSE_PREHEAT)
                                 return ["继续","取消"]
                             else if(lStOvState===workStateEnum.WORKSTATE_PAUSE_RESERVE)
                                 return ["继续","取消","立即烹饪"]
@@ -109,7 +109,7 @@ Item {
                         {
                             if(rStOvState===workStateEnum.WORKSTATE_STOP)
                                 return ["右腔速蒸","辅助烹饪"]
-                            else if(rStOvState===workStateEnum.WORKSTATE_PAUSE)
+                            else if(rStOvState===workStateEnum.WORKSTATE_PAUSE||rStOvState===workStateEnum.WORKSTATE_PAUSE_PREHEAT)
                                 return ["继续","取消"]
                             else if(rStOvState===workStateEnum.WORKSTATE_PAUSE_RESERVE)
                                 return ["继续","取消","立即烹饪"]
@@ -129,7 +129,7 @@ Item {
                         {
                             if(stOvState===workStateEnum.WORKSTATE_STOP)
                                 push_page(pageSteamOvenConfig,{cookWorkPos:index})
-                            else if(stOvState===workStateEnum.WORKSTATE_PAUSE)
+                            else if(stOvState===workStateEnum.WORKSTATE_PAUSE||stOvState===workStateEnum.WORKSTATE_PAUSE_PREHEAT)
                             {
                                 if(errorCodeShow!==0)
                                     loaderErrorCodeShow(errorCodeShow,index)
@@ -303,7 +303,7 @@ Item {
                         text:{
                             if(index==0)
                             {
-                                if(lStOvState===workStateEnum.WORKSTATE_PREHEAT)
+                                if(lStOvState===workStateEnum.WORKSTATE_PREHEAT||lStOvState===workStateEnum.WORKSTATE_PAUSE_PREHEAT)
                                     return QmlDevState.state.LStOvRealTemp+"℃"
                                 else if(lStOvState===workStateEnum.WORKSTATE_RESERVE||lStOvState===workStateEnum.WORKSTATE_PAUSE_RESERVE)
                                     return lStOvOrderTimerLeft+"分钟"
@@ -312,7 +312,7 @@ Item {
                             }
                             else
                             {
-                                if(rStOvState===workStateEnum.WORKSTATE_PREHEAT)
+                                if(rStOvState===workStateEnum.WORKSTATE_PREHEAT||rStOvState===workStateEnum.WORKSTATE_PAUSE_PREHEAT)
                                     return QmlDevState.state.RStOvRealTemp+"℃"
                                 else if(rStOvState===workStateEnum.WORKSTATE_RESERVE||rStOvState===workStateEnum.WORKSTATE_PAUSE_RESERVE)
                                     return rStOvOrderTimerLeft+"分钟"

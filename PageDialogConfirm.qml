@@ -11,6 +11,7 @@ Item {
     property alias hintWidth: hint.width
     property alias hintHeight: hint.height
     property int confirmBtnWidth:0
+    property int cancelBtnWidth:0
 
     signal cancel(int index)
     signal confirm()
@@ -76,7 +77,7 @@ Item {
         Button {
             id:cancelBtn
             visible: cancelBtnText.text!=""
-            width:140+10
+            width:140+10+cancelBtnWidth
             height:50+10
             anchors.bottom:parent.bottom
             anchors.bottomMargin: 25
@@ -90,7 +91,7 @@ Item {
                 text:""
             }
             background: Rectangle {
-                width:140
+                width:140+cancelBtnWidth
                 height:50
                 anchors.centerIn: parent
                 color:themesTextColor2

@@ -304,7 +304,7 @@ Item {
 
                 if(lastLStOvState!=value && lastLStOvState>=0)
                 {
-                    if(value===workStateEnum.WORKSTATE_PAUSE||value===workStateEnum.WORKSTATE_PAUSE_RESERVE)
+                    if(value===workStateEnum.WORKSTATE_PAUSE||value===workStateEnum.WORKSTATE_PAUSE_RESERVE||value===workStateEnum.WORKSTATE_PAUSE_PREHEAT)
                     {
                         if(QmlDevState.state.LStOvDoorState===1)
                             loaderDoorAutoShow("左腔门打开，暂停烹饪","","好的",cookWorkPosEnum.LEFT)
@@ -314,7 +314,9 @@ Item {
                         if(QmlDevState.state.LStOvDoorState===0)
                         {
                             if(value===workStateEnum.WORKSTATE_STOP)
+                            {
                                 loaderDoorAutoHide(cookWorkPosEnum.LEFT)
+                            }
                         }
                     }
 
@@ -347,8 +349,8 @@ Item {
             {
                 if(value==0)
                 {
-                    if(lStOvState===workStateEnum.WORKSTATE_PAUSE||lStOvState===workStateEnum.WORKSTATE_PAUSE_RESERVE)
-                        loaderDoorAutoShow("左腔门已关闭，是否继续烹饪？","结束烹饪","继续烹饪",cookWorkPosEnum.LEFT)
+                    if(lStOvState===workStateEnum.WORKSTATE_PAUSE||lStOvState===workStateEnum.WORKSTATE_PAUSE_RESERVE||lStOvState===workStateEnum.WORKSTATE_PAUSE_PREHEAT)
+                        loaderDoorAutoRestoreShow("左腔门已关闭，是否继续烹饪？","继续烹饪",cookWorkPosEnum.LEFT)
                 }
             }
             else if("RStOvState"==key)
@@ -369,7 +371,7 @@ Item {
 
                 if(lastRStOvState!=value && lastRStOvState>=0)
                 {
-                    if(value===workStateEnum.WORKSTATE_PAUSE||value===workStateEnum.WORKSTATE_PAUSE_RESERVE)
+                    if(value===workStateEnum.WORKSTATE_PAUSE||value===workStateEnum.WORKSTATE_PAUSE_RESERVE||value===workStateEnum.WORKSTATE_PAUSE_PREHEAT)
                     {
                         if(QmlDevState.state.RStOvDoorState===1)
                             loaderDoorAutoShow("右腔门打开，暂停烹饪","","好的",cookWorkPosEnum.RIGHT)
@@ -379,7 +381,9 @@ Item {
                         if(QmlDevState.state.RStOvDoorState===0)
                         {
                             if(value===workStateEnum.WORKSTATE_STOP)
+                            {
                                 loaderDoorAutoHide(cookWorkPosEnum.RIGHT)
+                            }
                         }
                     }
                     if(lastRStOvState===workStateEnum.WORKSTATE_STOP)
@@ -403,9 +407,19 @@ Item {
             {
                 if(value==0)
                 {
-                    if(rStOvState===workStateEnum.WORKSTATE_PAUSE||rStOvState===workStateEnum.WORKSTATE_PAUSE_RESERVE)
-                        loaderDoorAutoShow("右腔门已关闭，是否继续烹饪？","结束烹饪","继续烹饪",cookWorkPosEnum.RIGHT)
+                    if(rStOvState===workStateEnum.WORKSTATE_PAUSE||rStOvState===workStateEnum.WORKSTATE_PAUSE_RESERVE||rStOvState===workStateEnum.WORKSTATE_PAUSE_PREHEAT)
+                        loaderDoorAutoRestoreShow("右腔门已关闭，是否继续烹饪？","继续烹饪",cookWorkPosEnum.RIGHT)
                 }
+            }
+            else if("LStOvPauseTimerLeft"==key)
+            {
+                if(value==0)
+                    loaderDoorAutoRestoreHide(cookWorkPosEnum.LEFT)
+            }
+            else if("RStOvPauseTimerLeft"==key)
+            {
+                if(value==0)
+                    loaderDoorAutoRestoreHide(cookWorkPosEnum.RIGHT)
             }
             else if("HoodOffLeftTime"==key)
             {
@@ -721,7 +735,6 @@ Item {
             else
                 wifiModel.append(result)
         }
-
     }
 
     Component{
@@ -815,6 +828,7 @@ Item {
         //        loaderUpdateConfirmShow()
         //       loaderUpdateResultShow("系统已更新至最新版本\n"+"1.2.0")
         //loaderScreenSaverShow()
+        //loaderDoorAutoRestoreShow("左腔门已关闭，是否继续烹饪？","继续烹饪",cookWorkPosEnum.LEFT)
     }
 
     Item{

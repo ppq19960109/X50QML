@@ -51,7 +51,7 @@ ApplicationWindow {
     readonly property var rightAssistWorkModeModelEnum:[{"modelData":10,"temp":35,"time":60,"minTemp":30,"maxTemp":50},{"modelData":9,"temp":40,"time":30,"minTemp":30,"maxTemp":50},{"modelData":11,"temp":60,"time":60,"minTemp":50,"maxTemp":105}]
 
     readonly property var workStateEnum:{"WORKSTATE_STOP":0,"WORKSTATE_RESERVE":1,"WORKSTATE_PREHEAT":2,"WORKSTATE_RUN":3,"WORKSTATE_FINISH":4,"WORKSTATE_PAUSE":5,"WORKSTATE_PAUSE_RESERVE":6,"WORKSTATE_PAUSE_PREHEAT":7}
-    readonly property var workStateChineseEnum:["停止","预约中","预热中","运行中","烹饪完成","暂停中","预约暂停中"]
+    readonly property var workStateChineseEnum:["停止","预约中","预热中","运行中","烹饪完成","暂停中","预约暂停中","预热暂停中"]
     readonly property var workOperationEnum:{"START":0,"PAUSE":1,"CANCEL":2,"CONFIRM":3,"RUN_NOW":4}
     readonly property var otaStateEnum:{"OTA_IDLE":0,"OTA_NO_FIRMWARE":1,"OTA_NEW_FIRMWARE":2,"OTA_DOWNLOAD_START":3,"OTA_DOWNLOAD_FAIL":4,"OTA_DOWNLOAD_SUCCESS":5,"OTA_INSTALL_START":6,"OTA_INSTALL_FAIL":7,"OTA_INSTALL_SUCCESS":8}
     readonly property var timingStateEnum:{"STOP":0,"RUN":1,"PAUSE":2,"CONFIRM":3}
@@ -802,17 +802,9 @@ ApplicationWindow {
         id:component_doorAuto
         PageDialogConfirm{
             onCancel: {
-                if(index>0)
-                {
-                    SendFunc.setCookOperation(cookWorkPos,workOperationEnum.CANCEL)
-                }
                 loaderAutoHide()
             }
             onConfirm:{
-                if(cancelText!="")
-                {
-                    SendFunc.setCookOperation(cookWorkPos,workOperationEnum.START)
-                }
                 loaderAutoHide()
             }
             Component.onCompleted: {
@@ -835,6 +827,50 @@ ApplicationWindow {
     }
     function loaderDoorAutoHide(cookWorkPos){
         if(loaderAuto.sourceComponent === component_doorAuto)
+        {
+            if(loaderAuto.item.cookWorkPos===cookWorkPos)
+                loaderAuto.sourceComponent = null
+        }
+    }
+    Component{
+        id:component_doorAutoRestore
+        PageDialogConfirm{
+            cancelText:"结束烹饪("+(cookWorkPos===cookWorkPosEnum.LEFT?QmlDevState.state.LStOvPauseTimerLeft:QmlDevState.state.RStOvPauseTimerLeft)+"分钟)"
+            cancelBtnWidth:130
+            onCancel: {
+                if(index>0)
+                {
+                    SendFunc.setCookOperation(cookWorkPos,workOperationEnum.CANCEL)
+                }
+                loaderAutoHide()
+            }
+            onConfirm:{
+                SendFunc.setCookOperation(cookWorkPos,workOperationEnum.START)
+                loaderAutoHide()
+            }
+            Component.onCompleted: {
+                SendFunc.setBuzControl(buzControlEnum.OPEN)
+            }
+            Component.onDestruction: {
+                SendFunc.setBuzControl(buzControlEnum.STOP)
+            }
+        }
+    }
+    function loaderDoorAutoRestoreShow(text,confirmText,cookWorkPos){
+        if(loaderAuto.sourceComponent !== component_doorAutoRestore)
+        {
+            loaderAuto.sourceComponent = component_doorAutoRestore
+        }
+        loaderAuto.item.hintCenterText=text
+//        if(cookWorkPos===cookWorkPosEnum.LEFT)
+//            loaderAuto.item.cancelText=Qt.binding(function(){return "结束烹饪("+QmlDevState.state.LStOvPauseTimerLeft+"分钟)"})
+//        else
+//            loaderAuto.item.cancelText=Qt.binding(function(){return "结束烹饪("+QmlDevState.state.RStOvPauseTimerLeft+"分钟)"})
+        loaderAuto.item.confirmText=confirmText
+        loaderAuto.item.cookWorkPos=cookWorkPos
+    }
+    function loaderDoorAutoRestoreHide(cookWorkPos){
+        if(loaderAuto.sourceComponent === component_doorAutoRestore)
         {
             if(loaderAuto.item.cookWorkPos===cookWorkPos)
                 loaderAuto.sourceComponent = null

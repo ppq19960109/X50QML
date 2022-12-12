@@ -136,10 +136,11 @@ Item {
         var obj={}
         obj.signalStrength=signalStrength
         obj.quadruple=quadruple
-        obj.versionCommunicationPanel=QmlDevState.state.ComSWVersion
+        obj.versionSmartScreen=QmlDevState.state.ComSWVersion
         obj.versionPowerPanel=QmlDevState.state.PwrSWVersion.replace(/\./g,"")
         obj.deviceName=QmlDevState.state.DeviceName
         obj.deviceSecret=QmlDevState.state.DeviceSecret
+        obj.mqVerify=Qt.md5(obj.deviceName+obj.deviceSecret+pk+QmlDevState.state.ProductSecret)
         var body=JSON.stringify(obj)
         console.log("body:",body)
         setTimeout(function(){
