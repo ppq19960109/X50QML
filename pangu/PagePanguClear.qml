@@ -6,13 +6,53 @@ import "qrc:/CookFunc.js" as CookFunc
 import "qrc:/SendFunc.js" as SendFunc
 import "../"
 Item {
+    property int clickIndex:0
+    Connections { // 将目标对象信号与槽函数进行连接
+        id:connections
+        enabled:false
+        target: QmlDevState
+        onStateChanged: { // 处理目标对象信号的槽函数
+            if("SteamStart"==key)
+            {
+                steamStart()
+            }
+        }
+    }
+    StackView.onActivated:{
+        connections.enabled=true
+    }
+    StackView.onDeactivated:{
+        connections.enabled=false
+    }
+    Component.onCompleted: {
+        SendFunc.permitSteamStartStatus(1)
+    }
+
+    function steamStart()
+    {
+        var clearMode=QmlDevState.getClearMode()
+        var para =CookFunc.getDefHistory()
+        para.cookPos=1
+        para.cookSteps=clearMode[curClearMode].cookSteps
+        if(clickIndex==0)
+        {
+            para.cookSteps[0].waterTime=60
+        }
+        else
+        {
+
+        }
+        startPanguCooking(para,para.cookSteps)
+    }
+
     PageBackBar{
         id:topBar
         anchors.bottom:parent.bottom
         name:qsTr("清洁模式")
-        leftBtnText:qsTr("")
+//        leftBtnText:qsTr("启动")
         rightBtnText:qsTr("")
         onLeftClick:{
+            steamStart()
         }
         onRightClick:{
         }
@@ -37,7 +77,7 @@ Item {
                     height:parent.height
 
                     background:Rectangle {
-                        color: "#333333"
+                        color: clickIndex==index?themesTextColor2:"#333333"
                         radius: 4
                     }
                     Text{
@@ -57,19 +97,8 @@ Item {
                         anchors.topMargin: 94
                     }
                     onClicked: {
-                        var clearMode=QmlDevState.getClearMode()
-                        var para =CookFunc.getDefHistory()
-                        para.cookPos=1
-                        para.cookSteps=clearMode[curClearMode].cookSteps
-                        if(index==0)
-                        {
-                            para.cookSteps[0].waterTime=60
-                        }
-                        else
-                        {
-
-                        }
-                        startPanguCooking(para,para.cookSteps)
+                        console.log("onClicked",index)
+                        clickIndex=index
                     }
                 }
             }

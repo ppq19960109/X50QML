@@ -189,7 +189,7 @@ Item {
             visible: workState !== workStateEnum.WORKSTATE_STOP
             font.pixelSize:(workState === workStateEnum.WORKSTATE_FINISH||workState === workStateEnum.WORKSTATE_CLEAN_FINISH) ? 45:32
             anchors.top:parent.top
-            anchors.topMargin: 75
+            anchors.topMargin: 65
             anchors.horizontalCenter: parent.horizontalCenter
             //            horizontalAlignment :Text.AlignHCenter
             //            verticalAlignment :Text.AlignHCenter
@@ -235,10 +235,10 @@ Item {
         }
         Button{
             visible: workState === workStateEnum.WORKSTATE_FINISH && device != 0
-            width:120
-            height: 50
+            width:140
+            height: 60
             anchors.top: parent.top
-            anchors.topMargin: 145
+            anchors.topMargin: 135
             anchors.horizontalCenter: parent.horizontalCenter
             background:Rectangle{
                 color:"#484848"
@@ -258,8 +258,8 @@ Item {
         }
         Button{
            visible: workState === workStateEnum.WORKSTATE_FINISH || workState === workStateEnum.WORKSTATE_CLEAN_FINISH
-            width:120
-            height: 50
+            width:140
+            height: 55
             anchors.top: parent.top
             anchors.topMargin: 205
             anchors.horizontalCenter: parent.horizontalCenter

@@ -300,7 +300,7 @@ Rectangle {
 
             workColor:"#DE932F"
             workState:QmlDevState.state.RStOvState
-            workMode:workState===workStateEnum.WORKSTATE_STOP?qsTr("右腔烹饪"):"智能模式"
+            workMode:workState===workStateEnum.WORKSTATE_STOP?qsTr("右腔烹饪"):QmlDevState.state.RCookbookName//"智能模式"
             canvasDiameter:width
             setTimeLeft:Math.ceil(QmlDevState.state.RStOvSetTimerLeft/60)
             orderTimeLeft:QmlDevState.state.RStOvOrderTimerLeft
@@ -321,32 +321,34 @@ Rectangle {
                     return setTimeLeft
                 }
             }
-            workTemp:qsTr(QmlDevState.state.RStOvRealTemp+"℃ "+QmlDevState.state.RStOvSetTemp+"℃")
+            //workTemp:qsTr(QmlDevState.state.RStOvRealTemp+"℃ "+QmlDevState.state.RStOvSetTemp+"℃")
+            workTemp:Math.ceil(QmlDevState.state.RStOvSetTimer/60)+"分钟"
             MouseArea{
                 anchors.fill: parent
                 propagateComposedEvents: true
                 onClicked: {
                     if(rightProgressBar.workState === workStateEnum.WORKSTATE_STOP)
                     {
-                        loaderPageNewCook(rightProgressBar.device)
+//                        loaderPageNewCook(rightProgressBar.device)
+                          load_page("pagePangu")
                     }
                     else if(rightProgressBar.workState === workStateEnum.WORKSTATE_PAUSE)
                     {
-                        load_page("pageSteamBakeBase",{"device":cookWorkPosEnum.RIGHT,"reserve":0})
+                        //load_page("pageSteamBakeBase",{"device":cookWorkPosEnum.RIGHT,"reserve":0})
                     }
                     else if(rightProgressBar.workState === workStateEnum.WORKSTATE_PAUSE_RESERVE)
                     {
-                        var para =CookFunc.getDefHistory()
-                        para.cookPos=cookWorkPosEnum.RIGHT
-                        var list = []
-                        var steps={}
-                        steps.mode=QmlDevState.state.RStOvMode
-                        steps.temp=QmlDevState.state.RStOvSetTemp
-                        steps.time=QmlDevState.state.RStOvSetTimer
-                        list.push(steps)
-                        para.dishName=CookFunc.getDishName(list)
-                        load_page("pageSteamBakeReserve",{"root":para})
-                        para=undefined
+//                        var para =CookFunc.getDefHistory()
+//                        para.cookPos=cookWorkPosEnum.RIGHT
+//                        var list = []
+//                        var steps={}
+//                        steps.mode=QmlDevState.state.RStOvMode
+//                        steps.temp=QmlDevState.state.RStOvSetTemp
+//                        steps.time=QmlDevState.state.RStOvSetTimer
+//                        list.push(steps)
+//                        para.dishName=CookFunc.getDishName(list)
+//                        load_page("pageSteamBakeReserve",{"root":para})
+//                        para=undefined
                     }
                     else
                     {

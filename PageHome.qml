@@ -767,6 +767,7 @@ Item {
         //        loaderPopupShow("恢复出厂设置成功","",292,"确定")
         //        loaderUpdateConfirmShow()
         //       loaderUpdateResultShow("系统已更新至最新版本\n"+"1.2.0")
+        //loaderPopupShow("","料理机盖缺失或料理锅缺失",292,"好的")
     }
     StackView.onActivating:{
         //        console.log("PageHome StackView onActivating")

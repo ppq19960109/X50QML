@@ -13,12 +13,19 @@ Item {
         var steps={}
 
         steps.temp=parseInt(tempPathView.model[tempPathView.currentIndex])
-        steps.time=parseInt(timePathView.model[timePathView.currentIndex])*60
+        steps.time=parseInt(timePathView.model[timePathView.currentIndex])*60+parseInt(secondsPathView.model[secondsPathView.currentIndex])
         steps.motorSpeed=parseInt(speedPathView.model[speedPathView.currentIndex])
-        steps.waterTime=Math.ceil(parseInt(waterPathView.model[waterPathView.currentIndex])/11)
+        if(steps.motorSpeed>=0)
+            steps.motorDir=0
+        else
+        {
+            steps.motorDir=1
+            steps.motorSpeed=Math.abs(steps.motorSpeed)
+        }
+
+        steps.waterTime=0
         steps.mode=3
         steps.fire=5
-        steps.motorDir=0
         steps.fan=1
         steps.hoodSpeed=1
         steps.repeat=0
@@ -68,17 +75,17 @@ Item {
         timePathView.model=array
         timePathView.currentIndex=9
         array = new Array
-        for( i=0; i<= 20; ++i) {
+        for( i=-20; i<= 20; ++i) {
             array.push(i+"档")
         }
         speedPathView.model=array
-        speedPathView.currentIndex=5
+        speedPathView.currentIndex=21
         array = new Array
-        for( i=0; i<= 2500; i+=10) {
-            array.push(i+"ml")
+        for( i=0; i< 60; i+=1) {
+            array.push(i+"秒")
         }
-        waterPathView.model=array
-        waterPathView.currentIndex=0
+        secondsPathView.model=array
+        secondsPathView.currentIndex=0
 
         SendFunc.permitSteamStartStatus(1)
     }
@@ -87,8 +94,8 @@ Item {
         id:topBar
         anchors.bottom:parent.bottom
         name:"+自定义"
-        leftBtnText:qsTr("启动")
-        rightBtnText:qsTr("预约")
+        //        leftBtnText:qsTr("启动")
+        //        rightBtnText:qsTr("预约")
         onClose:{
             backPrePage()
         }
@@ -157,7 +164,27 @@ Item {
                     source: "qrc:/x50/steam/temp-time-change-background.png"
                 }
                 Text{
-                    text:qsTr("时间")
+                    text:qsTr("分钟")
+                    color:themesTextColor2
+                    font.pixelSize: 30
+                    anchors.horizontalCenter:parent.horizontalCenter
+                    anchors.top: parent.top
+                    anchors.topMargin: -40
+                }
+            }
+            DataPathView {
+                id:secondsPathView
+                width: 180
+                height:parent.height
+                Image {
+                    visible: secondsPathView.moving
+                    asynchronous:true
+                    smooth:false
+                    anchors.centerIn: parent
+                    source: "qrc:/x50/steam/temp-time-change-background.png"
+                }
+                Text{
+                    text:qsTr("秒")
                     color:themesTextColor2
                     font.pixelSize: 30
                     anchors.horizontalCenter:parent.horizontalCenter
@@ -177,27 +204,7 @@ Item {
                     source: "qrc:/x50/steam/temp-time-change-background.png"
                 }
                 Text{
-                    text:qsTr("转速(正)")
-                    color:themesTextColor2
-                    font.pixelSize: 30
-                    anchors.horizontalCenter:parent.horizontalCenter
-                    anchors.top: parent.top
-                    anchors.topMargin: -40
-                }
-            }
-            DataPathView {
-                id:waterPathView
-                width: 180
-                height:parent.height
-                Image {
-                    visible: waterPathView.moving
-                    asynchronous:true
-                    smooth:false
-                    anchors.centerIn: parent
-                    source: "qrc:/x50/steam/temp-time-change-background.png"
-                }
-                Text{
-                    text:qsTr("进水量")
+                    text:qsTr("转速")
                     color:themesTextColor2
                     font.pixelSize: 30
                     anchors.horizontalCenter:parent.horizontalCenter

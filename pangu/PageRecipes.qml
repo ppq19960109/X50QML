@@ -79,15 +79,15 @@ Item {
                     elide:Text.ElideRight
                 }
             }
-            Image{
-                asynchronous:true
-                smooth:false
-                anchors.top: recipeBtn.top
-                anchors.left: recipeBtn.left
-                sourceSize.width: 88
-                sourceSize.height: 48
-                source: themesImagesPath+cookModeImg[modelData.cookType]
-            }
+//            Image{
+//                asynchronous:true
+//                smooth:false
+//                anchors.top: recipeBtn.top
+//                anchors.left: recipeBtn.left
+//                sourceSize.width: 88
+//                sourceSize.height: 48
+//                source: themesImagesPath+cookModeImg[modelData.cookType]
+//            }
             Button {
                 id:recipeBtn
                 width:220

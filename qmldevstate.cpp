@@ -97,6 +97,7 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
 
     stateType.append(QPair<QString,int>("PushRod",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("Weight",LINK_VALUE_TYPE_NUM));
+    stateType.append(QPair<QString,int>("hallState",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("RCookbookName",LINK_VALUE_TYPE_STRING));
 
     localConnected=0;
@@ -108,6 +109,7 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     setState("RStoveStatus",0);
     setState("Weight",1);
     setState("PushRod",0);
+    setState("hallState",0);
 #ifndef USE_RK3308
     setState("SysPower",1);
     setState("LoadPowerState",7);
@@ -404,6 +406,7 @@ void QmlDevState::readPanguRecipes()
         QJsonValue details =obj.value("details");
         QJsonValue cookType =obj.value("cookType");
         QJsonValue clearMode =obj.value("clearMode");
+        QJsonValue reserve =obj.value("reserve");
         int recipeType =obj.value("recipeType").toInt();
         QVariantMap info;
         info.insert("dishName",dishName.toString());
@@ -411,6 +414,7 @@ void QmlDevState::readPanguRecipes()
         info.insert("details",details.toString());
         info.insert("cookType",cookType.toInt());
         info.insert("clearMode",clearMode.toInt());
+        info.insert("reserve",reserve.toInt());
         info.insert("recipeType",recipeType);
         info.insert("cookSteps",cookSteps.toArray());
         panguRecipes[recipeType-1].append(info);

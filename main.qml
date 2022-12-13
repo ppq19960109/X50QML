@@ -181,6 +181,7 @@ ApplicationWindow {
             if(isExistView("pageSteamBakeRun")==null)
                 backTopPage()
             SendFunc.setBuzControl(buzControlEnum.STOP)
+            SendFunc.setCookOperation(cookWorkPosEnum.RIGHT,workOperationEnum.CANCEL)
         }
         if(window.visible===false)
             window.visible=true
@@ -1136,12 +1137,12 @@ ApplicationWindow {
                 //                }
                 //                else
                 //                {
-                QmlDevState.setState("RStOvState",workStateEnum.WORKSTATE_CLEAN_FINISH)
-                QmlDevState.setState("RStOvRealTemp",cookSteps[0].temp)
-                QmlDevState.setState("RStOvSetTimerLeft",cookSteps[0].time)
-                QmlDevState.setState("RStOvSetTimer",cookSteps[0].time)
-                QmlDevState.setState("RStOvOrderTimer",cookSteps[0].time)
-                QmlDevState.setState("RStOvOrderTimerLeft",cookSteps[0].time/2)
+//                QmlDevState.setState("RStOvState",workStateEnum.WORKSTATE_FINISH)
+//                QmlDevState.setState("RStOvRealTemp",cookSteps[0].temp)
+//                QmlDevState.setState("RStOvSetTimerLeft",cookSteps[0].time)
+//                QmlDevState.setState("RStOvSetTimer",cookSteps[0].time)
+//                QmlDevState.setState("RStOvOrderTimer",cookSteps[0].time)
+//                QmlDevState.setState("RStOvOrderTimerLeft",cookSteps[0].time/2)
                 //                }
             }
             else
@@ -1170,6 +1171,12 @@ ApplicationWindow {
     }
     function startPanguCooking(root,cookSteps)
     {
+        if(QmlDevState.state.hallState==0)
+        {
+            loaderPopupShow("","料理机盖缺失或料理锅缺失",292,"好的")
+            return
+        }
+
         if(root.recipeType>0 || root.recipeid>0)
         {
             SendFunc.setPanguMultiCooking(cookSteps,root.orderTime,root.dishName,root.recipeid)
