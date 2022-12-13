@@ -11,6 +11,7 @@ Item {
     id:root
     property bool completed_state: false
     property int scan_count: 0
+    readonly property int scan_min_num: 2
     property bool wifiInputConnecting:false
     property int qrcode_display: 0
 
@@ -89,7 +90,7 @@ Item {
                             QmlDevState.executeShell("(wpa_cli list_networks | tail -n +3 | grep -v 'CURRENT' | awk '{system(\"wpa_cli disable_network \" $1)}') &")
                         }
 
-                        if(scan_count>=3)
+                        if(scan_count > scan_min_num)
                             wifi_scan_timer_reset()
                     }
                 }
@@ -175,7 +176,7 @@ Item {
         triggeredOnStart: false
         onTriggered: {
             ++scan_count
-            if(scan_count <= 3)
+            if(scan_count <= scan_min_num)
             {
                 if(scan_count==1)
                 {
@@ -185,9 +186,9 @@ Item {
                         SendFunc.scanWifi()
                     }
                 }
-                else if(scan_count==3)
+                else if(scan_count==scan_min_num)
                 {
-                    timer_wifi_scan.interval=8000
+                    timer_wifi_scan.interval=9000
                 }
                 if(wifiConnecting==false)
                 {
@@ -239,7 +240,11 @@ Item {
                 MouseArea{
                     anchors.fill: parent
                     onDoubleClicked: {
-                        ipText.text=MNetwork.getIpFromName("wlan0")
+                        if(systemSettings.wifiEnable)
+                        {
+//                            QmlDevState.executeShell("udhcpc -A 1 -t 1 -i wlan0 -n -q -b")
+                            ipText.text=MNetwork.getIpFromName("wlan0")
+                        }
                     }
                 }
             }
@@ -586,7 +591,7 @@ Item {
                     {
                         permit_connect=false
                     }
-                    if(wifiConnecting==true && wifiConnectInfo.psk===text)
+                    if(wifiConnecting==true && wifiConnectInfo.ssid===wifi_ssid && wifiConnectInfo.psk===text)
                         wifiInputConnecting=true
                     else
                         wifiInputConnecting=false

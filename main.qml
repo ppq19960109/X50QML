@@ -467,8 +467,8 @@ ApplicationWindow {
             if(wifiConnecting==true)
             {
                 console.log("timer_wifi_connecting...")
-                //                wifiConnecting=false
-                //                QmlDevState.executeShell("(wpa_cli reconfigure) &")
+                wifiConnecting=false
+                QmlDevState.executeShell("(wpa_cli reconfigure) &")
             }
         }
     }
