@@ -200,7 +200,8 @@ Item {
             console.log("page home onLocalConnectedChanged",value)
             if(value > 0)
             {
-                SendFunc.getAllToServer()
+                if(boot.playing==false)
+                    SendFunc.getAllToServer()
                 loaderErrorHide()
 
                 SendFunc.setBuzControl(buzControlEnum.STOP)

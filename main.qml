@@ -3,7 +3,7 @@ import QtQuick.Controls 2.5
 import QtQuick.Layouts 1.12
 import Qt.labs.settings 1.0
 //import QtQuick.Window 2.2
-
+//import QtMultimedia 5.12
 import "pageCook"
 import "pageMain"
 import "pageSet"
@@ -15,7 +15,7 @@ ApplicationWindow {
     id: window
     width: 1280
     height: 400
-    visible: false //true false
+    visible: true //true false
     property int sysPower:-1
     property int productionTestStatus:0
     property int productionTestFlag:1
@@ -267,6 +267,11 @@ ApplicationWindow {
 
     Component.onCompleted: {
         console.log("Window onCompleted:")
+        if(systemSettings.brightness<1 || systemSettings.brightness>255)
+        {
+            systemSettings.brightness=200
+        }
+        Backlight.backlightSet(systemSettings.brightness)
 
         //        var pattern = new RegExp("[\u4E00-\u9FA5]+")
         //        var str='\\xE6\\x95\\xB0\\xE6\\x8D\\xae'
@@ -289,10 +294,6 @@ ApplicationWindow {
         //                console.log("encryp:",element.encryp)
         //            }
         //        }
-        if(systemSettings.brightness<1 || systemSettings.brightness>255)
-        {
-            systemSettings.brightness=200
-        }
     }
     Connections { // 将目标对象信号与槽函数进行连接
         target: MNetwork
@@ -481,6 +482,7 @@ ApplicationWindow {
         productionTestFlag=0
         timer_standby.interval=3*60000
         timer_standby.restart()
+        SendFunc.setSysPower(0)
     }
 
     Timer{
@@ -543,7 +545,54 @@ ApplicationWindow {
         anchors.left: stackView.right
         anchors.right: parent.right
     }
+    //    Item {
+    //        anchors.fill: parent
+    ////        Video{
+    ////            anchors.fill: parent
+    ////            source: themesPicturesPath+"boot.mp4"
+    ////            autoPlay: true
+    ////        }
 
+    //        MediaPlayer {
+    //            id: mediaplayer
+    //            source: "qrc:/boot.mp4"
+    ////            source: "http://vfx.mtime.cn/Video/2019/03/09/mp4/190309153658147087.mp4"
+    //            autoPlay: true
+    //        }
+
+    //        VideoOutput {
+    //            id: videoOutput
+    //            anchors.fill: parent
+    //            source: mediaplayer
+    //        }
+
+    ////        MouseArea {
+    ////            anchors.fill: parent
+    ////            onPressed: mediaplayer.play();
+    ////        }
+    //    }
+    AnimatedImage {
+        id:boot
+        anchors.fill: parent
+//        width: window.width
+//        height: window.height
+        asynchronous:true
+        smooth:false
+//        source: themesPicturesPath+"boot.gif"
+        source:"file:///oem/boot.gif"
+        visible: true
+        playing: true
+//        speed: 10
+        onCurrentFrameChanged: {
+            console.log("onCurrentFrameChanged:",currentFrame,frameCount)
+            if(currentFrame+1>=145)//frameCount
+            {
+                SendFunc.getAllToServer()
+                visible=false
+                playing=false
+            }
+        }
+    }
     //---------------------------------------------------------------
     Loader{
         //加载弹窗组件
@@ -862,10 +911,10 @@ ApplicationWindow {
             loaderAuto.sourceComponent = component_doorAutoRestore
         }
         loaderAuto.item.hintCenterText=text
-//        if(cookWorkPos===cookWorkPosEnum.LEFT)
-//            loaderAuto.item.cancelText=Qt.binding(function(){return "结束烹饪("+QmlDevState.state.LStOvPauseTimerLeft+"分钟)"})
-//        else
-//            loaderAuto.item.cancelText=Qt.binding(function(){return "结束烹饪("+QmlDevState.state.RStOvPauseTimerLeft+"分钟)"})
+        //        if(cookWorkPos===cookWorkPosEnum.LEFT)
+        //            loaderAuto.item.cancelText=Qt.binding(function(){return "结束烹饪("+QmlDevState.state.LStOvPauseTimerLeft+"分钟)"})
+        //        else
+        //            loaderAuto.item.cancelText=Qt.binding(function(){return "结束烹饪("+QmlDevState.state.RStOvPauseTimerLeft+"分钟)"})
         loaderAuto.item.confirmText=confirmText
         loaderAuto.item.cookWorkPos=cookWorkPos
     }

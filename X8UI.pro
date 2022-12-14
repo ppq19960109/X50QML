@@ -1,4 +1,4 @@
-QT += quick quickcontrols2 network
+QT += quick quickcontrols2 network multimedia #multimediawidgets
 
 CONFIG += c++11 #qtquickcompiler
 
