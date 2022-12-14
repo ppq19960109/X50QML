@@ -1177,16 +1177,20 @@ ApplicationWindow {
             return
         }
 
+        if(root.clearMode!=null)
+            curClearMode=root.clearMode
+        else
+            curClearMode=0
+
+        if(root.workMode==null)
+            root.workMode=0
         if(root.recipeType>0 || root.recipeid>0)
         {
-            SendFunc.setPanguMultiCooking(cookSteps,root.orderTime,root.dishName,root.recipeid)
+            SendFunc.setPanguMultiCooking(cookSteps,root.orderTime,root.dishName,root.workMode)
         }
         else
         {
-            curClearMode=0
-            if(root.clearMode!=null)
-                curClearMode=root.clearMode
-            SendFunc.setPanguMultiCooking(cookSteps,root.orderTime)
+            SendFunc.setPanguMultiCooking(cookSteps,root.orderTime,null,root.workMode)
         }
         var page=isExistView("pageSteamBakeRun")
         if(page!==null)

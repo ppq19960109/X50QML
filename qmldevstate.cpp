@@ -109,7 +109,7 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     setState("RStoveStatus",0);
     setState("Weight",1);
     setState("PushRod",0);
-    setState("hallState",0);
+    setState("hallState",1);
 #ifndef USE_RK3308
     setState("SysPower",1);
     setState("LoadPowerState",7);

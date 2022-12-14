@@ -141,7 +141,7 @@ Item {
                     Image {
                         id:closeImg
                         anchors.centerIn: parent
-                        source: themesImagesPath+"icon-window-close.png"
+                        source: themesImagesPanguPath+"icon_close.png"
                     }
                     background: Item {}
                     onClicked: {

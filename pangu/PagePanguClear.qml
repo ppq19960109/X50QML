@@ -34,6 +34,8 @@ Item {
         var para =CookFunc.getDefHistory()
         para.cookPos=1
         para.cookSteps=clearMode[curClearMode].cookSteps
+        para.clearMode=curClearMode
+        para.workMode=1
         if(clickIndex==0)
         {
             para.cookSteps[0].waterTime=60

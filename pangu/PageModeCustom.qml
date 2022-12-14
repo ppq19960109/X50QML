@@ -69,7 +69,7 @@ Item {
         tempPathView.model=array
         tempPathView.currentIndex=11
         array = new Array
-        for( i=1; i<= 480; ++i) {
+        for( i=0; i<= 480; ++i) {
             array.push(i+"分钟")
         }
         timePathView.model=array
