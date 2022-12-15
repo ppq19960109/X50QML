@@ -33,7 +33,7 @@ Item {
             steps.hoodSpeed=0
         }
 
-        steps.waterTime=0
+        steps.waterTime=Math.ceil(parseInt(waterPathView.model[waterPathView.currentIndex])/11)
         steps.fire=5
         steps.fan=1
         steps.repeat=0
@@ -95,6 +95,12 @@ Item {
         }
         secondsPathView.model=array
         secondsPathView.currentIndex=0
+        array = new Array
+        for( i=100; i< 2500; i+=100) {
+            array.push(i+"ml")
+        }
+        waterPathView.model=array
+        waterPathView.currentIndex=0
 
         SendFunc.permitSteamStartStatus(1)
     }
@@ -103,7 +109,7 @@ Item {
         id:topBar
         anchors.bottom:parent.bottom
         name:"+自定义"
-        //        leftBtnText:qsTr("启动")
+        //                leftBtnText:qsTr("启动")
         //        rightBtnText:qsTr("预约")
         onClose:{
             backPrePage()
@@ -133,7 +139,7 @@ Item {
 
         Row {
             id:rowPathView
-            width: 180*4
+            width: 155*5
             height:330
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.bottom: parent.bottom
@@ -142,7 +148,7 @@ Item {
 
             DataPathView {
                 id:tempPathView
-                width: 180
+                width: 155
                 height:parent.height
                 currentIndex:0
                 Image {
@@ -163,7 +169,7 @@ Item {
             }
             DataPathView {
                 id:timePathView
-                width: 180
+                width: 155
                 height:parent.height
                 Image {
                     visible: timePathView.moving
@@ -183,7 +189,7 @@ Item {
             }
             DataPathView {
                 id:secondsPathView
-                width: 180
+                width: 155
                 height:parent.height
                 Image {
                     visible: secondsPathView.moving
@@ -203,7 +209,7 @@ Item {
             }
             DataPathView {
                 id:speedPathView
-                width: 180
+                width: 155
                 height:parent.height
                 Image {
                     visible: speedPathView.moving
@@ -214,6 +220,26 @@ Item {
                 }
                 Text{
                     text:qsTr("转速")
+                    color:themesTextColor2
+                    font.pixelSize: 30
+                    anchors.horizontalCenter:parent.horizontalCenter
+                    anchors.top: parent.top
+                    anchors.topMargin: -40
+                }
+            }
+            DataPathView {
+                id:waterPathView
+                width: 155
+                height:parent.height
+                Image {
+                    visible: waterPathView.moving
+                    asynchronous:true
+                    smooth:false
+                    anchors.centerIn: parent
+                    source: "qrc:/x50/steam/temp-time-change-background.png"
+                }
+                Text{
+                    text:qsTr("进水量")
                     color:themesTextColor2
                     font.pixelSize: 30
                     anchors.horizontalCenter:parent.horizontalCenter

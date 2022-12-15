@@ -958,6 +958,10 @@ ApplicationWindow {
         id: pagePanguClear
         PagePanguClear {}
     }
+    Component {
+        id: pageModeTest
+        PageModeTest {}
+    }
     function isExistView(pageName) {
         //        console.log("isExistView:",pageName)
         return stackView.find(function(item,index){
@@ -1102,6 +1106,9 @@ ApplicationWindow {
         case "pagePanguClear":
             stackView.push(pagePanguClear, args,StackView.Immediate)
             break;
+        case "pageModeTest":
+            stackView.push(pageModeTest, args,StackView.Immediate)
+            break;
         }
 
         console.log("stackView depth:"+stackView.depth)
@@ -1176,7 +1183,11 @@ ApplicationWindow {
             loaderPopupShow("","料理机盖缺失或料理锅缺失",292,"好的")
             return
         }
-
+//        if(QmlDevState.state.PushRod > 0)
+//        {
+//            loaderPopupShow("","请先关闭右腔门再启动烹饪",292,"好的")
+//            return
+//        }
         if(root.clearMode!=null)
             curClearMode=root.clearMode
         else

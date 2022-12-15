@@ -17,6 +17,12 @@ Button {
         text: pushRod?"关门":"开门"
     }
     onClicked: {
+//        var state=QmlDevState.state.RStOvState
+//        if(state===workStateEnum.WORKSTATE_RUN||state===workStateEnum.WORKSTATE_WATER)
+//        {
+//            loaderPopupShow("","设备运行中，请暂停后再开关门",292,"好的")
+//            return
+//        }
         var Data={}
         Data.PushRod = !pushRod
         SendFunc.setToServer(Data)

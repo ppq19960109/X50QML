@@ -114,5 +114,6 @@
         <file>pangu/PagePanguReserve.qml</file>
         <file>pangu/PageModeCustom.qml</file>
         <file>pangu/PagePanguClear.qml</file>
+        <file>pangu/PageModeTest.qml</file>
     </qresource>
 </RCC>
