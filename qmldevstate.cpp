@@ -393,7 +393,7 @@ void QmlDevState::parsingData(const QJsonObject& object)
                 else
                 {
 #endif    
-                    if("LStOvState"==key ||"LStOvDoorState"==key || "LStOvMode"==key ||"LStOvSetTemp"==key ||"LStOvRealTemp"==key ||"LStOvSetTimer"==key ||"LStOvOrderTimer"==key ||"LStOvSetTimerLeft"==key ||"LStOvOrderTimerLeft"==key ||"LSteamGear"==key ||"RStOvState"==key ||"RStOvDoorState"==key ||"RStOvMode"==key ||"RStOvSetTemp"==key ||"RStOvRealTemp"==key ||"RStOvOrderTimer"==key ||"RStOvSetTimer"==key ||"RStOvSetTimerLeft"==key ||"RStOvOrderTimerLeft"==key||"LMultiMode"==key||"HoodSpeed"==key||"HoodLight"==key)
+                    if("LStOvState"==key ||"LStOvDoorState"==key || "LStOvMode"==key ||"LStOvSetTemp"==key ||"LStOvRealTemp"==key ||"LStOvSetTimer"==key ||"LStOvOrderTimer"==key ||"LStOvSetTimerLeft"==key ||"LStOvOrderTimerLeft"==key ||"LSteamGear"==key ||"RStOvState"==key ||"RStOvDoorState"==key ||"RStOvMode"==key ||"RStOvSetTemp"==key ||"RStOvRealTemp"==key ||"RStOvOrderTimer"==key ||"RStOvSetTimer"==key ||"RStOvSetTimerLeft"==key ||"RStOvOrderTimerLeft"==key||"LMultiMode"==key||"LCookbookID"==key||"RMultiMode"==key||"RCookbookID"==key||"HoodSpeed"==key||"HoodLight"==key)
                     {
                         if(stateMap[key]==value.toInt())
                             continue;
@@ -406,7 +406,7 @@ void QmlDevState::parsingData(const QJsonObject& object)
             else if(LINK_VALUE_TYPE_STRING==value_type)
             {
                 //                qDebug()<<"key:"<<key<<"value:"<<value.toString();
-                if("LCookbookName"==key)
+                if("LCookbookName"==key||"RCookbookName"==key)
                 {
                     if(stateMap[key]==value.toString())
                         continue;
@@ -439,10 +439,14 @@ void QmlDevState::parsingData(const QJsonObject& object)
                     QJsonValue remind =object_struct.value("remind");
                     QJsonValue RemindText =object_struct.value("RemindText");
 
-                    setState("LMultiTotalStep",cnt.toInt());
-                    setState("LMultiCurrentStep",current.toInt());
-                    setState("LMultiRemindText",RemindText.toString());
-                    setState("LMultiRemind",remind.toInt());
+                    if(stateMap["LMultiTotalStep"]!=cnt.toInt())
+                        setState("LMultiTotalStep",cnt.toInt());
+                    if(stateMap["LMultiCurrentStep"]!=current.toInt())
+                        setState("LMultiCurrentStep",current.toInt());
+                    if(stateMap["LMultiRemindText"]!=RemindText.toString())
+                        setState("LMultiRemindText",RemindText.toString());
+                    if(stateMap["LMultiRemind"]!=remind.toInt())
+                        setState("LMultiRemind",remind.toInt());
                 }
                 else if(key=="RMultiStageState")
                 {
@@ -451,11 +455,14 @@ void QmlDevState::parsingData(const QJsonObject& object)
                     QJsonValue current =object_struct.value("current");
                     QJsonValue remind =object_struct.value("remind");
                     QJsonValue RemindText =object_struct.value("RemindText");
-
-                    setState("RMultiTotalStep",cnt.toInt());
-                    setState("RMultiCurrentStep",current.toInt());
-                    setState("RMultiRemindText",RemindText.toString());
-                    setState("RMultiRemind",remind.toInt());
+                    if(stateMap["RMultiTotalStep"]!=cnt.toInt())
+                        setState("RMultiTotalStep",cnt.toInt());
+                    if(stateMap["RMultiCurrentStep"]!=current.toInt())
+                        setState("RMultiCurrentStep",current.toInt());
+                    if(stateMap["RMultiRemindText"]!=RemindText.toString())
+                        setState("RMultiRemindText",RemindText.toString());
+                    if(stateMap["RMultiRemind"]!=remind.toInt())
+                        setState("RMultiRemind",remind.toInt());
                 }
             }
             else if(LINK_VALUE_TYPE_NULL==value_type)

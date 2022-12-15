@@ -121,16 +121,25 @@ Item {
                     }
                     onClick: {
                         let stOvState
+                        let stOvDoorState
                         if(index==0)
+                        {
                             stOvState=lStOvState
+                            stOvDoorState=lStOvDoorState
+                        }
                         else
+                        {
                             stOvState=rStOvState
+                            stOvDoorState=rStOvDoorState
+                        }
                         if(clickIndex==0)
                         {
                             if(stOvState===workStateEnum.WORKSTATE_STOP)
                                 push_page(pageSteamOvenConfig,{cookWorkPos:index})
                             else if(stOvState===workStateEnum.WORKSTATE_PAUSE||stOvState===workStateEnum.WORKSTATE_PAUSE_PREHEAT)
                             {
+                                if(stOvDoorState>0)
+                                    loaderDoorAutoShow((index==0?"左":"右")+"腔门打开，暂停烹饪","","好的",cookWorkPosEnum.LEFT)
                                 if(errorCodeShow!==0)
                                     loaderErrorCodeShow(errorCodeShow,index)
                                 SendFunc.setCookOperation(index,workOperationEnum.START)

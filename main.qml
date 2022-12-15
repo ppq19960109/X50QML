@@ -34,6 +34,8 @@ ApplicationWindow {
     property var rTimingState: QmlDevState.state.RStoveTimingState
     property var lStOvState: QmlDevState.state.LStOvState
     property var rStOvState: QmlDevState.state.RStOvState
+    property var lStOvDoorState: QmlDevState.state.LStOvDoorState
+    property var rStOvDoorState: QmlDevState.state.RStOvDoorState
     property var errorCodeShow: QmlDevState.state.ErrorCodeShow
     property var auxiliarySwitch: QmlDevState.state.RAuxiliarySwitch
 
@@ -482,7 +484,7 @@ ApplicationWindow {
         productionTestFlag=0
         timer_standby.interval=3*60000
         timer_standby.restart()
-        SendFunc.setSysPower(0)
+//        SendFunc.setSysPower(0)
     }
 
     Timer{
@@ -540,10 +542,14 @@ ApplicationWindow {
         width: 1160
         height: parent.height
         anchors.left: parent.left
+        visible: !boot.visible
+        enabled: sysPower > 0 && loaderManual.status !== Loader.Ready
     }
     PageHomeBar{
         anchors.left: stackView.right
         anchors.right: parent.right
+        visible: stackView.visible
+        enabled: stackView.enabled
     }
     //    Item {
     //        anchors.fill: parent
@@ -574,18 +580,26 @@ ApplicationWindow {
     AnimatedImage {
         id:boot
         anchors.fill: parent
-//        width: window.width
-//        height: window.height
+        //        width: window.width
+        //        height: window.height
         asynchronous:true
         smooth:false
-//        source: themesPicturesPath+"boot.gif"
+        //        source: themesPicturesPath+"boot.gif"
         source:"file:///oem/boot.gif"
         visible: true
         playing: true
-//        speed: 10
+        //        speed: 10
+        onStatusChanged: {
+            console.log("onStatusChanged:",status)
+            if(status==Image.Error)
+            {
+                visible=false
+                playing=false
+            }
+        }
         onCurrentFrameChanged: {
             console.log("onCurrentFrameChanged:",currentFrame,frameCount)
-            if(currentFrame+1>=145)//frameCount
+            if(currentFrame+1>=frameCount)//frameCount
             {
                 SendFunc.getAllToServer()
                 visible=false

@@ -12,7 +12,7 @@ Item {
     property int lastHoodSpeed:0
     property int lastHoodLight:0
 
-    enabled: sysPower > 0
+//    enabled: sysPower > 0
 
     Component{
         id:component_multistageConfirm
@@ -307,12 +307,12 @@ Item {
                 {
                     if(value===workStateEnum.WORKSTATE_PAUSE||value===workStateEnum.WORKSTATE_PAUSE_RESERVE||value===workStateEnum.WORKSTATE_PAUSE_PREHEAT)
                     {
-                        if(QmlDevState.state.LStOvDoorState===1)
+                        if(lStOvDoorState===1)
                             loaderDoorAutoShow("左腔门打开，暂停烹饪","","好的",cookWorkPosEnum.LEFT)
                     }
                     else
                     {
-                        if(QmlDevState.state.LStOvDoorState===0)
+                        if(lStOvDoorState===0)
                         {
                             if(value===workStateEnum.WORKSTATE_STOP)
                             {
@@ -374,12 +374,12 @@ Item {
                 {
                     if(value===workStateEnum.WORKSTATE_PAUSE||value===workStateEnum.WORKSTATE_PAUSE_RESERVE||value===workStateEnum.WORKSTATE_PAUSE_PREHEAT)
                     {
-                        if(QmlDevState.state.RStOvDoorState===1)
+                        if(rStOvDoorState===1)
                             loaderDoorAutoShow("右腔门打开，暂停烹饪","","好的",cookWorkPosEnum.RIGHT)
                     }
                     else
                     {
-                        if(QmlDevState.state.RStOvDoorState===0)
+                        if(rStOvDoorState===0)
                         {
                             if(value===workStateEnum.WORKSTATE_STOP)
                             {
