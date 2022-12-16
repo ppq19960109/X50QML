@@ -33,7 +33,7 @@ Item {
             steps.hoodSpeed=0
         }
 
-        steps.waterTime=Math.ceil(parseInt(waterPathView.model[waterPathView.currentIndex])/11)
+        steps.waterTime=Math.ceil(parseInt(waterPathView.model[waterPathView.currentIndex])/9)
         steps.fire=5
         steps.fan=1
         steps.repeat=0
