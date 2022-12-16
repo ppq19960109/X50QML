@@ -3,10 +3,7 @@ import QtQuick.Controls 2.5
 import "../"
 Item {
     readonly property var screenSaverEnum: ["深色", "山峰", "家庭", "美食"]
-    Component {
-        id: pageClock
-        PageClock {}
-    }
+
     Item {
         id:localSet
         anchors.fill: parent

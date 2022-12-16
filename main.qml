@@ -15,7 +15,7 @@ ApplicationWindow {
     id: window
     width: 1280
     height: 400
-    visible: true //true false
+    visible: false //true false
     property int sysPower:-1
     property int productionTestStatus:0
     property int productionTestFlag:1
@@ -273,7 +273,13 @@ ApplicationWindow {
         {
             systemSettings.brightness=200
         }
-        Backlight.backlightSet(systemSettings.brightness)
+        if(systemSettings.reboot==false)
+        {
+            window.visible=true
+            Backlight.backlightSet(systemSettings.brightness)
+        }
+        else
+            boot.visible=false
 
         //        var pattern = new RegExp("[\u4E00-\u9FA5]+")
         //        var str='\\xE6\\x95\\xB0\\xE6\\x8D\\xae'
@@ -484,7 +490,9 @@ ApplicationWindow {
         productionTestFlag=0
         timer_standby.interval=3*60000
         timer_standby.restart()
-//        SendFunc.setSysPower(0)
+        //        SendFunc.setSysPower(0)
+//        systemSettings.reboot=true
+//        systemSettings.firstStartup=true
     }
 
     Timer{
@@ -542,7 +550,7 @@ ApplicationWindow {
         width: 1160
         height: parent.height
         anchors.left: parent.left
-        visible: !boot.visible
+        visible: !boot.playing
         enabled: sysPower > 0 && loaderManual.status !== Loader.Ready
     }
     PageHomeBar{
@@ -577,17 +585,31 @@ ApplicationWindow {
     ////            onPressed: mediaplayer.play();
     ////        }
     //    }
+
+    Loader{
+        //加载弹窗组件
+        id:loaderStackView
+        anchors.fill: stackView
+        sourceComponent:null
+    }
+    Loader{
+        //加载弹窗组件
+        id:loaderManual
+        anchors.fill: parent
+        sourceComponent:null
+    }
+
     AnimatedImage {
         id:boot
         anchors.fill: parent
         //        width: window.width
         //        height: window.height
-        asynchronous:true
+        //asynchronous:true
         smooth:false
         //        source: themesPicturesPath+"boot.gif"
         source:"file:///oem/boot.gif"
         visible: true
-        playing: true
+        playing: visible
         //        speed: 10
         onStatusChanged: {
             console.log("onStatusChanged:",status)
@@ -602,24 +624,25 @@ ApplicationWindow {
             if(currentFrame+1>=frameCount)//frameCount
             {
                 SendFunc.getAllToServer()
-                visible=false
+                SendFunc.setBuzControl(buzControlEnum.SHORT)
+                //                visible=false
                 playing=false
+                animation.restart()
+            }
+        }
+        PropertyAnimation {
+            id: animation;
+            target: boot;
+            property: "opacity";
+            to: 0;
+            duration: 2000;
+            onStopped:{
+                console.log("onStopped...")
+                boot.visible=false
             }
         }
     }
     //---------------------------------------------------------------
-    Loader{
-        //加载弹窗组件
-        id:loaderStackView
-        anchors.fill: stackView
-        sourceComponent:null
-    }
-    Loader{
-        //加载弹窗组件
-        id:loaderManual
-        anchors.fill: parent
-        sourceComponent:null
-    }
     function loaderMainHide(){
         loaderManual.sourceComponent = null
     }
@@ -1240,6 +1263,10 @@ ApplicationWindow {
     Component {
         id: pageMultistageShow
         PageMultistageShow {}
+    }
+    Component {
+        id: pageClock
+        PageClock {}
     }
     function isExistView(pageName) {
         return stackView.find(function(item,index){

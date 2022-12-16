@@ -160,7 +160,7 @@ Item {
                     anchors.top: parent.top
                     anchors.topMargin: 75
                     anchors.horizontalCenter: parent.horizontalCenter
-                    text: qsTr(CookFunc.workModeName(mode))
+                    text: qsTr(CookFunc.workModeName(mode))+(steamGear>0?steamGear+"档":"")
                 }
                 Text{
                     visible: mode>=0

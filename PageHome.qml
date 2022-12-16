@@ -12,7 +12,7 @@ Item {
     property int lastHoodSpeed:0
     property int lastHoodLight:0
 
-//    enabled: sysPower > 0
+    //    enabled: sysPower > 0
 
     Component{
         id:component_multistageConfirm
@@ -200,8 +200,16 @@ Item {
             console.log("page home onLocalConnectedChanged",value)
             if(value > 0)
             {
+                if(systemSettings.reboot==false && sysPower<0)
+                {
+                    SendFunc.setSysPower(1)
+                }
                 if(boot.playing==false)
+                {
                     SendFunc.getAllToServer()
+                    SendFunc.setBuzControl(buzControlEnum.SHORT)
+                }
+
                 loaderErrorHide()
 
                 SendFunc.setBuzControl(buzControlEnum.STOP)
@@ -218,25 +226,10 @@ Item {
             if("SysPower"==key)
             {
                 //                console.log("systemSettings.reboot",systemSettings.reboot)
-                if(systemSettings.reboot==false)
-                {
-                    if(value==0)
-                    {
-                        if(sysPower<0)
-                        {
-                            SendFunc.setSysPower(1)
-                            SendFunc.setBuzControl(buzControlEnum.SHORT)
-                        }
-                    }
-                    else
-                    {
-                        if(sysPower<0)
-                        {
-                            SendFunc.setBuzControl(buzControlEnum.SHORT)
-                        }
-
-                    }
-                }
+//                if(systemSettings.reboot==false && sysPower<0)
+//                {
+//                    SendFunc.setBuzControl(buzControlEnum.SHORT)
+//                }
                 systemPower(value)
                 if(systemSettings.reboot==false)
                 {
@@ -247,6 +240,9 @@ Item {
                         loaderErrorCodeShow(errorCodeShow)
                     }
                 }
+            }
+            else if("ComSWVersion"==key)
+            {
                 if(systemSettings.firstStartup===true)
                 {
                     systemSettings.firstStartup=false
@@ -254,9 +250,6 @@ Item {
                     SendFunc.enableWifi(true)
                     loaderFirstStartupShow()
                 }
-            }
-            else if("ComSWVersion"==key)
-            {
                 if(systemSettings.otaSuccess==true)
                 {
                     systemSettings.otaSuccess=false
@@ -696,7 +689,7 @@ Item {
                 }
                 else if(value==2)
                 {
-                    loaderAutoTextShow("烟机档位发生变化，智能排烟已为您自动关闭")
+                    //loaderAutoTextShow("烟机档位发生变化，智能排烟已为您自动关闭")
                 }
             }
             else if("RAuxiliarySwitch"==key)
@@ -830,6 +823,7 @@ Item {
         //       loaderUpdateResultShow("系统已更新至最新版本\n"+"1.2.0")
         //loaderScreenSaverShow()
         //loaderDoorAutoRestoreShow("左腔门已关闭，是否继续烹饪？","继续烹饪",cookWorkPosEnum.LEFT)
+        //loaderFirstStartupShow()
     }
 
     Item{

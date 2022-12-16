@@ -141,10 +141,13 @@ Item {
                     anchors.centerIn: parent
                 }
                 onClicked: {
-                    Backlight.setClockTime(hourPathView.currentIndex,minutePathView.currentIndex)
-                    var date=new Date()
-                    gHours=date.getHours()
-                    gMinutes=date.getMinutes()
+                    if(wifiConnected==false)
+                    {
+                        Backlight.setClockTime(hourPathView.currentIndex,minutePathView.currentIndex)
+                        var date=new Date()
+                        gHours=date.getHours()
+                        gMinutes=date.getMinutes()
+                    }
                     loaderMainHide()
                 }
             }
