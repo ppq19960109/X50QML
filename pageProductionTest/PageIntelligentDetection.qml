@@ -197,7 +197,7 @@ Item {
         {
             wifiSignal.color="green"
         }
-        wifiSignalText.text=element.rssi+"db"
+        wifiSignalText.text=rssi+"db"
 
         if(root[i].rssi >= -75)
         {
