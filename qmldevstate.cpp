@@ -9,8 +9,6 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     readRecipeDetails();
 
     stateType.append(QPair<QString,int>("SysPower",LINK_VALUE_TYPE_NUM));
-    stateType.append(QPair<QString,int>("PwrSWVersion",LINK_VALUE_TYPE_STRING));
-    stateType.append(QPair<QString,int>("ComSWVersion",LINK_VALUE_TYPE_STRING));
     stateType.append(QPair<QString,int>("ErrorCode",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("ErrorCodeShow",LINK_VALUE_TYPE_NUM));
 
@@ -81,6 +79,8 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     stateType.append(QPair<QString,int>("DeviceName",LINK_VALUE_TYPE_STRING));
     stateType.append(QPair<QString,int>("ProductSecret",LINK_VALUE_TYPE_STRING));
     stateType.append(QPair<QString,int>("DeviceSecret",LINK_VALUE_TYPE_STRING));
+    stateType.append(QPair<QString,int>("PwrSWVersion",LINK_VALUE_TYPE_STRING));
+    stateType.append(QPair<QString,int>("ComSWVersion",LINK_VALUE_TYPE_STRING));
     stateType.append(QPair<QString,int>("QrCode",LINK_VALUE_TYPE_STRING));
     stateType.append(QPair<QString,int>("UpdateLog",LINK_VALUE_TYPE_STRING));
     //    stateType.append(QPair<QString,int>("BindTokenState",LINK_VALUE_TYPE_NUM));
@@ -430,6 +430,7 @@ void QmlDevState::parsingData(const QJsonObject& object)
                     QJsonValue mac_address =object_struct.value("mac_address");
                     setState("Wifissid",ssid.toString());
                     setState("Wifibssid",bssid.toString());
+                    setState("Wifimac",mac_address.toString());
                 }
                 else if(key=="LMultiStageState")
                 {

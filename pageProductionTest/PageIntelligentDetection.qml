@@ -121,13 +121,13 @@ Item {
         doc.onabort = function() {
             console.log("onabort");
         }
-        doc.open("POST", "http://192.168.101.199:63036/iot/push/testing/result",true)
+        doc.open("POST", "http://192.168.101.199:63136/iot/push/testing/result",true)
         doc.timeout=5000
         doc.setRequestHeader("Content-Type", "application/json")
 
         var pk=QmlDevState.state.ProductKey
         doc.setRequestHeader("pk", pk)
-        var mac=QmlDevState.getNetworkMac().replace(/:/g,"").toLowerCase()
+        var mac=QmlDevState.state.Wifimac.replace(/:/g,"").toLowerCase()
         doc.setRequestHeader("mac", mac)
         var sign="1643338882000."+Qt.md5("1643338882000"+pk+mac+"mars")
         doc.setRequestHeader("sign", sign)
@@ -137,7 +137,9 @@ Item {
         obj.signalStrength=signalStrength
         obj.quadruple=quadruple
         obj.versionSmartScreen=QmlDevState.state.ComSWVersion
-        obj.versionPowerPanel=QmlDevState.state.PwrSWVersion.replace(/\./g,"")
+        obj.versionPowerPanel=QmlDevState.state.PwrSWVersion//.replace(/\./g,"")
+        obj.versionShortcutScreen=QmlDevState.state.PwrSWVersion
+        obj.versionKeyboard=QmlDevState.state.ComSWVersion
         obj.deviceName=QmlDevState.state.DeviceName
         obj.deviceSecret=QmlDevState.state.DeviceSecret
         obj.mqVerify=Qt.md5(obj.deviceName+obj.deviceSecret+pk+QmlDevState.state.ProductSecret)
@@ -147,7 +149,7 @@ Item {
             console.log("timer abort...")
             if(doc!=null)
                 doc.abort();//请求中止
-        },6000)
+        },8000)
         doc.send(body)
     }
     function parseWifiList(sanR)
@@ -186,11 +188,12 @@ Item {
         {
             wifiSignal.color="green"
         }
-        wifiSignalText.text=element.rssi+"db"
+        wifiSignalText.text=rssi+"db"
 
         step=4
         wifiConnectText.visible=true
         //            SendFunc.connectWiFi("IoT-Test","12345678",1)
+        //            SendFunc.connectWiFi("Net","12345678",1)
         SendFunc.connectWiFi(productionTestWIFISSID,productionTestWIFIPWD,1)
     }
 
@@ -202,7 +205,7 @@ Item {
             if("PwrSWVersion"==key && step==0)
             {
                 step=1
-                versionText.text="电源板软件版本号:"+QmlDevState.state.PwrSWVersion+" 屏幕模组软件版本号:"+QmlDevState.state.ComSWVersion
+                versionText.text="电源板软件版本:"+QmlDevState.state.PwrSWVersion+" 智慧屏软件版本:"+QmlDevState.state.ComSWVersion+"\n快捷屏软件版本:"+QmlDevState.state.PwrSWVersion+" 按键板软件版本:"+QmlDevState.state.ComSWVersion
                 version.color="green"
                 SendFunc.scanWifi()
                 timer_wifi.restart()
@@ -298,7 +301,7 @@ Item {
             Rectangle{
                 id:version
                 Layout.preferredWidth: 600
-                Layout.preferredHeight:50
+                Layout.preferredHeight:80
                 radius: 8
                 color:"transparent"
 

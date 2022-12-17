@@ -78,6 +78,7 @@ Item {
                     step=2
                     quad.color="green"
                     quadText.text="四元组烧录成功"
+                    productionTest.visible=true
                     SendFunc.getAllToServer()
                 }
             }

@@ -46,6 +46,7 @@ Item {
                 {
                     if(systemSettings.wifiEnable && wifiConnected==false && wifiConnectInfo.ssid!=="")
                     {
+                        console.log("onWifiConnectingChanged wifi fail...")
                         wifiConnectInfo.ssid=""
                         loaderWifiConfirmShow("网络连接失败，请重试")
                     }
@@ -71,6 +72,7 @@ Item {
                     {
                         if(systemSettings.wifiEnable && wifiConnected==false && wifiConnectInfo.ssid!=="")
                         {
+                            console.log("onStateChanged wifi fail...")
                             wifiConnectInfo.ssid=""
                             loaderWifiConfirmShow("网络连接失败，请重试")
                         }

@@ -226,10 +226,10 @@ Item {
             if("SysPower"==key)
             {
                 //                console.log("systemSettings.reboot",systemSettings.reboot)
-//                if(systemSettings.reboot==false && sysPower<0)
-//                {
-//                    SendFunc.setBuzControl(buzControlEnum.SHORT)
-//                }
+                //                if(systemSettings.reboot==false && sysPower<0)
+                //                {
+                //                    SendFunc.setBuzControl(buzControlEnum.SHORT)
+                //                }
                 systemPower(value)
                 if(systemSettings.reboot==false)
                 {
@@ -243,7 +243,7 @@ Item {
             }
             else if("ComSWVersion"==key)
             {
-                if(systemSettings.firstStartup===true)
+                if(QmlDevState.state.DeviceSecret!=="" && productionTestStatus==0 && systemSettings.firstStartup===true)
                 {
                     systemSettings.firstStartup=false
                     systemSync()
@@ -509,7 +509,6 @@ Item {
                 }
                 else
                 {
-                    wifiConnecting=false
                     if(value==2 || value==3||value==5)
                     {
                         QmlDevState.executeShell("(wpa_cli reconfigure) &")
@@ -527,6 +526,7 @@ Item {
                     {
                         SendFunc.getCurWifi()
                     }
+                    wifiConnecting=false
                 }
                 console.log("WifiState",value,wifiConnected,wifiConnecting)
             }

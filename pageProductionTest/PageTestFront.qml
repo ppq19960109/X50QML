@@ -4,6 +4,7 @@ import "../"
 import "qrc:/SendFunc.js" as SendFunc
 Item {
     Component.onCompleted: {
+        stackView.width=1280
         productionTestStatus=1
         SendFunc.setBuzControl(buzControlEnum.SHORT)
         SendFunc.setProductionTestStatus(1)
@@ -11,6 +12,7 @@ Item {
     Component.onDestruction: {
         productionTestStatus=0
         SendFunc.setProductionTestStatus(0)
+        stackView.width=1160
     }
     PageBackBar{
         id:topBar

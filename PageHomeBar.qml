@@ -4,11 +4,11 @@ import QtQuick.Controls 2.5
 ToolBar {
     id:root
     background: null
-//    PageFps{
-//        width: parent.width
-//        height: 20
-//        anchors.top: parent.top
-//    }
+    //    PageFps{
+    //        width: parent.width
+    //        height: 20
+    //        anchors.top: parent.top
+    //    }
     Text {
         id: clock
         width: parent.width

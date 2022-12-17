@@ -556,7 +556,7 @@ ApplicationWindow {
     PageHomeBar{
         anchors.left: stackView.right
         anchors.right: parent.right
-        visible: stackView.visible
+        visible: stackView.visible && productionTestStatus == 0
         enabled: stackView.enabled
     }
     //    Item {
