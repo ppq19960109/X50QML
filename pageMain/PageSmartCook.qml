@@ -243,7 +243,7 @@ Item {
                 onClicked: {
                     if(checked==true)
                     {
-                        if(wifiConnected==false)
+                        if(linkWifiConnected==false)
                         {
                             loaderCheckWifiShow("当前无网络，连网后可生成烹饪曲线")
                             cookingCurvePageSwitch.checked=false

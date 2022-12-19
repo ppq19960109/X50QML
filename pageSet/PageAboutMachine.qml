@@ -22,7 +22,7 @@ Item {
         onStateChanged: { // 处理目标对象信号的槽函数
             if("WifiState"==key)
             {
-                if(value==4 && timer_qrcode.running==false)
+                if(value===wifiStateEnum.WIFISTATE_LINK_CONNECTED && timer_qrcode.running==false)
                 {
                     timer_qrcode.restart()
                     loaderQrcodeShow("火粉APP")
@@ -181,10 +181,10 @@ Item {
                         loaderErrorConfirmShow("四元组不存在")
                         return
                     }
-                    if(wifiConnected==true)
+                    if(linkWifiConnected==true)
                     {
                         loaderLoadingShow("二维码刷新中...",true)
-                        wifiConnected=false
+//                        linkWifiConnected=false
                         var Data={}
                         Data.BackOnline = null
                         SendFunc.setToServer(Data)

@@ -39,7 +39,14 @@ ToolBar {
             }
             Image{
                 anchors.centerIn: parent
-                source: themesPicturesPath+(wifiConnected==true?"icon_wifi_connected.png":"icon_wifi_disconnect.png")
+                source: {
+                    if(linkWifiConnected==true)
+                        return  themesPicturesPath+"icon_wifi_connected.png"
+                    else if(wifiConnected==true)
+                        return themesPicturesPath+"icon_wifi_half_connect.png"
+                    else
+                        return themesPicturesPath+"icon_wifi_disconnect.png"
+                }
             }
             onClicked: {
                 openWifiPage()

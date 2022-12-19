@@ -150,3 +150,12 @@ void Backlight::setClockTime(int hours,int minutes)
     tv.tv_sec=t;
     settimeofday(&tv, NULL);
 }
+
+void Backlight::setClockTimestamp(long timestamp)
+{
+    qDebug() << "setClockTimestamp:" << timestamp;
+
+    struct timeval tv;
+    tv.tv_sec=timestamp;
+    settimeofday(&tv, NULL);
+}

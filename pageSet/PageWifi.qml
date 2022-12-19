@@ -14,6 +14,7 @@ Item {
     readonly property int scan_min_num: 2
     property bool wifiInputConnecting:false
     property int qrcode_display: 0
+    property int link_connect_state:0
 
     function wifi_scan_timer_reset()
     {
@@ -66,35 +67,41 @@ Item {
             if("WifiState"==key)
             {
                 console.log("page wifi WifiState:",value,wifiConnected,wifiConnectInfo.ssid)
-                if(value > 1)
-                {
-                    if(value==2|| value==5)
-                    {
-                        if(systemSettings.wifiEnable && wifiConnected==false && wifiConnectInfo.ssid!=="")
-                        {
-                            console.log("onStateChanged wifi fail...")
-                            wifiConnectInfo.ssid=""
-                            loaderWifiConfirmShow("网络连接失败，请重试")
-                        }
-                    }
-                    else if(value==3)
-                    {
-                        if(systemSettings.wifiEnable && wifiConnected==false && wifiConnectInfo.ssid!=="")
-                        {
-                            wifiConnectInfo.ssid=""
-                            loaderWifiConfirmShow("密码错误，连接失败")
-                        }
-                    }
-                    else if(value==4)
-                    {
-                        if(wifiConnected==true)
-                        {
-                            QmlDevState.executeShell("(wpa_cli list_networks | tail -n +3 | grep -v 'CURRENT' | awk '{system(\"wpa_cli disable_network \" $1)}') &")
-                        }
 
-                        if(scan_count > scan_min_num)
-                            wifi_scan_timer_reset()
+                if(value===wifiStateEnum.WIFISTATE_CONNECTFAILED|| value===wifiStateEnum.WIFISTATE_DISCONNECTED)
+                {
+                    if(systemSettings.wifiEnable && wifiConnected==false && wifiConnectInfo.ssid!=="")
+                    {
+                        console.log("onStateChanged wifi fail...")
+                        wifiConnectInfo.ssid=""
+                        loaderWifiConfirmShow("网络连接失败，请重试")
                     }
+                }
+                else if(value===wifiStateEnum.WIFISTATE_CONNECTFAILED_WRONG_KEY)
+                {
+                    if(systemSettings.wifiEnable && wifiConnected==false && wifiConnectInfo.ssid!=="")
+                    {
+                        wifiConnectInfo.ssid=""
+                        loaderWifiConfirmShow("密码错误，连接失败")
+                    }
+                }
+                else if(value===wifiStateEnum.WIFISTATE_CONNECTED)
+                {
+                    if(wifiConnected==true && wifiConnectInfo.ssid!=="")
+                    {
+                        QmlDevState.executeShell("(wpa_cli list_networks | tail -n +3 | grep -v 'CURRENT' | awk '{system(\"wpa_cli disable_network \" $1)}') &")
+                    }
+                    link_connect_state=0
+                }
+                else if(value===wifiStateEnum.WIFISTATE_LINK_CONNECTED)
+                {
+                    if(link_connect_state>0)
+                    {
+                        loaderQrcodeShow("连接成功！")
+                    }
+                    link_connect_state=0
+                    //                    if(scan_count > scan_min_num)
+                    //                        wifi_scan_timer_reset()
                 }
             }
             else if("Wifissid"==key)
@@ -104,11 +111,12 @@ Item {
                     if(decode_ssid===wifiConnectInfo.ssid)
                     {
                         loaderWifiInputHide(decode_ssid)
-                        qrcode_display=20
-                        wifiConnectInfo.ssid=""
-                        loaderQrcodeShow("连接成功！")
+                        link_connect_state=1
                     }
+                    else
+                        link_connect_state=0
                 }
+                wifiConnectInfo.ssid=""
             }
             else if("WifiEnable"==key)
             {
@@ -244,7 +252,7 @@ Item {
                     onDoubleClicked: {
                         if(systemSettings.wifiEnable)
                         {
-//                            QmlDevState.executeShell("udhcpc -A 1 -t 1 -i wlan0 -n -q -b")
+                            //                            QmlDevState.executeShell("udhcpc -A 1 -t 1 -i wlan0 -n -q -b")
                             ipText.text=MNetwork.getIpFromName("wlan0")
                         }
                     }

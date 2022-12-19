@@ -17,6 +17,7 @@ public:
     Q_INVOKABLE static int backlightGet();
     Q_INVOKABLE QVariantList getAllFileName(QString path);
     Q_INVOKABLE void setClockTime(int hours,int minutes);
+    Q_INVOKABLE void setClockTimestamp(long timestamp);
 };
 
 #endif // BACKLIGHT_H

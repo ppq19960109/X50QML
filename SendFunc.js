@@ -108,6 +108,12 @@ function otaRquest(request)
     Data.OTARquest = request
     setToServer(Data)
 }
+function otaCmdPushTypeSet(request)
+{
+    var Data={}
+    Data.OtaCmdPushType = request
+    setToServer(Data)
+}
 function otaPowerRquest(request)
 {
     var Data={}
@@ -196,6 +202,7 @@ function connectWiFi(ssid,psk,encryp)
     Data.WifiConnect=wifiConnectInfo
     wifiConnecting=true
     wifiConnected=false
+    linkWifiConnected=false
     setToServer(Data)
     //deleteWifissid(ssid)
 }

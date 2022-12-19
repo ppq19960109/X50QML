@@ -138,7 +138,7 @@ Item {
                     return
                 }
 
-                if(wifiConnected)
+                if(linkWifiConnected)
                 {
                     checkStatus.visible=true
                     versionCheckState=2

@@ -50,6 +50,7 @@ Item {
             cancelText:"取消"
             confirmText:"升级"
             onCancel: {
+                SendFunc.otaCmdPushTypeSet(0)
                 loaderAuto.sourceComponent = undefined
             }
             onConfirm: {
@@ -70,6 +71,7 @@ Item {
             cancelText:"取消"
             confirmText:"升级"
             onCancel: {
+                SendFunc.otaCmdPushTypeSet(0)
                 loaderAuto.sourceComponent = undefined
             }
             onConfirm: {
@@ -502,10 +504,11 @@ Item {
             }
             else if("WifiState"==key)
             {
-                wifiConnected=false
                 if(value==1)
                 {
                     wifiConnecting=true
+                    wifiConnected=false
+                    linkWifiConnected=false
                 }
                 else
                 {
@@ -518,21 +521,34 @@ Item {
                             wifiConnectInfo.ssid=""
                         }
                     }
-                    else if(value==4)
+
+                    if(value===wifiStateEnum.WIFISTATE_CONNECTED)
                     {
                         wifiConnected=true
+                        linkWifiConnected=false
                     }
+                    else if(value===wifiStateEnum.WIFISTATE_LINK_CONNECTED)
+                    {
+                        wifiConnected=true
+                        linkWifiConnected=true
+                    }
+                    else
+                    {
+                        wifiConnected=false
+                        linkWifiConnected=false
+                    }
+                    wifiConnecting=false
+
                     if(wifiPageStatus==false)
                     {
                         SendFunc.getCurWifi()
                     }
-                    wifiConnecting=false
                 }
-                console.log("WifiState",value,wifiConnected,wifiConnecting)
+                console.log("WifiState",value,wifiConnected,wifiConnecting,linkWifiConnected)
             }
             else if("Wifissid"==key)
             {
-                if(wifiConnected==true && wifiConnectInfo.ssid!="")
+                if(wifiConnected==true && wifiConnectInfo.ssid!=="")
                 {
                     //                    if(pattern.test(wifiConnectInfo.ssid))
                     //                    {
@@ -543,12 +559,11 @@ Item {
                     //                        decode_ssid=value
                     //                    }
                     console.log("decode_ssid",decode_ssid,wifiConnectInfo.ssid)
-                    if(decode_ssid==wifiConnectInfo.ssid)
+                    if(decode_ssid===wifiConnectInfo.ssid)
                     {
                         WifiFunc.addWifiInfo(wifiConnectInfo)
                         var real_value=value.replace(/\\{1}x/g,"\\\\x")
                         QmlDevState.executeShell("(wpa_cli list_networks | tail -n +3 | grep \'"+real_value+"\' | grep -v 'CURRENT' | awk '{system(\"wpa_cli remove_network \" $1)}' && wpa_cli save_config) &")
-                        real_value=null
                     }
                 }
                 if(wifiPageStatus==false)

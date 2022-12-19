@@ -165,13 +165,14 @@ Item {
                     }
                     Text{
                         text:gTimeText
-                        color:wifiConnected?"#fff":themesTextColor2
+                        color:timeMoreImg.visible?themesTextColor2:"#fff"
                         font.pixelSize: 30
                         anchors.verticalCenter: parent.verticalCenter
                         anchors.right: parent.right
                         anchors.rightMargin: 70
                     }
                     Image {
+                        id:timeMoreImg
                         visible: wifiConnected == false
                         asynchronous:true
                         smooth:false
