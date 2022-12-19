@@ -67,6 +67,8 @@ Item {
             anchors.fill:parent
             contextType: "2d"
             onPaint: {//绘图事件的响应
+                if(tilted1Area.pressed===false)
+                    return
                 context.lineWidth=2;//线的宽度
                 context.strokeStyle="red";//线的颜色
                 context.beginPath();//开始
@@ -91,12 +93,12 @@ Item {
             }
             onReleased: {
                 console.warn("onReleased",mouse.x,mouse.y)
-                canvas.context.reset()
-                canvas.requestPaint()
                 if(touchJudge(mouse.x,mouse.y,parent)===0)
                 {
                     ++touchCount;
                 }
+                canvas.context.reset()
+                canvas.requestPaint()
             }
             onPositionChanged:{
                 console.warn("onPositionChanged",mouse.x,mouse.y)
@@ -152,12 +154,13 @@ Item {
         }
         else if(touchCount==6)
         {
-            rect.width=root.width+5
-            rect.rotation=15
+            rect.x=-5
+            rect.width=root.width+10
+            rect.rotation=13
         }
         else if(touchCount==7)
         {
-            rect.rotation=-15
+            rect.rotation=-13
         }
         else if(touchCount>=8)
         {

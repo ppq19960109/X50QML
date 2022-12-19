@@ -52,6 +52,7 @@ ApplicationWindow {
     readonly property var rightWorkModeModelEnum:[{"modelData":1,"temp":100,"time":30,"minTemp":40,"maxTemp":100},{"modelData":3,"temp":120,"time":20,"minTemp":101,"maxTemp":105},{"modelData":2,"temp":90,"time":15,"minTemp":80,"maxTemp":100}]
     readonly property var rightAssistWorkModeModelEnum:[{"modelData":10,"temp":35,"time":60,"minTemp":30,"maxTemp":50},{"modelData":9,"temp":40,"time":30,"minTemp":30,"maxTemp":50},{"modelData":11,"temp":60,"time":60,"minTemp":50,"maxTemp":105}]
 
+    readonly property var wifiStateEnum:{"WIFISTATE_IDLE":0,"WIFISTATE_CONNECTING":1,"WIFISTATE_CONNECTFAILED":2,"WIFISTATE_CONNECTFAILED_WRONG_KEY":3,"WIFISTATE_CONNECTED":4,"WIFISTATE_DISCONNECTED":5,"WIFISTATE_OPEN":6,"WIFISTATE_OFF":7,"WIFISTATE_LINK_CONNECTED":8,"WIFISTATE_LINK_DISCONNECTED":9}
     readonly property var workStateEnum:{"WORKSTATE_STOP":0,"WORKSTATE_RESERVE":1,"WORKSTATE_PREHEAT":2,"WORKSTATE_RUN":3,"WORKSTATE_FINISH":4,"WORKSTATE_PAUSE":5,"WORKSTATE_PAUSE_RESERVE":6,"WORKSTATE_PAUSE_PREHEAT":7}
     readonly property var workStateChineseEnum:["停止","预约中","预热中","运行中","烹饪完成","暂停中","预约暂停中","预热暂停中"]
     readonly property var workOperationEnum:{"START":0,"PAUSE":1,"CANCEL":2,"CONFIRM":3,"RUN_NOW":4}
@@ -214,7 +215,7 @@ ApplicationWindow {
 
         systemSettings.wifiEnable=true
         systemSettings.sleepSwitch=true
-        systemSettings.screenSaverIndex=0
+        systemSettings.screenSaverIndex=2
         systemSettings.cookDialog=[true,true,true,true,true,true,true]
         systemSettings.multistageRemind=true
         systemSettings.wifiPasswdArray=[]
@@ -287,7 +288,7 @@ ApplicationWindow {
         //        console.warn("Window onCompleted test2: ",encodeURI("a1数b2据C3"),encodeURIComponent("a1数b2据C3"),decodeURI("a1%E6%95%B0b2%E6%8D%AEC3"),decodeURIComponent("a1%E6%95%B0b2%E6%8D%AEC3"),pattern.test("数据a1"),pattern.test("adwe445-._"))
 
         push_page(pageHome)
-        //                push_page(pageTestFront)
+//                        push_page(pageTestFront)
         //        push_page(pageDemoMode)
         //push_page(pageGetQuad)
         //        if(systemSettings.wifiPasswdArray!=null)
@@ -635,7 +636,7 @@ ApplicationWindow {
             target: boot;
             property: "opacity";
             to: 0;
-            duration: 2000;
+            duration: 1500;
             onStopped:{
                 console.log("onStopped...")
                 boot.visible=false
