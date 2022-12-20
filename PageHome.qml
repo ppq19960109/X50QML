@@ -8,6 +8,7 @@ Item {
 
     property int lastLStOvState:-1
     property int lastRStOvState:-1
+    property int lastErrorCode:-1
     property int lastErrorCodeShow:-1
     property int lastHoodSpeed:0
     property int lastHoodLight:0
@@ -466,6 +467,14 @@ Item {
                             timer_auxiliary.stop()
                     }
                 }
+            }
+            else if("ErrorCode"==key)
+            {
+                if(lastErrorCode!=value)
+                {
+                    lastErrorCodeShow=-1
+                }
+                lastErrorCode=value
             }
             else if("ErrorCodeShow"==key)
             {
