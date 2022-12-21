@@ -23,7 +23,7 @@ ApplicationWindow {
     property int demoModeStatus:0
     property bool steamingStatus:false
     property bool errorBuzzer:false
-    property int curClearMode:0
+    property int curClearMode:1
 
     //    readonly property string uiVersion:"1.1"
     readonly property string productionTestWIFISSID:"moduletest"
@@ -1191,7 +1191,7 @@ ApplicationWindow {
         if(root.clearMode!=null)
             curClearMode=root.clearMode
         else
-            curClearMode=0
+            curClearMode=1
 
         if(root.workMode==null)
             root.workMode=0

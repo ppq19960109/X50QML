@@ -38,11 +38,11 @@ Item {
         para.workMode=1
         if(clickIndex==0)
         {
-            para.cookSteps[0].waterTime=60
+
         }
         else
         {
-
+            para.cookSteps[0].waterTime=0
         }
         startPanguCooking(para,para.cookSteps)
     }
