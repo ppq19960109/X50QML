@@ -312,7 +312,7 @@ ApplicationWindow {
 
                 if(QmlDevState.state.ErrorCodeShow == 0)
                 {
-                    if(!((QmlDevState.state.RStOvState == workStateEnum.WORKSTATE_PREHEAT || QmlDevState.state.RStOvState == workStateEnum.WORKSTATE_RUN || QmlDevState.state.RStOvState == workStateEnum.WORKSTATE_PAUSE ) || (QmlDevState.state.LStOvState == workStateEnum.WORKSTATE_PREHEAT || QmlDevState.state.LStOvState == workStateEnum.WORKSTATE_RUN || QmlDevState.state.LStOvState == workStateEnum.WORKSTATE_PAUSE )))
+                    if(!((QmlDevState.state.RStOvState == workStateEnum.WORKSTATE_PREHEAT || QmlDevState.state.RStOvState == workStateEnum.WORKSTATE_RUN || QmlDevState.state.RStOvState == workStateEnum.WORKSTATE_PAUSE|| QmlDevState.state.RStOvState == workStateEnum.WORKSTATE_WATER|| QmlDevState.state.RStOvState == workStateEnum.WORKSTATE_CLEAN ) || (QmlDevState.state.LStOvState == workStateEnum.WORKSTATE_PREHEAT || QmlDevState.state.LStOvState == workStateEnum.WORKSTATE_RUN || QmlDevState.state.LStOvState == workStateEnum.WORKSTATE_PAUSE )))
                     {
                         sleepState=true
                         Backlight.backlightSet(0)
@@ -1192,6 +1192,7 @@ ApplicationWindow {
             curClearMode=root.clearMode
         else
             curClearMode=1
+        console.log("curClearMode:",curClearMode)
 
         if(root.workMode==null)
             root.workMode=0
