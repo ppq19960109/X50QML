@@ -1183,11 +1183,11 @@ ApplicationWindow {
             loaderPopupShow("","料理机盖缺失或料理锅缺失",292,"好的")
             return
         }
-//        if(QmlDevState.state.PushRod > 0)
-//        {
-//            loaderPopupShow("","请先关闭右腔门再启动烹饪",292,"好的")
-//            return
-//        }
+        if(QmlDevState.state.PushRod > 0)
+        {
+            loaderPopupShow("","请先关闭右腔门再启动烹饪",292,"好的")
+            return
+        }
         if(root.clearMode!=null)
             curClearMode=root.clearMode
         else
