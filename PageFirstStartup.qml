@@ -18,27 +18,6 @@ Item {
             implicitHeight:parent.height
 
             background:null
-            //back图标
-//            ToolButton {
-//                id:backBtn
-//                width:80
-//                height:parent.height
-//                anchors.left:parent.left
-//                anchors.verticalCenter: parent.verticalCenter
-
-//                background: Image{
-//                    asynchronous:true
-//                    smooth:false
-//                    anchors.centerIn: parent
-//                    source: themesPicturesPath+"back_button_background.png"
-//                }
-//                onClicked: {
-//                    if(wifiConnected==false)
-//                        loaderManual.sourceComponent = pageClock
-//                    else
-//                        loaderMainHide()
-//                }
-//            }
 
             Text{
                 anchors.centerIn: parent

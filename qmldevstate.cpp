@@ -73,6 +73,9 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     stateType.append(QPair<QString,int>("HoodLight",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("HoodOffRemind",LINK_VALUE_TYPE_NUM));
 
+    stateType.append(QPair<QString,int>("Reset",LINK_VALUE_TYPE_NUM));
+    stateType.append(QPair<QString,int>("PCBInput",LINK_VALUE_TYPE_ARRAY));
+
     stateType.append(QPair<QString,int>("ProductCategory",LINK_VALUE_TYPE_STRING));
     stateType.append(QPair<QString,int>("ProductModel",LINK_VALUE_TYPE_STRING));
     stateType.append(QPair<QString,int>("ProductKey",LINK_VALUE_TYPE_STRING));
@@ -85,9 +88,6 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     stateType.append(QPair<QString,int>("UpdateLog",LINK_VALUE_TYPE_STRING));
     //    stateType.append(QPair<QString,int>("BindTokenState",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("QuadInfo",LINK_VALUE_TYPE_STRING));
-
-    stateType.append(QPair<QString,int>("Reset",LINK_VALUE_TYPE_NUM));
-    stateType.append(QPair<QString,int>("PCBInput",LINK_VALUE_TYPE_ARRAY));
 
     stateType.append(QPair<QString,int>("SmartSmokeSwitch",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("RAuxiliarySwitch",LINK_VALUE_TYPE_NUM));

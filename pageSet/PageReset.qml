@@ -26,7 +26,7 @@ Item {
             console.log("PageReset:",key)
             if("Reset"==key)
             {
-                loaderManual.sourceComponent=component_resetSuccess
+//                loaderManual.sourceComponent=component_resetSuccess
             }
         }
     }

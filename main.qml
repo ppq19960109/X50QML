@@ -206,10 +206,6 @@ ApplicationWindow {
     }
     function systemSetReset()
     {
-        var Data={}
-        Data.reset = null
-        Data.LocalOperate = 0xa4
-        SendFunc.setToServer(Data)
         systemSettings.firstStartup=true
         systemSettings.sleepTime=3
         systemSettings.brightness=200
@@ -221,6 +217,10 @@ ApplicationWindow {
         systemSettings.multistageRemind=true
         systemSettings.wifiPasswdArray=[]
         systemSync()
+        var Data={}
+        Data.reset = null
+        Data.LocalOperate = 0xa4
+        SendFunc.setToServer(Data)
     }
     function closeHeatShortTime()
     {
@@ -670,7 +670,6 @@ ApplicationWindow {
         loaderManual.item.cookItem=cookItem
     }
     function loaderFirstStartupShow(){
-        //        loaderManual.sourceComponent = null
         loaderManual.source="PageFirstStartup.qml"
     }
     Component{

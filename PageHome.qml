@@ -246,6 +246,7 @@ Item {
             }
             else if("ComSWVersion"==key)
             {
+                console.log("ComSWVersion,",QmlDevState.state.DeviceSecret,productionTestStatus,systemSettings.firstStartup)
                 if(QmlDevState.state.DeviceSecret!=="" && productionTestStatus==0 && systemSettings.firstStartup===true)
                 {
                     systemSettings.firstStartup=false

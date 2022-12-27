@@ -26,8 +26,12 @@ Item {
     }
     function getWifiInfo()
     {
-        if(wifiConnected==false)
+        if(linkWifiConnected==false)
+        {
             SendFunc.getWifiState()
+            if(wifiConnected==true)
+                SendFunc.getCurWifi()
+        }
         else
             SendFunc.getCurWifi()
     }
@@ -38,7 +42,10 @@ Item {
         onWifiConnectingChanged:{
             console.log("page wifi onWifiConnectingChanged:",systemSettings.wifiEnable,wifiConnecting,wifiConnectInfo.ssid)
             if(wifiConnecting==true)
+            {
+                link_connect_state=1
                 timer_wifi_connecting.restart()
+            }
             else
             {
                 if(timer_wifi_connecting.running)
@@ -91,10 +98,10 @@ Item {
                     {
                         QmlDevState.executeShell("(wpa_cli list_networks | tail -n +3 | grep -v 'CURRENT' | awk '{system(\"wpa_cli disable_network \" $1)}') &")
                     }
-                    link_connect_state=0
                 }
                 else if(value===wifiStateEnum.WIFISTATE_LINK_CONNECTED)
                 {
+                    console.log("WIFISTATE_LINK_CONNECTED:",link_connect_state)
                     if(link_connect_state>0)
                     {
                         loaderQrcodeShow("连接成功！")
@@ -111,7 +118,6 @@ Item {
                     if(decode_ssid===wifiConnectInfo.ssid)
                     {
                         loaderWifiInputHide(decode_ssid)
-                        link_connect_state=1
                     }
                     else
                         link_connect_state=0
@@ -139,6 +145,8 @@ Item {
                 SendFunc.scanRWifi()
             }
             wifiPageStatus=true
+            if(wifiConnecting==true)
+                link_connect_state=1
         }
         else
         {
