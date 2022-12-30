@@ -72,6 +72,7 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     stateType.append(QPair<QString,int>("HoodSpeed",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("HoodLight",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("HoodOffRemind",LINK_VALUE_TYPE_NUM));
+    stateType.append(QPair<QString,int>("StirFryTimerLeft",LINK_VALUE_TYPE_NUM));
 
     stateType.append(QPair<QString,int>("Reset",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("PCBInput",LINK_VALUE_TYPE_ARRAY));
@@ -126,6 +127,9 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     setState("ComSWVersion","1.0");
     setState("PwrSWVersion","1.0");
     setState("RMultiMode",0);
+    setState("LOilTemp",-1);
+    setState("ROilTemp",-1);
+    setState("StirFryTimerLeft",0);
 #ifndef USE_TCP
 #ifndef USE_RK3308
     setState("SysPower",1);

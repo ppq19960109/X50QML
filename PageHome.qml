@@ -153,10 +153,11 @@ Item {
         loaderAuto.sourceComponent = component_update
         loaderAuto.item.titleText=text+"升级中,请勿断电!"
     }
-    function loaderUpdateProgress(value){
+    function loaderUpdateProgress(value,text){
         if(value>0 && loaderAuto.sourceComponent !== component_update)
         {
             loaderAuto.sourceComponent = component_update
+            loaderAuto.item.titleText=text+"升级中,请勿断电!"
         }
         if(loaderAuto.sourceComponent === component_update)
             loaderAuto.item.updateProgress=value
@@ -658,10 +659,17 @@ Item {
 
                 }
             }
-            else if("OTAProgress"==key || "OTAPowerProgress"==key)
+            else if("OTAProgress"==key)
             {
                 console.log("OTAProgress:",value)
-                loaderUpdateProgress(value);
+                loaderUpdateProgress(value,"通讯板");
+            }
+            else if("OTAPowerProgress"==key)
+            {
+                console.log("OTAPowerProgress:",value)
+                loaderUpdateProgress(value,"电源板");
+                if(sysPower==0)
+                    standbyWakeup()
             }
             else if( "DeviceSecret"==key && productionTestFlag==1)
             {

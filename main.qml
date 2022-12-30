@@ -38,6 +38,8 @@ ApplicationWindow {
     property var rStOvDoorState: QmlDevState.state.RStOvDoorState
     property var errorCodeShow: QmlDevState.state.ErrorCodeShow
     property var auxiliarySwitch: QmlDevState.state.RAuxiliarySwitch
+    property var lOilTemp: QmlDevState.state.LOilTemp
+    property var rOilTemp: QmlDevState.state.ROilTemp
 
     readonly property string productionTestWIFISSID:"moduletest"
     readonly property string productionTestWIFIPWD:"58185818"

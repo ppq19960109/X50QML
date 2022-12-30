@@ -8,7 +8,7 @@ Item {
         id:topBar
         anchors.top:parent.top
         name:qsTr("烟机灶具")
-        centerText:QmlDevState.state.OilTempSwitch?("左灶油温:"+QmlDevState.state.LOilTemp+"℃"+"    右灶油温:"+QmlDevState.state.ROilTemp+"℃"):""
+        centerText:QmlDevState.state.OilTempSwitch?("左灶油温:"+(lOilTemp>=0?lOilTemp:"-")+"℃"+"    右灶油温:"+(rOilTemp>=0?rOilTemp:"-")+"℃"):""
     }
     PageTabBar{
         anchors.horizontalCenter: parent.horizontalCenter
@@ -22,79 +22,115 @@ Item {
         anchors.topMargin: 26
         anchors.horizontalCenter: parent.horizontalCenter
         spacing: 20
-        Repeater {
-            model: [{"background":"smart_smoke_background.png","text":"智能排烟"}, {"background":"stir_fried_background.png","text":"爆炒"}]
-            Button{
-                width: 200
-                height:parent.height
-                anchors.verticalCenter: parent.verticalCenter
+        Button{
+            width: 200
+            height:parent.height
+            anchors.verticalCenter: parent.verticalCenter
 
-                background:Rectangle {
-                    color: "#000"
-                    border{
-                        width: 1
-                        color: "#858585"
-                    }
-                    radius: 4
+            background:Rectangle {
+                color: "#000"
+                border{
+                    width: 1
+                    color: "#858585"
                 }
-                Text{
-                    text:modelData.text
-                    color:"#fff"
-                    font.pixelSize: 34
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    anchors.top: parent.top
-                    anchors.topMargin: 26
-                }
+                radius: 4
+            }
+            Text{
+                text:"智能排烟"
+                color:"#fff"
+                font.pixelSize: 34
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.top: parent.top
+                anchors.topMargin: 26
+            }
+            Image {
+                asynchronous:true
+                smooth:false
+                anchors.top: parent.top
+                anchors.topMargin: 83
+                anchors.horizontalCenter: parent.horizontalCenter
+                source: themesPicturesPath+"smart_smoke_background.png"
                 Image {
+                    id:rotation1
+                    visible: smartSmokeSwitch
                     asynchronous:true
-                    smooth:false
-                    anchors.top: parent.top
-                    anchors.topMargin: 83
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    source: themesPicturesPath+modelData.background
-                    Image {
-                        id:rotation1
-                        visible: {
-                            if(index==0)
-                            {
-                                return smartSmokeSwitch
-                            }
-                            else
-                            {
-                                return hoodSpeed===4 && smartSmokeSwitch===0
-                            }
-                        }
-                        asynchronous:true
-//                        smooth:false
-                        source: themesPicturesPath+"icon_runing.png"
-                        RotationAnimation on rotation {
-                            from: 0
-                            to: 360
-                            duration: 8000 //旋转速度，默认250
-                            loops: Animation.Infinite //一直旋转
-                            running: rotation1.visible
-                        }
-                    }
-                }
-                onClicked: {
-                    if(index==0)
-                    {
-                        if(smartSmokeSwitch===0)
-                            SendFunc.setSmartSmoke(1)
-                        else
-                            SendFunc.setSmartSmoke(0)
-                    }
-                    else
-                    {
-                        if(hoodSpeed===4)
-                            SendFunc.setHoodSpeed(0)
-                        else
-                            SendFunc.setHoodSpeed(4)
+                    //                        smooth:false
+                    source: themesPicturesPath+"icon_runing.png"
+                    RotationAnimation on rotation {
+                        from: 0
+                        to: 360
+                        duration: 8000 //旋转速度，默认250
+                        loops: Animation.Infinite //一直旋转
+                        running: rotation1.visible
                     }
                 }
             }
+            onClicked: {
+                if(smartSmokeSwitch===0)
+                    SendFunc.setSmartSmoke(1)
+                else
+                    SendFunc.setSmartSmoke(0)
+            }
         }
+        Button{
+            width: 200
+            height:parent.height
+            anchors.verticalCenter: parent.verticalCenter
 
+            background:Rectangle {
+                color: "#000"
+                border{
+                    width: 1
+                    color: "#858585"
+                }
+                radius: 4
+            }
+            Text{
+                text:"爆炒"
+                color:"#fff"
+                font.pixelSize: 34
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.top: parent.top
+                anchors.topMargin: 26
+            }
+            Image {
+                asynchronous:true
+                smooth:false
+                anchors.top: parent.top
+                anchors.topMargin: 83
+                anchors.horizontalCenter: parent.horizontalCenter
+                source: themesPicturesPath+"stir_fried_background.png"
+                Image {
+                    id:rotation2
+                    visible: hoodSpeed===4 && smartSmokeSwitch===0
+                    asynchronous:true
+                    //                        smooth:false
+                    source: themesPicturesPath+"icon_runing.png"
+                    RotationAnimation on rotation {
+                        from: 0
+                        to: 360
+                        duration: 8000 //旋转速度，默认250
+                        loops: Animation.Infinite //一直旋转
+                        running: rotation2.visible
+                    }
+                }
+            }
+            Text{
+                visible: rotation2.visible
+                text:QmlDevState.state.StirFryTimerLeft+"分钟"
+                color:themesTextColor
+                font.pixelSize: 26
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.bottom: parent.bottom
+                anchors.bottomMargin: 10
+            }
+            onClicked: {
+                if(hoodSpeed===4)
+                    SendFunc.setHoodSpeed(0)
+                else
+                    SendFunc.setHoodSpeed(4)
+            }
+        }
         Rectangle{
             width: 200
             height:parent.height
@@ -196,7 +232,7 @@ Item {
                             }
                         }
                         asynchronous:true
-//                        smooth:false
+                        //                        smooth:false
                         source: themesPicturesPath+"icon_runing.png"
                         RotationAnimation on rotation {
                             from: 0

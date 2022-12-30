@@ -151,7 +151,7 @@ Item {
         id:topBar
         anchors.top:parent.top
         name:qsTr("智慧烹饪")
-        centerText:QmlDevState.state.OilTempSwitch?("左灶油温:"+QmlDevState.state.LOilTemp+"℃"+"    右灶油温:"+QmlDevState.state.ROilTemp+"℃"):""
+        centerText:QmlDevState.state.OilTempSwitch?("左灶油温:"+(lOilTemp>=0?lOilTemp:"-")+"℃"+"    右灶油温:"+(rOilTemp>=0?rOilTemp:"-")+"℃"):""
         customClose:true
         onClose:{
             let page=isExistView("PageHood")
@@ -278,7 +278,7 @@ Item {
             }
             Text{
                 visible: oilTempPageSwitch.checked==true
-                text:"当前油温参考\n左灶 "+QmlDevState.state.LOilTemp+"℃\n右灶 "+QmlDevState.state.ROilTemp+"℃"
+                text:"当前油温参考\n左灶 "+(lOilTemp>=0?lOilTemp:"-")+"℃\n右灶 "+(rOilTemp>=0?rOilTemp:"-")+"℃"
                 color:themesTextColor
                 font.pixelSize: 24
                 anchors.horizontalCenter: parent.horizontalCenter
