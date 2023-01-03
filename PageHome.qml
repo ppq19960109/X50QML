@@ -867,11 +867,39 @@ Item {
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.bottom: parent.bottom
             spacing: 50
-
             Button{
                 width: 292
                 height:parent.height
+                visible: aiState
+                background:Image {
+                    source: themesPicturesPath+"home_hood_background.png"
+                }
+                Text{
+                    text:"AI 烹饪"
+                    color:"#fff"
+                    font.pixelSize: 40
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.top: parent.top
+                    anchors.topMargin: 45
+                    Text{
+                        text:"AI COOKING"
+                        color:"#C3C2C2"
+                        font.pixelSize: 16
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        anchors.top: parent.bottom
+                        anchors.topMargin: 10
+                        anchors.left: parent.left
+                    }
+                }
 
+                onClicked: {
+                    push_page(pageAICook)
+                }
+            }
+            Button{
+                width: 292
+                height:parent.height
+                visible: !aiState
                 background:Image {
                     source: themesPicturesPath+"home_hood_background.png"
                 }
@@ -988,7 +1016,6 @@ Item {
                         }
                     }
                 }
-
                 onClicked: {
                     push_page(pageHood)
                 }

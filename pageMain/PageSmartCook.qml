@@ -29,7 +29,7 @@ Item {
     Component.onCompleted: {
         auxiliaryPageSwitch.checked=auxiliarySwitch
         cookingCurvePageSwitch.checked=QmlDevState.state.CookingCurveSwitch
-        oilTempPageSwitch.checked=QmlDevState.state.OilTempSwitch
+        oilTempPageSwitch.checked=oilTempSwitch
         lowHeatPageSwitch.checked=QmlDevState.state.RMovePotLowHeatSwitch
     }
 
@@ -41,7 +41,7 @@ Item {
             Component.onCompleted: {
                 var i
                 var array = []
-                for(i=80; i<= 300; ++i) {
+                for(i=50; i<= 210; ++i) {
                     array.push(i)
                 }
                 tempPathView.model=array
@@ -63,6 +63,7 @@ Item {
                     anchors.top:parent.top
                     anchors.right:parent.right
                     onClicked: {
+                        auxiliaryPageSwitch.checked=false
                         loaderMainHide()
                     }
                 }
@@ -151,7 +152,7 @@ Item {
         id:topBar
         anchors.top:parent.top
         name:qsTr("智慧烹饪")
-        centerText:QmlDevState.state.OilTempSwitch?("左灶油温:"+(lOilTemp>=0?lOilTemp:"-")+"℃"+"    右灶油温:"+(rOilTemp>=0?rOilTemp:"-")+"℃"):""
+        centerText:oilTempSwitch?("左灶油温:"+(lOilTemp>=0?lOilTemp:"-")+"℃"+"    右灶油温:"+(rOilTemp>=0?rOilTemp:"-")+"℃"):""
         customClose:true
         onClose:{
             let page=isExistView("PageHood")

@@ -130,6 +130,7 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     setState("LOilTemp",-1);
     setState("ROilTemp",-1);
     setState("StirFryTimerLeft",0);
+    setState("HoodLight",0);
 #ifndef USE_TCP
 #ifndef USE_RK3308
     setState("SysPower",1);

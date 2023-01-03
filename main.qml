@@ -16,13 +16,14 @@ ApplicationWindow {
     width: 1280
     height: 400
     visible: false //true false
-    property int sysPower:-1
+    property int sysPower:1
     property int productionTestStatus:0
     property int productionTestFlag:1
     property int demoModeStatus:0
     property bool wifiPageStatus:false
     property bool errorBuzzer:false
     property bool testMode:false
+    property bool aiState:true
     property var decode_ssid:""
     property int smartRecipesIndex:0
     property int pageSetIndex:0
@@ -37,7 +38,9 @@ ApplicationWindow {
     property var lStOvDoorState: QmlDevState.state.LStOvDoorState
     property var rStOvDoorState: QmlDevState.state.RStOvDoorState
     property var errorCodeShow: QmlDevState.state.ErrorCodeShow
+    property var errorCode: QmlDevState.state.ErrorCode
     property var auxiliarySwitch: QmlDevState.state.RAuxiliarySwitch
+    property var oilTempSwitch:QmlDevState.state.OilTempSwitch
     property var lOilTemp: QmlDevState.state.LOilTemp
     property var rOilTemp: QmlDevState.state.ROilTemp
 
@@ -1285,6 +1288,10 @@ ApplicationWindow {
     Component {
         id: pageClock
         PageClock {}
+    }
+    Component {
+        id: pageAICook
+        PageAICook {}
     }
     function isExistView(pageName) {
         return stackView.find(function(item,index){

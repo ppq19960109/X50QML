@@ -68,5 +68,6 @@
         <file>pageMain/PageRightRecipes.qml</file>
         <file>PageFps.qml</file>
         <file>pageCook/PageMultistageShow.qml</file>
+        <file>pageMain/PageAICook.qml</file>
     </qresource>
 </RCC>

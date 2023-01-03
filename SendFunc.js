@@ -227,7 +227,13 @@ function setHoodSpeed(speed)
     Data.DataReportReason=0
     setToServer(Data)
 }
-
+function setHoodLight(state)
+{
+    var Data={}
+    Data.HoodLight=state
+    Data.DataReportReason=0
+    setToServer(Data)
+}
 function setBuzControl(operation)
 {
     if(systemSettings.reboot==true)

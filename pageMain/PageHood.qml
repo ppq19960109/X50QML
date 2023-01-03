@@ -4,11 +4,14 @@ import "../"
 import "qrc:/SendFunc.js" as SendFunc
 Item {
     property string name: "PageHood"
+    Component.onCompleted: {
+        aiState=false
+    }
     PageBackBar{
         id:topBar
         anchors.top:parent.top
         name:qsTr("烟机灶具")
-        centerText:QmlDevState.state.OilTempSwitch?("左灶油温:"+(lOilTemp>=0?lOilTemp:"-")+"℃"+"    右灶油温:"+(rOilTemp>=0?rOilTemp:"-")+"℃"):""
+        centerText:oilTempSwitch?("左灶油温:"+(lOilTemp>=0?lOilTemp:"-")+"℃"+"    右灶油温:"+(rOilTemp>=0?rOilTemp:"-")+"℃"):""
     }
     PageTabBar{
         anchors.horizontalCenter: parent.horizontalCenter

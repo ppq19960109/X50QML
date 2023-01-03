@@ -140,8 +140,38 @@ Item {
                             {
                                 if(stOvDoorState>0)
                                     loaderDoorAutoShow((index==0?"左":"右")+"腔门打开，暂停烹饪","","好的",cookWorkPosEnum.LEFT)
-                                if(errorCodeShow!==0)
-                                    loaderErrorCodeShow(errorCodeShow,index)
+                                else if(errorCodeShow!==0)
+                                {
+                                    if(errorCodeShow===6)
+                                    {
+                                        if((errorCode>>1) & 0x01)
+                                            loaderErrorCodeShow(2,index)
+                                        else if((errorCode>>2) & 0x01)
+                                            loaderErrorCodeShow(3,index)
+                                        else if(index==0)
+                                        {
+                                            if(errorCode & 0x01)
+                                                loaderErrorCodeShow(1,index)
+                                            else if((errorCode>>3) & 0x01)
+                                                loaderErrorCodeShow(4,index)
+                                            else if((errorCode>>4) & 0x01)
+                                                loaderErrorCodeShow(5,index)
+                                            else if((errorCode>>9) & 0x01)
+                                                loaderErrorCodeShow(10,index)
+                                        }
+                                        else
+                                        {
+                                            if((errorCode>>11) & 0x01)
+                                                loaderErrorCodeShow(12,index)
+                                            else if((errorCode>>12) & 0x01)
+                                                loaderErrorCodeShow(13,index)
+                                            else if((errorCode>>13) & 0x01)
+                                                loaderErrorCodeShow(14,index)
+                                        }
+                                    }
+                                    else
+                                        loaderErrorCodeShow(errorCodeShow,index)
+                                }
                                 SendFunc.setCookOperation(index,workOperationEnum.START)
                             }
                             else if(stOvState===workStateEnum.WORKSTATE_PAUSE_RESERVE)
