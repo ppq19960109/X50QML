@@ -125,11 +125,11 @@ Item {
                     onClick: {
                         if(clickIndex==1)
                         {
-//                            var Data={}
-//                            Data.RAuxiliarySwitch = true
-//                            Data.RAuxiliaryTemp = tempPathView.model[tempPathView.currentIndex]
-//                            SendFunc.setToServer(Data)
-//                            timer_auxiliary.restart()
+                            //                            var Data={}
+                            //                            Data.RAuxiliarySwitch = true
+                            //                            Data.RAuxiliaryTemp = tempPathView.model[tempPathView.currentIndex]
+                            //                            SendFunc.setToServer(Data)
+                            //                            timer_auxiliary.restart()
                             SendFunc.tempControlRquest(tempPathView.model[tempPathView.currentIndex])
                         }
                         else
@@ -148,25 +148,43 @@ Item {
         loaderManual.item.clickFunc=clickFunc
     }
 
-    PageBackBar{
-        id:topBar
-        anchors.top:parent.top
-        name:qsTr("智慧烹饪")
-        centerText:oilTempSwitch?("左灶油温:"+(lOilTemp>=0?lOilTemp:"-")+"℃"+"    右灶油温:"+(rOilTemp>=0?rOilTemp:"-")+"℃"):""
-        customClose:true
-        onClose:{
-            let page=isExistView("PageHood")
+    //    PageBackBar{
+    //        id:topBar
+    //        anchors.top:parent.top
+    //        name:qsTr("智慧烹饪")
+    //        centerText:oilTempSwitch?("左灶油温:"+(lOilTemp>=0?lOilTemp:"-")+"℃"+"    右灶油温:"+(rOilTemp>=0?rOilTemp:"-")+"℃"):""
+    //        customClose:true
+    //        onClose:{
+    //            let page=isExistView("PageAICook")
+    //            if(page==null)
+    //                backTopPage()
+    //            else
+    //                backPage(page)
+    //        }
+    //    }
+    Button{
+        width: 370
+        height:60
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.bottom: parent.bottom
+        background:Image {
+            asynchronous:true
+            smooth:false
+            anchors.centerIn: parent
+            source: themesPicturesPath+"ai/cook_assist_open.png"
+        }
+        onClicked: {
+            let page=isExistView("PageAICook")
             if(page==null)
-                backTopPage()
+                replace_page(pageAICook)
             else
                 backPage(page)
         }
     }
-
     Row {
         width: 314+204*3+40*2
         height: 282
-        anchors.top: topBar.bottom
+        anchors.top: parent.top
         anchors.topMargin: 30
         anchors.horizontalCenter: parent.horizontalCenter
         spacing: 40
@@ -190,7 +208,7 @@ Item {
             }
             Text{
                 visible: auxiliarySwitch > 0
-                text:QmlDevState.state.RAuxiliaryTemp+"℃"
+                text:rAuxiliaryTemp+"℃"
                 color:themesTextColor
                 font.pixelSize: 30
                 anchors.horizontalCenter: parent.horizontalCenter

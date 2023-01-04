@@ -112,10 +112,9 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     setState("ProductCategory","集成灶");
     setState("ProductModel","IIZ(T/Y)—X8GCZ01");
     setState("SmartSmokeSwitch",0);
+    setState("OilTempSwitch",0);
     setState("LStoveStatus",0);
     setState("RStoveStatus",0);
-    setState("LOilTemp",0);
-    setState("ROilTemp",0);
     setState("LStoveTimingState",0);
     setState("RStoveTimingState",0);
     setState("LStOvState",0);
@@ -131,8 +130,11 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     setState("ROilTemp",-1);
     setState("StirFryTimerLeft",0);
     setState("HoodLight",0);
+
 #ifndef USE_TCP
 #ifndef USE_RK3308
+    setState("RAuxiliarySwitch",1);
+    setState("RAuxiliaryTemp",220);
     setState("SysPower",1);
     setState("OTASlientUpgrade",0);
     setState("LoadPowerState",7);

@@ -20,7 +20,7 @@ Item{
         anchors.centerIn: parent
         background:null
         Repeater {
-            model: [aiState?"AI 烹饪":"烟机灶具", "蒸烤箱", "智慧菜谱"]
+            model: ["AI 烹饪", "蒸烤箱", "智慧菜谱"]
             TabButton {
                 width: 150
                 height: parent.height
@@ -49,10 +49,7 @@ Item{
 
             switch (currentIndex){
             case 0:
-                if(aiState)
-                    replace_page(pageAICook)
-                else
-                    replace_page(pageHood)
+                replace_page(pageAICook)
                 break
             case 1:
                 replace_page(pageSteamOven)

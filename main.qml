@@ -16,14 +16,14 @@ ApplicationWindow {
     width: 1280
     height: 400
     visible: false //true false
-    property int sysPower:1
+    property int sysPower:-1
     property int productionTestStatus:0
     property int productionTestFlag:1
     property int demoModeStatus:0
     property bool wifiPageStatus:false
     property bool errorBuzzer:false
     property bool testMode:false
-    property bool aiState:true
+    //    property bool aiState:true
     property var decode_ssid:""
     property int smartRecipesIndex:0
     property int pageSetIndex:0
@@ -40,6 +40,7 @@ ApplicationWindow {
     property var errorCodeShow: QmlDevState.state.ErrorCodeShow
     property var errorCode: QmlDevState.state.ErrorCode
     property var auxiliarySwitch: QmlDevState.state.RAuxiliarySwitch
+    property var rAuxiliaryTemp:QmlDevState.state.RAuxiliaryTemp
     property var oilTempSwitch:QmlDevState.state.OilTempSwitch
     property var lOilTemp: QmlDevState.state.LOilTemp
     property var rOilTemp: QmlDevState.state.ROilTemp
@@ -372,7 +373,7 @@ ApplicationWindow {
         {
             console.log("getCurrentTime seconds:",seconds)
             timer_time.interval=(60-seconds)*1000
-//            timer_time.restart()
+            //            timer_time.restart()
         }
         //        console.log("getCurrentTime",ms,gYear,gMonth,gDate,gDay,gHours,gMinutes)
     }
@@ -1464,7 +1465,213 @@ ApplicationWindow {
             break
         }
     }
+    //-----------------------------------------------------
+    Component{
+        id:component_closeHeat
+        Item {
+            property int cookWorkPos:0
+            property var clickFunc:null
+            property var cancelFunc:null
+            property alias hourIndex:hourPathView.currentIndex
+            property alias minuteIndex:minutePathView.currentIndex
+            Component.onCompleted: {
+                let i
+                let hourArray = []
+                for(i=0; i<= 2; ++i) {
+                    hourArray.push(i)
+                }
+                hourPathView.model=hourArray
+                let minuteArray = []
+                for(i=0; i< 60; ++i) {
+                    minuteArray.push(i)
+                }
+                minutePathView.model=minuteArray
+            }
+            Component.onDestruction: {
+                clickFunc=null
+                cancelFunc=null
+            }
 
+            //内容
+            Rectangle{
+                width:730
+                height: 350
+                anchors.centerIn: parent
+                anchors.margins: 20
+                color: "#333333"
+                radius: 10
+
+                PageCloseButton {
+                    anchors.top:parent.top
+                    anchors.right:parent.right
+                    onClicked: {
+                        if(clickFunc!=null)
+                            cancelFunc(cookWorkPos)
+                        loaderMainHide()
+                    }
+                }
+
+                PageDivider{
+                    width: parent.width-40
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.verticalCenter:row.verticalCenter
+                    anchors.verticalCenterOffset:-30
+                }
+                PageDivider{
+                    width: parent.width-40
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.verticalCenter:row.verticalCenter
+                    anchors.verticalCenterOffset:30
+                }
+
+                Row {
+                    id:row
+                    width: parent.width
+                    height:222
+                    anchors.top: parent.top
+                    anchors.topMargin: 50
+                    anchors.left:parent.left
+                    anchors.leftMargin: 30
+                    spacing: 10
+
+                    Text{
+                        width:130
+                        color:"#fff"
+                        font.pixelSize: 30
+                        anchors.verticalCenter: parent.verticalCenter
+                        horizontalAlignment:Text.AlignHCenter
+                        verticalAlignment:Text.AlignVCenter
+                        text:qsTr(cookWorkPos==0?"左灶将在":"右灶将在")
+                    }
+                    PageCookPathView {
+                        id:hourPathView
+                        width: 200
+                        height:parent.height
+                        pathItemCount:3
+                        currentIndex:0
+                        Image {
+                            anchors.fill: parent
+                            visible: parent.moving
+                            asynchronous:true
+                            smooth:false
+                            anchors.centerIn: parent
+                            source: themesPicturesPath+"steamoven/"+"roll_background.png"
+                        }
+                        Text{
+                            text:qsTr("小时")
+                            color:themesTextColor
+                            font.pixelSize: 24
+                            anchors.centerIn: parent
+                            anchors.horizontalCenterOffset: 60
+                        }
+                    }
+                    PageCookPathView {
+                        id:minutePathView
+                        width: 200
+                        height:parent.height
+                        pathItemCount:3
+                        Image {
+                            anchors.fill: parent
+                            visible: parent.moving
+                            asynchronous:true
+                            smooth:false
+                            anchors.centerIn: parent
+                            source: themesPicturesPath+"steamoven/"+"roll_background.png"
+                        }
+                        Text{
+                            text:qsTr("分钟")
+                            color:themesTextColor
+                            font.pixelSize: 24
+                            anchors.centerIn: parent
+                            anchors.horizontalCenterOffset: 60
+                        }
+                    }
+                    Text{
+                        width:100
+                        color:"#fff"
+                        font.pixelSize: 30
+                        anchors.verticalCenter: parent.verticalCenter
+                        horizontalAlignment:Text.AlignHCenter
+                        verticalAlignment:Text.AlignVCenter
+                        text:qsTr("后关火")
+                    }
+                }
+
+                PageButtonBar{
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.bottom: parent.bottom
+                    anchors.bottomMargin: 20
+
+                    space:80
+                    models: ["取消","开始"]
+                    onClick: {
+                        if(clickIndex==0)
+                        {
+                            if(clickFunc!=null)
+                                cancelFunc(cookWorkPos)
+                            loaderMainHide()
+                        }
+                        else
+                        {
+                            if(clickFunc==null)
+                                return
+                            if(clickFunc(cookWorkPos,hourPathView.currentIndex*60+minutePathView.currentIndex)===0)
+                            {
+                                loaderMainHide()
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    function loaderCloseHeat(cookWorkPos,clickFunc,time,cancelFunc)
+    {
+        loaderManual.sourceComponent = component_closeHeat
+        loaderManual.item.cookWorkPos=cookWorkPos
+        loaderManual.item.clickFunc=clickFunc
+        loaderManual.item.cancelFunc=cancelFunc
+        if(time!=null)
+        {
+            loaderManual.item.hourIndex=time/60
+            loaderManual.item.minuteIndex=time%60
+        }
+    }
+
+    function startTurnOffFire(dir,time)
+    {
+        if(time === 0)
+            return
+        let Data={}
+        if(dir===cookWorkPosEnum.LEFT)
+        {
+            Data.LStoveTimingOpera = timingOperationEnum.START
+            Data.LStoveTimingSet = time
+        }
+        else
+        {
+            Data.RStoveTimingOpera = timingOperationEnum.START
+            Data.RStoveTimingSet = time
+        }
+        Data.DataReportReason=0
+        SendFunc.setToServer(Data)
+        return 0
+    }
+    function stopCloseHeat(dir)
+    {
+        var Data={}
+        if(dir===cookWorkPosEnum.LEFT)
+        {
+            Data.LStoveTimingOpera = timingOperationEnum.CANCEL
+        }
+        else
+        {
+            Data.RStoveTimingOpera = timingOperationEnum.CANCEL
+        }
+        Data.DataReportReason=0
+        SendFunc.setToServer(Data)
+    }
     //    readonly property var weather_code:{
     //        "113": "Sunny",
     //        "116": "PartlyCloudy",

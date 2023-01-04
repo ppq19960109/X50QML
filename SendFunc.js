@@ -123,10 +123,15 @@ function otaPowerRquest(request)
 function tempControlRquest(temp)
 {
     var Data={}
-    Data.RAuxiliarySwitch = true
-    Data.RAuxiliaryTemp = temp
-    SendFunc.setToServer(Data)
-    timer_auxiliary.restart()
+    if(temp===0)
+        Data.RAuxiliarySwitch = false
+    else
+    {
+        Data.RAuxiliarySwitch = true
+        Data.RAuxiliaryTemp = temp
+        timer_auxiliary.restart()
+    }
+    setToServer(Data)
 }
 function enableWifi(enable)
 {
@@ -373,5 +378,5 @@ function setMultiCooking(list,orderTime,cookPos,dishName,cookbookID)
     }
     Data.DataReportReason=0
     setToServer(Data)
-//    recipesLoadSteamingPage()
+    //    recipesLoadSteamingPage()
 }

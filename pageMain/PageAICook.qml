@@ -3,8 +3,69 @@ import QtQuick.Controls 2.5
 import "../"
 import "qrc:/SendFunc.js" as SendFunc
 Item {
+    property string name: "PageAICook"
+    property int left_percent:{
+        if(lOilTemp<50)
+            return 0
+        else if(lOilTemp>250)
+            return 100
+        else
+            return 100*(lOilTemp-50)/200
+    }
+    property int right_percent:{
+        if(rOilTemp<50)
+            return 0
+        else if(rOilTemp>250)
+            return 100
+        else
+            return 100*(rOilTemp-50)/200
+    }
+    onLeft_percentChanged: {
+        left_canvas.requestPaint()
+    }
+    onRight_percentChanged: {
+        right_canvas.requestPaint()
+    }
+    function close_heat_cancel(index)
+    {
+        if(index===0)
+        {
+            leftCloseHeatSwitch.checked=false
+        }
+        else
+        {
+            rightCloseHeatSwitch.checked=false
+        }
+    }
+    Connections { // 将目标对象信号与槽函数进行连接
+        target: QmlDevState
+        onStateChanged: { // 处理目标对象信号的槽函数
+            //            console.log("page PageAICook:",key,value)
+            if("LStoveTimingState"==key)
+            {
+                if(value===timingStateEnum.RUN)
+                    leftCloseHeatSwitch.checked=true
+                else
+                    leftCloseHeatSwitch.checked=false
+            }
+            else if("RStoveTimingState"==key)
+            {
+                if(value===timingStateEnum.RUN)
+                    rightCloseHeatSwitch.checked=true
+                else
+                    rightCloseHeatSwitch.checked=false
+            }
+        }
+    }
     Component.onCompleted: {
-        aiState=true
+        if(lTimingState===timingStateEnum.RUN)
+            leftCloseHeatSwitch.checked=true
+        else
+            leftCloseHeatSwitch.checked=false
+        if(rTimingState===timingStateEnum.RUN)
+            rightCloseHeatSwitch.checked=true
+        else
+            rightCloseHeatSwitch.checked=false
     }
     PageTabBar{
         anchors.horizontalCenter: parent.horizontalCenter
@@ -20,24 +81,35 @@ Item {
             asynchronous:true
             smooth:false
             anchors.centerIn: parent
-            source: themesPicturesPath+"ai/cook_assist_btn.png"
+            source: themesPicturesPath+"ai/cook_assist_close.png"
         }
         onClicked: {
-            replace_page(pageHood)
+            push_page(pageSmartCook)
         }
     }
+    Text{
+        visible: hoodSpeed===4 && (testMode==true||smartSmokeSwitch===0)
+        text:QmlDevState.state.StirFryTimerLeft+"分钟"
+        color:themesTextColor
+        font.pixelSize: 26
+        anchors.right: grid.right
+        anchors.rightMargin: 5
+        anchors.bottom: grid.top
+        anchors.bottomMargin: 0
+    }
     Grid{
-        width: 79*3+38*2
-        height: 100*2+19
+        id:grid
+        width: 80*3+40*2
+        height: 100*2+20
         rows: 2
-        rowSpacing: 19
+        rowSpacing: 20
         columns: 3
-        columnSpacing: 38
+        columnSpacing: 40
         anchors.centerIn: parent
         Repeater {
             model: [{"background":"light.png","text":"照明"}, {"background":"ai.png","text":"智能排烟"}, {"background":"stir_fry.png","text":"爆炒"}, {"background":"high_speed.png","text":"高速"}, {"background":"medium_speed.png","text":"中速"}, {"background":"low_speed.png","text":"低速"}]
             Item {
-                width: 79
+                width: 80
                 height:100
                 Button{
                     property bool curState:{
@@ -47,13 +119,10 @@ Item {
                         case 1:
                             return smartSmokeSwitch
                         case 2:
-                            return hoodSpeed===4
                         case 3:
-                            return hoodSpeed===3
                         case 4:
-                            return hoodSpeed===2
                         case 5:
-                            return hoodSpeed===1
+                            return hoodSpeed===(6-index) && (testMode==true||smartSmokeSwitch===0)
                         }
                         return false
                     }
@@ -66,7 +135,6 @@ Item {
                         smooth:false
                         anchors.centerIn: parent
                         source: {
-
                             return themesPicturesPath+"/ai/"+(parent.curState?"checked_background.png":"uncheck_background.png")
                         }
                     }
@@ -85,28 +153,18 @@ Item {
                             SendFunc.setSmartSmoke(!smartSmokeSwitch)
                             break
                         case 2:
-                            if(hoodSpeed===4)
-                                SendFunc.setHoodSpeed(0)
-                            else
-                                SendFunc.setHoodSpeed(4)
-                            break
                         case 3:
-                            if(hoodSpeed===3)
-                                SendFunc.setHoodSpeed(0)
-                            else
-                                SendFunc.setHoodSpeed(3)
-                            break
                         case 4:
-                            if(hoodSpeed===2)
-                                SendFunc.setHoodSpeed(0)
-                            else
-                                SendFunc.setHoodSpeed(2)
-                            break
                         case 5:
-                            if(hoodSpeed===1)
-                                SendFunc.setHoodSpeed(0)
+                            if(hoodSpeed===6-index)
+                            {
+                                if(testMode==false && smartSmokeSwitch>0)
+                                    SendFunc.setSmartSmoke(0)
+                                else
+                                    SendFunc.setHoodSpeed(0)
+                            }
                             else
-                                SendFunc.setHoodSpeed(1)
+                                SendFunc.setHoodSpeed(6-index)
                             break
                         }
                     }
@@ -141,14 +199,14 @@ Item {
             anchors.left:parent.left
             anchors.leftMargin: 135
             anchors.verticalCenter: parent.verticalCenter
-            source: themesPicturesPath+"ai/"+"left_temp_arc.png"
+            source: themesPicturesPath+"ai/"+(oilTempSwitch?"left_temp_arc.png":"left_temp_arc_close.png")
         }
         Text{
-            text:"120℃"
+            text:oilTempSwitch?(lOilTemp>=0?lOilTemp:"-")+"℃":"关"
             color:"#fff"
             font.pixelSize: 40
             anchors.top: parent.top
-            anchors.topMargin: 106
+            anchors.topMargin: 50
             anchors.left: parent.left
             anchors.leftMargin: 46
         }
@@ -160,16 +218,88 @@ Item {
             anchors.left: parent.left
             anchors.leftMargin: 130
         }
+        Text{
+            visible: lTimingState===timingStateEnum.RUN
+            text:{
+                var timingTime=QmlDevState.state.LStoveTimingLeft
+                return generateTwoTime(Math.floor(timingTime/60))+":"+generateTwoTime(timingTime%60)
+            }
+            color:themesTextColor
+            font.pixelSize: 36
+            anchors.top: parent.top
+            anchors.topMargin: 120
+            anchors.left: parent.left
+            anchors.leftMargin: 50
+        }
         PageSwitch {
-            id:leftTempSwitch
+            id:leftCloseHeatSwitch
             checked: false
             anchors.verticalCenter: parent.verticalCenter
             anchors.left: parent.left
             anchors.leftMargin: 30
             onClicked: {
-
+                if(checked==true)
+                {
+                    if(QmlDevState.state.LStoveStatus===0)
+                    {
+                        checked=false
+                        loaderWarnConfirmShow("左灶未开启\n开启后才可设置定时关火")
+                    }
+                    else
+                        loaderCloseHeat(cookWorkPosEnum.LEFT,startTurnOffFire,null,close_heat_cancel)
+                }
+                else
+                {
+                    stopCloseHeat(cookWorkPosEnum.LEFT)
+                }
             }
         }
+        Canvas{
+            property int r:210//-10
+            id: left_canvas
+            visible: oilTempSwitch
+            width: parent.width
+            height: parent.height
+            anchors.centerIn: parent
+            onVisibleChanged: {
+                left_canvas.requestPaint()
+            }
+            onPaint: {
+                if(!visible)
+                    return
+                var ctx = getContext("2d")
+                ctx.clearRect(0, 0, parent.width, parent.height)
+                ctx.lineWidth = 60
+
+                //ctx.lineCap="round"
+                ctx.beginPath()
+                ctx.strokeStyle ="#FFFFFF"
+                //0.71 1.288 0.29 -0.288
+                var percentArc=0.578*left_percent/100
+                ctx.arc(parent.width/2-135, parent.height/2, r, (0.29-percentArc)*Math.PI, (0.285-percentArc)*Math.PI,true)
+
+                //                ctx.path=path
+                ctx.stroke()
+                ctx.closePath()
+            }
+        }
+        //        Slider {
+        //            anchors.left: parent.left
+        //            anchors.bottom: parent.bottom
+        //            stepSize: 2
+        //            from:50
+        //            to: 250
+        //            value: 50
+        //            onValueChanged: {
+        //                console.log("slider:",value)
+        //                left_percent=100*(value-50)/200
+        //                left_canvas.requestPaint()
+        //                if(value==from)
+        //                    QmlDevState.setState("OilTempSwitch",0)
+        //                else
+        //                    QmlDevState.setState("OilTempSwitch",1)
+        //            }
+        //        }
     }
     Item {
         id: right_content
@@ -192,14 +322,14 @@ Item {
             anchors.right:parent.right
             anchors.rightMargin: 135
             anchors.verticalCenter: parent.verticalCenter
-            source: themesPicturesPath+"ai/"+"right_temp_arc.png"
+            source: themesPicturesPath+"ai/"+(oilTempSwitch?"right_temp_arc.png":"right_temp_arc_close.png")
         }
         Text{
-            text:"120℃"
+            text:oilTempSwitch?(rOilTemp>=0?rOilTemp:"-")+"℃":"关"
             color:"#fff"
             font.pixelSize: 40
             anchors.top: parent.top
-            anchors.topMargin: 106
+            anchors.topMargin: 50
             anchors.right: parent.right
             anchors.rightMargin: 46
         }
@@ -211,14 +341,40 @@ Item {
             anchors.right: parent.right
             anchors.rightMargin: 130
         }
+        Text{
+            visible: rTimingState===timingStateEnum.RUN
+            text:{
+                var timingTime=QmlDevState.state.RStoveTimingLeft
+                return generateTwoTime(Math.floor(timingTime/60))+":"+generateTwoTime(timingTime%60)
+            }
+            color:themesTextColor
+            font.pixelSize: 36
+            anchors.top: parent.top
+            anchors.topMargin: 120
+            anchors.right: parent.right
+            anchors.rightMargin: 50
+        }
         PageSwitch {
-            id:rightTempSwitch
+            id:rightCloseHeatSwitch
             checked: false
             anchors.verticalCenter: parent.verticalCenter
             anchors.right: parent.right
             anchors.rightMargin: 30
             onClicked: {
-
+                if(checked==true)
+                {
+                    if(QmlDevState.state.RStoveStatus===0)
+                    {
+                        checked=false
+                        loaderWarnConfirmShow("右灶未开启\n开启后才可设置定时关火")
+                    }
+                    else
+                        loaderCloseHeat(cookWorkPosEnum.RIGHT,startTurnOffFire,null,close_heat_cancel)
+                }
+                else
+                {
+                    stopCloseHeat(cookWorkPosEnum.RIGHT)
+                }
             }
         }
         //        Path
@@ -232,45 +388,48 @@ Item {
         //                sweepAngle:360
         //            }
         //        }
-
         Canvas{
             property int r: 210//-10
-            id: canvas
-            visible: true
+            id: right_canvas
+            visible: oilTempSwitch
             width: parent.width
             height: parent.height
             anchors.centerIn: parent
-
+            onVisibleChanged: {
+                right_canvas.requestPaint()
+            }
             onPaint: {
+                if(!visible)
+                    return
                 var ctx = getContext("2d")
-                ctx.clearRect(0, 0, canvas.width, canvas.height)
+                ctx.clearRect(0, 0, parent.width, parent.height)
                 ctx.lineWidth = 60
 
                 //ctx.lineCap="round"
                 ctx.beginPath()
                 ctx.strokeStyle ="#FFFFFF"
                 //0.71 1.288
-                var percentArc=0.578*percent/100
-                ctx.arc(canvas.width/2+135, canvas.height/2, r, (0.71+percentArc)*Math.PI, (0.715+percentArc)*Math.PI)
+                var percentArc=0.578*right_percent/100
+                ctx.arc(parent.width/2+135, parent.height/2, r, (0.71+percentArc)*Math.PI, (0.715+percentArc)*Math.PI)
 
                 //                ctx.path=path
                 ctx.stroke()
                 ctx.closePath()
             }
         }
-        Slider {
-            anchors.right: parent.right
-            anchors.bottom: parent.bottom
-            stepSize: 2
-            from:50
-            to: 250
-            value: 30
-            onValueChanged: {
-                console.log("slider:",value)
-                percent=100*(value-50)/200
-                canvas.requestPaint()
-            }
-        }
+        //        Slider {
+        //            anchors.right: parent.right
+        //            anchors.bottom: parent.bottom
+        //            stepSize: 2
+        //            from:50
+        //            to: 250
+        //            value: 50
+        //            onValueChanged: {
+        //                console.log("slider:",value)
+        //                right_percent=100*(value-50)/200
+        //                right_canvas.requestPaint()
+        //            }
+        //        }
         Button{
             width: 60
             height:30
@@ -279,7 +438,7 @@ Item {
             anchors.right: right_arc.left
             anchors.rightMargin: -20
             background:Rectangle {
-                color: "#434343"
+                color: (auxiliarySwitch===1 && rAuxiliaryTemp===220)?themesTextColor:"#434343"
                 radius: 6
             }
             Text{
@@ -289,7 +448,10 @@ Item {
                 anchors.centerIn: parent
             }
             onClicked: {
-
+                if(auxiliarySwitch===0 || rAuxiliaryTemp!==220)
+                    SendFunc.tempControlRquest(220)
+                else
+                    SendFunc.tempControlRquest(0)
             }
         }
         Button{
@@ -300,7 +462,7 @@ Item {
             anchors.right: right_arc.left
             anchors.rightMargin: 0
             background:Rectangle {
-                color: "#434343"
+                color: (auxiliarySwitch===1 && rAuxiliaryTemp===200)?themesTextColor:"#434343"
                 radius: 6
             }
             Text{
@@ -310,7 +472,10 @@ Item {
                 anchors.centerIn: parent
             }
             onClicked: {
-
+                if(auxiliarySwitch===0 || rAuxiliaryTemp!==200)
+                    SendFunc.tempControlRquest(200)
+                else
+                    SendFunc.tempControlRquest(0)
             }
         }
         Button{
@@ -321,7 +486,7 @@ Item {
             anchors.right: right_arc.left
             anchors.rightMargin: 5
             background:Rectangle {
-                color: "#434343"
+                color: (auxiliarySwitch===1 && rAuxiliaryTemp===180)?themesTextColor:"#434343"
                 radius: 6
             }
             Text{
@@ -331,7 +496,10 @@ Item {
                 anchors.centerIn: parent
             }
             onClicked: {
-
+                if(auxiliarySwitch===0 || rAuxiliaryTemp!==180)
+                    SendFunc.tempControlRquest(180)
+                else
+                    SendFunc.tempControlRquest(0)
             }
         }
         Button{
@@ -342,7 +510,7 @@ Item {
             anchors.right: right_arc.left
             anchors.rightMargin: 5
             background:Rectangle {
-                color: "#434343"
+                color: (auxiliarySwitch===1 && rAuxiliaryTemp===100)?themesTextColor:"#434343"
                 radius: 6
             }
             Text{
@@ -352,9 +520,13 @@ Item {
                 anchors.centerIn: parent
             }
             onClicked: {
-
+                if(auxiliarySwitch===0 || rAuxiliaryTemp!==100)
+                    SendFunc.tempControlRquest(100)
+                else
+                    SendFunc.tempControlRquest(0)
             }
-        }        Button{
+        }
+        Button{
             width: 60
             height:30
             anchors.top: parent.top
@@ -362,7 +534,7 @@ Item {
             anchors.right: right_arc.left
             anchors.rightMargin: -40
             background:Rectangle {
-                color: "#434343"
+                color: (auxiliarySwitch===1 && rAuxiliaryTemp===60)?themesTextColor:"#434343"
                 radius: 6
             }
             Text{
@@ -372,9 +544,11 @@ Item {
                 anchors.centerIn: parent
             }
             onClicked: {
-
+                if(auxiliarySwitch===0 || rAuxiliaryTemp!==60)
+                    SendFunc.tempControlRquest(60)
+                else
+                    SendFunc.tempControlRquest(0)
             }
         }
     }
-    property int percent:0
 }

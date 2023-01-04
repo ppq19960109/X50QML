@@ -714,7 +714,7 @@ Item {
             {
                 if(value==0)
                 {
-                    loaderAutoTextShow("右灶火力档位过小，无法达到"+QmlDevState.state.RAuxiliaryTemp+"℃\n请将火力调至最大！")
+                    //                    loaderAutoTextShow("右灶火力档位过小，无法达到"+QmlDevState.state.RAuxiliaryTemp+"℃\n请将火力调至最大！")
                 }
                 else if(value==1)
                 {
@@ -870,7 +870,7 @@ Item {
             Button{
                 width: 292
                 height:parent.height
-                visible: aiState
+                visible: true
                 background:Image {
                     source: themesPicturesPath+"home_hood_background.png"
                 }
@@ -896,130 +896,130 @@ Item {
                     push_page(pageAICook)
                 }
             }
-            Button{
-                width: 292
-                height:parent.height
-                visible: !aiState
-                background:Image {
-                    source: themesPicturesPath+"home_hood_background.png"
-                }
-                Text{
-                    text:"烟机灶具"
-                    color:"#fff"
-                    font.pixelSize: 40
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    anchors.top: parent.top
-                    anchors.topMargin: 45
-                    Text{
-                        text:"HOOD"
-                        color:"#C3C2C2"
-                        font.pixelSize: 16
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        anchors.top: parent.bottom
-                        anchors.topMargin: 10
-                        anchors.left: parent.left
-                    }
-                }
-                Column{
-                    width: 182
-                    anchors.centerIn: parent
-                    anchors.verticalCenterOffset: 40
-                    spacing: 6
-                    Item
-                    {
-                        visible: smartSmokeSwitch
-                        width: parent.width
-                        height: 50
-                        Rectangle{
-                            width: parent.width
-                            height: parent.height
-                            color: "#000"
-                            opacity: 0.5
-                            border.color: themesTextColor
-                            radius: 4
-                        }
-                        Text{
-                            text:"AUTO"
-                            color:themesTextColor
-                            font.pixelSize: 26
-                            anchors.centerIn: parent
-                        }
-                    }
-                    Item
-                    {
-                        visible: hoodSpeed > 0 && (testMode==true||smartSmokeSwitch===0)
-                        width: parent.width
-                        height: 50
-                        Rectangle{
-                            visible: true
-                            width: parent.width
-                            height: parent.height
-                            color: "#000"
-                            opacity: 0.5
-                            border.color: themesTextColor
-                            radius: 4
-                        }
-                        Image {
-                            anchors.centerIn: parent
-                            anchors.horizontalCenterOffset: -30
-                            source:{
-                                if(hoodSpeed>=3)
-                                    return themesPicturesPath+"icon_speed_3.png"
-                                else if(hoodSpeed > 0)
-                                    return themesPicturesPath+"icon_speed_"+hoodSpeed+".png"
-                                else
-                                    return ""
-                            }
-                        }
-                        Text{
-                            text:{
-                                if(hoodSpeed>3)
-                                    return "爆炒"
-                                else if(hoodSpeed===3)
-                                    return "高速"
-                                else if(hoodSpeed===2)
-                                    return "中速"
-                                else
-                                    return "低速"
-                            }
-                            color:themesTextColor
-                            font.pixelSize: 24
-                            anchors.centerIn: parent
-                            anchors.horizontalCenterOffset: 20
-                        }
-                    }
-                    Item
-                    {
-                        visible: lTimingState===timingStateEnum.RUN||rTimingState===timingStateEnum.RUN
-                        width: parent.width
-                        height: 50
-                        Rectangle{
-                            visible: true
-                            width: parent.width
-                            height: parent.height
-                            color: "#000"
-                            opacity: 0.5
-                            border.color: themesTextColor
-                            radius: 4
-                        }
-                        Image {
-                            anchors.centerIn: parent
-                            anchors.horizontalCenterOffset: -30
-                            source:themesPicturesPath+"icon_stove.png"
-                        }
-                        Text{
-                            text:closeHeatShortTime()
-                            color:themesTextColor
-                            font.pixelSize: 24
-                            anchors.centerIn: parent
-                            anchors.horizontalCenterOffset: 20
-                        }
-                    }
-                }
-                onClicked: {
-                    push_page(pageHood)
-                }
-            }
+            //            Button{
+            //                width: 292
+            //                height:parent.height
+            //                visible: true
+            //                background:Image {
+            //                    source: themesPicturesPath+"home_hood_background.png"
+            //                }
+            //                Text{
+            //                    text:"烟机灶具"
+            //                    color:"#fff"
+            //                    font.pixelSize: 40
+            //                    anchors.horizontalCenter: parent.horizontalCenter
+            //                    anchors.top: parent.top
+            //                    anchors.topMargin: 45
+            //                    Text{
+            //                        text:"HOOD"
+            //                        color:"#C3C2C2"
+            //                        font.pixelSize: 16
+            //                        anchors.horizontalCenter: parent.horizontalCenter
+            //                        anchors.top: parent.bottom
+            //                        anchors.topMargin: 10
+            //                        anchors.left: parent.left
+            //                    }
+            //                }
+            //                Column{
+            //                    width: 182
+            //                    anchors.centerIn: parent
+            //                    anchors.verticalCenterOffset: 40
+            //                    spacing: 6
+            //                    Item
+            //                    {
+            //                        visible: smartSmokeSwitch
+            //                        width: parent.width
+            //                        height: 50
+            //                        Rectangle{
+            //                            width: parent.width
+            //                            height: parent.height
+            //                            color: "#000"
+            //                            opacity: 0.5
+            //                            border.color: themesTextColor
+            //                            radius: 4
+            //                        }
+            //                        Text{
+            //                            text:"AUTO"
+            //                            color:themesTextColor
+            //                            font.pixelSize: 26
+            //                            anchors.centerIn: parent
+            //                        }
+            //                    }
+            //                    Item
+            //                    {
+            //                        visible: hoodSpeed > 0 && (testMode==true||smartSmokeSwitch===0)
+            //                        width: parent.width
+            //                        height: 50
+            //                        Rectangle{
+            //                            visible: true
+            //                            width: parent.width
+            //                            height: parent.height
+            //                            color: "#000"
+            //                            opacity: 0.5
+            //                            border.color: themesTextColor
+            //                            radius: 4
+            //                        }
+            //                        Image {
+            //                            anchors.centerIn: parent
+            //                            anchors.horizontalCenterOffset: -30
+            //                            source:{
+            //                                if(hoodSpeed>=3)
+            //                                    return themesPicturesPath+"icon_speed_3.png"
+            //                                else if(hoodSpeed > 0)
+            //                                    return themesPicturesPath+"icon_speed_"+hoodSpeed+".png"
+            //                                else
+            //                                    return ""
+            //                            }
+            //                        }
+            //                        Text{
+            //                            text:{
+            //                                if(hoodSpeed>3)
+            //                                    return "爆炒"
+            //                                else if(hoodSpeed===3)
+            //                                    return "高速"
+            //                                else if(hoodSpeed===2)
+            //                                    return "中速"
+            //                                else
+            //                                    return "低速"
+            //                            }
+            //                            color:themesTextColor
+            //                            font.pixelSize: 24
+            //                            anchors.centerIn: parent
+            //                            anchors.horizontalCenterOffset: 20
+            //                        }
+            //                    }
+            //                    Item
+            //                    {
+            //                        visible: lTimingState===timingStateEnum.RUN||rTimingState===timingStateEnum.RUN
+            //                        width: parent.width
+            //                        height: 50
+            //                        Rectangle{
+            //                            visible: true
+            //                            width: parent.width
+            //                            height: parent.height
+            //                            color: "#000"
+            //                            opacity: 0.5
+            //                            border.color: themesTextColor
+            //                            radius: 4
+            //                        }
+            //                        Image {
+            //                            anchors.centerIn: parent
+            //                            anchors.horizontalCenterOffset: -30
+            //                            source:themesPicturesPath+"icon_stove.png"
+            //                        }
+            //                        Text{
+            //                            text:closeHeatShortTime()
+            //                            color:themesTextColor
+            //                            font.pixelSize: 24
+            //                            anchors.centerIn: parent
+            //                            anchors.horizontalCenterOffset: 20
+            //                        }
+            //                    }
+            //                }
+            //                onClicked: {
+            //                    push_page(pageHood)
+            //                }
+            //            }
             Button{
                 width: 292
                 height:parent.height

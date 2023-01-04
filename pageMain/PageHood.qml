@@ -4,9 +4,7 @@ import "../"
 import "qrc:/SendFunc.js" as SendFunc
 Item {
     property string name: "PageHood"
-    Component.onCompleted: {
-        aiState=false
-    }
+
     PageBackBar{
         id:topBar
         anchors.top:parent.top
@@ -276,7 +274,5 @@ Item {
                 }
             }
         }
-
     }
-
 }
