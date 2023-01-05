@@ -66,6 +66,120 @@ Item {
             rightCloseHeatSwitch.checked=true
         else
             rightCloseHeatSwitch.checked=false
+        if(systemSettings.firstAI==true)
+        {
+            systemSettings.firstAI=false
+            loaderManual.sourceComponent = component_help
+        }
+    }
+    Component{
+        id:component_help
+        Rectangle{
+            property int num:0
+            color: "#000"
+            Component.onCompleted: {
+                num=0
+            }
+            Image {
+                asynchronous:true
+                smooth:false
+                source: themesPicturesPath+"ai/help"+num+".png"
+            }
+            Button {
+                width:140
+                height: 50
+                visible: num>0
+                anchors.centerIn: parent
+                anchors.horizontalCenterOffset: {
+                    switch(num)
+                    {
+                    case 1:
+                        return -290
+                    case 2:
+                        return -210
+                    case 3:
+                        return 250
+                    }
+                    return 0
+                }
+                anchors.verticalCenterOffset: {
+                    switch(num)
+                    {
+                    case 1:
+                        return 130
+                    case 2:
+                        return 130
+                    case 3:
+                        return 110
+                    }
+                    return 0
+                }
+                background: Rectangle{
+                    color:"transparent"
+                    radius: 25
+                    border.color: themesTextColor2
+                }
+                Text{
+                    text:"上一步"
+                    color:themesTextColor2
+                    font.pixelSize: 30
+                    anchors.centerIn: parent
+                }
+                onClicked: {
+                    if(num>0)
+                        --num
+                }
+            }
+            Button {
+                width:140
+                height: 50
+                anchors.centerIn: parent
+                anchors.horizontalCenterOffset: {
+                    switch(num)
+                    {
+                    case 0:
+                        return -360
+                    case 1:
+                        return 50
+                    case 2:
+                        return 120
+                    case 3:
+                        return 440
+                    }
+                    return 0
+                }
+                anchors.verticalCenterOffset: {
+                    switch(num)
+                    {
+                    case 0:
+                        return 130
+                    case 1:
+                        return 130
+                    case 2:
+                        return 130
+                    case 3:
+                        return 110
+                    }
+                    return 0
+                }
+                background: Rectangle{
+                    color:"#fff"
+                    radius: 25
+                }
+                Text{
+                    text:num==3?"完成":"下一步"
+                    color:"#000"
+                    font.pixelSize: 30
+                    anchors.centerIn: parent
+                }
+                onClicked: {
+                    if(num==3)
+                        loaderManual.sourceComponent = null
+                    else
+                        ++num
+                }
+            }
+        }
     }
     PageTabBar{
         anchors.horizontalCenter: parent.horizontalCenter
@@ -85,6 +199,23 @@ Item {
         }
         onClicked: {
             push_page(pageSmartCook)
+        }
+    }
+    Button{
+        width: 40
+        height:40
+        anchors.top: parent.top
+        anchors.topMargin: 10
+        anchors.left: parent.left
+        anchors.leftMargin: 15
+        background:Image {
+            asynchronous:true
+            smooth:false
+            anchors.centerIn: parent
+            source: themesPicturesPath+"ai/icon_help.png"
+        }
+        onClicked: {
+            loaderManual.sourceComponent = component_help
         }
     }
     Text{
@@ -206,9 +337,9 @@ Item {
             color:"#fff"
             font.pixelSize: 40
             anchors.top: parent.top
-            anchors.topMargin: 50
+            anchors.topMargin: 55
             anchors.left: parent.left
-            anchors.leftMargin: 46
+            anchors.leftMargin: 50
         }
         Text{
             text:"定时\n关火"
@@ -329,9 +460,9 @@ Item {
             color:"#fff"
             font.pixelSize: 40
             anchors.top: parent.top
-            anchors.topMargin: 50
+            anchors.topMargin: 55
             anchors.right: parent.right
-            anchors.rightMargin: 46
+            anchors.rightMargin: 50
         }
         Text{
             text:"定时\n关火"
@@ -351,6 +482,15 @@ Item {
             font.pixelSize: 36
             anchors.top: parent.top
             anchors.topMargin: 120
+            anchors.right: parent.right
+            anchors.rightMargin: 50
+        }
+        Text{
+            text:"移锅小火/<font color='"+themesTextColor+"'>"+(QmlDevState.state.RMovePotLowHeatSwitch?"开":"关")+"</font>"
+            color:"#fff"
+            font.pixelSize: 24
+            anchors.top: parent.top
+            anchors.topMargin: 240
             anchors.right: parent.right
             anchors.rightMargin: 50
         }

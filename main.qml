@@ -130,6 +130,7 @@ ApplicationWindow {
         id: systemSettings
         category: "system"
         property bool firstStartup: true
+        property bool firstAI: true
         //设置-休眠时间(范围:1-5,单位:分钟 )
         property bool sleepSwitch: true
         property int sleepTime: 3
@@ -213,6 +214,7 @@ ApplicationWindow {
     function systemSetReset()
     {
         systemSettings.firstStartup=true
+        systemSettings.firstAI=true
         systemSettings.sleepTime=3
         systemSettings.brightness=200
 
