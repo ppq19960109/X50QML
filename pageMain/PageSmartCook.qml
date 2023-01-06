@@ -162,23 +162,43 @@ Item {
     //                backPage(page)
     //        }
     //    }
-    Button{
+    Flickable{
         width: 370
         height:60
+        contentWidth: width
+        contentHeight: height
+        flickableDirection:Flickable.VerticalFlick
+        clip: true
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.bottom: parent.bottom
-        background:Image {
-            asynchronous:true
-            smooth:false
-            anchors.centerIn: parent
-            source: themesPicturesPath+"ai/cook_assist_open.png"
+        Button{
+            width: parent.width
+            height:parent.height
+
+            background:Image {
+                asynchronous:true
+                smooth:false
+                anchors.centerIn: parent
+                source: themesPicturesPath+"ai/cook_assist_open.png"
+            }
+            onClicked: {
+                let page=isExistView("PageAICook")
+                if(page==null)
+                    replace_page(pageAICook)
+                else
+                    backPage(page)
+            }
         }
-        onClicked: {
-            let page=isExistView("PageAICook")
-            if(page==null)
-                replace_page(pageAICook)
-            else
-                backPage(page)
+        onVerticalOvershootChanged: {
+            //            console.log("onVerticalOvershootChanged:",contentY,originY,verticalOvershoot)
+            if(verticalOvershoot>13)
+            {
+                let page=isExistView("PageAICook")
+                if(page==null)
+                    replace_page(pageAICook)
+                else
+                    backPage(page)
+            }
         }
     }
     Row {

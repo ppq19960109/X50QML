@@ -186,20 +186,40 @@ Item {
         anchors.bottom: parent.bottom
         currentIndex:0
     }
-    Button{
+
+    Flickable{
         width: 370
         height:60
+        contentWidth: width
+        contentHeight: height
+        flickableDirection:Flickable.VerticalFlick
+        clip: true
         anchors.horizontalCenter: parent.horizontalCenter
 
-        background:Image {
-            asynchronous:true
-            smooth:false
-            anchors.centerIn: parent
-            source: themesPicturesPath+"ai/cook_assist_close.png"
+        Button{
+            width: parent.width
+            height:parent.height
+
+            background:Image {
+                asynchronous:true
+                smooth:false
+                anchors.centerIn: parent
+                source: themesPicturesPath+"ai/cook_assist_close.png"
+            }
+            onClicked: {
+                push_page(pageSmartCook)
+            }
         }
-        onClicked: {
-            push_page(pageSmartCook)
+
+        onVerticalOvershootChanged: {
+            //            console.log("onVerticalOvershootChanged:",contentY,originY,verticalOvershoot)
+            if(verticalOvershoot<-13)
+                push_page(pageSmartCook)
         }
+//        onMovementEnded:{//onMovementStarted onMovementEnded
+//            console.log("onMovementEnded:",contentY,originY,verticalOvershoot,atYBeginning,atYEnd)
+//            push_page(pageSmartCook)
+//        }
     }
     Button{
         width: 40
