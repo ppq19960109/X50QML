@@ -142,6 +142,7 @@ Item {
                 if(wifiConnected==true)
                     QmlDevState.executeShell("(wpa_cli list_networks | tail -n +3 | grep -v 'CURRENT' | awk '{system(\"wpa_cli disable_network \" $1)}') &")
                 getWifiInfo()
+//                SendFunc.scanWifi()
                 SendFunc.scanRWifi()
             }
             wifiPageStatus=true
@@ -601,6 +602,7 @@ Item {
                 //                    vkb.visible = true //当选择输入框的时候才显示键盘
                 //                }
                 onTextEdited:{
+                    console.log("onTextEdited:" , length)
                     if(length>=8 && length<=36)
                     {
                         permit_connect=true

@@ -112,7 +112,6 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     setState("ProductCategory","集成灶");
     setState("ProductModel","IIZ(T/Y)—X8GCZ01");
     setState("SmartSmokeSwitch",0);
-    setState("OilTempSwitch",0);
     setState("LStoveStatus",0);
     setState("RStoveStatus",0);
     setState("LStoveTimingState",0);
@@ -126,6 +125,7 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     setState("ComSWVersion","1.0");
     setState("PwrSWVersion","1.0");
     setState("RMultiMode",0);
+    setState("OilTempSwitch",0);
     setState("LOilTemp",-1);
     setState("ROilTemp",-1);
     setState("StirFryTimerLeft",0);

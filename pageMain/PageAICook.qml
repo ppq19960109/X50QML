@@ -353,13 +353,15 @@ Item {
             source: themesPicturesPath+"ai/"+(oilTempSwitch?"left_temp_arc.png":"left_temp_arc_close.png")
         }
         Text{
-            text:oilTempSwitch?(lOilTemp>=0?lOilTemp:"-")+"℃":"关"
-            color:"#fff"
-            font.pixelSize: 40
+            text:(oilTempSwitch?(lOilTemp>=0?lOilTemp:"-")+"℃":"关")+(lOilTemp>=220?'<br/><font size="24px">油温过高</font>':"")
+            color:lOilTemp>=220?"red":"#fff"
+            font.pixelSize: 35
             anchors.top: parent.top
             anchors.topMargin: 55
             anchors.left: parent.left
-            anchors.leftMargin: 50
+            anchors.leftMargin: 35
+            textFormat: Text.RichText
+            lineHeight:0.8
         }
         Text{
             text:"定时\n关火"
@@ -378,7 +380,7 @@ Item {
             color:themesTextColor
             font.pixelSize: 36
             anchors.top: parent.top
-            anchors.topMargin: 120
+            anchors.topMargin: 130
             anchors.left: parent.left
             anchors.leftMargin: 50
         }
@@ -476,13 +478,15 @@ Item {
             source: themesPicturesPath+"ai/"+(oilTempSwitch?"right_temp_arc.png":"right_temp_arc_close.png")
         }
         Text{
-            text:oilTempSwitch?(rOilTemp>=0?rOilTemp:"-")+"℃":"关"
-            color:"#fff"
-            font.pixelSize: 40
+            text:(oilTempSwitch?(rOilTemp>=0?rOilTemp:"-")+"℃":"关")+(rOilTemp>=220?'<br/><font size="24px">油温过高</font>':"")
+            color:rOilTemp>=220?"red":"#fff"
+            font.pixelSize: 35
             anchors.top: parent.top
             anchors.topMargin: 55
             anchors.right: parent.right
-            anchors.rightMargin: 50
+            anchors.rightMargin: 35
+            textFormat: Text.RichText
+            lineHeight:0.8
         }
         Text{
             text:"定时\n关火"
@@ -501,7 +505,7 @@ Item {
             color:themesTextColor
             font.pixelSize: 36
             anchors.top: parent.top
-            anchors.topMargin: 120
+            anchors.topMargin: 130
             anchors.right: parent.right
             anchors.rightMargin: 50
         }
