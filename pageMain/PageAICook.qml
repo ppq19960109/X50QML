@@ -225,7 +225,7 @@ Item {
         width: 40
         height:40
         anchors.top: parent.top
-        anchors.topMargin: 10
+        anchors.topMargin: 8
         anchors.left: parent.left
         anchors.leftMargin: 15
         background:Image {
@@ -239,7 +239,7 @@ Item {
         }
     }
     Text{
-        visible: hoodSpeed===4 && (testMode==true||smartSmokeSwitch===0)
+        visible: hoodSpeed===4 && (testMode==true||smartSmokeSwitch===0) && QmlDevState.state.StirFryTimerLeft>0
         text:QmlDevState.state.StirFryTimerLeft+"分钟"
         color:themesTextColor
         font.pixelSize: 26
@@ -353,7 +353,7 @@ Item {
             source: themesPicturesPath+"ai/"+(oilTempSwitch?"left_temp_arc.png":"left_temp_arc_close.png")
         }
         Text{
-            text:(oilTempSwitch?(lOilTemp>=0?lOilTemp:"-")+"℃":"关")+(lOilTemp>=220?'<br/><font size="24px">油温过高</font>':"")
+            text:oilTempSwitch?((lOilTemp>=0?lOilTemp:"-")+"℃"+(lOilTemp>=220?'<br/><font size="24px">油温过高</font>':"")):"关"
             color:lOilTemp>=220?"red":"#fff"
             font.pixelSize: 35
             anchors.top: parent.top
@@ -361,7 +361,7 @@ Item {
             anchors.left: parent.left
             anchors.leftMargin: 35
             textFormat: Text.RichText
-            lineHeight:0.8
+            lineHeight:0.75
         }
         Text{
             text:"定时\n关火"
@@ -478,7 +478,7 @@ Item {
             source: themesPicturesPath+"ai/"+(oilTempSwitch?"right_temp_arc.png":"right_temp_arc_close.png")
         }
         Text{
-            text:(oilTempSwitch?(rOilTemp>=0?rOilTemp:"-")+"℃":"关")+(rOilTemp>=220?'<br/><font size="24px">油温过高</font>':"")
+            text:oilTempSwitch?((rOilTemp>=0?rOilTemp:"-")+"℃"+(rOilTemp>=220?'<br/><font size="24px">油温过高</font>':"")):"关"
             color:rOilTemp>=220?"red":"#fff"
             font.pixelSize: 35
             anchors.top: parent.top
@@ -486,7 +486,7 @@ Item {
             anchors.right: parent.right
             anchors.rightMargin: 35
             textFormat: Text.RichText
-            lineHeight:0.8
+            lineHeight:0.75
         }
         Text{
             text:"定时\n关火"

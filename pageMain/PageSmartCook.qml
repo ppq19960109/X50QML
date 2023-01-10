@@ -343,7 +343,11 @@ Item {
             PageDialog{
                 cancelText:"取消"
                 confirmText:"确定"
-                hintCenterText:"开启后锅具离开灶具，火力变小\n离开3分钟以上，自动熄火"
+                hintCenterText:{
+                    var time=QmlDevState.state.RMovePotLowHeatOffTime
+                    var timeLeft=time%60
+                    return "开启后锅具离开灶具，火力变小\n离开"+Math.floor(time/60)+"分"+(timeLeft===0?"钟":(+timeLeft+"秒"))+"以上，自动熄火"
+                }
                 checkboxVisible:true
                 onCancel:{
                     lowHeatPageSwitch.checked=false

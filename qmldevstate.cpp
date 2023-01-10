@@ -98,6 +98,7 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     stateType.append(QPair<QString,int>("ROilTemp",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("OilTempSwitch",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("RMovePotLowHeatSwitch",LINK_VALUE_TYPE_NUM));
+    stateType.append(QPair<QString,int>("RMovePotLowHeatOffTime",LINK_VALUE_TYPE_NUM));
 
     stateType.append(QPair<QString,int>("NtpTimestamp",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("CookAssistRemind",LINK_VALUE_TYPE_NUM));
