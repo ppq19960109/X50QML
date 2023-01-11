@@ -454,22 +454,6 @@ Item {
                     sleepStandby()
                 }
             }
-            else if("RStoveStatus"==key)
-            {
-                if(auxiliarySwitch>0)
-                {
-                    if(value==0)
-                    {
-                        if(timer_auxiliary.running==false)
-                            timer_auxiliary.restart()
-                    }
-                    else
-                    {
-                        if(timer_auxiliary.running==true)
-                            timer_auxiliary.stop()
-                    }
-                }
-            }
             else if("ErrorCode"==key)
             {
                 if(lastErrorCode!=value)
@@ -714,7 +698,7 @@ Item {
             {
                 if(value==0)
                 {
-                    //                    loaderAutoTextShow("右灶火力档位过小，无法达到"+QmlDevState.state.RAuxiliaryTemp+"℃\n请将火力调至最大！")
+                    //loaderAutoTextShow("右灶火力档位过小，无法达到"+QmlDevState.state.RAuxiliaryTemp+"℃\n请将火力调至最大！")
                 }
                 else if(value==1)
                 {

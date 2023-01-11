@@ -129,7 +129,6 @@ function tempControlRquest(temp)
     {
         Data.RAuxiliarySwitch = true
         Data.RAuxiliaryTemp = temp
-        timer_auxiliary.restart()
     }
     setToServer(Data)
 }

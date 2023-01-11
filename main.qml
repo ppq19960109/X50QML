@@ -454,22 +454,6 @@ ApplicationWindow {
     }
 
     Timer{
-        id:timer_auxiliary
-        repeat: false
-        running: false
-        interval: 1000*60*10
-        triggeredOnStart: false
-        onTriggered: {
-            console.log("timer_auxiliary onTriggered")
-            if(auxiliarySwitch===0)
-                return
-            var Data={}
-            Data.RAuxiliarySwitch = 0
-            SendFunc.setToServer(Data)
-            loaderAutoTextShow("长时间未开启右灶，已自动取消右灶控温")
-        }
-    }
-    Timer{
         id:timer_standby
         repeat: false
         running: true

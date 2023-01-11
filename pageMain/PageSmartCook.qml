@@ -129,7 +129,7 @@ Item {
                             //                            Data.RAuxiliarySwitch = true
                             //                            Data.RAuxiliaryTemp = tempPathView.model[tempPathView.currentIndex]
                             //                            SendFunc.setToServer(Data)
-                            //                            timer_auxiliary.restart()
+
                             SendFunc.tempControlRquest(tempPathView.model[tempPathView.currentIndex])
                         }
                         else
