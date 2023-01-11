@@ -329,19 +329,21 @@ function setMultiCooking(list,orderTime,dishName,cookbookID)
     setToServer(Data)
 }
 
-function setPanguMultiCooking(list,orderTime,dishName,workMode)
+function setPanguMultiCooking(list,orderTime,dishName,workMode,clearMode)
 {
     var Data={}
     Data.RMultiStageContent=list
     if(null == dishName)
     {
-        Data.RCookbookName=""
+        Data.RStOvMode=multiModeEnum.MULTISTAGE
     }
     else
     {
+        Data.RStOvMode=multiModeEnum.RECIPE
         Data.RCookbookName=dishName
     }
     Data.RStOvMode=workMode
+    Data.ClearMode=clearMode
     Data.RStOvOperation=workOperationEnum.START
     if(undefined !== orderTime && orderTime > 0)
     {

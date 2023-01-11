@@ -99,6 +99,8 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     stateType.append(QPair<QString,int>("Weight",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("hallState",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("RCookbookName",LINK_VALUE_TYPE_STRING));
+    stateType.append(QPair<QString,int>("RMultiMode",LINK_VALUE_TYPE_NUM));
+    stateType.append(QPair<QString,int>("ClearMode",LINK_VALUE_TYPE_NUM));
 
     localConnected=0;
     connect(&client, SIGNAL(sendData(QByteArray)), this,SLOT(readData(QByteArray)));
@@ -110,6 +112,7 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     setState("Weight",1);
     setState("PushRod",0);
     setState("hallState",1);
+    setState("ClearMode",1);
 #ifndef USE_RK3308
     setState("SysPower",1);
     setState("LoadPowerState",7);

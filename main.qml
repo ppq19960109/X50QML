@@ -23,7 +23,6 @@ ApplicationWindow {
     property int demoModeStatus:0
     property bool steamingStatus:false
     property bool errorBuzzer:false
-    property int curClearMode:1
 
     //    readonly property string uiVersion:"1.1"
     readonly property string productionTestWIFISSID:"moduletest"
@@ -1188,21 +1187,22 @@ ApplicationWindow {
             loaderPopupShow("","请先关闭右腔门再启动烹饪",292,"好的")
             return
         }
+        var clearMode
         if(root.clearMode!=null)
-            curClearMode=root.clearMode
+            clearMode=root.clearMode
         else
-            curClearMode=1
-        console.log("curClearMode:",curClearMode)
+            clearMode=1
+        console.log("clearMode:",clearMode)
 
         if(root.workMode==null)
             root.workMode=0
         if(root.recipeType>0 || root.recipeid>0)
         {
-            SendFunc.setPanguMultiCooking(cookSteps,root.orderTime,root.dishName,root.workMode)
+            SendFunc.setPanguMultiCooking(cookSteps,root.orderTime,root.dishName,root.workMode,clearMode)
         }
         else
         {
-            SendFunc.setPanguMultiCooking(cookSteps,root.orderTime,null,root.workMode)
+            SendFunc.setPanguMultiCooking(cookSteps,root.orderTime,null,root.workMode,clearMode)
         }
         var page=isExistView("pageSteamBakeRun")
         if(page!==null)

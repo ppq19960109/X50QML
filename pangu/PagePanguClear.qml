@@ -30,11 +30,12 @@ Item {
 
     function steamStart()
     {
-        var clearMode=QmlDevState.getClearMode()
+        var clearModeArray=QmlDevState.getClearMode()
         var para =CookFunc.getDefHistory()
         para.cookPos=1
-        para.cookSteps=clearMode[curClearMode].cookSteps
-        para.clearMode=curClearMode
+        var clearModeIndex=QmlDevState.state.ClearMode
+        para.cookSteps=clearModeArray[clearModeIndex].cookSteps
+        para.clearMode=clearModeIndex
         para.workMode=1
         if(clickIndex==0)
         {
