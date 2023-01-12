@@ -134,13 +134,14 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
 
 #ifndef USE_TCP
 #ifndef USE_RK3308
+    setState("OilTempSwitch",1);
     setState("RAuxiliarySwitch",1);
     setState("RAuxiliaryTemp",220);
     setState("SysPower",1);
     setState("OTASlientUpgrade",0);
     setState("LoadPowerState",7);
 
-    setState("RStoveStatus",1);
+    setState("RStoveStatus",0);
     setState("RStoveTimingLeft",50);
 
     setState("LStOvMode",0);

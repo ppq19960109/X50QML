@@ -446,7 +446,7 @@ Item {
                 }
                 else if(value==4)
                 {
-                    if(QmlDevState.state.LStoveStatus > 0 || QmlDevState.state.RStoveStatus > 0)
+                    if(lStoveStatus > 0 || rStoveStatus > 0)
                         loaderAutoTextShow("灶具工作中，烟机无法关闭。")
                 }
                 else if(value==5)

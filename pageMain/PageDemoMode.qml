@@ -4,12 +4,14 @@ import QtQuick.Controls 2.5
 import "qrc:/SendFunc.js" as SendFunc
 Item{
     Component.onCompleted: {
+        stackView.width=1280
         demoModeStatus=1
         SendFunc.loadPowerSet(4)
     }
     Component.onDestruction: {
         demoModeStatus=0
         SendFunc.loadPowerSet(0)
+        stackView.width=1160
     }
     Timer{
         repeat: true
@@ -55,7 +57,11 @@ Item{
             smooth:false
             source:themesPicturesPath+"demo/demo5.png"
         }
-
+        Image {
+            asynchronous: true
+            smooth:false
+            source:themesPicturesPath+"demo/demo6.png"
+        }
     }
 }
 

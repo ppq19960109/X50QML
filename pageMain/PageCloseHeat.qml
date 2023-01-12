@@ -235,7 +235,7 @@ Item {
                 onClicked: {
                     if(index==0)
                     {
-                        if(QmlDevState.state.LStoveStatus===0)
+                        if(lStoveStatus===0)
                         {
                             loaderCloseHeatReset("左灶未开启\n开启后才可设置定时关火","","好的",index)
                         }
@@ -247,7 +247,7 @@ Item {
                     }
                     else
                     {
-                        if(QmlDevState.state.RStoveStatus===0)
+                        if(rStoveStatus===0)
                         {
                             loaderCloseHeatReset("右灶未开启\n开启后才可设置定时关火","","好的",index)
                         }

@@ -44,6 +44,8 @@ ApplicationWindow {
     property var oilTempSwitch:QmlDevState.state.OilTempSwitch
     property var lOilTemp: QmlDevState.state.LOilTemp
     property var rOilTemp: QmlDevState.state.ROilTemp
+    property var lStoveStatus: QmlDevState.state.LStoveStatus
+    property var rStoveStatus: QmlDevState.state.RStoveStatus
 
     readonly property string productionTestWIFISSID:"moduletest"
     readonly property string productionTestWIFIPWD:"58185818"
@@ -441,7 +443,7 @@ ApplicationWindow {
 
     function sleepStandby()
     {
-        if(sleepState==true && QmlDevState.state.LStoveStatus === 0 && QmlDevState.state.RStoveStatus === 0 && QmlDevState.state.HoodSpeed == 0 && QmlDevState.state.HoodLight === 0 && QmlDevState.state.LStoveTimingState===timingStateEnum.STOP && QmlDevState.state.RStoveTimingState===timingStateEnum.STOP)
+        if(sleepState==true && lStoveStatus === 0 && rStoveStatus === 0 && hoodSpeed === 0 && QmlDevState.state.HoodLight === 0 && QmlDevState.state.LStoveTimingState===timingStateEnum.STOP && QmlDevState.state.RStoveTimingState===timingStateEnum.STOP)
         {
             if((QmlDevState.state.RStOvState === workStateEnum.WORKSTATE_STOP || QmlDevState.state.RStOvState === workStateEnum.WORKSTATE_FINISH) && (QmlDevState.state.LStOvState === workStateEnum.WORKSTATE_STOP || QmlDevState.state.LStOvState === workStateEnum.WORKSTATE_FINISH))
             {
@@ -512,7 +514,7 @@ ApplicationWindow {
         triggeredOnStart: false
         onTriggered: {
             console.log("timer_sleep onTriggered...")
-            if(productionTestStatus==0 && demoModeStatus==0 && wifiConnecting==false && QmlDevState.localConnected > 0 && errorCodeShow === 0 && QmlDevState.state.LStoveStatus === 0 && QmlDevState.state.RStoveStatus === 0)
+            if(productionTestStatus==0 && demoModeStatus==0 && wifiConnecting==false && QmlDevState.localConnected > 0 && errorCodeShow === 0 && lStoveStatus === 0 && rStoveStatus === 0)
             {
                 if((QmlDevState.state.RStOvState === workStateEnum.WORKSTATE_STOP || QmlDevState.state.RStOvState === workStateEnum.WORKSTATE_FINISH || QmlDevState.state.RStOvState === workStateEnum.WORKSTATE_RESERVE || QmlDevState.state.RStOvState === workStateEnum.WORKSTATE_PAUSE_RESERVE) && (QmlDevState.state.LStOvState === workStateEnum.WORKSTATE_STOP || QmlDevState.state.LStOvState === workStateEnum.WORKSTATE_FINISH || QmlDevState.state.LStOvState === workStateEnum.WORKSTATE_RESERVE || QmlDevState.state.LStOvState === workStateEnum.WORKSTATE_PAUSE_RESERVE ))
                 {
@@ -565,7 +567,7 @@ ApplicationWindow {
     PageHomeBar{
         anchors.left: stackView.right
         anchors.right: parent.right
-        visible: stackView.visible && productionTestStatus == 0
+        visible: stackView.visible && productionTestStatus == 0 && demoModeStatus==0
         enabled: stackView.enabled
     }
     //    Item {
@@ -723,7 +725,7 @@ ApplicationWindow {
         }
         else
         {
-            loaderCheckWifiShow("当前设备离线，请检查网络")
+            loaderManualConfirmShow("当前设备离线，请检查网络","icon_wifi_warn.png","检查网络",openWifiPage)
         }
     }
     function loaderQrcodeHide(){
@@ -775,26 +777,26 @@ ApplicationWindow {
         loaderWarnManualShow(text,"","好的",themesPicturesPath+"icon_wifi_warn.png")
     }
     Component{
-        id:component_wifiManual
+        id:component_confirmFunc
         PageDialogConfirm{
             onCancel: {
                 loaderMainHide()
             }
             onConfirm:{
-                openWifiPage()
                 loaderMainHide()
             }
         }
     }
-    function loaderCheckWifiShow(text){
-        if(loaderManual.sourceComponent !== component_wifiManual)
+    function loaderManualConfirmShow(text,topImageSrc,confirmText,confirmFunc){
+        if(loaderManual.sourceComponent !== component_confirmFunc)
         {
-            loaderManual.sourceComponent = component_wifiManual
+            loaderManual.sourceComponent = component_confirmFunc
         }
-        loaderManual.item.topImageSrc=themesPicturesPath+"icon_wifi_warn.png"
+        loaderManual.item.topImageSrc=themesPicturesPath+topImageSrc
         loaderManual.item.hintCenterText=text
         loaderManual.item.cancelText="取消"
-        loaderManual.item.confirmText="检查网络"
+        loaderManual.item.confirmText=confirmText
+        loaderManual.item.confirmFunc=confirmFunc
     }
     Component{
         id:component_loading

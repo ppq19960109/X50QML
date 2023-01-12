@@ -5,20 +5,20 @@ import "qrc:/SendFunc.js" as SendFunc
 Item {
     property string name: "PageAICook"
     property int left_percent:{
-        if(lOilTemp<50)
+        if(lOilTemp<40)
             return 0
-        else if(lOilTemp>250)
+        else if(lOilTemp>220)
             return 100
         else
-            return 100*(lOilTemp-50)/200
+            return 100*(lOilTemp-40)/180
     }
     property int right_percent:{
-        if(rOilTemp<50)
+        if(rOilTemp<40)
             return 0
-        else if(rOilTemp>250)
+        else if(rOilTemp>220)
             return 100
         else
-            return 100*(rOilTemp-50)/200
+            return 100*(rOilTemp-40)/180
     }
     onLeft_percentChanged: {
         left_canvas.requestPaint()
@@ -37,6 +37,11 @@ Item {
             rightCloseHeatSwitch.checked=false
         }
     }
+    function closeHoodSpeed()
+    {
+        SendFunc.setHoodSpeed(0)
+    }
+
     Connections { // 将目标对象信号与槽函数进行连接
         target: QmlDevState
         onStateChanged: { // 处理目标对象信号的槽函数
@@ -216,10 +221,10 @@ Item {
             if(verticalOvershoot<-13)
                 push_page(pageSmartCook)
         }
-//        onMovementEnded:{//onMovementStarted onMovementEnded
-//            console.log("onMovementEnded:",contentY,originY,verticalOvershoot,atYBeginning,atYEnd)
-//            push_page(pageSmartCook)
-//        }
+        //        onMovementEnded:{//onMovementStarted onMovementEnded
+        //            console.log("onMovementEnded:",contentY,originY,verticalOvershoot,atYBeginning,atYEnd)
+        //            push_page(pageSmartCook)
+        //        }
     }
     Button{
         width: 40
@@ -312,7 +317,14 @@ Item {
                                 if(testMode==false && smartSmokeSwitch>0)
                                     SendFunc.setSmartSmoke(0)
                                 else
-                                    SendFunc.setHoodSpeed(0)
+                                {
+                                    if((lStOvState===workStateEnum.WORKSTATE_STOP||lStOvState===workStateEnum.WORKSTATE_RESERVE||lStOvState===workStateEnum.WORKSTATE_FINISH||lStOvState===workStateEnum.WORKSTATE_PAUSE_RESERVE) && (rStOvState===workStateEnum.WORKSTATE_STOP||rStOvState===workStateEnum.WORKSTATE_RESERVE||rStOvState===workStateEnum.WORKSTATE_FINISH||rStOvState===workStateEnum.WORKSTATE_PAUSE_RESERVE) && (lStoveStatus > 0 || rStoveStatus >0))
+                                    {
+                                        loaderManualConfirmShow("灶具工作中，\n建议开启烟机，便于散热","icon_warn.png","立即关闭",closeHoodSpeed)
+                                    }
+                                    else
+                                        SendFunc.setHoodSpeed(0)
+                                }
                             }
                             else
                                 SendFunc.setHoodSpeed(6-index)
@@ -354,7 +366,7 @@ Item {
         }
         Text{
             text:oilTempSwitch?((lOilTemp>=0?lOilTemp:"-")+"℃"+(lOilTemp>=220?'<br/><font size="24px">油温过高</font>':"")):"关"
-            color:lOilTemp>=220?"red":"#fff"
+            color:(oilTempSwitch && lOilTemp>=220)?"red":"#fff"
             font.pixelSize: 35
             anchors.top: parent.top
             anchors.topMargin: 55
@@ -393,7 +405,7 @@ Item {
             onClicked: {
                 if(checked==true)
                 {
-                    if(QmlDevState.state.LStoveStatus===0)
+                    if(lStoveStatus===0)
                     {
                         checked=false
                         loaderWarnConfirmShow("左灶未开启\n开启后才可设置定时关火")
@@ -436,23 +448,23 @@ Item {
                 ctx.closePath()
             }
         }
-        //        Slider {
-        //            anchors.left: parent.left
-        //            anchors.bottom: parent.bottom
-        //            stepSize: 2
-        //            from:50
-        //            to: 250
-        //            value: 50
-        //            onValueChanged: {
-        //                console.log("slider:",value)
-        //                left_percent=100*(value-50)/200
-        //                left_canvas.requestPaint()
-        //                if(value==from)
-        //                    QmlDevState.setState("OilTempSwitch",0)
-        //                else
-        //                    QmlDevState.setState("OilTempSwitch",1)
-        //            }
-        //        }
+//                Slider {
+//                    anchors.left: parent.left
+//                    anchors.bottom: parent.bottom
+//                    stepSize: 2
+//                    from:40
+//                    to: 220
+//                    value: 40
+//                    onValueChanged: {
+//                        console.log("slider:",value)
+//                        left_percent=100*(value-40)/180
+//                        left_canvas.requestPaint()
+//                        if(value==from)
+//                            QmlDevState.setState("OilTempSwitch",0)
+//                        else
+//                            QmlDevState.setState("OilTempSwitch",1)
+//                    }
+//                }
     }
     Item {
         id: right_content
@@ -479,7 +491,7 @@ Item {
         }
         Text{
             text:oilTempSwitch?((rOilTemp>=0?rOilTemp:"-")+"℃"+(rOilTemp>=220?'<br/><font size="24px">油温过高</font>':"")):"关"
-            color:rOilTemp>=220?"red":"#fff"
+            color:(oilTempSwitch && rOilTemp>=220)?"red":"#fff"
             font.pixelSize: 35
             anchors.top: parent.top
             anchors.topMargin: 55
@@ -527,7 +539,7 @@ Item {
             onClicked: {
                 if(checked==true)
                 {
-                    if(QmlDevState.state.RStoveStatus===0)
+                    if(rStoveStatus===0)
                     {
                         checked=false
                         loaderWarnConfirmShow("右灶未开启\n开启后才可设置定时关火")
@@ -581,19 +593,19 @@ Item {
                 ctx.closePath()
             }
         }
-        //        Slider {
-        //            anchors.right: parent.right
-        //            anchors.bottom: parent.bottom
-        //            stepSize: 2
-        //            from:50
-        //            to: 250
-        //            value: 50
-        //            onValueChanged: {
-        //                console.log("slider:",value)
-        //                right_percent=100*(value-50)/200
-        //                right_canvas.requestPaint()
-        //            }
-        //        }
+//                Slider {
+//                    anchors.right: parent.right
+//                    anchors.bottom: parent.bottom
+//                    stepSize: 2
+//                    from:40
+//                    to: 220
+//                    value: 40
+//                    onValueChanged: {
+//                        console.log("slider:",value)
+//                        right_percent=100*(value-40)/180
+//                        right_canvas.requestPaint()
+//                    }
+//                }
         Button{
             width: 60
             height:30
@@ -602,35 +614,11 @@ Item {
             anchors.right: right_arc.left
             anchors.rightMargin: -20
             background:Rectangle {
-                color: (auxiliarySwitch===1 && rAuxiliaryTemp===220)?themesTextColor:"#434343"
-                radius: 6
-            }
-            Text{
-                text:"爆炒"
-                color:"#fff"
-                font.pixelSize: 20
-                anchors.centerIn: parent
-            }
-            onClicked: {
-                if(auxiliarySwitch===0 || rAuxiliaryTemp!==220)
-                    SendFunc.tempControlRquest(220)
-                else
-                    SendFunc.tempControlRquest(0)
-            }
-        }
-        Button{
-            width: 60
-            height:30
-            anchors.top: parent.top
-            anchors.topMargin: 70
-            anchors.right: right_arc.left
-            anchors.rightMargin: 0
-            background:Rectangle {
                 color: (auxiliarySwitch===1 && rAuxiliaryTemp===200)?themesTextColor:"#434343"
                 radius: 6
             }
             Text{
-                text:"煎炸"
+                text:"爆炒"
                 color:"#fff"
                 font.pixelSize: 20
                 anchors.centerIn: parent
@@ -646,11 +634,35 @@ Item {
             width: 60
             height:30
             anchors.top: parent.top
-            anchors.topMargin: 110
+            anchors.topMargin: 90
             anchors.right: right_arc.left
             anchors.rightMargin: 5
             background:Rectangle {
-                color: (auxiliarySwitch===1 && rAuxiliaryTemp===180)?themesTextColor:"#434343"
+                color: (auxiliarySwitch===1 && rAuxiliaryTemp===170)?themesTextColor:"#434343"
+                radius: 6
+            }
+            Text{
+                text:"煎炸"
+                color:"#fff"
+                font.pixelSize: 20
+                anchors.centerIn: parent
+            }
+            onClicked: {
+                if(auxiliarySwitch===0 || rAuxiliaryTemp!==170)
+                    SendFunc.tempControlRquest(170)
+                else
+                    SendFunc.tempControlRquest(0)
+            }
+        }
+        Button{
+            width: 60
+            height:30
+            anchors.top: parent.top
+            anchors.topMargin: 180
+            anchors.right: right_arc.left
+            anchors.rightMargin: 15
+            background:Rectangle {
+                color: (auxiliarySwitch===1 && rAuxiliaryTemp===150)?themesTextColor:"#434343"
                 radius: 6
             }
             Text{
@@ -660,8 +672,8 @@ Item {
                 anchors.centerIn: parent
             }
             onClicked: {
-                if(auxiliarySwitch===0 || rAuxiliaryTemp!==180)
-                    SendFunc.tempControlRquest(180)
+                if(auxiliarySwitch===0 || rAuxiliaryTemp!==150)
+                    SendFunc.tempControlRquest(150)
                 else
                     SendFunc.tempControlRquest(0)
             }
@@ -670,9 +682,9 @@ Item {
             width: 60
             height:30
             anchors.top: parent.top
-            anchors.topMargin: 290
+            anchors.topMargin: 260
             anchors.right: right_arc.left
-            anchors.rightMargin: 5
+            anchors.rightMargin: 10
             background:Rectangle {
                 color: (auxiliarySwitch===1 && rAuxiliaryTemp===100)?themesTextColor:"#434343"
                 radius: 6
@@ -694,11 +706,11 @@ Item {
             width: 60
             height:30
             anchors.top: parent.top
-            anchors.topMargin: 360
+            anchors.topMargin: 350
             anchors.right: right_arc.left
-            anchors.rightMargin: -40
+            anchors.rightMargin: -30
             background:Rectangle {
-                color: (auxiliarySwitch===1 && rAuxiliaryTemp===60)?themesTextColor:"#434343"
+                color: (auxiliarySwitch===1 && rAuxiliaryTemp===70)?themesTextColor:"#434343"
                 radius: 6
             }
             Text{
@@ -708,8 +720,8 @@ Item {
                 anchors.centerIn: parent
             }
             onClicked: {
-                if(auxiliarySwitch===0 || rAuxiliaryTemp!==60)
-                    SendFunc.tempControlRquest(60)
+                if(auxiliarySwitch===0 || rAuxiliaryTemp!==70)
+                    SendFunc.tempControlRquest(70)
                 else
                     SendFunc.tempControlRquest(0)
             }

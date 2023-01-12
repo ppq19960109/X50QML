@@ -13,8 +13,12 @@ Item {
     property int confirmBtnWidth:0
     property int cancelBtnWidth:0
 
+    property var confirmFunc:null
     signal cancel(int index)
     signal confirm()
+    Component.onDestruction: {
+        confirmFunc=null
+    }
     MouseArea{
         anchors.fill: parent
     }
@@ -123,6 +127,8 @@ Item {
                 radius: height/2
             }
             onClicked: {
+                if(confirmFunc!=null)
+                    confirmFunc()
                 confirm()
             }
         }

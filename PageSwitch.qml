@@ -2,6 +2,7 @@ import QtQuick 2.12
 import QtQuick.Controls 2.5
 
 Switch {
+    id:root
     property alias source:indicatorImg.source
     indicator: Item {
         implicitWidth: indicatorImg.width

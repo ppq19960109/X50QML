@@ -41,7 +41,7 @@ Item {
             Component.onCompleted: {
                 var i
                 var array = []
-                for(i=50; i<= 210; ++i) {
+                for(i=40; i<= 220; i+=5) {
                     array.push(i)
                 }
                 tempPathView.model=array
@@ -131,6 +131,11 @@ Item {
                             //                            SendFunc.setToServer(Data)
 
                             SendFunc.tempControlRquest(tempPathView.model[tempPathView.currentIndex])
+                            if(rStoveStatus===0)
+                            {
+                                loaderWarnConfirmShow("请开启右灶，\n并将火力调到最大")
+                                return
+                            }
                         }
                         else
                         {
@@ -218,7 +223,7 @@ Item {
                 source: themesPicturesPath+"auxiliary_temp_control.png"
             }
             Text{
-                text:"右灶 | 辅助控温"
+                text:"右灶 | 辅助控火"
                 color:"#fff"
                 font.pixelSize: 34
                 anchors.horizontalCenter: parent.horizontalCenter
@@ -227,6 +232,7 @@ Item {
                 horizontalAlignment:Text.AlignHCenter
             }
             Text{
+                height: 40
                 visible: auxiliarySwitch > 0
                 text:rAuxiliaryTemp+"℃"
                 color:themesTextColor
@@ -234,6 +240,13 @@ Item {
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.top: parent.top
                 anchors.topMargin: 84
+                MouseArea{
+                    anchors.fill: parent
+                    onClicked: {
+                        console.log("Text onClicked")
+                        loaderTempControl(null)
+                    }
+                }
             }
             PageSwitch {
                 id:auxiliaryPageSwitch
@@ -284,7 +297,7 @@ Item {
                     {
                         if(linkWifiConnected==false)
                         {
-                            loaderCheckWifiShow("当前无网络，连网后可生成烹饪曲线")
+                            loaderManualConfirmShow("当前无网络，连网后可生成烹饪曲线","icon_wifi_warn.png","检查网络",openWifiPage)
                             cookingCurvePageSwitch.checked=false
                             return
                         }
@@ -327,11 +340,17 @@ Item {
             PageSwitch {
                 id:oilTempPageSwitch
                 checked: false
+                enabled: auxiliarySwitch === 0
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.bottom: parent.bottom
                 anchors.bottomMargin: 30
-                source: themesPicturesPath+(checked ?"icon_switch_open.png":"icon_switch_close.png")
+                source: themesPicturesPath+(enabled==false?"icon_switch_disable.png":(checked ?"icon_switch_open.png":"icon_switch_close.png"))
                 onClicked: {
+//                    if(checked==false && auxiliarySwitch > 0)
+//                    {
+//                        checked=true
+//                        return
+//                    }
                     var Data={}
                     Data.OilTempSwitch = checked
                     SendFunc.setToServer(Data)

@@ -147,7 +147,7 @@ Item {
                 }
                 else
                 {
-                    loaderCheckWifiShow("当前设备离线，请检查网络")
+                    loaderManualConfirmShow("当前设备离线，请检查网络","icon_wifi_warn.png","检查网络",openWifiPage)
                 }
             }
         }
