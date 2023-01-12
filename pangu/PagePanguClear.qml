@@ -52,7 +52,7 @@ Item {
         id:topBar
         anchors.bottom:parent.bottom
         name:qsTr("清洁模式")
-//        leftBtnText:qsTr("启动")
+        leftBtnText:qsTr("启动")
         rightBtnText:qsTr("")
         onLeftClick:{
             steamStart()

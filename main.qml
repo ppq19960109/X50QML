@@ -16,7 +16,7 @@ ApplicationWindow {
     width: 800
     height: 480
     visible: true //true false
-    property int sysPower:-1
+    property int sysPower:1
     property int permitStartStatus:0
     property int productionTestStatus:0
     property int productionTestFlag:1

@@ -7,7 +7,20 @@ import "../"
 Rectangle {
     color: themesWindowBackgroundColor
     property string name: "pageSteamBakeRun"
+    Connections { // 将目标对象信号与槽函数进行连接
+        target: QmlDevState
 
+        onStateChanged: { // 处理目标对象信号的槽函数
+            //            console.log("PageSteamBakeRun:",key)
+            if("RunPause"==key)
+            {
+                if(value > 0 && rightProgressBar.workState===workStateEnum.WORKSTATE_PAUSE)
+                {
+                    loaderAutoPopupShow("暂停中，请开门加入食材","",292,"确定",null)
+                }
+            }
+        }
+    }
 
     Component.onCompleted: {
         leftProgressBar.updatePaint()
@@ -329,8 +342,8 @@ Rectangle {
                 onClicked: {
                     if(rightProgressBar.workState === workStateEnum.WORKSTATE_STOP)
                     {
-//                        loaderPageNewCook(rightProgressBar.device)
-                          load_page("pagePangu")
+                        //                        loaderPageNewCook(rightProgressBar.device)
+                        load_page("pagePangu")
                     }
                     else if(rightProgressBar.workState === workStateEnum.WORKSTATE_PAUSE)
                     {
@@ -338,17 +351,17 @@ Rectangle {
                     }
                     else if(rightProgressBar.workState === workStateEnum.WORKSTATE_PAUSE_RESERVE)
                     {
-//                        var para =CookFunc.getDefHistory()
-//                        para.cookPos=cookWorkPosEnum.RIGHT
-//                        var list = []
-//                        var steps={}
-//                        steps.mode=QmlDevState.state.RStOvMode
-//                        steps.temp=QmlDevState.state.RStOvSetTemp
-//                        steps.time=QmlDevState.state.RStOvSetTimer
-//                        list.push(steps)
-//                        para.dishName=CookFunc.getDishName(list)
-//                        load_page("pageSteamBakeReserve",{"root":para})
-//                        para=undefined
+                        //                        var para =CookFunc.getDefHistory()
+                        //                        para.cookPos=cookWorkPosEnum.RIGHT
+                        //                        var list = []
+                        //                        var steps={}
+                        //                        steps.mode=QmlDevState.state.RStOvMode
+                        //                        steps.temp=QmlDevState.state.RStOvSetTemp
+                        //                        steps.time=QmlDevState.state.RStOvSetTimer
+                        //                        list.push(steps)
+                        //                        para.dishName=CookFunc.getDishName(list)
+                        //                        load_page("pageSteamBakeReserve",{"root":para})
+                        //                        para=undefined
                     }
                     else
                     {

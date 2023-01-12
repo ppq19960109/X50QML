@@ -101,6 +101,7 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     stateType.append(QPair<QString,int>("RCookbookName",LINK_VALUE_TYPE_STRING));
     stateType.append(QPair<QString,int>("RMultiMode",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("ClearMode",LINK_VALUE_TYPE_NUM));
+    stateType.append(QPair<QString,int>("RunPause",LINK_VALUE_TYPE_NUM));
 
     localConnected=0;
     connect(&client, SIGNAL(sendData(QByteArray)), this,SLOT(readData(QByteArray)));

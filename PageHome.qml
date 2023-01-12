@@ -768,6 +768,7 @@ Item {
         //        loaderUpdateConfirmShow()
         //       loaderUpdateResultShow("系统已更新至最新版本\n"+"1.2.0")
         //loaderPopupShow("","料理机盖缺失或料理锅缺失",292,"好的")
+        //loaderAutoPopupShow("暂停中，请开门加入食材","",292,"确定",null)
     }
     StackView.onActivating:{
         //        console.log("PageHome StackView onActivating")
