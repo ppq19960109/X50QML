@@ -57,7 +57,7 @@ ApplicationWindow {
     readonly property var workModeNumberEnum:[0,1,3,4,35,36,38,40,42,65,66,68]
 
     readonly property var leftWorkModeModelEnum:[{"modelData":5,"temp":180,"time":30,"minTemp":50,"maxTemp":230},{"modelData":7,"temp":150,"time":30,"minTemp":50,"maxTemp":200},{"modelData":6,"temp":180,"time":30,"minTemp":50,"maxTemp":230},{"modelData":4,"temp":200,"time":30,"minTemp":50,"maxTemp":230},{"modelData":3,"temp":120,"time":20,"minTemp":101,"maxTemp":120},{"modelData":8,"temp":220,"time":30,"minTemp":200,"maxTemp":230,"maxTime":180}]
-    readonly property var rightWorkModeModelEnum:[{"modelData":1,"temp":100,"time":30,"minTemp":40,"maxTemp":100},{"modelData":3,"temp":120,"time":20,"minTemp":101,"maxTemp":105},{"modelData":2,"temp":90,"time":15,"minTemp":80,"maxTemp":100}]
+    readonly property var rightWorkModeModelEnum:[{"modelData":1,"temp":100,"time":30,"minTemp":40,"maxTemp":100},{"modelData":3,"temp":105,"time":20,"minTemp":101,"maxTemp":105},{"modelData":2,"temp":90,"time":15,"minTemp":80,"maxTemp":100}]
     readonly property var rightAssistWorkModeModelEnum:[{"modelData":10,"temp":35,"time":60,"minTemp":30,"maxTemp":50},{"modelData":9,"temp":40,"time":30,"minTemp":30,"maxTemp":50},{"modelData":11,"temp":60,"time":60,"minTemp":50,"maxTemp":105}]
 
     readonly property var wifiStateEnum:{"WIFISTATE_IDLE":0,"WIFISTATE_CONNECTING":1,"WIFISTATE_CONNECTFAILED":2,"WIFISTATE_CONNECTFAILED_WRONG_KEY":3,"WIFISTATE_CONNECTED":4,"WIFISTATE_DISCONNECTED":5,"WIFISTATE_OPEN":6,"WIFISTATE_OFF":7,"WIFISTATE_LINK_CONNECTED":8}
@@ -281,6 +281,10 @@ ApplicationWindow {
 
     Component.onCompleted: {
         console.log("Window onCompleted:")
+        if(systemSettings.wifiEnable)
+        {
+            QmlDevState.executeShell("(wpa_cli enable_network all && wpa_cli save_config) &")
+        }
         if(systemSettings.brightness<1 || systemSettings.brightness>255)
         {
             systemSettings.brightness=200

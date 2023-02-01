@@ -146,9 +146,8 @@ void Backlight::setClockTime(int hours,int minutes)
     local_tm->tm_hour=hours;
     local_tm->tm_min=minutes;
     t=mktime(local_tm);
-    struct timeval tv;
-    tv.tv_sec=t;
-    settimeofday(&tv, NULL);
+
+    setClockTimestamp(t);
 }
 
 void Backlight::setClockTimestamp(long timestamp)
@@ -157,5 +156,6 @@ void Backlight::setClockTimestamp(long timestamp)
 
     struct timeval tv;
     tv.tv_sec=timestamp;
+    tv.tv_usec=0;
     settimeofday(&tv, NULL);
 }

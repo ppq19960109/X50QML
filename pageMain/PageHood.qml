@@ -221,7 +221,7 @@ Item {
                     anchors.horizontalCenter: parent.horizontalCenter
                     source: themesPicturesPath+modelData.background
                     Image {
-                        id:rotation2
+                        id:rotation3
                         visible: {
                             if(index==0)
                             {
@@ -240,12 +240,12 @@ Item {
                             to: 360
                             duration: 8000 //旋转速度，默认250
                             loops: Animation.Infinite //一直旋转
-                            running:rotation2.visible
+                            running:rotation3.visible
                         }
                     }
                 }
                 Text{
-                    visible: index==0 && rotation2.visible
+                    visible: index==0 && rotation3.visible
                     text:{
                         if(index==0)
                         {
