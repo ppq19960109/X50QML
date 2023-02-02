@@ -38,6 +38,7 @@ Item {
         steps.fan=1
         steps.repeat=0
         steps.repeatStep=0
+        steps.runPause=0
         list.push(steps)
 
         var para =CookFunc.getDefHistory()
