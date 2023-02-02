@@ -608,7 +608,8 @@ Item {
             {
                 if(value==otaStateEnum.OTA_NEW_FIRMWARE)
                 {
-                    loaderUpdateConfirmShow()
+                    if(versionCheckState>0)
+                        loaderUpdateConfirmShow()
                 }
                 else if(value==otaStateEnum.OTA_DOWNLOAD_START)
                 {
@@ -623,12 +624,27 @@ Item {
                     systemSettings.reboot=true
                     systemSettings.otaSuccess=true
                 }
+
+                if(value==otaStateEnum.OTA_NO_FIRMWARE)
+                {
+                    if(versionCheckState>0)
+                    {
+                        --versionCheckState
+                        if(versionCheckState==0)
+                            SendFunc.otaCmdPushTypeSet(0)
+                    }
+                }
+                else
+                {
+                    versionCheckState=0
+                }
             }
             else if("OTAPowerState"==key)
             {
                 if(value==otaStateEnum.OTA_NEW_FIRMWARE)
                 {
-                    loaderUpdatePowerConfirmShow()
+                    if(versionCheckState>0)
+                        loaderUpdatePowerConfirmShow()
                 }
                 else if(value==otaStateEnum.OTA_DOWNLOAD_START)
                 {
@@ -641,6 +657,20 @@ Item {
                 else if(value==otaStateEnum.OTA_INSTALL_SUCCESS)
                 {
 
+                }
+
+                if(value==otaStateEnum.OTA_NO_FIRMWARE)
+                {
+                    if(versionCheckState>0)
+                    {
+                        --versionCheckState
+                        if(versionCheckState==0)
+                            SendFunc.otaCmdPushTypeSet(0)
+                    }
+                }
+                else
+                {
+                    versionCheckState=0
                 }
             }
             else if("OTAProgress"==key)

@@ -4,8 +4,9 @@ import QtQuick.Layouts 1.12
 import "../"
 import "qrc:/SendFunc.js" as SendFunc
 Item {
-    property int versionCheckState: 0
     property var otaSlientUpgrade: QmlDevState.state.OTASlientUpgrade
+    property bool checkStatusVisible:false
+
     Component {
         id: pageReleaseNotes
         PageReleaseNotes {}
@@ -18,28 +19,16 @@ Item {
 
             if("OTAState"==key)
             {
-                if(value==1)
+                if(value!=otaStateEnum.OTA_NO_FIRMWARE)
                 {
-                    if(versionCheckState>0)
-                        --versionCheckState
-                }
-                else if(value==2)
-                {
-                    checkStatus.visible=false
-                    versionCheckState=0
+                    checkStatusVisible=false
                 }
             }
             else if("OTAPowerState"==key)
             {
-                if(value==1)
+                if(value!=otaStateEnum.OTA_NO_FIRMWARE)
                 {
-                    if(versionCheckState>0)
-                        --versionCheckState
-                }
-                else if(value==2)
-                {
-                    checkStatus.visible=false
-                    versionCheckState=0
+                    checkStatusVisible=false
                 }
             }
         }
@@ -93,7 +82,7 @@ Item {
             anchors.top: parent.top
             anchors.topMargin: 195
             anchors.horizontalCenter: parent.horizontalCenter
-            visible: otaSlientUpgrade>0?true:false
+            visible: (otaSlientUpgrade>0||checkStatusVisible)?true:false
             Text{
                 id:checkText
                 text:{
@@ -140,7 +129,7 @@ Item {
 
                 if(linkWifiConnected)
                 {
-                    checkStatus.visible=true
+                    checkStatusVisible=true
                     versionCheckState=2
                     SendFunc.otaRquest(0)
                     SendFunc.otaPowerRquest(0)

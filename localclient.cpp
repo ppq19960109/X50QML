@@ -22,8 +22,8 @@ LocalClient::LocalClient(QObject *parent) : QObject(parent)
     connect(timer, &QTimer::timeout, this, &LocalClient::connectToServer);
     qDebug() << "UNIX_DOMAIN:" << UNIX_DOMAIN;
     qDebug() << "readBufferSize:" << m_socket->readBufferSize();
-    m_socket->setReadBufferSize(10240*5);
-    qDebug() << "readBufferSize:" << m_socket->readBufferSize();
+//    m_socket->setReadBufferSize(10240*5);
+//    qDebug() << "readBufferSize:" << m_socket->readBufferSize();
 }
 
 LocalClient::~LocalClient()

@@ -28,6 +28,7 @@ ApplicationWindow {
     property int smartRecipesIndex:0
     property int pageSetIndex:0
     property var lMultiStageContent
+    property int versionCheckState: 0
 
     property var smartSmokeSwitch: QmlDevState.state.SmartSmokeSwitch
     property var hoodSpeed: QmlDevState.state.HoodSpeed
