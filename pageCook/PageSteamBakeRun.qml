@@ -313,7 +313,7 @@ Rectangle {
 
             workColor:"#DE932F"
             workState:QmlDevState.state.RStOvState
-            workMode:workState===workStateEnum.WORKSTATE_STOP?qsTr("右腔烹饪"):QmlDevState.state.RCookbookName//"智能模式"
+            workMode:workState===workStateEnum.WORKSTATE_STOP?qsTr("右腔烹饪"):(QmlDevState.state.RMultiMode===multiModeEnum.RECIPE?QmlDevState.state.RCookbookName:"")
             canvasDiameter:width
             setTimeLeft:Math.ceil(QmlDevState.state.RStOvSetTimerLeft/60)
             orderTimeLeft:QmlDevState.state.RStOvOrderTimerLeft

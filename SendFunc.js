@@ -335,11 +335,11 @@ function setPanguMultiCooking(list,orderTime,dishName,workMode,clearMode)
     Data.RMultiStageContent=list
     if(null == dishName)
     {
-        Data.RStOvMode=multiModeEnum.MULTISTAGE
+        Data.RMultiMode=multiModeEnum.MULTISTAGE
     }
     else
     {
-        Data.RStOvMode=multiModeEnum.RECIPE
+        Data.RMultiMode=multiModeEnum.RECIPE
         Data.RCookbookName=dishName
     }
     Data.RStOvMode=workMode

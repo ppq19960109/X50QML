@@ -13,7 +13,7 @@ Item {
         var steps={}
 
         steps.temp=parseInt(tempPathView.model[tempPathView.currentIndex])
-        steps.time=parseInt(timePathView.model[timePathView.currentIndex])*60+parseInt(secondsPathView.model[secondsPathView.currentIndex])
+        steps.cookTime=parseInt(timePathView.model[timePathView.currentIndex])*60+parseInt(secondsPathView.model[secondsPathView.currentIndex])
         steps.motorSpeed=parseInt(speedPathView.model[speedPathView.currentIndex])
         if(steps.motorSpeed>=0)
             steps.motorDir=0
