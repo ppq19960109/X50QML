@@ -325,17 +325,18 @@ Item {
                         anchors.topMargin: 48
                     }
                     Text{
+                        id:timeTempText
                         visible: flashAnimation.flash==0
                         PageFlashAnimation {
                             id:flashAnimation
                             running: {
                                 if(index==0)
                                 {
-                                    return lStOvState===workStateEnum.WORKSTATE_PAUSE||lStOvState===workStateEnum.WORKSTATE_PAUSE_RESERVE
+                                    return lStOvState===workStateEnum.WORKSTATE_PAUSE||lStOvState===workStateEnum.WORKSTATE_PAUSE_RESERVE||lStOvState===workStateEnum.WORKSTATE_PAUSE_PREHEAT
                                 }
                                 else
                                 {
-                                    return rStOvState===workStateEnum.WORKSTATE_PAUSE||rStOvState===workStateEnum.WORKSTATE_PAUSE_RESERVE
+                                    return rStOvState===workStateEnum.WORKSTATE_PAUSE||rStOvState===workStateEnum.WORKSTATE_PAUSE_RESERVE||rStOvState===workStateEnum.WORKSTATE_PAUSE_PREHEAT
                                 }
                             }
                         }
@@ -343,20 +344,20 @@ Item {
                             if(index==0)
                             {
                                 if(lStOvState===workStateEnum.WORKSTATE_PREHEAT||lStOvState===workStateEnum.WORKSTATE_PAUSE_PREHEAT)
-                                    return QmlDevState.state.LStOvRealTemp+"℃"
+                                    return QmlDevState.state.LStOvRealTemp
                                 else if(lStOvState===workStateEnum.WORKSTATE_RESERVE||lStOvState===workStateEnum.WORKSTATE_PAUSE_RESERVE)
-                                    return lStOvOrderTimerLeft+"分钟"
+                                    return lStOvOrderTimerLeft
                                 else
-                                    return lStOvSetTimerLeft+"分钟"
+                                    return lStOvSetTimerLeft
                             }
                             else
                             {
                                 if(rStOvState===workStateEnum.WORKSTATE_PREHEAT||rStOvState===workStateEnum.WORKSTATE_PAUSE_PREHEAT)
-                                    return QmlDevState.state.RStOvRealTemp+"℃"
+                                    return QmlDevState.state.RStOvRealTemp
                                 else if(rStOvState===workStateEnum.WORKSTATE_RESERVE||rStOvState===workStateEnum.WORKSTATE_PAUSE_RESERVE)
-                                    return rStOvOrderTimerLeft+"分钟"
+                                    return rStOvOrderTimerLeft
                                 else
-                                    return rStOvSetTimerLeft+"分钟"
+                                    return rStOvSetTimerLeft
                             }
                         }
                         color:themesTextColor
@@ -364,6 +365,30 @@ Item {
                         anchors.horizontalCenter: parent.horizontalCenter
                         anchors.top: parent.top
                         anchors.topMargin: 98
+                    }
+                    Text{
+                        anchors.bottom: timeTempText.bottom
+                        anchors.bottomMargin: 5
+                        anchors.left: timeTempText.right
+                        anchors.leftMargin: 9
+                        color:themesTextColor
+                        font.pixelSize: 26
+                        text:{
+                            if(index==0)
+                            {
+                                if(lStOvState===workStateEnum.WORKSTATE_PREHEAT||lStOvState===workStateEnum.WORKSTATE_PAUSE_PREHEAT)
+                                    return "℃"
+                                else
+                                    return "分钟"
+                            }
+                            else
+                            {
+                                if(rStOvState===workStateEnum.WORKSTATE_PREHEAT||rStOvState===workStateEnum.WORKSTATE_PAUSE_PREHEAT)
+                                    return "℃"
+                                else
+                                    return "分钟"
+                            }
+                        }
                     }
                     Item
                     {
