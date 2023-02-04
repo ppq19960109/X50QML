@@ -260,7 +260,7 @@ Item {
             id:grid
 
             width: 418*2+columnSpacing
-            height: 115*2+rowSpacing
+            height: 116*2+rowSpacing
             anchors.top: parent.top
             anchors.topMargin: 74
             anchors.horizontalCenter: parent.horizontalCenter

@@ -436,13 +436,13 @@ Item {
                 }
                 else if(value==2)
                 {
-                    if(lStOvState === workStateEnum.WORKSTATE_PREHEAT || lStOvState === workStateEnum.WORKSTATE_RUN || lStOvState === workStateEnum.WORKSTATE_PAUSE || rStOvState === workStateEnum.WORKSTATE_PREHEAT || rStOvState === workStateEnum.WORKSTATE_RUN|| rStOvState === workStateEnum.WORKSTATE_PAUSE)
-                        loaderAutoTextShow("蒸烤箱工作中，需散热，烟机无法关闭。")
+                    //if(lStOvState === workStateEnum.WORKSTATE_PREHEAT || lStOvState === workStateEnum.WORKSTATE_RUN || lStOvState === workStateEnum.WORKSTATE_PAUSE || rStOvState === workStateEnum.WORKSTATE_PREHEAT || rStOvState === workStateEnum.WORKSTATE_RUN|| rStOvState === workStateEnum.WORKSTATE_PAUSE)
+                    loaderAutoTextShow("蒸烤箱工作中，需散热，烟机无法关闭。")
                 }
                 else if(value==3)
                 {
-                    if(lStOvState === workStateEnum.WORKSTATE_PREHEAT || lStOvState === workStateEnum.WORKSTATE_RUN|| lStOvState === workStateEnum.WORKSTATE_PAUSE)
-                        loaderAutoTextShow("烤箱工作中，需散热，烟机不得低于2档。")
+                    //if(lStOvState === workStateEnum.WORKSTATE_PREHEAT || lStOvState === workStateEnum.WORKSTATE_RUN|| lStOvState === workStateEnum.WORKSTATE_PAUSE)
+                    loaderAutoTextShow("烤箱工作中，需散热，烟机不得低于2档。")
                 }
                 else if(value==4)
                 {
