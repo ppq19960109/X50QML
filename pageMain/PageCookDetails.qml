@@ -66,10 +66,17 @@ Item {
                 asynchronous:true
                 smooth:false
                 source: {
-                    if(tabBar.currentIndex==0)
-                        return "file:"+cookItem.imgUrl+"/0.png"
-                    else{
-                        return "file:"+cookItem.imgUrl+"/"+(swipeview.currentIndex+1)+".png"
+                    if(cookItem.cookPos==0)
+                    {
+                        if(tabBar.currentIndex==0)
+                            return "file:"+cookItem.imgUrl+"/0.png"
+                        else{
+                            return "file:"+cookItem.imgUrl+"/"+(swipeview.currentIndex+1)+".png"
+                        }
+                    }
+                    else
+                    {
+                        return "file:"+cookItem.imgUrl+".png"
                     }
                 }
             }
