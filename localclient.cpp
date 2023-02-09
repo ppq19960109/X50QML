@@ -45,7 +45,7 @@ void LocalClient::connectToServer()
 {
     qDebug() << "connectToServer";
 #ifdef USE_TCP
-    m_socket->connectToHost("192.168.1.100",9999);
+    m_socket->connectToHost("192.168.1.103",9999);
 #else
     m_socket->connectToServer(UNIX_DOMAIN);
 #endif
@@ -155,7 +155,7 @@ void LocalClient::readyReadHandler()
 {
 //    qDebug() << "recv_data bytesAvailable" << m_socket->bytesAvailable();
     QByteArray recv_data=m_socket->readAll();
-    static int recv_data_size=recv_data.size();
+    int recv_data_size=recv_data.size();
     if(recv_data_size<=0)
     {
         qDebug() << "recv_data error";
