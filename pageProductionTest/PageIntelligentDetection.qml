@@ -19,6 +19,7 @@ Item {
                 versionText.visible=true
                 version.color="red"
                 versionText.text="电源串口通讯异常"
+
                 step=0xff
             }
             else if(step>0 && step<=3)
@@ -138,8 +139,9 @@ Item {
         obj.quadruple=quadruple
         obj.versionSmartScreen=QmlDevState.state.ComSWVersion
         obj.versionPowerPanel=QmlDevState.state.PwrSWVersion//.replace(/\./g,"")
-        obj.versionShortcutScreen=QmlDevState.state.PwrSWVersion
-        obj.versionKeyboard=QmlDevState.state.ComSWVersion
+        obj.versionShortcutScreen=QmlDevState.state.ShortcutSWVersion
+        obj.versionKeyboard=QmlDevState.state.KeySWVersion
+        obj.versionCookingHelper=QmlDevState.state.CookAssistVersion
         obj.deviceName=QmlDevState.state.DeviceName
         obj.deviceSecret=QmlDevState.state.DeviceSecret
         obj.mqVerify=Qt.md5(obj.deviceName+obj.deviceSecret+pk+QmlDevState.state.ProductSecret)
@@ -205,7 +207,7 @@ Item {
             if("PwrSWVersion"==key && step==0)
             {
                 step=1
-                versionText.text="电源板软件版本:"+QmlDevState.state.PwrSWVersion+" 智慧屏软件版本:"+QmlDevState.state.ComSWVersion+"\n快捷屏软件版本:"+QmlDevState.state.PwrSWVersion+" 按键板软件版本:"+QmlDevState.state.ComSWVersion
+                versionText.text="电源板版本:"+QmlDevState.state.PwrSWVersion+" 智慧屏版本:"+QmlDevState.state.ComSWVersion+" 快捷屏版本:"+QmlDevState.state.ShortcutSWVersion+"\n按键板版本:"+QmlDevState.state.KeySWVersion+" 烹饪助手版本:"+QmlDevState.state.CookAssistVersion
                 version.color="green"
                 SendFunc.scanWifi()
                 timer_wifi.restart()
@@ -300,7 +302,7 @@ Item {
             }
             Rectangle{
                 id:version
-                Layout.preferredWidth: 600
+                Layout.preferredWidth: 700
                 Layout.preferredHeight:80
                 radius: 8
                 color:"transparent"

@@ -85,6 +85,9 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     stateType.append(QPair<QString,int>("DeviceSecret",LINK_VALUE_TYPE_STRING));
     stateType.append(QPair<QString,int>("PwrSWVersion",LINK_VALUE_TYPE_STRING));
     stateType.append(QPair<QString,int>("ComSWVersion",LINK_VALUE_TYPE_STRING));
+    stateType.append(QPair<QString,int>("ShortcutSWVersion",LINK_VALUE_TYPE_STRING));
+    stateType.append(QPair<QString,int>("KeySWVersion",LINK_VALUE_TYPE_STRING));
+    stateType.append(QPair<QString,int>("CookAssistVersion",LINK_VALUE_TYPE_STRING));
     stateType.append(QPair<QString,int>("QrCode",LINK_VALUE_TYPE_STRING));
     stateType.append(QPair<QString,int>("UpdateLog",LINK_VALUE_TYPE_STRING));
     //    stateType.append(QPair<QString,int>("BindTokenState",LINK_VALUE_TYPE_NUM));
