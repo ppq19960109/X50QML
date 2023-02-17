@@ -143,9 +143,15 @@ void Backlight::setClockTime(int hours,int minutes)
     struct tm * local_tm=localtime(&t);
     qDebug() << "year mon day:" << local_tm->tm_year << local_tm->tm_mon << local_tm->tm_mday;
     qDebug() << "hour min sec:" << local_tm->tm_hour << local_tm->tm_min << local_tm->tm_sec;
+    //qDebug() << "mktime:" << mktime(local_tm);
     local_tm->tm_hour=hours;
     local_tm->tm_min=minutes;
     t=mktime(local_tm);
+    if(t<0)
+    {
+        local_tm->tm_mon=1;
+        t=mktime(local_tm);
+    }
 
     setClockTimestamp(t);
 }
