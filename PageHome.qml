@@ -12,6 +12,7 @@ Item {
     property int lastErrorCodeShow:-1
     property int lastHoodSpeed:0
     property int lastHoodLight:0
+    property int lastRStoveStatus:-1
 
     //    enabled: sysPower > 0
 
@@ -420,6 +421,23 @@ Item {
                 if(value==0)
                     loaderDoorAutoRestoreHide(cookWorkPosEnum.RIGHT)
             }
+            else if("RStoveStatus"==key)
+            {
+                if(lastRStoveStatus > 0 && value==0)
+                {
+                    if(auxiliarySwitch>0)
+                    {
+                        SendFunc.tempControlRquest(0)
+                        if(lStoveStatus>0)
+                        {
+                            loaderAutoTextShow("右灶已关闭，本次控温结束")
+                        }
+                        lastRStoveStatus=-1
+                        return
+                    }
+                }
+                lastRStoveStatus=value
+            }
             else if("HoodOffLeftTime"==key)
             {
                 if(value==0)
@@ -431,7 +449,10 @@ Item {
                 {
                     if(QmlDevState.state.HoodOffLeftTime!==0)
                     {
-                        showLoaderHoodOff()
+                        if(lastRStoveStatus<0)
+                            showLoaderHoodOff(1)
+                        else
+                            showLoaderHoodOff()
                     }
                 }
                 else if(value==2)

@@ -41,7 +41,7 @@ Item {
             Component.onCompleted: {
                 var i
                 var array = []
-                for(i=40; i<= 220; i+=5) {
+                for(i=50; i<= 210; i+=5) {
                     array.push(i)
                 }
                 tempPathView.model=array
@@ -223,7 +223,7 @@ Item {
                 source: themesPicturesPath+"auxiliary_temp_control.png"
             }
             Text{
-                text:"右灶 | 辅助控火"
+                text:"右灶 | 辅助控温"
                 color:"#fff"
                 font.pixelSize: 34
                 anchors.horizontalCenter: parent.horizontalCenter

@@ -980,7 +980,8 @@ ApplicationWindow {
     Component{
         id:component_hoodoff
         PageDialogConfirm{
-            hintCenterText:"烟机自动延时<br/><b><font color='#E68855'>"+QmlDevState.state.HoodOffLeftTime+"分钟</font></b>后关闭，清除余烟"
+            property bool rAuxiliary: false
+            hintCenterText:(rAuxiliary?"右灶已关闭，本次控温结束<br/>烟机自动延时":"烟机自动延时<br/>")+"<b><font color='#E68855'>"+QmlDevState.state.HoodOffLeftTime+"分钟</font></b>后关闭，清除余烟"
             cancelText:"好的"
             confirmText:"立即关闭("+QmlDevState.state.HoodOffLeftTime+"分钟)"
             confirmBtnWidth:130
@@ -994,8 +995,12 @@ ApplicationWindow {
         }
     }
 
-    function showLoaderHoodOff(){
+    function showLoaderHoodOff(status){
         loaderAuto.sourceComponent = component_hoodoff
+        if(status==null || status===0)
+            loaderAuto.item.rAuxiliary=false
+        else
+            loaderAuto.item.rAuxiliary=true
     }
     function closeLoaderHoodOff(){
         if(loaderAuto.sourceComponent === component_hoodoff)
