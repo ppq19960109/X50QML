@@ -38,6 +38,7 @@ Item {
         visible: wifiConnected
         Image {
             id:icon_weather
+            visible: gWeatherId!=0
             anchors.top:parent.top
             anchors.topMargin: 110
             anchors.left: parent.left
