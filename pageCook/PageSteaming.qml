@@ -48,6 +48,9 @@ Item {
             loaderManual.sourceComponent = null
         }
     }
+    Component.onDestruction: {
+        loaderMainHide()
+    }
 
     PageBackBar{
         id:topBar

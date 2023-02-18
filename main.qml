@@ -72,6 +72,7 @@ ApplicationWindow {
     property bool wifiConnected:false
     property bool linkWifiConnected:false
     property bool sleepState: false
+    property int sleepCount: 0
     property var wifiConnectInfo:{"ssid":"","psk":"","encryp":0}
     readonly property var multiModeEnum:{"NONE":0,"RECIPE":1,"MULTISTAGE":2}
     readonly property var buzControlEnum:{"STOP":0,"SHORT":1,"SHORTTWO":2,"SCECONDS2":3,"OPEN":4,"SHORTFIVE":5,"SHORTTHREE":6}
@@ -159,8 +160,14 @@ ApplicationWindow {
             if(window.visible==true)
             {
                 console.log("onSleepTimeChanged...",systemSettings.sleepTime)
-                timer_sleep.interval=systemSettings.sleepTime*60000
-                timer_sleep.restart()
+                sleepCount=0
+            }
+        }
+        onSleepSwitchChanged: {
+            if(window.visible==true)
+            {
+                console.log("onSleepSwitchChanged...",systemSettings.sleepSwitch)
+                sleepCount=0
             }
         }
     }
@@ -214,6 +221,21 @@ ApplicationWindow {
         }
         pageSetIndex=1
     }
+    function openAICookPage()
+    {
+        console.log("openAICookPage....")
+        var page=isExistView("PageAICook")
+        if(page==null)
+        {
+            loaderMainHide()
+            backTopPage()
+            push_page(pageAICook)
+        }
+        else
+        {
+            backPage(page)
+        }
+    }
     function systemSetReset()
     {
         systemSettings.firstStartup=true
@@ -258,6 +280,7 @@ ApplicationWindow {
         if(power)
         {
             Backlight.backlightSet(systemSettings.brightness)
+            sleepCount=0
             timer_sleep.restart()
         }
         else
@@ -268,6 +291,7 @@ ApplicationWindow {
 
             if(productionTestFlag==0 && timer_standby.running==true)
                 timer_standby.stop()
+            loaderMainHide()
             backTopPage()
         }
         if(window.visible==false)
@@ -395,6 +419,8 @@ ApplicationWindow {
         triggeredOnStart: false
         onTriggered: {
             console.log("timer_time onTriggered")
+            if(timer_time.interval!=60000)
+                timer_time.interval=60000
             getCurrentTime()
             if(gHours==0)
             {
@@ -427,21 +453,10 @@ ApplicationWindow {
             {
                 if(wifiConnected)
                 {
-                    if(timer_time.interval==10000)
-                    {
-                        console.log("time onTriggered interval:",timer_time.interval)
-                        timer_time.interval=60000
-                    }
-
                     MNetwork.locationRequest()
                     MNetwork.timeRequest()
                 }
                 //                SendFunc.makeRequest()
-            }
-            else
-            {
-                if(timer_time.interval!=60000)
-                    timer_time.interval=60000
             }
         }
     }
@@ -502,7 +517,7 @@ ApplicationWindow {
     {
         sleepState=true
         loaderScreenSaverShow()
-
+        timer_sleep.stop()
         productionTestFlag=0
         timer_standby.interval=3*60000
         timer_standby.restart()
@@ -513,27 +528,34 @@ ApplicationWindow {
 
     Timer{
         id:timer_sleep
-        repeat: false
-        running: systemSettings.sleepSwitch && sysPower == 1
-        interval: systemSettings.sleepTime*60000
+        repeat: true
+        running:  sysPower == 1
+        interval: 60000
         triggeredOnStart: false
         onTriggered: {
-            console.log("timer_sleep onTriggered...")
-            if(productionTestStatus==0 && demoModeStatus==0 && wifiConnecting==false && QmlDevState.localConnected > 0 && errorCodeShow === 0 && lStoveStatus === 0 && rStoveStatus === 0)
+            ++sleepCount
+            console.log("timer_sleep onTriggered...",sleepCount)
+
+            if(systemSettings.sleepSwitch)
             {
-                if((QmlDevState.state.RStOvState === workStateEnum.WORKSTATE_STOP || QmlDevState.state.RStOvState === workStateEnum.WORKSTATE_FINISH || QmlDevState.state.RStOvState === workStateEnum.WORKSTATE_RESERVE || QmlDevState.state.RStOvState === workStateEnum.WORKSTATE_PAUSE_RESERVE) && (QmlDevState.state.LStOvState === workStateEnum.WORKSTATE_STOP || QmlDevState.state.LStOvState === workStateEnum.WORKSTATE_FINISH || QmlDevState.state.LStOvState === workStateEnum.WORKSTATE_RESERVE || QmlDevState.state.LStOvState === workStateEnum.WORKSTATE_PAUSE_RESERVE ))
+                if(sleepCount >= systemSettings.sleepTime && productionTestStatus==0 && demoModeStatus==0 && wifiConnecting==false && QmlDevState.localConnected > 0 && errorCodeShow === 0 && lStoveStatus === 0 && rStoveStatus === 0)
                 {
-                    var OTAState=QmlDevState.state.OTAState
-                    var OTAPowerState=QmlDevState.state.OTAPowerState
-                    if(OTAState!=otaStateEnum.OTA_DOWNLOAD_START && OTAState!=otaStateEnum.OTA_INSTALL_START && OTAPowerState!=otaStateEnum.OTA_DOWNLOAD_START && OTAPowerState!=otaStateEnum.OTA_INSTALL_START)
+                    if((QmlDevState.state.RStOvState === workStateEnum.WORKSTATE_STOP || QmlDevState.state.RStOvState === workStateEnum.WORKSTATE_FINISH || QmlDevState.state.RStOvState === workStateEnum.WORKSTATE_RESERVE || QmlDevState.state.RStOvState === workStateEnum.WORKSTATE_PAUSE_RESERVE) && (QmlDevState.state.LStOvState === workStateEnum.WORKSTATE_STOP || QmlDevState.state.LStOvState === workStateEnum.WORKSTATE_FINISH || QmlDevState.state.LStOvState === workStateEnum.WORKSTATE_RESERVE || QmlDevState.state.LStOvState === workStateEnum.WORKSTATE_PAUSE_RESERVE ))
                     {
-                        screenSleep()
-                        return
+                        var OTAState=QmlDevState.state.OTAState
+                        var OTAPowerState=QmlDevState.state.OTAPowerState
+                        if(OTAState!=otaStateEnum.OTA_DOWNLOAD_START && OTAState!=otaStateEnum.OTA_INSTALL_START && OTAPowerState!=otaStateEnum.OTA_DOWNLOAD_START && OTAPowerState!=otaStateEnum.OTA_INSTALL_START)
+                        {
+                            screenSleep()
+                            return
+                        }
                     }
                 }
             }
-            sleepState=false
-            timer_sleep.restart()
+            if(sleepState==false && productionTestStatus==0 && demoModeStatus==0 && (lStoveStatus > 0 || rStoveStatus > 0))
+            {
+                openAICookPage()
+            }
         }
     }
     Timer{
@@ -669,6 +691,8 @@ ApplicationWindow {
         loaderManual.item.cookItem=cookItem
     }
     function loaderFirstStartupShow(){
+        systemSettings.firstStartup=false
+        systemSync()
         loaderManual.source="PageFirstStartup.qml"
     }
     Component{
@@ -1041,9 +1065,11 @@ ApplicationWindow {
     }
     function loaderScreenSaverShow()
     {
+        sleepState=true
         loaderScreenSaver.source=systemSettings.screenSaverIndex==0?"PageScreenSaver0.qml":"PageScreenSaver1.qml"
     }
     function loaderScreenSaverHide(){
+        sleepState=false
         if(loaderScreenSaver.source != "")
             loaderScreenSaver.source = ""
     }
@@ -1053,19 +1079,18 @@ ApplicationWindow {
         propagateComposedEvents: true
 
         onPressed: {
-            //            console.log("Window onPressed:",sysPower)
+            console.log("Window onPressed:",sysPower,timer_sleep.running)
             mouse.accepted=false
             if(sysPower > 0)
             {
-                if(systemSettings.sleepSwitch)
-                    timer_sleep.restart()
+                sleepCount=0
+                timer_sleep.restart()
 
                 if(sleepState==true)
                 {
                     if(productionTestFlag==0 && timer_standby.running==true)
                         timer_standby.stop()
 
-                    sleepState=false
                     loaderScreenSaverHide()
                     mouse.accepted = true
                 }
@@ -1095,11 +1120,11 @@ ApplicationWindow {
         {
             if(sleepState==true)
             {
-                sleepState=false
                 if(productionTestFlag==0 && timer_standby.running==true)
                     timer_standby.stop()
 
                 loaderScreenSaverHide()
+                sleepCount=0
                 timer_sleep.restart()
                 return 0
             }
@@ -1308,7 +1333,6 @@ ApplicationWindow {
     }
 
     function backTopPage() {
-        loaderMainHide()
         stackView.pop(null,StackView.Immediate)
         console.log("backTopPage stackView depth:"+stackView.depth)
     }

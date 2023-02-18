@@ -12,6 +12,7 @@ Item {
     property int lastErrorCodeShow:-1
     property int lastHoodSpeed:0
     property int lastHoodLight:0
+    property int lastLStoveStatus:-1
     property int lastRStoveStatus:-1
 
     //    enabled: sysPower > 0
@@ -251,8 +252,6 @@ Item {
                 console.log("ComSWVersion,",QmlDevState.state.DeviceSecret,productionTestStatus,systemSettings.firstStartup)
                 if(QmlDevState.state.DeviceSecret!=="" && productionTestStatus==0 && systemSettings.firstStartup===true)
                 {
-                    systemSettings.firstStartup=false
-                    systemSync()
                     SendFunc.enableWifi(true)
                     loaderFirstStartupShow()
                 }
@@ -421,9 +420,21 @@ Item {
                 if(value==0)
                     loaderDoorAutoRestoreHide(cookWorkPosEnum.RIGHT)
             }
+            else if("LStoveStatus"==key)
+            {
+                if(lastLStoveStatus==0 && value==1 && rStoveStatus === 0)
+                {
+                    openAICookPage()
+                }
+                lastLStoveStatus=value
+            }
             else if("RStoveStatus"==key)
             {
-                if(lastRStoveStatus > 0 && value==0)
+                if(lastRStoveStatus==0 && value==1 && lStoveStatus === 0)
+                {
+                    openAICookPage()
+                }
+                else if(lastRStoveStatus > 0 && value==0)
                 {
                     if(auxiliarySwitch>0)
                     {
