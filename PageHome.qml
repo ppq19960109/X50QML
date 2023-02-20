@@ -461,7 +461,10 @@ Item {
                     if(QmlDevState.state.HoodOffLeftTime!==0)
                     {
                         if(lastRStoveStatus<0)
+                        {
                             showLoaderHoodOff(1)
+                            lastRStoveStatus=rStoveStatus
+                        }
                         else
                             showLoaderHoodOff()
                     }
