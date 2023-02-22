@@ -346,11 +346,11 @@ Item {
                 anchors.bottomMargin: 30
                 source: themesPicturesPath+(enabled==false?"icon_switch_disable.png":(checked ?"icon_switch_open.png":"icon_switch_close.png"))
                 onClicked: {
-//                    if(checked==false && auxiliarySwitch > 0)
-//                    {
-//                        checked=true
-//                        return
-//                    }
+                    if(checked==false && auxiliarySwitch > 0)
+                    {
+                        checked=true
+                        return
+                    }
                     var Data={}
                     Data.OilTempSwitch = checked
                     SendFunc.setToServer(Data)
@@ -410,14 +410,19 @@ Item {
                 anchors.bottomMargin: 30
                 source: themesPicturesPath+(checked ?"icon_switch_open.png":"icon_switch_close.png")
                 onClicked: {
+                    var Data={}
                     if(checked==true)
                     {
                         if(systemSettings.rMovePotLowHeatRemind)
                             loaderManual.sourceComponent = component_lowHeat
+                        else
+                        {
+                            Data.RMovePotLowHeatSwitch = true
+                            SendFunc.setToServer(Data)
+                        }
                     }
                     else
                     {
-                        var Data={}
                         Data.RMovePotLowHeatSwitch = false
                         SendFunc.setToServer(Data)
                     }

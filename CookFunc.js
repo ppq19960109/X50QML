@@ -168,7 +168,7 @@ function getCookType(cookSteps)
     var root=JSON.parse(cookSteps)
     if(root.length>1)
         return 2
-    if(root[0].mode==1||root[0].mode==2)
+    if(root[0].mode==1||root[0].mode==3||root[0].mode==4)
         return 0
     return 1;
 }

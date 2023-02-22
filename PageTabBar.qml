@@ -4,6 +4,7 @@ import QtQuick.Controls 2.5
 Item{
     property bool completed_state: false
     property alias currentIndex: tabBar.currentIndex
+    property alias source: bg.source
     width: bg.width
     height: bg.height
 

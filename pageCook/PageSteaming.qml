@@ -262,7 +262,7 @@ Item {
                             return rStOvState===workStateEnum.WORKSTATE_PREHEAT
                         }
                     }
-                    duration:8000
+                    duration:9000
                     anchors.centerIn: parent
                     source:themesPicturesPath+"icon_steam_runing.png"
                 }

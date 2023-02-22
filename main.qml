@@ -23,7 +23,7 @@ ApplicationWindow {
     property bool wifiPageStatus:false
     property bool errorBuzzer:false
     property bool testMode:false
-    //    property bool aiState:true
+    property bool aiState:false
     property var decode_ssid:""
     property int smartRecipesIndex:0
     property int pageSetIndex:0
@@ -402,7 +402,7 @@ ApplicationWindow {
         gHours=date.getHours()
         gMinutes=date.getMinutes()
         var seconds=date.getSeconds()
-        if(seconds<40 && seconds>15)
+        if(seconds<50 && seconds>30)
         {
             console.log("getCurrentTime seconds:",seconds)
             timer_time.interval=(60-seconds)*1000
@@ -533,12 +533,11 @@ ApplicationWindow {
         interval: 60000
         triggeredOnStart: false
         onTriggered: {
-            ++sleepCount
             console.log("timer_sleep onTriggered...",sleepCount)
 
             if(systemSettings.sleepSwitch)
             {
-                if(sleepCount >= systemSettings.sleepTime && productionTestStatus==0 && demoModeStatus==0 && wifiConnecting==false && QmlDevState.localConnected > 0 && errorCodeShow === 0 && lStoveStatus === 0 && rStoveStatus === 0)
+                if(productionTestStatus==0 && demoModeStatus==0 && wifiConnecting==false && QmlDevState.localConnected > 0 && errorCodeShow === 0 && lStoveStatus === 0 && rStoveStatus === 0)
                 {
                     if((QmlDevState.state.RStOvState === workStateEnum.WORKSTATE_STOP || QmlDevState.state.RStOvState === workStateEnum.WORKSTATE_FINISH || QmlDevState.state.RStOvState === workStateEnum.WORKSTATE_RESERVE || QmlDevState.state.RStOvState === workStateEnum.WORKSTATE_PAUSE_RESERVE) && (QmlDevState.state.LStOvState === workStateEnum.WORKSTATE_STOP || QmlDevState.state.LStOvState === workStateEnum.WORKSTATE_FINISH || QmlDevState.state.LStOvState === workStateEnum.WORKSTATE_RESERVE || QmlDevState.state.LStOvState === workStateEnum.WORKSTATE_PAUSE_RESERVE ))
                     {
@@ -546,12 +545,24 @@ ApplicationWindow {
                         var OTAPowerState=QmlDevState.state.OTAPowerState
                         if(OTAState!=otaStateEnum.OTA_DOWNLOAD_START && OTAState!=otaStateEnum.OTA_INSTALL_START && OTAPowerState!=otaStateEnum.OTA_DOWNLOAD_START && OTAPowerState!=otaStateEnum.OTA_INSTALL_START)
                         {
-                            screenSleep()
-                            return
+                            ++sleepCount
+                            if(sleepCount >= systemSettings.sleepTime)
+                            {
+                                screenSleep()
+                                return
+                            }
                         }
+                        else
+                            sleepCount=0
                     }
+                    else
+                        sleepCount=0
                 }
+                else
+                    sleepCount=0
             }
+            else
+                sleepCount=0
             if(sleepState==false && productionTestStatus==0 && demoModeStatus==0 && (lStoveStatus > 0 || rStoveStatus > 0))
             {
                 openAICookPage()
@@ -580,7 +591,7 @@ ApplicationWindow {
         }
     }
     background:Image {
-        source: themesPicturesPath+"window-background.png"
+        source: themesPicturesPath+(aiState?"ai/ai_background.png":"window-background.png")
     }
     StackView {
         id: stackView
@@ -1134,6 +1145,25 @@ ApplicationWindow {
             return 1
         }
         return 2
+    }
+    function stoveSleepWakeup(){
+        if(sysPower > 0)
+        {
+            if(sleepState==true)
+            {
+                if(productionTestFlag==0 && timer_standby.running==true)
+                    timer_standby.stop()
+
+                loaderScreenSaverHide()
+                sleepCount=0
+                timer_sleep.restart()
+            }
+            else
+            {
+                sleepCount=0
+                timer_sleep.restart()
+            }
+        }
     }
     ListModel {
         id: wifiModel

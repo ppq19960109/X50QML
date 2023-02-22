@@ -5,20 +5,20 @@ import "qrc:/SendFunc.js" as SendFunc
 Item {
     property string name: "PageAICook"
     property int left_percent:{
-        if(lOilTemp<40)
+        if(lOilTemp<50)
             return 0
-        else if(lOilTemp>220)
+        else if(lOilTemp>250)
             return 100
         else
-            return 100*(lOilTemp-40)/180
+            return 100*(lOilTemp-50)/200
     }
     property int right_percent:{
-        if(rOilTemp<40)
+        if(rOilTemp<50)
             return 0
-        else if(rOilTemp>220)
+        else if(rOilTemp>250)
             return 100
         else
-            return 100*(rOilTemp-40)/180
+            return 100*(rOilTemp-50)/200
     }
     onLeft_percentChanged: {
         left_canvas.requestPaint()
@@ -76,6 +76,12 @@ Item {
             systemSettings.firstAI=false
             loaderManual.sourceComponent = component_help
         }
+    }
+    StackView.onActivated:{
+        aiState=true
+    }
+    StackView.onDeactivated:{
+        aiState=false
     }
     Component{
         id:component_help
@@ -186,10 +192,12 @@ Item {
             }
         }
     }
+
     PageTabBar{
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.bottom: parent.bottom
         currentIndex:0
+        source:themesPicturesPath+"ai/navigation_aibar.png"
     }
 
     Flickable{
@@ -330,6 +338,7 @@ Item {
                                 SendFunc.setHoodSpeed(6-index)
                             break
                         }
+                        SendFunc.setBuzControl(buzControlEnum.SHORT)
                     }
                 }
                 Text{
@@ -402,6 +411,7 @@ Item {
             anchors.verticalCenter: parent.verticalCenter
             anchors.left: parent.left
             anchors.leftMargin: 30
+            source: themesPicturesPath+(checked ?"ai/icon_aiopen.png":"ai/icon_aiclose.png")
             onClicked: {
                 if(checked==true)
                 {
@@ -435,10 +445,12 @@ Item {
                 var ctx = getContext("2d")
                 ctx.clearRect(0, 0, parent.width, parent.height)
                 ctx.lineWidth = 60
-
+                var grd=ctx.createRadialGradient(parent.width/2-135, parent.height/2,190,parent.width/2-135, parent.height/2,230);
+                grd.addColorStop(1,"#E68855");
+                grd.addColorStop(0,"#FFFFFF");
                 //ctx.lineCap="round"
                 ctx.beginPath()
-                ctx.strokeStyle ="#FFFFFF"
+                ctx.strokeStyle =grd
                 //0.71 1.288 0.29 -0.288
                 var percentArc=0.578*left_percent/100
                 ctx.arc(parent.width/2-135, parent.height/2, r, (0.29-percentArc)*Math.PI, (0.285-percentArc)*Math.PI,true)
@@ -448,23 +460,23 @@ Item {
                 ctx.closePath()
             }
         }
-//                Slider {
-//                    anchors.left: parent.left
-//                    anchors.bottom: parent.bottom
-//                    stepSize: 2
-//                    from:40
-//                    to: 220
-//                    value: 40
-//                    onValueChanged: {
-//                        console.log("slider:",value)
-//                        left_percent=100*(value-40)/180
-//                        left_canvas.requestPaint()
-//                        if(value==from)
-//                            QmlDevState.setState("OilTempSwitch",0)
-//                        else
-//                            QmlDevState.setState("OilTempSwitch",1)
-//                    }
-//                }
+        //                Slider {
+        //                    anchors.left: parent.left
+        //                    anchors.bottom: parent.bottom
+        //                    stepSize: 2
+        //                    from:40
+        //                    to: 220
+        //                    value: 40
+        //                    onValueChanged: {
+        //                        console.log("slider:",value)
+        //                        left_percent=100*(value-40)/180
+        //                        left_canvas.requestPaint()
+        //                        if(value==from)
+        //                            QmlDevState.setState("OilTempSwitch",0)
+        //                        else
+        //                            QmlDevState.setState("OilTempSwitch",1)
+        //                    }
+        //                }
     }
     Item {
         id: right_content
@@ -536,6 +548,7 @@ Item {
             anchors.verticalCenter: parent.verticalCenter
             anchors.right: parent.right
             anchors.rightMargin: 30
+            source: themesPicturesPath+(checked ?"ai/icon_aiopen.png":"ai/icon_aiclose.png")
             onClicked: {
                 if(checked==true)
                 {
@@ -580,41 +593,42 @@ Item {
                 var ctx = getContext("2d")
                 ctx.clearRect(0, 0, parent.width, parent.height)
                 ctx.lineWidth = 60
-
+                var grd=ctx.createRadialGradient(parent.width/2+135, parent.height/2,190,parent.width/2+135, parent.height/2,230);
+                grd.addColorStop(1,"#E68855");
+                grd.addColorStop(0,"#FFFFFF");
                 //ctx.lineCap="round"
                 ctx.beginPath()
-                ctx.strokeStyle ="#FFFFFF"
+                ctx.strokeStyle =grd
                 //0.71 1.288
                 var percentArc=0.578*right_percent/100
                 ctx.arc(parent.width/2+135, parent.height/2, r, (0.71+percentArc)*Math.PI, (0.715+percentArc)*Math.PI)
-
                 //                ctx.path=path
                 ctx.stroke()
                 ctx.closePath()
             }
         }
-//                Slider {
-//                    anchors.right: parent.right
-//                    anchors.bottom: parent.bottom
-//                    stepSize: 2
-//                    from:40
-//                    to: 220
-//                    value: 40
-//                    onValueChanged: {
-//                        console.log("slider:",value)
-//                        right_percent=100*(value-40)/180
-//                        right_canvas.requestPaint()
-//                    }
-//                }
+        //                Slider {
+        //                    anchors.right: parent.right
+        //                    anchors.bottom: parent.bottom
+        //                    stepSize: 2
+        //                    from:40
+        //                    to: 220
+        //                    value: 40
+        //                    onValueChanged: {
+        //                        console.log("slider:",value)
+        //                        right_percent=100*(value-40)/180
+        //                        right_canvas.requestPaint()
+        //                    }
+        //                }
         Button{
-            width: 60
-            height:30
+            width: 70
+            height:40
             anchors.top: parent.top
             anchors.topMargin: 30
             anchors.right: right_arc.left
             anchors.rightMargin: -20
             background:Rectangle {
-                color: (auxiliarySwitch===1 && rAuxiliaryTemp===200)?themesTextColor:"#434343"
+                color: (auxiliarySwitch===1 && rAuxiliaryTemp===200)?themesTextColor:"#7174AC"
                 radius: 6
             }
             Text{
@@ -628,17 +642,18 @@ Item {
                     SendFunc.tempControlRquest(200)
                 else
                     SendFunc.tempControlRquest(0)
+                SendFunc.setBuzControl(buzControlEnum.SHORT)
             }
         }
         Button{
-            width: 60
-            height:30
+            width: 70
+            height:40
             anchors.top: parent.top
             anchors.topMargin: 90
             anchors.right: right_arc.left
             anchors.rightMargin: 5
             background:Rectangle {
-                color: (auxiliarySwitch===1 && rAuxiliaryTemp===170)?themesTextColor:"#434343"
+                color: (auxiliarySwitch===1 && rAuxiliaryTemp===170)?themesTextColor:"#7174AC"
                 radius: 6
             }
             Text{
@@ -652,17 +667,18 @@ Item {
                     SendFunc.tempControlRquest(170)
                 else
                     SendFunc.tempControlRquest(0)
+                SendFunc.setBuzControl(buzControlEnum.SHORT)
             }
         }
         Button{
-            width: 60
-            height:30
+            width: 70
+            height:40
             anchors.top: parent.top
             anchors.topMargin: 180
             anchors.right: right_arc.left
             anchors.rightMargin: 15
             background:Rectangle {
-                color: (auxiliarySwitch===1 && rAuxiliaryTemp===150)?themesTextColor:"#434343"
+                color: (auxiliarySwitch===1 && rAuxiliaryTemp===150)?themesTextColor:"#7174AC"
                 radius: 6
             }
             Text{
@@ -676,17 +692,18 @@ Item {
                     SendFunc.tempControlRquest(150)
                 else
                     SendFunc.tempControlRquest(0)
+                SendFunc.setBuzControl(buzControlEnum.SHORT)
             }
         }
         Button{
-            width: 60
-            height:30
+            width: 70
+            height:40
             anchors.top: parent.top
             anchors.topMargin: 260
             anchors.right: right_arc.left
             anchors.rightMargin: 10
             background:Rectangle {
-                color: (auxiliarySwitch===1 && rAuxiliaryTemp===100)?themesTextColor:"#434343"
+                color: (auxiliarySwitch===1 && rAuxiliaryTemp===100)?themesTextColor:"#7174AC"
                 radius: 6
             }
             Text{
@@ -700,17 +717,18 @@ Item {
                     SendFunc.tempControlRquest(100)
                 else
                     SendFunc.tempControlRquest(0)
+                SendFunc.setBuzControl(buzControlEnum.SHORT)
             }
         }
         Button{
-            width: 60
-            height:30
+            width: 70
+            height:40
             anchors.top: parent.top
             anchors.topMargin: 350
             anchors.right: right_arc.left
             anchors.rightMargin: -30
             background:Rectangle {
-                color: (auxiliarySwitch===1 && rAuxiliaryTemp===70)?themesTextColor:"#434343"
+                color: (auxiliarySwitch===1 && rAuxiliaryTemp===70)?themesTextColor:"#7174AC"
                 radius: 6
             }
             Text{
@@ -724,6 +742,7 @@ Item {
                     SendFunc.tempControlRquest(70)
                 else
                     SendFunc.tempControlRquest(0)
+                SendFunc.setBuzControl(buzControlEnum.SHORT)
             }
         }
     }

@@ -426,6 +426,8 @@ Item {
                 {
                     openAICookPage()
                 }
+                if(value>0)
+                    sleepWakeup()
                 lastLStoveStatus=value
             }
             else if("RStoveStatus"==key)
@@ -447,6 +449,8 @@ Item {
                         return
                     }
                 }
+                if(value>0)
+                    sleepWakeup()
                 lastRStoveStatus=value
             }
             else if("HoodOffLeftTime"==key)
