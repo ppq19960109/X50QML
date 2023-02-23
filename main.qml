@@ -451,7 +451,7 @@ ApplicationWindow {
             }
             if(timeSync<2)
             {
-                if(wifiConnected)
+                if(linkWifiConnected)
                 {
                     MNetwork.locationRequest()
                     MNetwork.timeRequest()

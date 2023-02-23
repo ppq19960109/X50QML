@@ -239,7 +239,7 @@ Item {
                 systemPower(value)
                 if(systemSettings.reboot==false)
                 {
-                    if(errorCodeShow!=null && errorCodeShow!==0)
+                    if(errorCodeShow!=null && errorCodeShow!==0 && value>0)
                     {
                         if(errorCodeShow===6)
                             errorBuzzer=true
