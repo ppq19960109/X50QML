@@ -306,6 +306,7 @@ ApplicationWindow {
 
     Component.onCompleted: {
         console.log("Window onCompleted:")
+        //        '1'.padStart(2,'0')
         if(systemSettings.wifiEnable)
         {
             QmlDevState.executeShell("(wpa_cli enable_network all && wpa_cli save_config) &")
