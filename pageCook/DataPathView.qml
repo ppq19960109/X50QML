@@ -4,6 +4,7 @@ import QtQuick.Controls 2.5
 Item {
     property alias model:pathView.model
     property alias cacheItemCount:pathView.cacheItemCount
+    property alias pathItemCount:pathView.pathItemCount
     property int delegateIndex:0
     property alias currentIndex:pathView.currentIndex
     property alias moving:pathView.moving
@@ -14,7 +15,7 @@ Item {
     Component {
         id: rectDelegate
         Item  {
-            property int textFont:PathView.isCurrentItem ? 45 : 35
+            property int textFont:PathView.isCurrentItem ? 35 : 25
             property color textColor:PathView.isCurrentItem ?themesTextColor:themesTextColor2
             width:parent.width
             height:parent.height/parent.pathItemCount
@@ -32,7 +33,7 @@ Item {
     Component {
         id: modeDelegate
         Item  {
-            property int textFont:PathView.isCurrentItem ? 45 : 35
+            property int textFont:PathView.isCurrentItem ? 35 : 25
             property color textColor:PathView.isCurrentItem ?themesTextColor:themesTextColor2
             property url imgUrl:PathView.isCurrentItem ?leftWorkBigImg[modelData.modelData]:leftWorkSmallImg[modelData.modelData]
             width:parent.width

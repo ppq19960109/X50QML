@@ -22,19 +22,33 @@ Item {
             steps.motorDir=1
             steps.motorSpeed=Math.abs(steps.motorSpeed)
         }
+        switch(modePathView.currentIndex)
+        {
+        case 0:
+            steps.mode=3
+            break
+        case 1:
+            steps.mode=2
+            break
+        case 2:
+            steps.mode=1
+            break
+        default:
+            steps.mode=3
+            break
+        }
+
         if(steps.temp>0)
         {
-            steps.mode=3
             steps.hoodSpeed=1
         }
         else
         {
-            steps.mode=1
             steps.hoodSpeed=0
         }
 
         steps.waterTime=Math.ceil(parseInt(waterPathView.model[waterPathView.currentIndex])/9)
-        steps.fire=5
+        steps.fire=parseInt(firePathView.model[firePathView.currentIndex])
         steps.fan=1
         steps.repeat=0
         steps.repeatStep=0
@@ -71,6 +85,7 @@ Item {
     }
     Component.onCompleted: {
         var i
+        modePathView.model=["智能","大厨","无效"]
         var array = new Array
         array.push("0℃")
         for(i=35; i<= 150;i+=5) {
@@ -78,6 +93,12 @@ Item {
         }
         tempPathView.model=array
         tempPathView.currentIndex=6
+        array = new Array
+        for( i=1; i<= 10; ++i) {
+            array.push(i+"档")
+        }
+        firePathView.model=array
+        firePathView.currentIndex=4
         array = new Array
         for( i=0; i<= 480; ++i) {
             array.push(i+"分钟")
@@ -110,7 +131,7 @@ Item {
         id:topBar
         anchors.bottom:parent.bottom
         name:"+自定义"
-        //                leftBtnText:qsTr("启动")
+                        leftBtnText:qsTr("启动")
         //        rightBtnText:qsTr("预约")
         onClose:{
             backPrePage()
@@ -140,23 +161,43 @@ Item {
 
         Row {
             id:rowPathView
-            width: 155*5
+            width: 110*7
             height:330
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.bottom: parent.bottom
             anchors.bottomMargin: 5
             spacing: 0
-
+            DataPathView {
+                id:modePathView
+                width: 110
+                height:parent.height
+                currentIndex:0
+                Image {
+                    visible: modePathView.moving
+                    asynchronous:true
+                    smooth:false
+                    anchors.fill: parent
+                    source: "qrc:/x50/steam/temp-time-change-background.png"
+                }
+                Text{
+                    text:qsTr("模式")
+                    color:themesTextColor2
+                    font.pixelSize: 30
+                    anchors.horizontalCenter:parent.horizontalCenter
+                    anchors.top: parent.top
+                    anchors.topMargin: -40
+                }
+            }
             DataPathView {
                 id:tempPathView
-                width: 155
+                width: 110
                 height:parent.height
                 currentIndex:0
                 Image {
                     visible: tempPathView.moving
                     asynchronous:true
                     smooth:false
-                    anchors.centerIn: parent
+                    anchors.fill: parent
                     source: "qrc:/x50/steam/temp-time-change-background.png"
                 }
                 Text{
@@ -169,14 +210,35 @@ Item {
                 }
             }
             DataPathView {
+                id:firePathView
+                width: 110
+                height:parent.height
+                currentIndex:0
+                Image {
+                    visible: firePathView.moving
+                    asynchronous:true
+                    smooth:false
+                    anchors.fill: parent
+                    source: "qrc:/x50/steam/temp-time-change-background.png"
+                }
+                Text{
+                    text:qsTr("火力")
+                    color:themesTextColor2
+                    font.pixelSize: 30
+                    anchors.horizontalCenter:parent.horizontalCenter
+                    anchors.top: parent.top
+                    anchors.topMargin: -40
+                }
+            }
+            DataPathView {
                 id:timePathView
-                width: 155
+                width: 110
                 height:parent.height
                 Image {
                     visible: timePathView.moving
                     asynchronous:true
                     smooth:false
-                    anchors.centerIn: parent
+                    anchors.fill: parent
                     source: "qrc:/x50/steam/temp-time-change-background.png"
                 }
                 Text{
@@ -190,13 +252,13 @@ Item {
             }
             DataPathView {
                 id:secondsPathView
-                width: 155
+                width: 110
                 height:parent.height
                 Image {
                     visible: secondsPathView.moving
                     asynchronous:true
                     smooth:false
-                    anchors.centerIn: parent
+                    anchors.fill: parent
                     source: "qrc:/x50/steam/temp-time-change-background.png"
                 }
                 Text{
@@ -210,13 +272,13 @@ Item {
             }
             DataPathView {
                 id:speedPathView
-                width: 155
+                width: 110
                 height:parent.height
                 Image {
                     visible: speedPathView.moving
                     asynchronous:true
                     smooth:false
-                    anchors.centerIn: parent
+                    anchors.fill: parent
                     source: "qrc:/x50/steam/temp-time-change-background.png"
                 }
                 Text{
@@ -230,13 +292,13 @@ Item {
             }
             DataPathView {
                 id:waterPathView
-                width: 155
+                width: 110
                 height:parent.height
                 Image {
                     visible: waterPathView.moving
                     asynchronous:true
                     smooth:false
-                    anchors.centerIn: parent
+                    anchors.fill: parent
                     source: "qrc:/x50/steam/temp-time-change-background.png"
                 }
                 Text{
