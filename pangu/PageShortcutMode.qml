@@ -53,6 +53,9 @@ Item{
                     case 3:
                         load_page("pageModeTest")
                         break
+                    case 6:
+                        load_page("pageModeKneadDough")
+                        break
                     }
                 }
             }

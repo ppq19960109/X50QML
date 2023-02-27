@@ -118,7 +118,7 @@ Item {
         secondsPathView.model=array
         secondsPathView.currentIndex=0
         array = new Array
-        for( i=100; i< 2500; i+=100) {
+        for( i=0; i< 2500; i+=100) {
             array.push(i+"ml")
         }
         waterPathView.model=array

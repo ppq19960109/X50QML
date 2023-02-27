@@ -115,5 +115,6 @@
         <file>pangu/PageModeCustom.qml</file>
         <file>pangu/PagePanguClear.qml</file>
         <file>pangu/PageModeTest.qml</file>
+        <file>pangu/PageModeKneadDough.qml</file>
     </qresource>
 </RCC>

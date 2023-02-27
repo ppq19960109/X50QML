@@ -16,7 +16,7 @@ ApplicationWindow {
     width: 800
     height: 480
     visible: true //true false
-    property int sysPower:1
+    property int sysPower:-1
     property int permitStartStatus:0
     property int productionTestStatus:0
     property int productionTestFlag:1
@@ -961,6 +961,10 @@ ApplicationWindow {
         id: pageModeTest
         PageModeTest {}
     }
+    Component {
+        id: pageModeKneadDough
+        PageModeKneadDough {}
+    }
     function isExistView(pageName) {
         //        console.log("isExistView:",pageName)
         return stackView.find(function(item,index){
@@ -1107,6 +1111,9 @@ ApplicationWindow {
             break;
         case "pageModeTest":
             stackView.push(pageModeTest, args,StackView.Immediate)
+            break;
+        case "pageModeKneadDough":
+            stackView.push(pageModeKneadDough, args,StackView.Immediate)
             break;
         }
 
