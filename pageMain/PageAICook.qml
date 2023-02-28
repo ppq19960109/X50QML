@@ -5,17 +5,31 @@ import "qrc:/SendFunc.js" as SendFunc
 Item {
     property string name: "PageAICook"
     property int left_percent:{
-        if(lOilTemp<50)
+        if(lOilTemp<100)
+            left_fire.source=themesPicturesPath+"ai/small_fire.png"
+        else if(lOilTemp>170)
+            left_fire.source=themesPicturesPath+"ai/big_fire.png"
+        else
+            left_fire.source=themesPicturesPath+"ai/medium_fire.png"
+
+        if(lOilTemp<=50)
             return 0
-        else if(lOilTemp>250)
+        else if(lOilTemp>=250)
             return 100
         else
             return 100*(lOilTemp-50)/200
     }
     property int right_percent:{
-        if(rOilTemp<50)
+        if(rOilTemp<100)
+            right_fire.source=themesPicturesPath+"ai/small_fire.png"
+        else if(rOilTemp>170)
+            right_fire.source=themesPicturesPath+"ai/big_fire.png"
+        else
+            right_fire.source=themesPicturesPath+"ai/medium_fire.png"
+
+        if(rOilTemp<=50)
             return 0
-        else if(rOilTemp>250)
+        else if(rOilTemp>=250)
             return 100
         else
             return 100*(rOilTemp-50)/200
@@ -37,6 +51,12 @@ Item {
             rightCloseHeatSwitch.checked=false
         }
     }
+    function close_heat_run_cancel(index,pos)
+    {
+        if(pos>0)
+            stopCloseHeat((index))
+    }
+
     function closeHoodSpeed()
     {
         SendFunc.setHoodSpeed(0)
@@ -197,7 +217,6 @@ Item {
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.bottom: parent.bottom
         currentIndex:0
-        source:themesPicturesPath+"ai/navigation_aibar.png"
     }
 
     Flickable{
@@ -369,16 +388,27 @@ Item {
             asynchronous:true
             smooth:false
             anchors.left:parent.left
-            anchors.leftMargin: 135
+            anchors.leftMargin: 175
             anchors.verticalCenter: parent.verticalCenter
-            source: themesPicturesPath+"ai/"+(oilTempSwitch?"left_temp_arc.png":"left_temp_arc_close.png")
+            source: themesPicturesPath+"ai/left_temp_arc.png"
+        }
+        Image {
+            id:left_fire
+            visible: oilTempSwitch && lStoveStatus>0 && lOilTemp>0
+            asynchronous:true
+            smooth:false
+            anchors.left:parent.left
+            anchors.leftMargin: 60
+            anchors.top: parent.top
+            anchors.topMargin: 120
+            source: themesPicturesPath+"ai/small_fire.png"
         }
         Text{
             text:oilTempSwitch?((lOilTemp>=0?lOilTemp:"-")+"℃"+(lOilTemp>=220?'<br/><font size="24px">油温过高</font>':"")):"关"
             color:(oilTempSwitch && lOilTemp>=220)?"red":"#fff"
             font.pixelSize: 35
             anchors.top: parent.top
-            anchors.topMargin: 55
+            anchors.topMargin: 60
             anchors.left: parent.left
             anchors.leftMargin: 35
             textFormat: Text.RichText
@@ -388,7 +418,8 @@ Item {
             text:"定时\n关火"
             color:"#fff"
             font.pixelSize: 24
-            anchors.verticalCenter: parent.verticalCenter
+            anchors.top: parent.top
+            anchors.topMargin: 235
             anchors.left: parent.left
             anchors.leftMargin: 130
         }
@@ -401,14 +432,22 @@ Item {
             color:themesTextColor
             font.pixelSize: 36
             anchors.top: parent.top
-            anchors.topMargin: 130
+            anchors.topMargin: 240
             anchors.left: parent.left
-            anchors.leftMargin: 50
+            anchors.leftMargin: 20
+            MouseArea{
+                anchors.fill: parent
+                onClicked: {
+                    loaderCloseHeat(cookWorkPosEnum.LEFT,startTurnOffFire,QmlDevState.state.LStoveTimingLeft,close_heat_run_cancel,["取消定时","开始"])
+                }
+            }
         }
         PageSwitch {
             id:leftCloseHeatSwitch
+            visible: lTimingState!==timingStateEnum.RUN
             checked: false
-            anchors.verticalCenter: parent.verticalCenter
+            anchors.top: parent.top
+            anchors.topMargin: 240
             anchors.left: parent.left
             anchors.leftMargin: 30
             source: themesPicturesPath+(checked ?"ai/icon_aiopen.png":"ai/icon_aiclose.png")
@@ -430,53 +469,58 @@ Item {
             }
         }
         Canvas{
-            property int r:210//-10
+            property int r:204//-10
             id: left_canvas
-            visible: oilTempSwitch
             width: parent.width
             height: parent.height
             anchors.centerIn: parent
-            onVisibleChanged: {
-                left_canvas.requestPaint()
-            }
             onPaint: {
-                if(!visible)
-                    return
                 var ctx = getContext("2d")
                 ctx.clearRect(0, 0, parent.width, parent.height)
-                ctx.lineWidth = 60
-                var grd=ctx.createRadialGradient(parent.width/2-135, parent.height/2,190,parent.width/2-135, parent.height/2,230);
-                grd.addColorStop(1,"#E68855");
-                grd.addColorStop(0,"#FFFFFF");
-                //ctx.lineCap="round"
+                ctx.lineWidth = 20
+                ctx.lineCap="round"
+
+                ctx.beginPath()
+                ctx.strokeStyle = "#CFCDCD"
+                ctx.arc(parent.width/2-135, parent.height/2, r, 0.32*Math.PI, -0.32*Math.PI,true)
+                ctx.stroke()
+                ctx.closePath()
+                if(oilTempSwitch===0)
+                    return
+
+                // var grd=ctx.createRadialGradient(parent.width/2-135, parent.height/2,190,parent.width/2-135, parent.height/2,230);
+                var grd = ctx.createConicalGradient(parent.width/2-135, parent.height/2, -0.5*Math.PI)
+                grd.addColorStop(0,"#0B6BB8");
+                grd.addColorStop(0.5,"#FF0000");
+                grd.addColorStop(1,"#0B6BB8");
+
                 ctx.beginPath()
                 ctx.strokeStyle =grd
-                //0.71 1.288 0.29 -0.288
-                var percentArc=0.578*left_percent/100
-                ctx.arc(parent.width/2-135, parent.height/2, r, (0.29-percentArc)*Math.PI, (0.285-percentArc)*Math.PI,true)
+                var percentArc=0.64*left_percent/100
+                ctx.arc(parent.width/2-135, parent.height/2, r, 0.32*Math.PI, (0.32-percentArc)*Math.PI,true)
 
-                //                ctx.path=path
                 ctx.stroke()
                 ctx.closePath()
             }
         }
-        //                Slider {
-        //                    anchors.left: parent.left
-        //                    anchors.bottom: parent.bottom
-        //                    stepSize: 2
-        //                    from:40
-        //                    to: 220
-        //                    value: 40
-        //                    onValueChanged: {
-        //                        console.log("slider:",value)
-        //                        left_percent=100*(value-40)/180
-        //                        left_canvas.requestPaint()
-        //                        if(value==from)
-        //                            QmlDevState.setState("OilTempSwitch",0)
-        //                        else
-        //                            QmlDevState.setState("OilTempSwitch",1)
-        //                    }
-        //                }
+        //        Slider {
+        //            anchors.left: parent.left
+        //            anchors.bottom: parent.bottom
+        //            anchors.bottomMargin: 100
+        //            stepSize: 2
+        //            from:50
+        //            to: 250
+        //            value: 50
+        //            onValueChanged: {
+        //                console.log("slider:",value)
+        //                left_percent=100*(value-50)/200
+        //                left_canvas.requestPaint()
+        //                if(value==from)
+        //                    QmlDevState.setState("OilTempSwitch",0)
+        //                else
+        //                    QmlDevState.setState("OilTempSwitch",1)
+        //            }
+        //        }
     }
     Item {
         id: right_content
@@ -497,16 +541,27 @@ Item {
             asynchronous:true
             smooth:false
             anchors.right:parent.right
-            anchors.rightMargin: 135
+            anchors.rightMargin: 175
             anchors.verticalCenter: parent.verticalCenter
-            source: themesPicturesPath+"ai/"+(oilTempSwitch?"right_temp_arc.png":"right_temp_arc_close.png")
+            source: themesPicturesPath+"ai/right_temp_arc.png"
+        }
+        Image {
+            id:right_fire
+            visible: oilTempSwitch && rStoveStatus>0 && rOilTemp>0
+            asynchronous:true
+            smooth:false
+            anchors.right:parent.right
+            anchors.rightMargin: 60
+            anchors.top: parent.top
+            anchors.topMargin: 120
+            source: themesPicturesPath+"ai/small_fire.png"
         }
         Text{
             text:oilTempSwitch?((rOilTemp>=0?rOilTemp:"-")+"℃"+(rOilTemp>=220?'<br/><font size="24px">油温过高</font>':"")):"关"
             color:(oilTempSwitch && rOilTemp>=220)?"red":"#fff"
             font.pixelSize: 35
             anchors.top: parent.top
-            anchors.topMargin: 55
+            anchors.topMargin: 60
             anchors.right: parent.right
             anchors.rightMargin: 35
             textFormat: Text.RichText
@@ -516,7 +571,8 @@ Item {
             text:"定时\n关火"
             color:"#fff"
             font.pixelSize: 24
-            anchors.verticalCenter: parent.verticalCenter
+            anchors.top: parent.top
+            anchors.topMargin: 235
             anchors.right: parent.right
             anchors.rightMargin: 130
         }
@@ -529,23 +585,22 @@ Item {
             color:themesTextColor
             font.pixelSize: 36
             anchors.top: parent.top
-            anchors.topMargin: 130
-            anchors.right: parent.right
-            anchors.rightMargin: 50
-        }
-        Text{
-            text:"移锅小火/<font color='"+themesTextColor+"'>"+(QmlDevState.state.RMovePotLowHeatSwitch?"开":"关")+"</font>"
-            color:"#fff"
-            font.pixelSize: 24
-            anchors.top: parent.top
             anchors.topMargin: 240
             anchors.right: parent.right
-            anchors.rightMargin: 50
+            anchors.rightMargin: 20
+            MouseArea{
+                anchors.fill: parent
+                onClicked: {
+                    loaderCloseHeat(cookWorkPosEnum.RIGHT,startTurnOffFire,QmlDevState.state.RStoveTimingLeft,close_heat_run_cancel,["取消定时","开始"])
+                }
+            }
         }
         PageSwitch {
             id:rightCloseHeatSwitch
+            visible: rTimingState!==timingStateEnum.RUN
             checked: false
-            anchors.verticalCenter: parent.verticalCenter
+            anchors.top: parent.top
+            anchors.topMargin: 240
             anchors.right: parent.right
             anchors.rightMargin: 30
             source: themesPicturesPath+(checked ?"ai/icon_aiopen.png":"ai/icon_aiclose.png")
@@ -578,53 +633,59 @@ Item {
         //            }
         //        }
         Canvas{
-            property int r: 210//-10
+            property int r: 204//-10
             id: right_canvas
-            visible: oilTempSwitch
             width: parent.width
             height: parent.height
             anchors.centerIn: parent
-            onVisibleChanged: {
-                right_canvas.requestPaint()
-            }
             onPaint: {
-                if(!visible)
-                    return
                 var ctx = getContext("2d")
                 ctx.clearRect(0, 0, parent.width, parent.height)
-                ctx.lineWidth = 60
-                var grd=ctx.createRadialGradient(parent.width/2+135, parent.height/2,190,parent.width/2+135, parent.height/2,230);
-                grd.addColorStop(1,"#E68855");
-                grd.addColorStop(0,"#FFFFFF");
-                //ctx.lineCap="round"
+                ctx.lineWidth = 20
+                ctx.lineCap="round"
+
+                ctx.beginPath()
+                ctx.strokeStyle = "#CFCDCD"
+                ctx.arc(parent.width/2+135, parent.height/2, r, 0.68*Math.PI, 1.32*Math.PI)
+                ctx.stroke()
+                ctx.closePath()
+                if(oilTempSwitch===0)
+                    return
+                //                var grd=ctx.createRadialGradient(parent.width/2+135, parent.height/2,190,parent.width/2+135, parent.height/2,230);
+                var grd = ctx.createConicalGradient(parent.width/2+135, parent.height/2, -0.5*Math.PI)
+                grd.addColorStop(0,"#0B6BB8");
+                grd.addColorStop(0.5,"#FF0000");
+                grd.addColorStop(1,"#0B6BB8");
+
                 ctx.beginPath()
                 ctx.strokeStyle =grd
-                //0.71 1.288
-                var percentArc=0.578*right_percent/100
-                ctx.arc(parent.width/2+135, parent.height/2, r, (0.71+percentArc)*Math.PI, (0.715+percentArc)*Math.PI)
+
+                var percentArc=0.64*right_percent/100
+                ctx.arc(parent.width/2+135, parent.height/2, r, 0.68*Math.PI, (0.68+percentArc)*Math.PI)
                 //                ctx.path=path
                 ctx.stroke()
                 ctx.closePath()
             }
         }
-        //                Slider {
-        //                    anchors.right: parent.right
-        //                    anchors.bottom: parent.bottom
-        //                    stepSize: 2
-        //                    from:40
-        //                    to: 220
-        //                    value: 40
-        //                    onValueChanged: {
-        //                        console.log("slider:",value)
-        //                        right_percent=100*(value-40)/180
-        //                        right_canvas.requestPaint()
-        //                    }
-        //                }
+        //        Slider {
+        //            anchors.right: parent.right
+        //            anchors.bottom: parent.bottom
+        //            anchors.bottomMargin: 100
+        //            stepSize: 2
+        //            from:50
+        //            to: 250
+        //            value: 50
+        //            onValueChanged: {
+        //                console.log("slider:",value)
+        //                right_percent=100*(value-50)/200
+        //                right_canvas.requestPaint()
+        //            }
+        //        }
         Button{
             width: 70
             height:40
             anchors.top: parent.top
-            anchors.topMargin: 30
+            anchors.topMargin: 25
             anchors.right: right_arc.left
             anchors.rightMargin: -20
             background:Rectangle {
@@ -649,7 +710,7 @@ Item {
             width: 70
             height:40
             anchors.top: parent.top
-            anchors.topMargin: 90
+            anchors.topMargin: 100
             anchors.right: right_arc.left
             anchors.rightMargin: 5
             background:Rectangle {
@@ -676,7 +737,7 @@ Item {
             anchors.top: parent.top
             anchors.topMargin: 180
             anchors.right: right_arc.left
-            anchors.rightMargin: 15
+            anchors.rightMargin: 20
             background:Rectangle {
                 color: (auxiliarySwitch===1 && rAuxiliaryTemp===150)?themesTextColor:"#7174AC"
                 radius: 6
@@ -701,7 +762,7 @@ Item {
             anchors.top: parent.top
             anchors.topMargin: 260
             anchors.right: right_arc.left
-            anchors.rightMargin: 10
+            anchors.rightMargin: 5
             background:Rectangle {
                 color: (auxiliarySwitch===1 && rAuxiliaryTemp===100)?themesTextColor:"#7174AC"
                 radius: 6
@@ -724,7 +785,7 @@ Item {
             width: 70
             height:40
             anchors.top: parent.top
-            anchors.topMargin: 350
+            anchors.topMargin: 335
             anchors.right: right_arc.left
             anchors.rightMargin: -30
             background:Rectangle {

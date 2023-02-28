@@ -685,7 +685,7 @@ ApplicationWindow {
             target: boot;
             property: "opacity";
             to: 0;
-            duration: 1500;
+            duration: 1600;
             onStopped:{
                 console.log("onStopped...")
                 boot.visible=false
@@ -1527,6 +1527,7 @@ ApplicationWindow {
             property var cancelFunc:null
             property alias hourIndex:hourPathView.currentIndex
             property alias minuteIndex:minutePathView.currentIndex
+            property alias models:btnBar.models
             Component.onCompleted: {
                 let i
                 let hourArray = []
@@ -1559,7 +1560,7 @@ ApplicationWindow {
                     anchors.right:parent.right
                     onClicked: {
                         if(clickFunc!=null)
-                            cancelFunc(cookWorkPos)
+                            cancelFunc(cookWorkPos,0)
                         loaderMainHide()
                     }
                 }
@@ -1651,6 +1652,7 @@ ApplicationWindow {
                 }
 
                 PageButtonBar{
+                    id:btnBar
                     anchors.horizontalCenter: parent.horizontalCenter
                     anchors.bottom: parent.bottom
                     anchors.bottomMargin: 20
@@ -1661,7 +1663,7 @@ ApplicationWindow {
                         if(clickIndex==0)
                         {
                             if(clickFunc!=null)
-                                cancelFunc(cookWorkPos)
+                                cancelFunc(cookWorkPos,1)
                             loaderMainHide()
                         }
                         else
@@ -1679,16 +1681,25 @@ ApplicationWindow {
         }
     }
 
-    function loaderCloseHeat(cookWorkPos,clickFunc,time,cancelFunc)
+    function loaderCloseHeat(cookWorkPos,clickFunc,time,cancelFunc,models)
     {
         loaderManual.sourceComponent = component_closeHeat
         loaderManual.item.cookWorkPos=cookWorkPos
         loaderManual.item.clickFunc=clickFunc
         loaderManual.item.cancelFunc=cancelFunc
+        if(models==null)
+            loaderManual.item.models=["取消","开始"]
+        else
+            loaderManual.item.models=models
         if(time!=null)
         {
             loaderManual.item.hourIndex=time/60
             loaderManual.item.minuteIndex=time%60
+        }
+        else
+        {
+            loaderManual.item.hourIndex=0
+            loaderManual.item.minuteIndex=10
         }
     }
 

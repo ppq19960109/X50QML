@@ -144,8 +144,10 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     setState("OTASlientUpgrade",0);
     setState("LoadPowerState",7);
 
-    setState("RStoveStatus",0);
+    setState("RStoveStatus",1);
     setState("RStoveTimingLeft",50);
+    setState("LStoveTimingState",0);
+    setState("RStoveTimingState",0);
 
     setState("LStOvMode",0);
     setState("LStOvState",0);

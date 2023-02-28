@@ -16,6 +16,7 @@ Item {
             minuteArray.push(i)
         }
         minutePathView.model=minuteArray
+        minutePathView.currentIndex=1
     }
     Component.onDestruction: {
         cookItem=null
