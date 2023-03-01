@@ -301,7 +301,7 @@ Item {
                             cookingCurvePageSwitch.checked=false
                             return
                         }
-                        loaderQrcodeShow("烹饪曲线已开启","下载火粉APP\n扫码查看您的烹饪曲线")
+                        loaderQrcodeShow("烹饪曲线已开启","下载火粉APP\n扫码查看您的烹饪曲线","file:CookingCurve.png")
                     }
                     var Data={}
                     Data.CookingCurveSwitch = checked

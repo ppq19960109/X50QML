@@ -128,6 +128,9 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     setState("RMovePotLowHeatSwitch",0);
     setState("ComSWVersion","1.0");
     setState("PwrSWVersion","1.0");
+    setState("ProductKey","");
+    setState("DeviceName","");
+    setState("Wifimac","");
     setState("RMultiMode",0);
     setState("OilTempSwitch",0);
     setState("LOilTemp",-1);
@@ -430,6 +433,10 @@ void QmlDevState::parsingData(const QJsonObject& object)
                 if("QrCode"==key)
                 {
                     QrcodeEn::encodeImage(value.toString(),6,key+".png");
+                    QString mac=stateMap["Wifimac"].toString().replace(":","");
+                    QString str =QString("https://club.marssenger.com/web/pages/E70/cookingCurve.html?wifimac=%1&productKey=%2&CookingCurveSwitch=1&type=link").arg(mac).arg(stateMap["ProductKey"].toString());
+//                    qDebug()<<"Wifimac:"<<stateMap["Wifimac"].toString()<<"mac:"<<mac<<"CookingCurve:"<<str;
+                    QrcodeEn::encodeImage(str,6,"CookingCurve.png");
                 }
             }
             else if(LINK_VALUE_TYPE_STRUCT==value_type)

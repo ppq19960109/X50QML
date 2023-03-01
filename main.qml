@@ -292,6 +292,7 @@ ApplicationWindow {
             if(productionTestFlag==0 && timer_standby.running==true)
                 timer_standby.stop()
             loaderMainHide()
+            SendFunc.setBuzControl(buzControlEnum.STOP)
             backTopPage()
         }
         if(window.visible==false)
@@ -749,7 +750,7 @@ ApplicationWindow {
             }
         }
     }
-    function loaderQrcodeShow(title,hint){
+    function loaderQrcodeShow(title,hint,qrcode){
         if(QmlDevState.state.DeviceSecret==="")
         {
             loaderErrorConfirmShow("四元组不存在")
@@ -758,6 +759,11 @@ ApplicationWindow {
         if(linkWifiConnected==true)
         {
             loaderManual.sourceComponent = component_qrcode
+            if(qrcode==null)
+                loaderManual.item.qrcodeSource="file:QrCode.png"
+            else
+                loaderManual.item.qrcodeSource=qrcode
+
             loaderManual.item.hintTopText=title
             if(hint==null)
                 loaderManual.item.hintCenterText="下载火粉APP   绑定设备\n海量智慧菜谱  一键烹饪"
