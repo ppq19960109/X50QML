@@ -672,7 +672,7 @@ ApplicationWindow {
         }
         onCurrentFrameChanged: {
             console.log("onCurrentFrameChanged:",currentFrame,frameCount)
-            if(currentFrame+1>=frameCount)//frameCount
+            if(currentFrame+9>=frameCount)//frameCount
             {
                 SendFunc.getAllToServer()
                 SendFunc.setBuzControl(buzControlEnum.SHORT)
