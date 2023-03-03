@@ -43,7 +43,7 @@ Item {
         id: recipeDelegate
         Item{
             readonly property int cookType:CookFunc.getCookType(modelData.cookSteps)
-            width:recipeListView.currentIndex===index?174:152
+            width:recipeListView.currentIndex===index?194:164
             height:recipeListView.currentIndex===index?252:210
             anchors.verticalCenter: parent.verticalCenter
             Image{
@@ -190,7 +190,7 @@ Item {
                 clip: true
                 //cacheItemCount:5
                 currentIndex:0
-                pathItemCount:5
+                pathItemCount:3
                 interactive: true
                 preferredHighlightBegin: 0.5;
                 preferredHighlightEnd: 0.5;

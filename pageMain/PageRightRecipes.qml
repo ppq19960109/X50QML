@@ -15,14 +15,13 @@ Item {
     function steamStart(reserve)
     {
         var cookItem=recipeListView.model[recipeListView.currentIndex]
-
-        SendFunc.tempControlRquest(cookItem.temp)
+        SendFunc.tempControlRquest(cookItem.temp,cookItem.dishName)
     }
 
     Component {
         id: recipeDelegate
         Item{
-            width:recipeListView.currentIndex===index?174:152
+            width:recipeListView.currentIndex===index?194:164
             height:recipeListView.currentIndex===index?252:210
             anchors.verticalCenter: parent.verticalCenter
             Image{

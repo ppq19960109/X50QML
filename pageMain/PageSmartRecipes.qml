@@ -26,7 +26,7 @@ Item {
         contentWidth:200*2
         contentHeight:40
         anchors.top: topBar.bottom
-        anchors.topMargin: -20
+        anchors.topMargin: -35
         anchors.horizontalCenter: parent.horizontalCenter
 
         background:Rectangle {
@@ -43,13 +43,22 @@ Item {
                 background:Rectangle {
                     color: index==tabBar.currentIndex?"#3E2B21":"transparent"
                     radius: 4
-                    border.color: index==tabBar.currentIndex?themesTextColor:"transparent"
-                    border.width: 2
+                    //border.color: index==tabBar.currentIndex?themesTextColor:"transparent"
+                    //border.width: 2
+                }
+                Image {
+                    asynchronous:true
+                    smooth:false
+                    opacity: 0.6
+                    visible: index==tabBar.currentIndex
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.bottom: parent.bottom
+                    source: themesPicturesPath+"navigation_bar_text_background.png"
                 }
                 Text{
                     anchors.centerIn: parent
                     text:modelData
-                    color:"#fff"
+                    color: index==tabBar.currentIndex?themesTextColor:"#ffffff"
                     font.pixelSize: 24
                     horizontalAlignment:Text.AlignHCenter
                     verticalAlignment:Text.AlignVCenter

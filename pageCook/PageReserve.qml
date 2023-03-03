@@ -11,12 +11,13 @@ Item {
             hourArray.push(i)
         }
         hourPathView.model=hourArray
+        hourPathView.currentIndex=1
         var minuteArray = []
         for(i=0; i< 60; ++i) {
             minuteArray.push(i)
         }
         minutePathView.model=minuteArray
-        minutePathView.currentIndex=1
+//        minutePathView.currentIndex=1
     }
     Component.onDestruction: {
         cookItem=null

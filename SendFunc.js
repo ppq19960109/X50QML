@@ -120,7 +120,7 @@ function otaPowerRquest(request)
     Data.OTAPowerRquest = request
     setToServer(Data)
 }
-function tempControlRquest(temp)
+function tempControlRquest(temp,name)
 {
     var Data={}
     if(temp===0)
@@ -131,6 +131,10 @@ function tempControlRquest(temp)
         Data.RAuxiliaryTemp = temp
     }
     setToServer(Data)
+    if(name==null)
+        rightAuxiliaryName=""
+    else
+        rightAuxiliaryName=name
 }
 function enableWifi(enable)
 {

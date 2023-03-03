@@ -32,7 +32,8 @@ Item {
         }
         else
         {
-            SendFunc.tempControlRquest(cookItem.temp)
+            SendFunc.tempControlRquest(cookItem.temp,cookItem.dishName)
+
         }
     }
 
@@ -60,8 +61,8 @@ Item {
 
             Image{
                 id:recipeImg
-                //                width: tabBar.currentIndex==0?164:210
-                //                height: tabBar.currentIndex==0?252:122
+                width: tabBar.currentIndex==0?180:210
+                height: tabBar.currentIndex==0?277:122
                 anchors.centerIn: parent
                 asynchronous:true
                 smooth:false

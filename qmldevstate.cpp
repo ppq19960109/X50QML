@@ -31,6 +31,7 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     stateType.append(QPair<QString,int>("LCookbookName",LINK_VALUE_TYPE_STRING));
     stateType.append(QPair<QString,int>("RMultiMode",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("RMultiStageState",LINK_VALUE_TYPE_STRUCT));
+    stateType.append(QPair<QString,int>("RCookbookName",LINK_VALUE_TYPE_STRING));
 
     stateType.append(QPair<QString,int>("LStOvDoorState",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("LStOvMode",LINK_VALUE_TYPE_NUM));
@@ -147,6 +148,7 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     setState("OTASlientUpgrade",0);
     setState("LoadPowerState",7);
 
+    setState("ROilTemp",220);
     setState("RStoveStatus",1);
     setState("RStoveTimingLeft",50);
     setState("LStoveTimingState",0);

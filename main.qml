@@ -29,6 +29,7 @@ ApplicationWindow {
     property int pageSetIndex:0
     property var lMultiStageContent
     property int versionCheckState: 0
+    property string rightAuxiliaryName:""
 
     property var smartSmokeSwitch: QmlDevState.state.SmartSmokeSwitch
     property var hoodSpeed: QmlDevState.state.HoodSpeed
@@ -63,7 +64,7 @@ ApplicationWindow {
 
     readonly property var wifiStateEnum:{"WIFISTATE_IDLE":0,"WIFISTATE_CONNECTING":1,"WIFISTATE_CONNECTFAILED":2,"WIFISTATE_CONNECTFAILED_WRONG_KEY":3,"WIFISTATE_CONNECTED":4,"WIFISTATE_DISCONNECTED":5,"WIFISTATE_OPEN":6,"WIFISTATE_OFF":7,"WIFISTATE_LINK_CONNECTED":8}
     readonly property var workStateEnum:{"WORKSTATE_STOP":0,"WORKSTATE_RESERVE":1,"WORKSTATE_PREHEAT":2,"WORKSTATE_RUN":3,"WORKSTATE_FINISH":4,"WORKSTATE_PAUSE":5,"WORKSTATE_PAUSE_RESERVE":6,"WORKSTATE_PAUSE_PREHEAT":7}
-    readonly property var workStateChineseEnum:["停止","预约中","预热中","运行中","烹饪完成","暂停中","预约暂停中","预热暂停中"]
+    readonly property var workStateChineseEnum:["停止","预约中","预热中","运行中","烹饪完成","暂停中","预约暂停","预热暂停"]
     readonly property var workOperationEnum:{"START":0,"PAUSE":1,"CANCEL":2,"CONFIRM":3,"RUN_NOW":4}
     readonly property var otaStateEnum:{"OTA_IDLE":0,"OTA_NO_FIRMWARE":1,"OTA_NEW_FIRMWARE":2,"OTA_DOWNLOAD_START":3,"OTA_DOWNLOAD_FAIL":4,"OTA_DOWNLOAD_SUCCESS":5,"OTA_INSTALL_START":6,"OTA_INSTALL_FAIL":7,"OTA_INSTALL_SUCCESS":8}
     readonly property var timingStateEnum:{"STOP":0,"RUN":1,"PAUSE":2,"CONFIRM":3}
@@ -138,7 +139,7 @@ ApplicationWindow {
         //设置-休眠时间(范围:1-5,单位:分钟 )
         property bool sleepSwitch: true
         property int sleepTime: 3
-        property int screenSaverIndex:2
+        property int screenSaverIndex:1
         //运行期间临时保存设置的亮度值，在收到开机状态是把该值重新设置回去 设置-屏幕亮度
         property int brightness: 200
         property bool wifiEnable: false

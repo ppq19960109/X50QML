@@ -783,7 +783,10 @@ Item {
                 if(value>0)
                 {
                     if(smartRecipesIndex==1)
-                        push_page(pageSmartCook)
+                    {
+                        backTopPage()
+                        push_page(pageAICook)
+                    }
                 }
             }
         }

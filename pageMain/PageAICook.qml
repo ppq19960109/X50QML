@@ -97,10 +97,13 @@ Item {
             loaderManual.sourceComponent = component_help
         }
     }
+
     StackView.onActivated:{
+        console.log("StackView.onActivated...")
         aiState=true
     }
     StackView.onDeactivated:{
+        console.log("StackView.onDeactivated...")
         aiState=false
     }
     Component{
@@ -376,6 +379,7 @@ Item {
         height: parent.height
         anchors.left: parent.left
         Text{
+            id:left_stove
             text:"左灶"
             color:"#fff"
             font.pixelSize: 24
@@ -400,19 +404,28 @@ Item {
             anchors.left:parent.left
             anchors.leftMargin: 60
             anchors.top: parent.top
-            anchors.topMargin: 120
+            anchors.topMargin: 126
             source: themesPicturesPath+"ai/small_fire.png"
         }
         Text{
-            text:oilTempSwitch?((lOilTemp>=0?lOilTemp:"-")+"℃"+(lOilTemp>=220?'<br/><font size="24px">油温过高</font>':"")):"关"
+            id:left_temp
+            text:oilTempSwitch?((lOilTemp>=0?lOilTemp:"-")+"℃"):"关"
             color:(oilTempSwitch && lOilTemp>=220)?"red":"#fff"
             font.pixelSize: 35
             anchors.top: parent.top
             anchors.topMargin: 60
-            anchors.left: parent.left
-            anchors.leftMargin: 35
+            anchors.horizontalCenter: left_stove.horizontalCenter
             textFormat: Text.RichText
             lineHeight:0.75
+        }
+        Text{
+            visible: (oilTempSwitch && lOilTemp>=220)
+            text:"油温过高"
+            color:"red"
+            font.pixelSize: 24
+            anchors.top: left_temp.bottom
+            anchors.topMargin: 0
+            anchors.horizontalCenter: left_temp.horizontalCenter
         }
         Text{
             text:"定时\n关火"
@@ -528,6 +541,7 @@ Item {
         height: parent.height
         anchors.right: parent.right
         Text{
+            id:right_stove
             text:"右灶"
             color:"#fff"
             font.pixelSize: 24
@@ -553,19 +567,26 @@ Item {
             anchors.right:parent.right
             anchors.rightMargin: 60
             anchors.top: parent.top
-            anchors.topMargin: 120
+            anchors.topMargin: 126
             source: themesPicturesPath+"ai/small_fire.png"
         }
         Text{
-            text:oilTempSwitch?((rOilTemp>=0?rOilTemp:"-")+"℃"+(rOilTemp>=220?'<br/><font size="24px">油温过高</font>':"")):"关"
+            id:right_temp
+            text:oilTempSwitch?((rOilTemp>=0?rOilTemp:"-")+"℃"):"关"
             color:(oilTempSwitch && rOilTemp>=220)?"red":"#fff"
             font.pixelSize: 35
             anchors.top: parent.top
             anchors.topMargin: 60
-            anchors.right: parent.right
-            anchors.rightMargin: 35
-            textFormat: Text.RichText
-            lineHeight:0.75
+            anchors.horizontalCenter: right_stove.horizontalCenter
+        }
+        Text{
+            visible: (oilTempSwitch && rOilTemp>=220)||(auxiliarySwitch>0 && rightAuxiliaryName!="")
+            text:(auxiliarySwitch>0 && rightAuxiliaryName!="")?rightAuxiliaryName:"油温过高"
+            color:(auxiliarySwitch>0 && rightAuxiliaryName!="")?themesTextColor:"red"
+            font.pixelSize: 24
+            anchors.top: right_temp.bottom
+            anchors.topMargin: 0
+            anchors.horizontalCenter: right_temp.horizontalCenter
         }
         Text{
             text:"定时\n关火"
@@ -764,7 +785,7 @@ Item {
             anchors.right: right_arc.left
             anchors.rightMargin: 5
             background:Rectangle {
-                color: (auxiliarySwitch===1 && rAuxiliaryTemp===100)?themesTextColor:"#7174AC"
+                color: (auxiliarySwitch===1 && rAuxiliaryTemp===95)?themesTextColor:"#7174AC"
                 radius: 6
             }
             Text{
@@ -774,8 +795,8 @@ Item {
                 anchors.centerIn: parent
             }
             onClicked: {
-                if(auxiliarySwitch===0 || rAuxiliaryTemp!==100)
-                    SendFunc.tempControlRquest(100)
+                if(auxiliarySwitch===0 || rAuxiliaryTemp!==95)
+                    SendFunc.tempControlRquest(95)
                 else
                     SendFunc.tempControlRquest(0)
                 SendFunc.setBuzControl(buzControlEnum.SHORT)
