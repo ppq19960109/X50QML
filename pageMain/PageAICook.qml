@@ -13,7 +13,7 @@ Item {
             left_fire.source=themesPicturesPath+"ai/medium_fire.png"
 
         if(lOilTemp<=50)
-            return 0
+            return 1
         else if(lOilTemp>=250)
             return 100
         else
@@ -28,7 +28,7 @@ Item {
             right_fire.source=themesPicturesPath+"ai/medium_fire.png"
 
         if(rOilTemp<=50)
-            return 0
+            return 1
         else if(rOilTemp>=250)
             return 100
         else
