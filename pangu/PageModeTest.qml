@@ -88,7 +88,7 @@ Item {
         modePathView.model=["智能","大厨","无效"]
         var array = new Array
         array.push("0℃")
-        for(i=35; i<= 150;i+=5) {
+        for(i=35; i<= 200;i+=5) {
             array.push(i+"℃")
         }
         tempPathView.model=array

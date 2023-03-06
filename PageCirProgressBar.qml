@@ -207,9 +207,9 @@ Item {
 //                textFormat: Text.RichText
                 anchors.top:parent.top
                 anchors.horizontalCenter: parent.horizontalCenter
-                anchors.horizontalCenterOffset:(workState === workStateEnum.WORKSTATE_RESERVE||workState === workStateEnum.WORKSTATE_PAUSE_RESERVE)?0:-20
+                anchors.horizontalCenterOffset:(workState === workStateEnum.WORKSTATE_RESERVE||workState === workStateEnum.WORKSTATE_PAUSE_RESERVE)?0:(device==0?-20:0)
                 color:workColor
-                font.pixelSize: 70
+                font.pixelSize: 60
                 //                font.bold: (workState === workStateEnum.WORKSTATE_RUN|| workState === workStateEnum.WORKSTATE_PAUSE)?true:false
                 visible: !((workState === workStateEnum.WORKSTATE_PAUSE_RESERVE||workState === workStateEnum.WORKSTATE_PAUSE) && reserveFlash==false)
             }
@@ -223,7 +223,7 @@ Item {
                 text: qsTr(":")//：:
             }
             Text{
-                visible: !(workState === workStateEnum.WORKSTATE_RESERVE || workState === workStateEnum.WORKSTATE_PAUSE_RESERVE || (workState === workStateEnum.WORKSTATE_PAUSE && reserveFlash==false))
+                visible: !(workState === workStateEnum.WORKSTATE_RESERVE || workState === workStateEnum.WORKSTATE_PAUSE_RESERVE || (workState === workStateEnum.WORKSTATE_PAUSE && reserveFlash==false)) && device==0
                 anchors.left: time.right
                 anchors.leftMargin: 5
                 anchors.bottom: time.bottom

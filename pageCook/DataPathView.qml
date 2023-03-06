@@ -63,7 +63,7 @@ Item {
     PathView {
         id:pathView
         anchors.fill: parent
-        cacheItemCount:3
+        cacheItemCount:2
 //        currentIndex:0
         pathItemCount:3
         interactive: true

@@ -57,6 +57,8 @@ public:
     Q_INVOKABLE QVariantList getPanguRecipe(const int index);
     QVariantList clearMode;
     Q_INVOKABLE QVariantList getClearMode();
+    QVariantList testMode;
+    Q_INVOKABLE QVariantList getTestMode();
 
     QVariantList history;
     Q_INVOKABLE QVariantList getHistory();

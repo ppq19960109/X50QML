@@ -315,7 +315,7 @@ Rectangle {
             workState:QmlDevState.state.RStOvState
             workMode:workState===workStateEnum.WORKSTATE_STOP?qsTr("右腔烹饪"):(QmlDevState.state.RMultiMode===multiModeEnum.RECIPE?QmlDevState.state.RCookbookName:"")
             canvasDiameter:width
-            setTimeLeft:Math.ceil(QmlDevState.state.RStOvSetTimerLeft/60)
+            setTimeLeft:QmlDevState.state.RStOvSetTimerLeft
             orderTimeLeft:QmlDevState.state.RStOvOrderTimerLeft
             percent:(workState === workStateEnum.WORKSTATE_RESERVE|| workState === workStateEnum.WORKSTATE_PAUSE_RESERVE)?(100-100*orderTimeLeft/QmlDevState.state.RStOvOrderTimer):(100-Math.floor(100*QmlDevState.state.RStOvSetTimerLeft/QmlDevState.state.RStOvSetTimer))
             workTime:
@@ -331,7 +331,7 @@ Rectangle {
                 }
                 else
                 {
-                    return setTimeLeft
+                    return Math.floor(setTimeLeft/60)+":"+setTimeLeft%60
                 }
             }
             //workTemp:qsTr(QmlDevState.state.RStOvRealTemp+"℃ "+QmlDevState.state.RStOvSetTemp+"℃")

@@ -303,6 +303,11 @@ QVariantList QmlDevState::getClearMode()
 {
     return clearMode;
 }
+
+QVariantList QmlDevState::getTestMode()
+{
+    return testMode;
+}
 void QmlDevState::executeShell(const QString cmd)
 {
     qDebug() << "executeShell:" << cmd;
@@ -435,6 +440,18 @@ void QmlDevState::readPanguRecipes()
         info.insert("dishName",dishName.toString());
         info.insert("cookSteps",cookSteps.toArray());
         clearMode.append(info);
+    }
+    QJsonArray test = object.value("testMode").toArray();
+    qDebug()<<"test:"<<test.size();
+    for(int i=0;i<test.size();++i)
+    {
+        QJsonObject obj=test.at(i).toObject();
+        QJsonValue dishName =obj.value("dishName");
+        QJsonValue cookSteps =obj.value("cookSteps");
+        QVariantMap info;
+        info.insert("dishName",dishName.toString());
+        info.insert("cookSteps",cookSteps.toArray());
+        testMode.append(info);
     }
 }
 

@@ -16,7 +16,7 @@ ApplicationWindow {
     width: 800
     height: 480
     visible: true //true false
-    property int sysPower:-1
+    property int sysPower:2
     property int permitStartStatus:0
     property int productionTestStatus:0
     property int productionTestFlag:1
@@ -965,6 +965,10 @@ ApplicationWindow {
         id: pageModeKneadDough
         PageModeKneadDough {}
     }
+    Component {
+        id: pageModeDurabilityTest
+        PageModeDurabilityTest {}
+    }
     function isExistView(pageName) {
         //        console.log("isExistView:",pageName)
         return stackView.find(function(item,index){
@@ -1115,6 +1119,9 @@ ApplicationWindow {
         case "pageModeKneadDough":
             stackView.push(pageModeKneadDough, args,StackView.Immediate)
             break;
+        case "pageModeDurabilityTest":
+            stackView.push(pageModeDurabilityTest, args,StackView.Immediate)
+            break;
         }
 
         console.log("stackView depth:"+stackView.depth)
@@ -1184,16 +1191,16 @@ ApplicationWindow {
     }
     function startPanguCooking(root,cookSteps)
     {
-        if(QmlDevState.state.hallState==0)
-        {
-            loaderPopupShow("","料理机盖缺失或料理锅缺失",292,"好的")
-            return
-        }
-        if(QmlDevState.state.PushRod > 0)
-        {
-            loaderPopupShow("","请先关闭右腔门再启动烹饪",292,"好的")
-            return
-        }
+//        if(QmlDevState.state.hallState==0)
+//        {
+//            loaderPopupShow("","料理机盖缺失或料理锅缺失",292,"好的")
+//            return
+//        }
+//        if(QmlDevState.state.PushRod > 0)
+//        {
+//            loaderPopupShow("","请先关闭右腔门再启动烹饪",292,"好的")
+//            return
+//        }
         var clearMode
         if(root.clearMode!=null)
             clearMode=root.clearMode
