@@ -13,7 +13,7 @@ Item {
         var steps={}
 
         steps.temp=parseInt(tempPathView.model[tempPathView.currentIndex])
-        steps.cookTime=parseInt(timePathView.model[timePathView.currentIndex])*60+parseInt(secondsPathView.model[secondsPathView.currentIndex])
+        steps.cookTime=parseInt(hourPathView.model[hourPathView.currentIndex])*3600+parseInt(timePathView.model[timePathView.currentIndex])*60+parseInt(secondsPathView.model[secondsPathView.currentIndex])
         steps.motorSpeed=parseInt(speedPathView.model[speedPathView.currentIndex])
         if(steps.motorSpeed>=0)
             steps.motorDir=0
@@ -94,14 +94,20 @@ Item {
         tempPathView.model=array
         tempPathView.currentIndex=6
         array = new Array
-        for( i=1; i<= 10; ++i) {
+        for( i=0; i<= 10; ++i) {
             array.push(i+"档")
         }
         firePathView.model=array
         firePathView.currentIndex=4
         array = new Array
-        for( i=0; i<= 480; ++i) {
-            array.push(i+"分钟")
+        for( i=0; i<= 120; i+=5) {
+            array.push(i+"时")
+        }
+        hourPathView.model=array
+        hourPathView.currentIndex=0
+        array = new Array
+        for( i=0; i<= 59; i+=1) {
+            array.push(i+"分")
         }
         timePathView.model=array
         timePathView.currentIndex=10
@@ -161,7 +167,7 @@ Item {
 
         Row {
             id:rowPathView
-            width: 110*7
+            width: 100*8
             height:330
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.bottom: parent.bottom
@@ -169,7 +175,7 @@ Item {
             spacing: 0
             DataPathView {
                 id:modePathView
-                width: 110
+                width: 100
                 height:parent.height
                 currentIndex:0
                 Image {
@@ -190,7 +196,7 @@ Item {
             }
             DataPathView {
                 id:tempPathView
-                width: 110
+                width: 100
                 height:parent.height
                 currentIndex:0
                 Image {
@@ -211,7 +217,7 @@ Item {
             }
             DataPathView {
                 id:firePathView
-                width: 110
+                width: 100
                 height:parent.height
                 currentIndex:0
                 Image {
@@ -231,8 +237,28 @@ Item {
                 }
             }
             DataPathView {
+                id:hourPathView
+                width: 100
+                height:parent.height
+                Image {
+                    visible: hourPathView.moving
+                    asynchronous:true
+                    smooth:false
+                    anchors.fill: parent
+                    source: "qrc:/x50/steam/temp-time-change-background.png"
+                }
+                Text{
+                    text:qsTr("时")
+                    color:themesTextColor2
+                    font.pixelSize: 30
+                    anchors.horizontalCenter:parent.horizontalCenter
+                    anchors.top: parent.top
+                    anchors.topMargin: -40
+                }
+            }
+            DataPathView {
                 id:timePathView
-                width: 110
+                width: 100
                 height:parent.height
                 Image {
                     visible: timePathView.moving
@@ -252,7 +278,7 @@ Item {
             }
             DataPathView {
                 id:secondsPathView
-                width: 110
+                width: 100
                 height:parent.height
                 Image {
                     visible: secondsPathView.moving
@@ -272,7 +298,7 @@ Item {
             }
             DataPathView {
                 id:speedPathView
-                width: 110
+                width: 100
                 height:parent.height
                 Image {
                     visible: speedPathView.moving
@@ -292,7 +318,7 @@ Item {
             }
             DataPathView {
                 id:waterPathView
-                width: 110
+                width: 100
                 height:parent.height
                 Image {
                     visible: waterPathView.moving

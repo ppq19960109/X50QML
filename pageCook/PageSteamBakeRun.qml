@@ -334,8 +334,8 @@ Rectangle {
                     return Math.floor(setTimeLeft/60)+":"+setTimeLeft%60
                 }
             }
-            //workTemp:qsTr(QmlDevState.state.RStOvRealTemp+"℃ "+QmlDevState.state.RStOvSetTemp+"℃")
-            workTemp:Math.ceil(QmlDevState.state.RStOvSetTimer/60)+"分钟"
+            workTemp:qsTr(QmlDevState.state.RStOvRealTemp+"℃ "+QmlDevState.state.RStOvSetTemp+"℃")
+            //workTemp:Math.ceil(QmlDevState.state.RStOvSetTimer/60)+"分钟"
             MouseArea{
                 anchors.fill: parent
                 propagateComposedEvents: true

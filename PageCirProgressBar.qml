@@ -209,7 +209,7 @@ Item {
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.horizontalCenterOffset:(workState === workStateEnum.WORKSTATE_RESERVE||workState === workStateEnum.WORKSTATE_PAUSE_RESERVE)?0:(device==0?-20:0)
                 color:workColor
-                font.pixelSize: 60
+                font.pixelSize: 50
                 //                font.bold: (workState === workStateEnum.WORKSTATE_RUN|| workState === workStateEnum.WORKSTATE_PAUSE)?true:false
                 visible: !((workState === workStateEnum.WORKSTATE_PAUSE_RESERVE||workState === workStateEnum.WORKSTATE_PAUSE) && reserveFlash==false)
             }
