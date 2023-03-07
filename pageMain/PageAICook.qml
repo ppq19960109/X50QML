@@ -404,7 +404,7 @@ Item {
             anchors.left:parent.left
             anchors.leftMargin: 60
             anchors.top: parent.top
-            anchors.topMargin: 126
+            anchors.topMargin: 125
             source: themesPicturesPath+"ai/small_fire.png"
         }
         Text{
@@ -567,7 +567,7 @@ Item {
             anchors.right:parent.right
             anchors.rightMargin: 60
             anchors.top: parent.top
-            anchors.topMargin: 126
+            anchors.topMargin: 125
             source: themesPicturesPath+"ai/small_fire.png"
         }
         Text{
