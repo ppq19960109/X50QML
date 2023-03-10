@@ -9,7 +9,7 @@ Item {
     readonly property int fontPixelSize:20
 
     readonly property var twobytes: [twobyte0, twobyte1, twobyte2, twobyte3, twobyte4, twobyte5, twobyte6, twobyte7, twobyte8, twobyte9, twobyte10]
-    readonly property var onebytes: [onebyte0, onebyte1, onebyte2, onebyte3, onebyte4, onebyte5, onebyte6]
+    readonly property var onebytes: [onebyte0, onebyte1, onebyte2, onebyte3, onebyte4, onebyte5, onebyte6, onebyte7, onebyte8]
 
     Component.onCompleted: {
         SendFunc.loadPowerSet(2)
@@ -28,7 +28,7 @@ Item {
                 {
                     twobytes[i/2].text=(value[i]<<8) + value[i+1]
                 }
-                for(;i<29;++i)
+                for(;i<31;++i)
                 {
                     onebytes[i-22].text=value[i]
                 }
@@ -354,6 +354,36 @@ Item {
                 font.pixelSize: fontPixelSize
             }
 
+            Text{
+                Layout.preferredWidth: layWidth
+                Layout.preferredHeight:layHeight
+                text:"快捷板通讯状态:"
+                color:"#FFF"
+                font.pixelSize: fontPixelSize
+            }
+            Text{
+                id:onebyte7
+                Layout.preferredWidth: layWidth
+                Layout.preferredHeight:layHeight
+                text:"255"
+                color:"#FFF"
+                font.pixelSize: fontPixelSize
+            }
+            Text{
+                Layout.preferredWidth: layWidth
+                Layout.preferredHeight:layHeight
+                text:"变频板通讯状态:"
+                color:"#FFF"
+                font.pixelSize: fontPixelSize
+            }
+            Text{
+                id:onebyte8
+                Layout.preferredWidth: layWidth
+                Layout.preferredHeight:layHeight
+                text:"255"
+                color:"#FFF"
+                font.pixelSize: fontPixelSize
+            }
         }
     }
 }
