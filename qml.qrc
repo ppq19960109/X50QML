@@ -117,5 +117,6 @@
         <file>pangu/PageModeTest.qml</file>
         <file>pangu/PageModeKneadDough.qml</file>
         <file>pangu/PageModeDurabilityTest.qml</file>
+        <file>pangu/PageModeDevelop.qml</file>
     </qresource>
 </RCC>
