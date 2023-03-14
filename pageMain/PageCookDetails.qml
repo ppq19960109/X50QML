@@ -12,6 +12,11 @@ Item {
     {
         if(cookItem.cookPos===cookWorkPosEnum.LEFT)
         {
+            if(lStOvState!==workStateEnum.WORKSTATE_STOP && lStOvState!==workStateEnum.WORKSTATE_FINISH)
+            {
+                loaderWarnConfirmShow("左腔正在烹饪\n暂时无法启动智慧菜谱");
+                return
+            }
             var cookSteps=JSON.parse(cookItem.cookSteps)
             if(reserve)
             {
