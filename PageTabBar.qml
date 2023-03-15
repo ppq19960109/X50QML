@@ -53,7 +53,10 @@ Item{
                 replace_page(pageAICook)
                 break
             case 1:
-                replace_page(pageSteamOven)
+                if(lStOvState!==workStateEnum.WORKSTATE_STOP || rStOvState!==workStateEnum.WORKSTATE_STOP)
+                    push_page(pageSteaming)
+                else
+                    replace_page(pageSteamOven)
                 break
             case 2:
                 replace_page(pageSmartRecipes)

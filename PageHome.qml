@@ -185,13 +185,15 @@ Item {
         {
             if(isExistView("PageSteaming")==null)
             {
-                if(isCurrentView("PageSteamOvenConfig")===true||isCurrentView("PageMultistage")===true)
-                    push_page(pageSteaming)
-                else if(isCurrentView("PageSmartRecipes")===true||isCurrentView("PageCookDetails")===true)
-                {
-                    if(smartRecipesIndex==0)
-                        push_page(pageSteaming)
-                }
+//                if(isCurrentView("PageSteamOvenConfig")===true||isCurrentView("PageMultistage")===true)
+//                    push_page(pageSteaming)
+//                else if(isCurrentView("PageSmartRecipes")===true||isCurrentView("PageCookDetails")===true)
+//                {
+//                    if(smartRecipesIndex==0)
+//                        push_page(pageSteaming)
+//                }
+                push_page(pageSteaming)
+                workSleepWakeup()
             }
         }
     }

@@ -1154,7 +1154,7 @@ ApplicationWindow {
         }
         return 2
     }
-    function stoveSleepWakeup(){
+    function workSleepWakeup(){
         if(sysPower > 0)
         {
             if(sleepState==true)
