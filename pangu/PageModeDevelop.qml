@@ -16,7 +16,11 @@ Item {
         switch(modePathView.currentIndex)
         {
         case 0:
+        case 1:
             steps.temp+=4
+            break
+        case 2:
+
             break
         default:
 
@@ -80,7 +84,7 @@ Item {
     }
     Component.onCompleted: {
         var i
-        modePathView.model=["发酵模式"]
+        modePathView.model=["发酵模式","煲汤模式","高温快炒"]
         var array = new Array
         array.push("0℃")
         for(i=35; i<= 200;i+=5) {

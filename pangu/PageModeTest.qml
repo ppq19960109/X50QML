@@ -47,7 +47,7 @@ Item {
             steps.hoodSpeed=0
         }
 
-        steps.waterTime=Math.ceil(parseInt(waterPathView.model[waterPathView.currentIndex])/9)
+        steps.waterTime=parseInt(waterPathView.model[waterPathView.currentIndex])
         steps.fire=parseInt(firePathView.model[firePathView.currentIndex])
         steps.fan=1
         steps.repeat=0
@@ -124,7 +124,7 @@ Item {
         secondsPathView.model=array
         secondsPathView.currentIndex=0
         array = new Array
-        for( i=0; i< 2500; i+=100) {
+        for( i=0; i<= 1500; i+=50) {
             array.push(i+"ml")
         }
         waterPathView.model=array
