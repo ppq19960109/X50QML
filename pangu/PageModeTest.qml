@@ -33,6 +33,10 @@ Item {
         case 2:
             steps.mode=1
             break
+        case 3:
+            steps.mode=3
+            steps.temp+=4
+            break
         default:
             steps.mode=3
             break
@@ -85,7 +89,7 @@ Item {
     }
     Component.onCompleted: {
         var i
-        modePathView.model=["智能","大厨","无效"]
+        modePathView.model=["智能","大厨","无效","智能1"]
         var array = new Array
         array.push("0℃")
         for(i=35; i<= 200;i+=5) {
