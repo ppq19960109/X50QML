@@ -16,7 +16,7 @@ ApplicationWindow {
     width: 800
     height: 480
     visible: true //true false
-    property int sysPower:-1
+    property int sysPower:1
     property int permitStartStatus:0
     property int productionTestStatus:0
     property int productionTestFlag:1
@@ -31,6 +31,7 @@ ApplicationWindow {
     readonly property var cookWorkPosEnum:{"LEFT":0,"RIGHT":1,"ALL":2}
     readonly property var  cookModeImg: ["icon-steamed.png","icon-bake.png","icon-multistage.png"]
     readonly property var workModeEnum: ["未设定", "经典蒸", "高温蒸", "热风烧烤", "上下加热", "立体热风", "蒸汽烤", "空气炸", "保温烘干","便捷蒸"]
+    readonly property var panguWorkModeEnum: ["无效", "大厨", "智能1", "智能2", "智能3"]
     readonly property var workModeNumberEnum:[0,1,2,35,36,38,40,42,72,100]
     readonly property int rightWorkModeIndex:8
 
@@ -973,6 +974,14 @@ ApplicationWindow {
         id: pageModeDevelop
         PageModeDevelop {}
     }
+    Component {
+        id: pagePanguMode
+        PagePanguMode {}
+    }
+    Component {
+        id: pageSoybeanMilk
+        PageSoybeanMilk {}
+    }
     function isExistView(pageName) {
         //        console.log("isExistView:",pageName)
         return stackView.find(function(item,index){
@@ -1128,6 +1137,12 @@ ApplicationWindow {
             break;
         case "pageModeDevelop":
             stackView.push(pageModeDevelop, args,StackView.Immediate)
+            break;
+        case "pagePanguMode":
+            stackView.push(pagePanguMode, args,StackView.Immediate)
+            break;
+        case "pageSoybeanMilk":
+            stackView.push(pageSoybeanMilk, args,StackView.Immediate)
             break;
         }
 

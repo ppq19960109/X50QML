@@ -308,6 +308,11 @@ QVariantList QmlDevState::getTestMode()
 {
     return testMode;
 }
+
+QVariantList QmlDevState::getPanguMode()
+{
+    return panguMode;
+}
 void QmlDevState::executeShell(const QString cmd)
 {
     qDebug() << "executeShell:" << cmd;
@@ -452,6 +457,18 @@ void QmlDevState::readPanguRecipes()
         info.insert("dishName",dishName.toString());
         info.insert("cookSteps",cookSteps.toArray());
         testMode.append(info);
+    }
+    QJsonArray PanguMode = object.value("PanguMode").toArray();
+    qDebug()<<"PanguMode:"<<PanguMode.size();
+    for(int i=0;i<PanguMode.size();++i)
+    {
+        QJsonObject obj=PanguMode.at(i).toObject();
+        QJsonValue dishName =obj.value("dishName");
+        QJsonValue cookSteps =obj.value("cookSteps");
+        QVariantMap info;
+        info.insert("dishName",dishName.toString());
+        info.insert("cookSteps",cookSteps.toArray());
+        panguMode.append(info);
     }
 }
 

@@ -1,4 +1,30 @@
 
+function panguModeName(mode)
+{
+    var name
+    switch(mode)
+    {
+    case 1:
+        name=panguWorkModeEnum[0]
+        break
+    case 2:
+        name=panguWorkModeEnum[1]
+        break
+    case 3:
+        name=panguWorkModeEnum[2]
+        break
+    case 4:
+        name=panguWorkModeEnum[3]
+        break
+    case 5:
+        name=panguWorkModeEnum[4]
+        break
+    default:
+        name=panguWorkModeEnum[0]
+        break
+    }
+    return name
+}
 function leftWorkModeName(mode)
 {
     var name

@@ -59,6 +59,8 @@ public:
     Q_INVOKABLE QVariantList getClearMode();
     QVariantList testMode;
     Q_INVOKABLE QVariantList getTestMode();
+    QVariantList panguMode;
+    Q_INVOKABLE QVariantList getPanguMode();
 
     QVariantList history;
     Q_INVOKABLE QVariantList getHistory();

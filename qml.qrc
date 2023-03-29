@@ -118,5 +118,9 @@
         <file>pangu/PageModeKneadDough.qml</file>
         <file>pangu/PageModeDurabilityTest.qml</file>
         <file>pangu/PageModeDevelop.qml</file>
+        <file>pangu/PagePanguMode.qml</file>
+        <file>pangu/PageSoybeanMilk.qml</file>
+        <file>pangu/PagePanguMultistageDelegate.qml</file>
+        <file>pangu/PageModeMultistage.qml</file>
     </qresource>
 </RCC>

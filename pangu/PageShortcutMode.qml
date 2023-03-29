@@ -18,7 +18,7 @@ Item{
         cellHeight: height/2
         flow:GridView.FlowTopToBottom
         clip: true
-        model:["+自定义","称重","清洗","测试","耐久测试","新模式","揉面","慢炖","干磨","低温慢煮","榨汁","煮饭"]
+        model:["+自定义","称重","清洗","测试","耐久测试","新模式","揉面","盘古模式","干磨","低温慢煮","榨汁","煮饭"]
         delegate:Item{
             width: 250
             height: parent.height/2
@@ -61,6 +61,9 @@ Item{
                         break
                     case 6:
                         load_page("pageModeKneadDough")
+                        break
+                    case 7:
+                        load_page("pagePanguMode")
                         break
                     }
                 }
