@@ -26,8 +26,6 @@ Item {
             {
                 step.mode=3
             }
-            if(step.repeat>0)
-                step.repeat-=1
             list.push(step)
         }
 
@@ -189,7 +187,7 @@ Item {
             name:'第'+ (listClickIndex+1) +'段'
             leftBtnText:""
             rightBtnText:"确定"
-            modeIndex:listClickIndex >= listView.count?-1:CookFunc.leftWorkModeToIndex(listModel.get(listClickIndex).mode)-1
+            modeIndex:listClickIndex >= listView.count?-1:listModel.get(listClickIndex).mode-1
             tempIndex:listClickIndex >= listView.count?-1:listModel.get(listClickIndex).temp
             timeIndex:listClickIndex >= listView.count?-1:listModel.get(listClickIndex).cookTime
             fireIndex:listClickIndex >= listView.count?-1:listModel.get(listClickIndex).fire

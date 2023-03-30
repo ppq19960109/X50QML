@@ -1,6 +1,7 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.5
 import "qrc:/SendFunc.js" as SendFunc
+import ".."
 Item{
     property var panguMode
     Component.onCompleted: {
@@ -8,10 +9,26 @@ Item{
         //console.log("panguMode:",JSON.stringify(panguMode))
         SendFunc.permitSteamStartStatus(1)
     }
+    PageBackBar{
+        id:topBar
+        anchors.bottom:parent.bottom
+        name:"盘古模式"
+        //leftBtnText:qsTr("启动")
+        //        rightBtnText:qsTr("预约")
+        onClose:{
+            backPrePage()
+        }
+        onLeftClick:{
+            steamStart(false)
+        }
+        onRightClick:{
+            steamStart(true)
+        }
+    }
     GridView{
         width: parent.width
-        height: 400
-        anchors.verticalCenter: parent.verticalCenter
+        anchors.bottom:topBar.top
+        anchors.top: parent.top
         cellWidth: 200
         cellHeight: 120
         clip: true
@@ -43,22 +60,37 @@ Item{
                     switch(index)
                     {
                     case 0:
-
+                        load_page("pagePanguMode1",{"cookSteps":panguMode[index].cookSteps})
                         break
                     case 1:
-
+                        load_page("pagePanguMode2",{"cookSteps":panguMode[index].cookSteps})
                         break
                     case 2:
-
+                        load_page("pagePanguMode3",{"cookSteps":panguMode[index].cookSteps})
                         break
                     case 3:
-
+                        load_page("pagePanguMode4",{"cookSteps":panguMode[index].cookSteps})
                         break
                     case 4:
-
+                        load_page("pagePanguMode5",{"cookSteps":panguMode[index].cookSteps})
                         break
                     case 5:
-
+                        load_page("pagePanguMode6",{"cookSteps":panguMode[index].cookSteps})
+                        break
+                    case 6:
+                        load_page("pagePanguMode7",{"cookSteps":panguMode[index].cookSteps})
+                        break
+                    case 7:
+                        load_page("pagePanguMode8",{"cookSteps":panguMode[index].cookSteps})
+                        break
+                    case 8:
+                        load_page("pagePanguMode9",{"cookSteps":panguMode[index].cookSteps})
+                        break
+                    case 9:
+                        load_page("pagePanguMode10",{"cookSteps":panguMode[index].cookSteps})
+                        break
+                    case 10:
+                        load_page("pagePanguMode11",{"cookSteps":panguMode[index].cookSteps})
                         break
                     case 11:
                         load_page("pageSoybeanMilk",{"cookSteps":panguMode[index].cookSteps})

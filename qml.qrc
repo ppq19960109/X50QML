@@ -122,5 +122,17 @@
         <file>pangu/PageSoybeanMilk.qml</file>
         <file>pangu/PagePanguMultistageDelegate.qml</file>
         <file>pangu/PageModeMultistage.qml</file>
+        <file>pangu/PagePanguMode1.qml</file>
+        <file>PageSlider2.qml</file>
+        <file>pangu/PagePanguMode2.qml</file>
+        <file>pangu/PagePanguMode3.qml</file>
+        <file>pangu/PagePanguMode4.qml</file>
+        <file>pangu/PagePanguMode6.qml</file>
+        <file>pangu/PagePanguMode7.qml</file>
+        <file>pangu/PagePanguMode8.qml</file>
+        <file>pangu/PagePanguMode9.qml</file>
+        <file>pangu/PagePanguMode10.qml</file>
+        <file>pangu/PagePanguMode11.qml</file>
+        <file>pangu/PagePanguMode5.qml</file>
     </qresource>
 </RCC>

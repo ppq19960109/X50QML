@@ -982,6 +982,50 @@ ApplicationWindow {
         id: pageSoybeanMilk
         PageSoybeanMilk {}
     }
+    Component {
+        id: pagePanguMode1
+        PagePanguMode1 {}
+    }
+    Component {
+        id: pagePanguMode2
+        PagePanguMode2 {}
+    }
+    Component {
+        id: pagePanguMode3
+        PagePanguMode3 {}
+    }
+    Component {
+        id: pagePanguMode4
+        PagePanguMode4 {}
+    }
+    Component {
+        id: pagePanguMode5
+        PagePanguMode5 {}
+    }
+    Component {
+        id: pagePanguMode6
+        PagePanguMode6 {}
+    }
+    Component {
+        id: pagePanguMode7
+        PagePanguMode7 {}
+    }
+    Component {
+        id: pagePanguMode8
+        PagePanguMode8 {}
+    }
+    Component {
+        id: pagePanguMode9
+        PagePanguMode9 {}
+    }
+    Component {
+        id: pagePanguMode10
+        PagePanguMode10 {}
+    }
+    Component {
+        id: pagePanguMode11
+        PagePanguMode11 {}
+    }
     function isExistView(pageName) {
         //        console.log("isExistView:",pageName)
         return stackView.find(function(item,index){
@@ -1143,6 +1187,39 @@ ApplicationWindow {
             break;
         case "pageSoybeanMilk":
             stackView.push(pageSoybeanMilk, args,StackView.Immediate)
+            break;
+        case "pagePanguMode1":
+            stackView.push(pagePanguMode1, args,StackView.Immediate)
+            break;
+        case "pagePanguMode2":
+            stackView.push(pagePanguMode2, args,StackView.Immediate)
+            break;
+        case "pagePanguMode3":
+            stackView.push(pagePanguMode3, args,StackView.Immediate)
+            break;
+        case "pagePanguMode4":
+            stackView.push(pagePanguMode4, args,StackView.Immediate)
+            break;
+        case "pagePanguMode5":
+            stackView.push(pagePanguMode5, args,StackView.Immediate)
+            break;
+        case "pagePanguMode6":
+            stackView.push(pagePanguMode6, args,StackView.Immediate)
+            break;
+        case "pagePanguMode7":
+            stackView.push(pagePanguMode7, args,StackView.Immediate)
+            break;
+        case "pagePanguMode8":
+            stackView.push(pagePanguMode8, args,StackView.Immediate)
+            break;
+        case "pagePanguMode9":
+            stackView.push(pagePanguMode9, args,StackView.Immediate)
+            break;
+        case "pagePanguMode10":
+            stackView.push(pagePanguMode10, args,StackView.Immediate)
+            break;
+        case "pagePanguMode11":
+            stackView.push(pagePanguMode11, args,StackView.Immediate)
             break;
         }
 

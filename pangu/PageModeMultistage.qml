@@ -64,7 +64,7 @@ Rectangle {
 
         var array = new Array
         array.push("0℃")
-        for(i=35; i<= 200;i+=5) {
+        for(i=35; i<= 200;i+=1) {
             array.push(i+"℃")
         }
         tempPathView.model=array
@@ -74,7 +74,7 @@ Rectangle {
             if(tempIndex==0)
                 tempPathView.currentIndex=0
             else
-                tempPathView.currentIndex=(tempIndex-35)/5+1
+                tempPathView.currentIndex=(tempIndex-35)+1
         }
 
         array = new Array
