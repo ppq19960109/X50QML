@@ -332,6 +332,20 @@ function setMultiCooking(list,orderTime,dishName,cookbookID)
 function setPanguMultiCooking(list,orderTime,dishName,workMode,clearMode)
 {
     var Data={}
+    list=JSON.parse(JSON.stringify(list))
+    for(var i = 0; i < list.length; ++i)
+    {
+        if(list[i].mode==4)
+        {
+            list[i].mode=3
+            if(list[i].temp>0)
+                list[i].temp+=4
+        }
+        else if(list[i].mode==5)
+        {
+            list[i].mode=3
+        }
+    }
     Data.RMultiStageContent=list
     if(null == dishName)
     {

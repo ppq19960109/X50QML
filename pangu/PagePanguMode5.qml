@@ -10,7 +10,7 @@ Item{
     function steamStart(order)
     {
         cookSteps[0].waterTime=waterSlider.value
-        cookSteps[cookSteps.length-1].repeat=Math.ceil((timeSlider.value-timeSlider.from)/20)+1
+        cookSteps[cookSteps.length-1].repeat=Math.ceil((timeSlider.value-timeSlider.from)/60)+1
         var para =CookFunc.getDefHistory()
         para.cookPos=1
         para.cookSteps=cookSteps
@@ -47,18 +47,18 @@ Item{
             PageSlider2 {
                 id: timeSlider
                 Layout.fillWidth: true
-                Layout.preferredHeight: 100
-                stepSize: 20
-                from: 440
-                to: 1500
-                value: 600
+                Layout.preferredHeight: 90
+                stepSize: 60
+                from: 60
+                to: 600
+                value: 60
                 title:"时间"
-                unit:"S"
+                unit:"min"
             }
             PageSlider2 {
                 id: waterSlider
                 Layout.fillWidth: true
-                Layout.preferredHeight: 100
+                Layout.preferredHeight: 90
                 stepSize: 10
                 to: 1500
                 value: 0

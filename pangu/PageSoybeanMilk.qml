@@ -16,16 +16,6 @@ Item {
         for(var i = 0; i < listModel.count; ++i)
         {
             step=listModel.get(i)
-            if(step.mode==4)
-            {
-                step.mode=3
-                if(step.temp>0)
-                    step.temp+=4
-            }
-            else if(step.mode==5)
-            {
-                step.mode=3
-            }
             list.push(step)
         }
 

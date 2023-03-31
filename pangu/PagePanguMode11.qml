@@ -9,16 +9,6 @@ Item{
 
     function steamStart(order)
     {
-        if(speedSlider.value>=0)
-        {
-            cookSteps[1].motorDir=0
-        }
-        else
-        {
-            cookSteps[1].motorDir=1
-        }
-        cookSteps[1].motorSpeed=Math.abs(speedSlider.value)
-
         cookSteps[cookSteps.length-1].repeat=Math.ceil((timeSlider.value-timeSlider.from)/10)+1
         var para =CookFunc.getDefHistory()
         para.cookPos=1
@@ -63,17 +53,6 @@ Item{
                 value: 10
                 title:"时间"
                 unit:"S"
-            }
-            PageSlider2 {
-                id: speedSlider
-                Layout.fillWidth: true
-                Layout.preferredHeight: 100
-                stepSize: 1
-                from: -20
-                to: 20
-                value: 0
-                title:"转速"
-                unit:"挡"
             }
         }
     }
