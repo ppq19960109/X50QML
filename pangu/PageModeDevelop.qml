@@ -20,7 +20,10 @@ Item {
             steps.temp+=4
             break
         case 2:
-
+            var x=steps.temp
+            //            steps.temp=-7.895*10**(-5)*x**3 + 0.02186*x**2- 0.7542*x + 37.82
+            steps.temp+=steps.temp- Math.floor(1.519*10**(-8)*x**5 - 8.437*10**(-6)*x**4 + 0.001695*x**3 - 0.1527*x**2 + 7.188*x - 94.23)
+            //steps.temp=Math.ceil(-7.635*10**(-8)*x**5 + 3.575*10**(-5)*x**4 - 0.006265*x**3 + 0.5083*x**2 - 17.98*x + 263.6)
             break
         default:
 
@@ -87,7 +90,7 @@ Item {
         modePathView.model=["发酵模式","煲汤模式","高温快炒"]
         var array = new Array
         array.push("0℃")
-        for(i=35; i<= 200;i+=5) {
+        for(i=35; i<= 180;i+=5) {
             array.push(i+"℃")
         }
         tempPathView.model=array
