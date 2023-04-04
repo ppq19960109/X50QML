@@ -11,8 +11,6 @@ Item {
     property var rStOvState: QmlDevState.state.RStOvState
     property var lStOvSetTimer: QmlDevState.state.LStOvSetTimer
     property var rStOvSetTimer: QmlDevState.state.RStOvSetTimer
-    property var lStOvSetTimerLeft: QmlDevState.state.LStOvSetTimerLeft
-    property var rStOvSetTimerLeft: QmlDevState.state.RStOvSetTimerLeft
     property var lStOvOrderTimer: QmlDevState.state.LStOvOrderTimer
     property var rStOvOrderTimer: QmlDevState.state.RStOvOrderTimer
     property var lStOvOrderTimerLeft: QmlDevState.state.LStOvOrderTimerLeft

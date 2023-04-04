@@ -33,126 +33,6 @@ Item {
         lowHeatPageSwitch.checked=QmlDevState.state.RMovePotLowHeatSwitch
     }
 
-    Component{
-        id:component_tempControl
-        Item {
-            property int cookWorkPos:0
-            property var clickFunc:null
-            Component.onCompleted: {
-                var i
-                var array = []
-                for(i=50; i<= 210; i+=5) {
-                    array.push(i)
-                }
-                tempPathView.model=array
-            }
-            Component.onDestruction: {
-                clickFunc=null
-            }
-
-            //内容
-            Rectangle{
-                width:730
-                height: 350
-                anchors.centerIn: parent
-
-                color: "#333333"
-                radius: 10
-
-                PageCloseButton {
-                    anchors.top:parent.top
-                    anchors.right:parent.right
-                    onClicked: {
-                        auxiliaryPageSwitch.checked=false
-                        loaderMainHide()
-                    }
-                }
-
-                PageDivider{
-                    width: parent.width-200
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    anchors.verticalCenter:tempPathView.verticalCenter
-                    anchors.verticalCenterOffset:-30
-                }
-                PageDivider{
-                    width: parent.width-200
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    anchors.verticalCenter:tempPathView.verticalCenter
-                    anchors.verticalCenterOffset:30
-                }
-                Text{
-                    width:130
-                    color:"#fff"
-                    font.pixelSize: 30
-                    anchors.top: parent.top
-                    anchors.topMargin: 20
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    text:qsTr("控温范围")
-                }
-
-                PageCookPathView {
-                    id:tempPathView
-                    width: 449
-                    height:222
-                    anchors.top: parent.top
-                    anchors.topMargin: 50
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    pathItemCount:3
-                    currentIndex:0
-                    Image {
-                        anchors.fill: parent
-                        visible: parent.moving
-                        asynchronous:true
-                        smooth:false
-                        anchors.centerIn: parent
-                        source: themesPicturesPath+"steamoven/"+"roll_background.png"
-                    }
-                    Text{
-                        text:qsTr("℃")
-                        color:themesTextColor
-                        font.pixelSize: 24
-                        anchors.centerIn: parent
-                        anchors.horizontalCenterOffset: 60
-                    }
-                }
-
-                PageButtonBar{
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    anchors.bottom: parent.bottom
-                    anchors.bottomMargin: 20
-                    space:80
-                    models: ["取消","确定"]
-                    onClick: {
-                        if(clickIndex==1)
-                        {
-                            //                            var Data={}
-                            //                            Data.RAuxiliarySwitch = true
-                            //                            Data.RAuxiliaryTemp = tempPathView.model[tempPathView.currentIndex]
-                            //                            SendFunc.setToServer(Data)
-
-                            SendFunc.tempControlRquest(tempPathView.model[tempPathView.currentIndex])
-                            if(rStoveStatus===0)
-                            {
-                                loaderWarnConfirmShow("请开启右灶，\n并将火力调到最大")
-                                return
-                            }
-                        }
-                        else
-                        {
-                            auxiliaryPageSwitch.checked=false
-                        }
-                        loaderMainHide()
-                    }
-                }
-            }
-        }
-    }
-    function loaderTempControl(clickFunc)
-    {
-        loaderManual.sourceComponent = component_tempControl
-        loaderManual.item.clickFunc=clickFunc
-    }
-
     //    PageBackBar{
     //        id:topBar
     //        anchors.top:parent.top
@@ -168,8 +48,8 @@ Item {
     //        }
     //    }
     Flickable{
-        width: 370
-        height:60
+        width: 341
+        height:53
         contentWidth: width
         contentHeight: height
         flickableDirection:Flickable.VerticalFlick

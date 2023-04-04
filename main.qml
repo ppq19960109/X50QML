@@ -23,7 +23,6 @@ ApplicationWindow {
     property bool wifiPageStatus:false
     property bool errorBuzzer:false
     property bool testMode:false
-    property bool aiState:false
     property var decode_ssid:""
     property int smartRecipesIndex:0
     property int pageSetIndex:0
@@ -37,6 +36,8 @@ ApplicationWindow {
     property var rTimingState: QmlDevState.state.RStoveTimingState
     property var lStOvState: QmlDevState.state.LStOvState
     property var rStOvState: QmlDevState.state.RStOvState
+    property var lStOvSetTimerLeft: QmlDevState.state.LStOvSetTimerLeft
+    property var rStOvSetTimerLeft: QmlDevState.state.RStOvSetTimerLeft
     property var lStOvDoorState: QmlDevState.state.LStOvDoorState
     property var rStOvDoorState: QmlDevState.state.RStOvDoorState
     property var errorCodeShow: QmlDevState.state.ErrorCodeShow
@@ -135,7 +136,6 @@ ApplicationWindow {
         id: systemSettings
         category: "system"
         property bool firstStartup: true
-        property bool firstAI: true
         //设置-休眠时间(范围:1-5,单位:分钟 )
         property bool sleepSwitch: true
         property int sleepTime: 3
@@ -240,7 +240,6 @@ ApplicationWindow {
     function systemSetReset()
     {
         systemSettings.firstStartup=true
-        systemSettings.firstAI=true
         systemSettings.sleepTime=3
         systemSettings.brightness=200
 
@@ -594,7 +593,7 @@ ApplicationWindow {
         }
     }
     background:Image {
-        source: themesPicturesPath+(aiState?"ai/ai_background.png":"window-background.png")
+        source: themesPicturesPath+"window-background.png"
     }
     StackView {
         id: stackView
@@ -611,6 +610,19 @@ ApplicationWindow {
         visible: stackView.visible && productionTestStatus == 0 && demoModeStatus==0
         enabled: stackView.enabled
     }
+//    SwipeView {
+//        anchors.fill: parent
+//        currentIndex:0
+
+//        interactive:true //是否可以滑动
+//        Item {Image{source: themesPicturesPath+"display/1.png" }}
+//        Item {Image{source: themesPicturesPath+"display/5.png" }}
+//        Item {Image{source: themesPicturesPath+"display/3.png" }}
+//        Item {Image{source: themesPicturesPath+"display/4.png" }}
+//        Item {Image{source: themesPicturesPath+"display/6.png" }}
+//        Item {Image{source: themesPicturesPath+"display/2.png" }}
+//    }
+
     //    Item {
     //        anchors.fill: parent
     ////        Video{
@@ -687,7 +699,7 @@ ApplicationWindow {
             target: boot;
             property: "opacity";
             to: 0;
-            duration: 1600;
+            duration: 1200;
             onStopped:{
                 console.log("onStopped...")
                 boot.visible=false
@@ -1566,7 +1578,7 @@ ApplicationWindow {
                     anchors.top:parent.top
                     anchors.right:parent.right
                     onClicked: {
-                        if(clickFunc!=null)
+                        if(cancelFunc!=null)
                             cancelFunc(cookWorkPos,0)
                         loaderMainHide()
                     }
@@ -1669,7 +1681,7 @@ ApplicationWindow {
                     onClick: {
                         if(clickIndex==0)
                         {
-                            if(clickFunc!=null)
+                            if(cancelFunc!=null)
                                 cancelFunc(cookWorkPos,1)
                             loaderMainHide()
                         }
@@ -1742,6 +1754,125 @@ ApplicationWindow {
         }
         Data.DataReportReason=0
         SendFunc.setToServer(Data)
+    }
+
+    Component{
+        id:component_tempControl
+        Item {
+            property int cookWorkPos:0
+            property var clickFunc:null
+            Component.onCompleted: {
+                var i
+                var array = []
+                for(i=50; i<= 210; i+=5) {
+                    array.push(i)
+                }
+                tempPathView.model=array
+            }
+            Component.onDestruction: {
+                clickFunc=null
+            }
+
+            //内容
+            Rectangle{
+                width:730
+                height: 350
+                anchors.centerIn: parent
+
+                color: "#333333"
+                radius: 10
+
+                PageCloseButton {
+                    anchors.top:parent.top
+                    anchors.right:parent.right
+                    onClicked: {
+                        auxiliaryPageSwitch.checked=false
+                        loaderMainHide()
+                    }
+                }
+
+                PageDivider{
+                    width: parent.width-200
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.verticalCenter:tempPathView.verticalCenter
+                    anchors.verticalCenterOffset:-30
+                }
+                PageDivider{
+                    width: parent.width-200
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.verticalCenter:tempPathView.verticalCenter
+                    anchors.verticalCenterOffset:30
+                }
+                Text{
+                    width:130
+                    color:"#fff"
+                    font.pixelSize: 30
+                    anchors.top: parent.top
+                    anchors.topMargin: 20
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    text:qsTr("控温范围")
+                }
+
+                PageCookPathView {
+                    id:tempPathView
+                    width: 449
+                    height:222
+                    anchors.top: parent.top
+                    anchors.topMargin: 50
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    pathItemCount:3
+                    currentIndex:0
+                    Image {
+                        anchors.fill: parent
+                        visible: parent.moving
+                        asynchronous:true
+                        smooth:false
+                        anchors.centerIn: parent
+                        source: themesPicturesPath+"steamoven/"+"roll_background.png"
+                    }
+                    Text{
+                        text:qsTr("℃")
+                        color:themesTextColor
+                        font.pixelSize: 24
+                        anchors.centerIn: parent
+                        anchors.horizontalCenterOffset: 60
+                    }
+                }
+
+                PageButtonBar{
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.bottom: parent.bottom
+                    anchors.bottomMargin: 20
+                    space:80
+                    models: ["取消","确定"]
+                    onClick: {
+                        if(clickIndex==1)
+                        {
+                            //                            var Data={}
+                            //                            Data.RAuxiliarySwitch = true
+                            //                            Data.RAuxiliaryTemp = tempPathView.model[tempPathView.currentIndex]
+                            //                            SendFunc.setToServer(Data)
+                            SendFunc.tempControlRquest(tempPathView.model[tempPathView.currentIndex])
+                            if(rStoveStatus===0)
+                            {
+                                loaderWarnConfirmShow("请开启右灶，\n并将火力调到最大")
+                                return
+                            }
+                        }
+                        else
+                        {
+                            auxiliaryPageSwitch.checked=false
+                        }
+                        loaderMainHide()
+                    }
+                }
+            }
+        }
+    }
+    function loaderTempControl(clickFunc)
+    {
+        loaderManual.sourceComponent = component_tempControl
+        loaderManual.item.clickFunc=clickFunc
     }
     //    readonly property var weather_code:{
     //        "113": "Sunny",

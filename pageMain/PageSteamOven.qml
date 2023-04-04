@@ -8,6 +8,7 @@ Item {
         anchors.top:parent.top
         name:qsTr("蒸烤箱")
     }
+
     PageTabBar{
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.bottom: parent.bottom

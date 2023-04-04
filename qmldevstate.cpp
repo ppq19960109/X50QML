@@ -143,28 +143,29 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
 #ifndef USE_RK3308
     setState("OilTempSwitch",1);
     setState("RAuxiliarySwitch",1);
-    setState("RAuxiliaryTemp",220);
+    setState("RAuxiliaryTemp",200);
     setState("SysPower",1);
     setState("OTASlientUpgrade",0);
     setState("LoadPowerState",7);
 
-    setState("LOilTemp",20);
+    setState("LOilTemp",220);
     setState("ROilTemp",220);
     setState("LStoveStatus",1);
     setState("RStoveStatus",1);
     setState("RStoveTimingLeft",50);
+    setState("LStoveTimingLeft",50);
     setState("LStoveTimingState",0);
     setState("RStoveTimingState",0);
 
     setState("LStOvMode",0);
-    setState("LStOvState",0);
-    setState("LStOvSetTimer",0);
-    setState("LStOvSetTimerLeft",0);
+    setState("LStOvState",2);
+    setState("LStOvSetTimer",10);
+    setState("LStOvSetTimerLeft",10);
     setState("LStOvRealTemp",0);
     setState("LStOvOrderTimerLeft",0);
 
-    setState("RStOvState",0);
-    setState("RStOvSetTimerLeft",0);
+    setState("RStOvState",2);
+    setState("RStOvSetTimerLeft",20);
     setState("RStOvRealTemp",0);
     setState("RStOvOrderTimerLeft",0);
 

@@ -4,57 +4,7 @@ import "../"
 import "qrc:/SendFunc.js" as SendFunc
 Item {
     property string name: "PageAICook"
-    property int left_percent:{
-        if(lOilTemp<100)
-            left_fire.source=themesPicturesPath+"ai/small_fire.png"
-        else if(lOilTemp>170)
-            left_fire.source=themesPicturesPath+"ai/big_fire.png"
-        else
-            left_fire.source=themesPicturesPath+"ai/medium_fire.png"
 
-        if(lOilTemp<=0)
-            return 0
-        else if(lOilTemp<=50)
-            return 1
-        else if(lOilTemp>=250)
-            return 100
-        else
-            return 100*(lOilTemp-50)/200
-    }
-    property int right_percent:{
-        if(rOilTemp<100)
-            right_fire.source=themesPicturesPath+"ai/small_fire.png"
-        else if(rOilTemp>170)
-            right_fire.source=themesPicturesPath+"ai/big_fire.png"
-        else
-            right_fire.source=themesPicturesPath+"ai/medium_fire.png"
-
-        if(rOilTemp<=0)
-            return 0
-        else if(rOilTemp<=50)
-            return 1
-        else if(rOilTemp>=250)
-            return 100
-        else
-            return 100*(rOilTemp-50)/200
-    }
-    onLeft_percentChanged: {
-        left_canvas.requestPaint()
-    }
-    onRight_percentChanged: {
-        right_canvas.requestPaint()
-    }
-    function close_heat_cancel(index)
-    {
-        if(index===0)
-        {
-            leftCloseHeatSwitch.checked=false
-        }
-        else
-        {
-            rightCloseHeatSwitch.checked=false
-        }
-    }
     function close_heat_run_cancel(index,pos)
     {
         if(pos>0)
@@ -66,160 +16,6 @@ Item {
         SendFunc.setHoodSpeed(0)
     }
 
-    Connections { // 将目标对象信号与槽函数进行连接
-        target: QmlDevState
-        onStateChanged: { // 处理目标对象信号的槽函数
-            //            console.log("page PageAICook:",key,value)
-            if("LStoveTimingState"==key)
-            {
-                if(value===timingStateEnum.RUN)
-                    leftCloseHeatSwitch.checked=true
-                else
-                    leftCloseHeatSwitch.checked=false
-            }
-            else if("RStoveTimingState"==key)
-            {
-                if(value===timingStateEnum.RUN)
-                    rightCloseHeatSwitch.checked=true
-                else
-                    rightCloseHeatSwitch.checked=false
-            }
-        }
-    }
-    Component.onCompleted: {
-        if(lTimingState===timingStateEnum.RUN)
-            leftCloseHeatSwitch.checked=true
-        else
-            leftCloseHeatSwitch.checked=false
-        if(rTimingState===timingStateEnum.RUN)
-            rightCloseHeatSwitch.checked=true
-        else
-            rightCloseHeatSwitch.checked=false
-        if(systemSettings.firstAI==true)
-        {
-            systemSettings.firstAI=false
-            loaderManual.sourceComponent = component_help
-        }
-    }
-
-    StackView.onActivated:{
-        console.log("StackView.onActivated...")
-        aiState=true
-    }
-    StackView.onDeactivated:{
-        console.log("StackView.onDeactivated...")
-        aiState=false
-    }
-    Component{
-        id:component_help
-        Rectangle{
-            property int num:0
-            color: "#000"
-            Component.onCompleted: {
-                num=0
-            }
-            Image {
-                asynchronous:true
-                smooth:false
-                source: themesPicturesPath+"ai/help"+num+".png"
-            }
-            Button {
-                width:140
-                height: 50
-                visible: num>0
-                anchors.centerIn: parent
-                anchors.horizontalCenterOffset: {
-                    switch(num)
-                    {
-                    case 1:
-                        return -290
-                    case 2:
-                        return -210
-                    case 3:
-                        return 250
-                    }
-                    return 0
-                }
-                anchors.verticalCenterOffset: {
-                    switch(num)
-                    {
-                    case 1:
-                        return 130
-                    case 2:
-                        return 130
-                    case 3:
-                        return 110
-                    }
-                    return 0
-                }
-                background: Rectangle{
-                    color:"transparent"
-                    radius: 25
-                    border.color: themesTextColor2
-                }
-                Text{
-                    text:"上一步"
-                    color:themesTextColor2
-                    font.pixelSize: 30
-                    anchors.centerIn: parent
-                }
-                onClicked: {
-                    if(num>0)
-                        --num
-                }
-            }
-            Button {
-                width:140
-                height: 50
-                anchors.centerIn: parent
-                anchors.horizontalCenterOffset: {
-                    switch(num)
-                    {
-                    case 0:
-                        return -360
-                    case 1:
-                        return 50
-                    case 2:
-                        return 120
-                    case 3:
-                        return 440
-                    }
-                    return 0
-                }
-                anchors.verticalCenterOffset: {
-                    switch(num)
-                    {
-                    case 0:
-                        return 130
-                    case 1:
-                        return 130
-                    case 2:
-                        return 130
-                    case 3:
-                        return 110
-                    }
-                    return 0
-                }
-                background: Rectangle{
-                    color:"#fff"
-                    radius: 25
-                }
-                Text{
-                    text:num==3?"完成":"下一步"
-                    color:"#000"
-                    font.pixelSize: 30
-                    anchors.centerIn: parent
-                }
-                onClicked: {
-                    if(num==3)
-                        loaderManual.sourceComponent = null
-                    else
-                        ++num
-                }
-            }
-        }
-    }
-
     PageTabBar{
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.bottom: parent.bottom
@@ -227,8 +23,8 @@ Item {
     }
 
     Flickable{
-        width: 370
-        height:60
+        width: 474
+        height:51
         contentWidth: width
         contentHeight: height
         flickableDirection:Flickable.VerticalFlick
@@ -260,54 +56,43 @@ Item {
         //            push_page(pageSmartCook)
         //        }
     }
-    Button{
-        width: 40
-        height:40
-        anchors.top: parent.top
-        anchors.topMargin: 8
-        anchors.left: parent.left
-        anchors.leftMargin: 15
-        background:Image {
-            asynchronous:true
-            smooth:false
-            anchors.centerIn: parent
-            source: themesPicturesPath+"ai/icon_help.png"
-        }
-        onClicked: {
-            loaderManual.sourceComponent = component_help
-        }
-    }
-    Text{
-        visible: hoodSpeed===4 && (testMode==true||smartSmokeSwitch===0) && QmlDevState.state.StirFryTimerLeft>0
-        text:QmlDevState.state.StirFryTimerLeft+"分钟"
-        color:themesTextColor
-        font.pixelSize: 26
-        anchors.right: grid.right
-        anchors.rightMargin: 5
-        anchors.bottom: grid.top
-        anchors.bottomMargin: 0
-    }
-    Grid{
-        id:grid
-        width: 80*3+40*2
-        height: 100*2+20
-        rows: 2
-        rowSpacing: 20
-        columns: 3
-        columnSpacing: 40
+
+    Image {
+        asynchronous:true
+        smooth:false
         anchors.centerIn: parent
-        Repeater {
-            model: [{"background":"light.png","text":"照明"}, {"background":"ai.png","text":"智能排烟"}, {"background":"stir_fry.png","text":"爆炒"}, {"background":"high_speed.png","text":"高速"}, {"background":"medium_speed.png","text":"中速"}, {"background":"low_speed.png","text":"低速"}]
-            Item {
-                width: 80
-                height:100
-                Button{
+        source:themesPicturesPath+"ai/center_background.png"
+        Text{
+            visible: hoodSpeed===4 && (testMode==true||smartSmokeSwitch===0) && QmlDevState.state.StirFryTimerLeft>0
+            text:QmlDevState.state.StirFryTimerLeft+"分钟"
+            color:themesTextColor
+            font.pixelSize: 26
+            anchors.right: grid.right
+            anchors.rightMargin: 5
+            anchors.bottom: grid.top
+            anchors.bottomMargin: 0
+        }
+        Grid{
+            id:grid
+            width: 80*3+70*2
+            height: 100*2+30
+            rows: 2
+            rowSpacing: 30
+            columns: 3
+            columnSpacing: 70
+            anchors.centerIn: parent
+            Repeater {
+                model: [{"background":"ai.png","text":"智能排烟"}, {"background":"light.png","text":"照明"},{"background":"stir_fry.png","text":"爆炒"}, {"background":"high_speed.png","text":"高速"}, {"background":"medium_speed.png","text":"中速"}, {"background":"low_speed.png","text":"低速"}]
+                Button {
+                    width: 80
+                    height:100
+                    background: null
                     property bool curState:{
                         switch (index){
                         case 0:
-                            return QmlDevState.state.HoodLight
-                        case 1:
                             return smartSmokeSwitch
+                        case 1:
+                            return QmlDevState.state.HoodLight
                         case 2:
                         case 3:
                         case 4:
@@ -316,31 +101,31 @@ Item {
                         }
                         return false
                     }
+                    Item{
+                        width: parent.width
+                        height:width
 
-                    width: parent.width
-                    height:width
-
-                    background: Image {
-                        asynchronous:true
-                        smooth:false
-                        anchors.centerIn: parent
-                        source: {
-                            return themesPicturesPath+"/ai/"+(parent.curState?"checked_background.png":"uncheck_background.png")
+                        Image {
+                            asynchronous:true
+                            smooth:false
+                            anchors.centerIn: parent
+                            source: themesPicturesPath+"/ai/"+(parent.parent.curState?"check_":"")+modelData.background
                         }
                     }
-                    Image {
-                        asynchronous:true
-                        smooth:false
-                        anchors.centerIn: parent
-                        source: themesPicturesPath+"/ai/"+modelData.background
+                    Text{
+                        text:modelData.text
+                        color:curState?themesTextColor:"#fff"
+                        font.pixelSize: 24
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        anchors.bottom: parent.bottom
                     }
                     onClicked: {
                         switch (index){
                         case 0:
-                            SendFunc.setHoodLight(!QmlDevState.state.HoodLight)
+                            SendFunc.setSmartSmoke(!smartSmokeSwitch)
                             break
                         case 1:
-                            SendFunc.setSmartSmoke(!smartSmokeSwitch)
+                            SendFunc.setHoodLight(!QmlDevState.state.HoodLight)
                             break
                         case 2:
                         case 3:
@@ -367,468 +152,380 @@ Item {
                         SendFunc.setBuzControl(buzControlEnum.SHORT)
                     }
                 }
-                Text{
-                    text:modelData.text
-                    color:"#fff"
-                    font.pixelSize: 24
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    anchors.bottom: parent.bottom
-                }
             }
         }
     }
-    Item {
-        id: left_content
-        width: 340
-        height: parent.height
+    Image {
+        asynchronous:true
+        smooth:false
+        anchors.verticalCenter: parent.verticalCenter
         anchors.left: parent.left
+        anchors.leftMargin: 20
+        source:themesPicturesPath+"ai/stove_bg.png"
         Text{
-            id:left_stove
-            text:"左灶"
-            color:"#fff"
-            font.pixelSize: 24
-            anchors.top: parent.top
-            anchors.topMargin: 306
-            anchors.left: parent.left
-            anchors.leftMargin: 63
-        }
-        Image {
-            asynchronous:true
-            smooth:false
-            anchors.left:parent.left
-            anchors.leftMargin: 175
-            anchors.verticalCenter: parent.verticalCenter
-            source: themesPicturesPath+"ai/left_temp_arc.png"
-        }
-        Image {
-            id:left_fire
-            visible: oilTempSwitch && lStoveStatus>0 && lOilTemp>0
-            asynchronous:true
-            smooth:false
-            anchors.left:parent.left
-            anchors.leftMargin: 60
-            anchors.top: parent.top
-            anchors.topMargin: 125
-            source: themesPicturesPath+"ai/small_fire.png"
-        }
-        Text{
-            id:left_temp
-            text:oilTempSwitch?((lOilTemp>=0?lOilTemp:"-")+"℃"):"关"
-            color:(oilTempSwitch && lOilTemp>=220)?"red":"#fff"
-            font.pixelSize: 35
-            anchors.top: parent.top
-            anchors.topMargin: 60
-            anchors.horizontalCenter: left_stove.horizontalCenter
-            textFormat: Text.RichText
-            lineHeight:0.75
-        }
-        Text{
-            visible: (oilTempSwitch && lOilTemp>=220)
-            text:"油温过高"
-            color:"red"
-            font.pixelSize: 24
-            anchors.top: left_temp.bottom
-            anchors.topMargin: 0
-            anchors.horizontalCenter: left_temp.horizontalCenter
-        }
-        Text{
-            text:"定时\n关火"
-            color:"#fff"
-            font.pixelSize: 24
-            anchors.top: parent.top
-            anchors.topMargin: 235
-            anchors.left: parent.left
-            anchors.leftMargin: 130
-        }
-        Text{
-            visible: lTimingState===timingStateEnum.RUN
             text:{
-                var timingTime=QmlDevState.state.LStoveTimingLeft
-                return generateTwoTime(Math.floor(timingTime/60))+":"+generateTwoTime(timingTime%60)
+                if(lStoveStatus>0 && oilTempSwitch)
+                {
+                    if(lOilTemp>=220 && lFlashAnimation.flash)
+                        return "油温过高"
+                    else
+                        return (lOilTemp<0?"-":lOilTemp)+"℃"
+                }
+                else
+                    return "左灶"
             }
-            color:themesTextColor
-            font.pixelSize: 36
+            color:(lStoveStatus>0 && lOilTemp>=220)?themesTextColor:"#fff"
+            font.pixelSize: (lStoveStatus>0 && oilTempSwitch)?28:34
             anchors.top: parent.top
-            anchors.topMargin: 240
-            anchors.left: parent.left
-            anchors.leftMargin: 20
-            MouseArea{
-                anchors.fill: parent
-                onClicked: {
+            anchors.topMargin: 25
+            anchors.horizontalCenter: parent.horizontalCenter
+        }
+        PageFlashAnimation {
+            id:lFlashAnimation
+            running: lStoveStatus>0 && oilTempSwitch && lOilTemp>=220
+        }
+        PageRotationImg {
+            asynchronous:true
+            smooth:true
+            visible: lStoveStatus>0 && oilTempSwitch
+            anchors.centerIn: left_stove
+            source: {
+                if(lOilTemp<100)
+                    return themesPicturesPath+"ai/low_temp.png"
+                else if(lOilTemp>170)
+                    return themesPicturesPath+"ai/high_temp.png"
+                else
+                    return themesPicturesPath+"ai/medium_temp.png"
+            }
+            duration:9000
+        }
+        Image {
+            id:left_stove
+            asynchronous:true
+            smooth:false
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.top: parent.top
+            anchors.topMargin: 100
+            source: themesPicturesPath+(lStoveStatus>0?"ai/stove_open.png":"ai/stove_close.png")
+        }
+
+        Button{
+            width: 120
+            height:40
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.top: parent.top
+            anchors.topMargin: 210
+            background: Rectangle{
+                color: "#535353"
+                radius: height/2
+            }
+            Text{
+                text:{
+                    if(lTimingState===timingStateEnum.RUN)
+                    {
+                        var timingTime=QmlDevState.state.LStoveTimingLeft
+                        return generateTwoTime(Math.floor(timingTime/60))+":"+generateTwoTime(timingTime%60)
+                    }
+                    return "定时关火"
+                }
+                color:lTimingState===timingStateEnum.RUN?themesTextColor:"#fff"
+                font.pixelSize: 24
+                //font.bold: true
+                anchors.centerIn: parent
+            }
+            onClicked: {
+                if(lTimingState===timingStateEnum.RUN)
+                {
                     loaderCloseHeat(cookWorkPosEnum.LEFT,startTurnOffFire,QmlDevState.state.LStoveTimingLeft,close_heat_run_cancel,["取消定时","开始"])
                 }
-            }
-        }
-        PageSwitch {
-            id:leftCloseHeatSwitch
-            visible: lTimingState!==timingStateEnum.RUN
-            checked: false
-            anchors.top: parent.top
-            anchors.topMargin: 240
-            anchors.left: parent.left
-            anchors.leftMargin: 30
-            source: themesPicturesPath+(checked ?"ai/icon_aiopen.png":"ai/icon_aiclose.png")
-            onClicked: {
-                if(checked==true)
+                else
                 {
                     if(lStoveStatus===0)
                     {
-                        checked=false
                         loaderWarnConfirmShow("左灶未开启\n开启后才可设置定时关火")
                     }
                     else
-                        loaderCloseHeat(cookWorkPosEnum.LEFT,startTurnOffFire,null,close_heat_cancel)
+                        loaderCloseHeat(cookWorkPosEnum.LEFT,startTurnOffFire,null,null)
+                }
+            }
+        }
+    }
+    Image {
+        asynchronous:true
+        smooth:false
+        anchors.verticalCenter: parent.verticalCenter
+        anchors.right: parent.right
+        anchors.rightMargin: 20
+        source:themesPicturesPath+"ai/stove_bg.png"
+        Text{
+            text:{
+                if(rStoveStatus>0 && oilTempSwitch)
+                {
+                    if(rOilTemp>=220 && rFlashAnimation.flash)
+                        return "油温过高"
+                    else
+                        return (rOilTemp<0?"-":rOilTemp)+"℃"
                 }
                 else
-                {
-                    stopCloseHeat(cookWorkPosEnum.LEFT)
-                }
+                    return "右灶"
             }
+            color:(rStoveStatus>0 && rOilTemp>=220)?themesTextColor:"#fff"
+            font.pixelSize: (rStoveStatus>0 && oilTempSwitch)?28:34
+            anchors.top: parent.top
+            anchors.topMargin: 25
+            anchors.horizontalCenter: parent.horizontalCenter
         }
-        Canvas{
-            property int r:204//-10
-            id: left_canvas
-            width: parent.width
-            height: parent.height
-            anchors.centerIn: parent
-            onPaint: {
-                var ctx = getContext("2d")
-                ctx.clearRect(0, 0, parent.width, parent.height)
-                ctx.lineWidth = 20
-                ctx.lineCap="round"
-
-                ctx.beginPath()
-                ctx.strokeStyle = "#CFCDCD"
-                ctx.arc(parent.width/2-135, parent.height/2, r, 0.32*Math.PI, -0.32*Math.PI,true)
-                ctx.stroke()
-                ctx.closePath()
-                if(oilTempSwitch===0)
-                    return
-
-                // var grd=ctx.createRadialGradient(parent.width/2-135, parent.height/2,190,parent.width/2-135, parent.height/2,230);
-                var grd = ctx.createConicalGradient(parent.width/2-135, parent.height/2, -0.5*Math.PI)
-                grd.addColorStop(0,"#0B6BB8");
-                grd.addColorStop(0.5,"#FF0000");
-                grd.addColorStop(1,"#0B6BB8");
-
-                ctx.beginPath()
-                ctx.strokeStyle =grd
-                var percentArc=0.64*left_percent/100
-                ctx.arc(parent.width/2-135, parent.height/2, r, 0.32*Math.PI, (0.32-percentArc)*Math.PI,true)
-
-                ctx.stroke()
-                ctx.closePath()
+        PageFlashAnimation {
+            id:rFlashAnimation
+            running: rStoveStatus>0 && oilTempSwitch && rOilTemp>=220
+        }
+        PageRotationImg {
+            asynchronous:true
+            smooth:true
+            visible: rStoveStatus>0 && oilTempSwitch
+            anchors.centerIn: right_stove
+            source: {
+                if(rOilTemp<100)
+                    return themesPicturesPath+"ai/low_temp.png"
+                else if(rOilTemp>170)
+                    return themesPicturesPath+"ai/high_temp.png"
+                else
+                    return themesPicturesPath+"ai/medium_temp.png"
             }
+            duration:9000
         }
-        //        Slider {
-        //            anchors.left: parent.left
-        //            anchors.bottom: parent.bottom
-        //            anchors.bottomMargin: 100
-        //            stepSize: 2
-        //            from:50
-        //            to: 250
-        //            value: 50
-        //            onValueChanged: {
-        //                console.log("slider:",value)
-        //                left_percent=100*(value-50)/200
-        //                left_canvas.requestPaint()
-        //                if(value==from)
-        //                    QmlDevState.setState("OilTempSwitch",0)
-        //                else
-        //                    QmlDevState.setState("OilTempSwitch",1)
-        //            }
-        //        }
-    }
-    Item {
-        id: right_content
-        width: 340
-        height: parent.height
-        anchors.right: parent.right
-        Text{
+        Image {
             id:right_stove
-            text:"右灶"
-            color:"#fff"
-            font.pixelSize: 24
-            anchors.top: parent.top
-            anchors.topMargin: 306
-            anchors.right: parent.right
-            anchors.rightMargin: 63
-        }
-        Image {
-            id:right_arc
             asynchronous:true
             smooth:false
-            anchors.right:parent.right
-            anchors.rightMargin: 175
-            anchors.verticalCenter: parent.verticalCenter
-            source: themesPicturesPath+"ai/right_temp_arc.png"
-        }
-        Image {
-            id:right_fire
-            visible: oilTempSwitch && rStoveStatus>0 && rOilTemp>0
-            asynchronous:true
-            smooth:false
-            anchors.right:parent.right
-            anchors.rightMargin: 60
+            anchors.horizontalCenter: parent.horizontalCenter
             anchors.top: parent.top
-            anchors.topMargin: 125
-            source: themesPicturesPath+"ai/small_fire.png"
+            anchors.topMargin: 100
+            source: themesPicturesPath+(rStoveStatus>0?"ai/stove_open.png":"ai/stove_close.png")
         }
-        Text{
-            id:right_temp
-            text:oilTempSwitch?((rOilTemp>=0?rOilTemp:"-")+"℃"):"关"
-            color:(oilTempSwitch && rOilTemp>=220)?"red":"#fff"
-            font.pixelSize: 35
-            anchors.top: parent.top
-            anchors.topMargin: 60
-            anchors.horizontalCenter: right_stove.horizontalCenter
-        }
-        Text{
-            visible: (oilTempSwitch && rOilTemp>=220)||(auxiliarySwitch>0 && rightAuxiliaryName!="")
-            text:(auxiliarySwitch>0 && rightAuxiliaryName!="")?rightAuxiliaryName:"油温过高"
-            color:(auxiliarySwitch>0 && rightAuxiliaryName!="")?themesTextColor:"red"
-            font.pixelSize: 24
-            anchors.top: right_temp.bottom
-            anchors.topMargin: 0
-            anchors.horizontalCenter: right_temp.horizontalCenter
-        }
-        Text{
-            text:"定时\n关火"
-            color:"#fff"
-            font.pixelSize: 24
-            anchors.top: parent.top
-            anchors.topMargin: 235
+
+        Button{
+            width: 120
+            height:40
             anchors.right: parent.right
-            anchors.rightMargin: 130
-        }
-        Text{
-            visible: rTimingState===timingStateEnum.RUN
-            text:{
-                var timingTime=QmlDevState.state.RStoveTimingLeft
-                return generateTwoTime(Math.floor(timingTime/60))+":"+generateTwoTime(timingTime%60)
+            anchors.rightMargin: 15
+            anchors.top: parent.top
+            anchors.topMargin: 210
+            background: Rectangle{
+                color: "#535353"
+                radius: height/2
             }
-            color:themesTextColor
-            font.pixelSize: 36
-            anchors.top: parent.top
-            anchors.topMargin: 240
-            anchors.right: parent.right
-            anchors.rightMargin: 20
-            MouseArea{
-                anchors.fill: parent
-                onClicked: {
+            Text{
+                text:{
+                    if(rTimingState===timingStateEnum.RUN)
+                    {
+                        var timingTime=QmlDevState.state.RStoveTimingLeft
+                        return generateTwoTime(Math.floor(timingTime/60))+":"+generateTwoTime(timingTime%60)
+                    }
+                    return "定时关火"
+                }
+                color:rTimingState===timingStateEnum.RUN?themesTextColor:"#fff"
+                font.pixelSize: 24
+                //font.bold: true
+                anchors.centerIn: parent
+            }
+            onClicked: {
+                if(rTimingState===timingStateEnum.RUN)
+                {
                     loaderCloseHeat(cookWorkPosEnum.RIGHT,startTurnOffFire,QmlDevState.state.RStoveTimingLeft,close_heat_run_cancel,["取消定时","开始"])
                 }
-            }
-        }
-        PageSwitch {
-            id:rightCloseHeatSwitch
-            visible: rTimingState!==timingStateEnum.RUN
-            checked: false
-            anchors.top: parent.top
-            anchors.topMargin: 240
-            anchors.right: parent.right
-            anchors.rightMargin: 30
-            source: themesPicturesPath+(checked ?"ai/icon_aiopen.png":"ai/icon_aiclose.png")
-            onClicked: {
-                if(checked==true)
+                else
                 {
                     if(rStoveStatus===0)
                     {
-                        checked=false
                         loaderWarnConfirmShow("右灶未开启\n开启后才可设置定时关火")
                     }
                     else
-                        loaderCloseHeat(cookWorkPosEnum.RIGHT,startTurnOffFire,null,close_heat_cancel)
-                }
-                else
-                {
-                    stopCloseHeat(cookWorkPosEnum.RIGHT)
+                        loaderCloseHeat(cookWorkPosEnum.RIGHT,startTurnOffFire,null,null)
                 }
             }
         }
-        //        Path
-        //        {
-        //            id:path
-        //            startX: 0; startY: 0
-        //            PathAngleArc
-        //            {
-        //                radiusX: 114; radiusY: 175
-        //                startAngle:90
-        //                sweepAngle:360
-        //            }
-        //        }
-        Canvas{
-            property int r: 204//-10
-            id: right_canvas
-            width: parent.width
-            height: parent.height
-            anchors.centerIn: parent
-            onPaint: {
-                var ctx = getContext("2d")
-                ctx.clearRect(0, 0, parent.width, parent.height)
-                ctx.lineWidth = 20
-                ctx.lineCap="round"
+        Button{
+            width: 140
+            height:40
+            anchors.left: parent.left
+            anchors.leftMargin: 15
+            anchors.top: parent.top
+            anchors.topMargin: 210
+            background: Rectangle{
+                color: "#535353"
+                radius: height/2
+            }
+            Text{
+                text:{
+                    if(auxiliarySwitch > 0)
+                    {
+                        var str
+                        switch(rAuxiliaryTemp)
+                        {
+                        case 200:
+                            str="爆炒"
+                            break
+                        case 170:
+                            str="煎炸"
+                            break
+                        case 150:
+                            str="小炒"
+                            break
+                        case 70:
+                            str="慢煮"
+                            break
+                        default:
+                            str=""
+                            break
+                        }
+                        return str+rAuxiliaryTemp+"℃"
+                    }
+                    return "辅助控温"
+                }
+                color:auxiliarySwitch > 0?themesTextColor:"#fff"
+                font.pixelSize: 24
+                //font.bold: true
+                anchors.centerIn: parent
+            }
+            onClicked: {
+                loaderManual.sourceComponent = component_temp
+            }
+        }
+    }
+    Component{
+        id:component_temp
+        Item {
+            property var clickFunc:null
+            property var cancelFunc:null
+            property int curIndex:-1
+            Component.onCompleted: {
 
-                ctx.beginPath()
-                ctx.strokeStyle = "#CFCDCD"
-                ctx.arc(parent.width/2+135, parent.height/2, r, 0.68*Math.PI, 1.32*Math.PI)
-                ctx.stroke()
-                ctx.closePath()
-                if(oilTempSwitch===0)
-                    return
-                //                var grd=ctx.createRadialGradient(parent.width/2+135, parent.height/2,190,parent.width/2+135, parent.height/2,230);
-                var grd = ctx.createConicalGradient(parent.width/2+135, parent.height/2, -0.5*Math.PI)
-                grd.addColorStop(0,"#0B6BB8");
-                grd.addColorStop(0.5,"#FF0000");
-                grd.addColorStop(1,"#0B6BB8");
+            }
+            Component.onDestruction: {
+                clickFunc=null
+                cancelFunc=null
+            }
 
-                ctx.beginPath()
-                ctx.strokeStyle =grd
+            //内容
+            Rectangle{
+                width:860
+                height: 350
+                anchors.centerIn: parent
+                anchors.margins: 20
+                color: "#333333"
+                radius: 10
 
-                var percentArc=0.64*right_percent/100
-                ctx.arc(parent.width/2+135, parent.height/2, r, 0.68*Math.PI, (0.68+percentArc)*Math.PI)
-                //                ctx.path=path
-                ctx.stroke()
-                ctx.closePath()
-            }
-        }
-        //        Slider {
-        //            anchors.right: parent.right
-        //            anchors.bottom: parent.bottom
-        //            anchors.bottomMargin: 100
-        //            stepSize: 2
-        //            from:50
-        //            to: 250
-        //            value: 50
-        //            onValueChanged: {
-        //                console.log("slider:",value)
-        //                right_percent=100*(value-50)/200
-        //                right_canvas.requestPaint()
-        //            }
-        //        }
-        Button{
-            width: 70
-            height:40
-            anchors.top: parent.top
-            anchors.topMargin: 25
-            anchors.right: right_arc.left
-            anchors.rightMargin: -20
-            background:Rectangle {
-                color: (auxiliarySwitch===1 && rAuxiliaryTemp===200)?themesTextColor:"#7174AC"
-                radius: 6
-            }
-            Text{
-                text:"爆炒"
-                color:"#fff"
-                font.pixelSize: 20
-                anchors.centerIn: parent
-            }
-            onClicked: {
-                if(auxiliarySwitch===0 || rAuxiliaryTemp!==200)
-                    SendFunc.tempControlRquest(200)
-                else
-                    SendFunc.tempControlRquest(0)
-                SendFunc.setBuzControl(buzControlEnum.SHORT)
-            }
-        }
-        Button{
-            width: 70
-            height:40
-            anchors.top: parent.top
-            anchors.topMargin: 100
-            anchors.right: right_arc.left
-            anchors.rightMargin: 5
-            background:Rectangle {
-                color: (auxiliarySwitch===1 && rAuxiliaryTemp===170)?themesTextColor:"#7174AC"
-                radius: 6
-            }
-            Text{
-                text:"煎炸"
-                color:"#fff"
-                font.pixelSize: 20
-                anchors.centerIn: parent
-            }
-            onClicked: {
-                if(auxiliarySwitch===0 || rAuxiliaryTemp!==170)
-                    SendFunc.tempControlRquest(170)
-                else
-                    SendFunc.tempControlRquest(0)
-                SendFunc.setBuzControl(buzControlEnum.SHORT)
-            }
-        }
-        Button{
-            width: 70
-            height:40
-            anchors.top: parent.top
-            anchors.topMargin: 180
-            anchors.right: right_arc.left
-            anchors.rightMargin: 20
-            background:Rectangle {
-                color: (auxiliarySwitch===1 && rAuxiliaryTemp===150)?themesTextColor:"#7174AC"
-                radius: 6
-            }
-            Text{
-                text:"小炒"
-                color:"#fff"
-                font.pixelSize: 20
-                anchors.centerIn: parent
-            }
-            onClicked: {
-                if(auxiliarySwitch===0 || rAuxiliaryTemp!==150)
-                    SendFunc.tempControlRquest(150)
-                else
-                    SendFunc.tempControlRquest(0)
-                SendFunc.setBuzControl(buzControlEnum.SHORT)
-            }
-        }
-        Button{
-            width: 70
-            height:40
-            anchors.top: parent.top
-            anchors.topMargin: 260
-            anchors.right: right_arc.left
-            anchors.rightMargin: 5
-            background:Rectangle {
-                color: (auxiliarySwitch===1 && rAuxiliaryTemp===95)?themesTextColor:"#7174AC"
-                radius: 6
-            }
-            Text{
-                text:"煲汤"
-                color:"#fff"
-                font.pixelSize: 20
-                anchors.centerIn: parent
-            }
-            onClicked: {
-                if(auxiliarySwitch===0 || rAuxiliaryTemp!==95)
-                    SendFunc.tempControlRquest(95)
-                else
-                    SendFunc.tempControlRquest(0)
-                SendFunc.setBuzControl(buzControlEnum.SHORT)
-            }
-        }
-        Button{
-            width: 70
-            height:40
-            anchors.top: parent.top
-            anchors.topMargin: 335
-            anchors.right: right_arc.left
-            anchors.rightMargin: -30
-            background:Rectangle {
-                color: (auxiliarySwitch===1 && rAuxiliaryTemp===70)?themesTextColor:"#7174AC"
-                radius: 6
-            }
-            Text{
-                text:"慢煮"
-                color:"#fff"
-                font.pixelSize: 20
-                anchors.centerIn: parent
-            }
-            onClicked: {
-                if(auxiliarySwitch===0 || rAuxiliaryTemp!==70)
-                    SendFunc.tempControlRquest(70)
-                else
-                    SendFunc.tempControlRquest(0)
-                SendFunc.setBuzControl(buzControlEnum.SHORT)
+                PageCloseButton {
+                    anchors.top:parent.top
+                    anchors.right:parent.right
+                    onClicked: {
+                        loaderMainHide()
+                    }
+                }
+                Text{
+                    text:"辅助控温"
+                    color:"#fff"
+                    font.pixelSize: 32
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.top: parent.top
+                    anchors.topMargin: 32
+                }
+                Row {
+                    id:row
+                    width: parent.width-80
+                    height:87
+                    anchors.top: parent.top
+                    anchors.topMargin: 120
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    spacing: 20
+                    Repeater {
+                        model: [{"text1":"200℃","text2":"爆炒"}, {"text1":"170℃","text2":"煎炸"},{"text1":"150℃","text2":"小炒"},{"text1":"70℃","text2":"慢煮"}]
+                        Button{
+                            width: 122
+                            height:87
+                            background: Rectangle{
+                                radius: 10
+                                color: curIndex==index?themesTextColor:"#4E4E4E"
+                            }
+                            Text{
+                                text:modelData.text1
+                                color:"#fff"
+                                font.pixelSize: 30
+                                anchors.horizontalCenter: parent.horizontalCenter
+                                anchors.top: parent.top
+                                anchors.topMargin: 15
+                            }
+                            Text{
+                                text:modelData.text2
+                                color:"#fff"
+                                font.pixelSize: 24
+                                anchors.horizontalCenter: parent.horizontalCenter
+                                anchors.top: parent.top
+                                anchors.topMargin: 45
+                            }
+                            onClicked: {
+                                curIndex=index
+                            }
+                        }
+                    }
+                    Button{
+                        width: 220
+                        height:87
+                        background: Rectangle{
+                            radius: 10
+                            color: "#4E4E4E"
+                        }
+                        Text{
+                            text:"+自定义温度"
+                            color:"#fff"
+                            font.pixelSize: 30
+                            anchors.centerIn: parent
+                        }
+                        onClicked: {
+                            loaderTempControl(null)
+                        }
+                    }
+                }
+
+                PageButtonBar{
+                    id:btnBar
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.bottom: parent.bottom
+                    anchors.bottomMargin: 30
+
+                    space:80
+                    models: ["取消控温","确认"]
+                    onClick: {
+                        if(clickIndex==0)
+                        {
+                            if(auxiliarySwitch > 0)
+                                SendFunc.tempControlRquest(0)
+                        }
+                        else
+                        {
+                            var temp=0
+                            switch(curIndex)
+                            {
+                            case 0:
+                                temp=200
+                                break
+                            case 1:
+                                temp=170
+                                break
+                            case 2:
+                                temp=150
+                                break
+                            case 3:
+                                temp=70
+                                break
+                            }
+                            if(temp!=0)
+                                SendFunc.tempControlRquest(temp)
+                        }
+                        loaderMainHide()
+                    }
+                }
             }
         }
     }

@@ -16,16 +16,76 @@ Item{
     }
     TabBar {
         id:tabBar
-        contentWidth:150*3
+        contentWidth:parent.width-17
         contentHeight:parent.height
         anchors.centerIn: parent
+        //anchors.leftMargin: 4
         background:null
         Repeater {
             model: ["AI 烹饪", "蒸烤箱", "智慧菜谱"]
             TabButton {
-                width: 150
+                width: {
+                    if(index==0)
+                        170
+                    else if(index==1)
+                        250
+                    else
+                        160
+                }
                 height: parent.height
                 background:null
+//                background:Rectangle{
+//                    color: "transparent"
+//                    border.color: "#fff"
+//                }
+
+                Item{
+                    anchors.fill: parent
+                    visible: index==1
+                    PageRotationImg {
+                        id:left_StOvState
+                        asynchronous:true
+                        smooth:true
+                        anchors.centerIn: parent
+                        anchors.horizontalCenterOffset: -95
+                        anchors.verticalCenterOffset: 6
+                        source: themesPicturesPath+"samll_rotation.png"
+                        duration:12000
+                        visible: lStOvState===workStateEnum.WORKSTATE_PREHEAT|| lStOvState===workStateEnum.WORKSTATE_RUN|| lStOvState===workStateEnum.WORKSTATE_PAUSE|| lStOvState===workStateEnum.WORKSTATE_PAUSE_PREHEAT
+                        running: visible && (lStOvState===workStateEnum.WORKSTATE_PREHEAT || lStOvState===workStateEnum.WORKSTATE_RUN)
+                    }
+                    Text{
+                        visible: left_StOvState.visible
+                        anchors.centerIn: parent
+                        anchors.horizontalCenterOffset: -60
+                        anchors.verticalCenterOffset: 6
+                        text:lStOvSetTimerLeft
+                        color:"#fff"
+                        font.pixelSize: 24
+                    }
+                    PageRotationImg {
+                        id:right_StOvState
+                        asynchronous:true
+                        smooth:true
+                        anchors.centerIn: parent
+                        anchors.horizontalCenterOffset: 60
+                        anchors.verticalCenterOffset: 6
+                        source: themesPicturesPath+"samll_rotation.png"
+                        duration:12000
+                        visible: rStOvState===workStateEnum.WORKSTATE_PREHEAT|| rStOvState===workStateEnum.WORKSTATE_RUN|| rStOvState===workStateEnum.WORKSTATE_PAUSE|| rStOvState===workStateEnum.WORKSTATE_PAUSE_PREHEAT
+                        running: visible && (rStOvState===workStateEnum.WORKSTATE_PREHEAT || rStOvState===workStateEnum.WORKSTATE_RUN)
+                    }
+                    Text{
+                        visible: right_StOvState.visible
+                        anchors.centerIn: parent
+                        anchors.horizontalCenterOffset: 95
+                        anchors.verticalCenterOffset: 6
+                        text:rStOvSetTimerLeft
+                        color:"#fff"
+                        font.pixelSize: 24
+                    }
+                }
+
                 Image {
                     asynchronous:true
                     smooth:false
@@ -35,12 +95,13 @@ Item{
                     source: themesPicturesPath+"navigation_bar_text_background.png"
                 }
                 Text{
-                    anchors.fill: parent
+                    anchors.centerIn: parent
+                    anchors.verticalCenterOffset: 5
                     text:modelData
                     color:index==tabBar.currentIndex?"#EF832B":"#fff"
                     font.pixelSize: 24
-                    horizontalAlignment:Text.AlignHCenter
-                    verticalAlignment:Text.AlignVCenter
+                    //horizontalAlignment:Text.AlignHCenter
+                    //verticalAlignment:Text.AlignVCenter
                 }
             }
         }
