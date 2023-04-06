@@ -134,5 +134,6 @@
         <file>pangu/PagePanguMode10.qml</file>
         <file>pangu/PagePanguMode11.qml</file>
         <file>pangu/PagePanguMode5.qml</file>
+        <file>pangu/PagePanguTest.qml</file>
     </qresource>
 </RCC>

@@ -33,7 +33,7 @@ Item{
         cellHeight: 120
         clip: true
 
-        model:["馒头面团-揉面","面包面团-揉面","奶油打发","蛋白打发","煲汤","研磨","酸奶发酵","面团发酵","绞肉","切碎","冰沙","豆浆"]
+        model:["测试","馒头面团-揉面","面包面团-揉面","奶油打发","蛋白打发","煲汤","研磨","酸奶发酵","面团发酵","绞肉","切碎","冰沙","豆浆"]
         delegate:Item{
             width: 200
             height: 120
@@ -60,39 +60,42 @@ Item{
                     switch(index)
                     {
                     case 0:
-                        load_page("pagePanguMode1",{"cookSteps":panguMode[index].cookSteps})
+                        load_page("pagePanguTest",{"cookSteps":panguMode[index].cookSteps})
                         break
                     case 1:
-                        load_page("pagePanguMode2",{"cookSteps":panguMode[index].cookSteps})
+                        load_page("pagePanguMode1",{"cookSteps":panguMode[index].cookSteps})
                         break
                     case 2:
-                        load_page("pagePanguMode3",{"cookSteps":panguMode[index].cookSteps})
+                        load_page("pagePanguMode2",{"cookSteps":panguMode[index].cookSteps})
                         break
                     case 3:
-                        load_page("pagePanguMode4",{"cookSteps":panguMode[index].cookSteps})
+                        load_page("pagePanguMode3",{"cookSteps":panguMode[index].cookSteps})
                         break
                     case 4:
-                        load_page("pagePanguMode5",{"cookSteps":panguMode[index].cookSteps})
+                        load_page("pagePanguMode4",{"cookSteps":panguMode[index].cookSteps})
                         break
                     case 5:
-                        load_page("pagePanguMode6",{"cookSteps":panguMode[index].cookSteps})
+                        load_page("pagePanguMode5",{"cookSteps":panguMode[index].cookSteps})
                         break
                     case 6:
-                        load_page("pagePanguMode7",{"cookSteps":panguMode[index].cookSteps})
+                        load_page("pagePanguMode6",{"cookSteps":panguMode[index].cookSteps})
                         break
                     case 7:
-                        load_page("pagePanguMode8",{"cookSteps":panguMode[index].cookSteps})
+                        load_page("pagePanguMode7",{"cookSteps":panguMode[index].cookSteps})
                         break
                     case 8:
-                        load_page("pagePanguMode9",{"cookSteps":panguMode[index].cookSteps})
+                        load_page("pagePanguMode8",{"cookSteps":panguMode[index].cookSteps})
                         break
                     case 9:
-                        load_page("pagePanguMode10",{"cookSteps":panguMode[index].cookSteps})
+                        load_page("pagePanguMode9",{"cookSteps":panguMode[index].cookSteps})
                         break
                     case 10:
-                        load_page("pagePanguMode11",{"cookSteps":panguMode[index].cookSteps})
+                        load_page("pagePanguMode10",{"cookSteps":panguMode[index].cookSteps})
                         break
                     case 11:
+                        load_page("pagePanguMode11",{"cookSteps":panguMode[index].cookSteps})
+                        break
+                    case 12:
                         load_page("pageSoybeanMilk",{"cookSteps":panguMode[index].cookSteps})
                         break
                     }
