@@ -70,7 +70,7 @@ Item {
             anchors.right: grid.right
             anchors.rightMargin: 5
             anchors.bottom: grid.top
-            anchors.bottomMargin: 0
+            anchors.bottomMargin: -15
         }
         Grid{
             id:grid
@@ -174,8 +174,27 @@ Item {
                 else
                     return "左灶"
             }
-            color:(lStoveStatus>0 && lOilTemp>=220)?themesTextColor:"#fff"
-            font.pixelSize: (lStoveStatus>0 && oilTempSwitch)?28:34
+            color:{
+                if(lStoveStatus>0)
+                {
+                    if(lOilTemp>=220)
+                        return "#B44F23"
+                    else if(lOilTemp>=170)
+                        return "#B19A56"
+                    else
+                        return "#5AA5BE"
+                }
+                return "#fff"
+            }
+            font.pixelSize: {
+                if(lStoveStatus>0 && oilTempSwitch)
+                    if(lOilTemp>=220 && lFlashAnimation.flash)
+                        28
+                    else
+                        32
+                else
+                    34
+            }
             anchors.top: parent.top
             anchors.topMargin: 25
             anchors.horizontalCenter: parent.horizontalCenter
@@ -190,12 +209,12 @@ Item {
             visible: lStoveStatus>0 && oilTempSwitch
             anchors.centerIn: left_stove
             source: {
-                if(lOilTemp<100)
-                    return themesPicturesPath+"ai/low_temp.png"
-                else if(lOilTemp>170)
+                if(lOilTemp>=220)
                     return themesPicturesPath+"ai/high_temp.png"
-                else
+                else if(lOilTemp>=170)
                     return themesPicturesPath+"ai/medium_temp.png"
+                else
+                    return themesPicturesPath+"ai/low_temp.png"
             }
             duration:9000
         }
@@ -211,10 +230,10 @@ Item {
 
         Button{
             width: 120
-            height:40
+            height:35
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.top: parent.top
-            anchors.topMargin: 210
+            anchors.topMargin: 215
             background: Rectangle{
                 color: "#535353"
                 radius: height/2
@@ -229,7 +248,7 @@ Item {
                     return "定时关火"
                 }
                 color:lTimingState===timingStateEnum.RUN?themesTextColor:"#fff"
-                font.pixelSize: 24
+                font.pixelSize: 20
                 //font.bold: true
                 anchors.centerIn: parent
             }
@@ -269,8 +288,27 @@ Item {
                 else
                     return "右灶"
             }
-            color:(rStoveStatus>0 && rOilTemp>=220)?themesTextColor:"#fff"
-            font.pixelSize: (rStoveStatus>0 && oilTempSwitch)?28:34
+            color:{
+                if(rStoveStatus>0)
+                {
+                    if(rOilTemp>=220)
+                        return "#B44F23"
+                    else if(rOilTemp>=170)
+                        return "#B19A56"
+                    else
+                        return "#5AA5BE"
+                }
+                return "#fff"
+            }
+            font.pixelSize: {
+                if(rStoveStatus>0 && oilTempSwitch)
+                    if(rOilTemp>=220 && lFlashAnimation.flash)
+                        28
+                    else
+                        32
+                else
+                    34
+            }
             anchors.top: parent.top
             anchors.topMargin: 25
             anchors.horizontalCenter: parent.horizontalCenter
@@ -285,12 +323,12 @@ Item {
             visible: rStoveStatus>0 && oilTempSwitch
             anchors.centerIn: right_stove
             source: {
-                if(rOilTemp<100)
-                    return themesPicturesPath+"ai/low_temp.png"
-                else if(rOilTemp>170)
+                if(rOilTemp>=220)
                     return themesPicturesPath+"ai/high_temp.png"
-                else
+                else if(rOilTemp>=170)
                     return themesPicturesPath+"ai/medium_temp.png"
+                else
+                    return themesPicturesPath+"ai/low_temp.png"
             }
             duration:9000
         }
@@ -306,11 +344,11 @@ Item {
 
         Button{
             width: 120
-            height:40
+            height:35
             anchors.right: parent.right
             anchors.rightMargin: 15
             anchors.top: parent.top
-            anchors.topMargin: 210
+            anchors.topMargin: 215
             background: Rectangle{
                 color: "#535353"
                 radius: height/2
@@ -325,7 +363,7 @@ Item {
                     return "定时关火"
                 }
                 color:rTimingState===timingStateEnum.RUN?themesTextColor:"#fff"
-                font.pixelSize: 24
+                font.pixelSize: 20
                 //font.bold: true
                 anchors.centerIn: parent
             }
@@ -347,11 +385,11 @@ Item {
         }
         Button{
             width: 140
-            height:40
+            height:35
             anchors.left: parent.left
             anchors.leftMargin: 15
             anchors.top: parent.top
-            anchors.topMargin: 210
+            anchors.topMargin: 215
             background: Rectangle{
                 color: "#535353"
                 radius: height/2
@@ -384,7 +422,7 @@ Item {
                     return "辅助控温"
                 }
                 color:auxiliarySwitch > 0?themesTextColor:"#fff"
-                font.pixelSize: 24
+                font.pixelSize: 20
                 //font.bold: true
                 anchors.centerIn: parent
             }

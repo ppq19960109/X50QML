@@ -185,13 +185,13 @@ Item {
         {
             if(isExistView("PageSteaming")==null)
             {
-//                if(isCurrentView("PageSteamOvenConfig")===true||isCurrentView("PageMultistage")===true)
-//                    push_page(pageSteaming)
-//                else if(isCurrentView("PageSmartRecipes")===true||isCurrentView("PageCookDetails")===true)
-//                {
-//                    if(smartRecipesIndex==0)
-//                        push_page(pageSteaming)
-//                }
+                //                if(isCurrentView("PageSteamOvenConfig")===true||isCurrentView("PageMultistage")===true)
+                //                    push_page(pageSteaming)
+                //                else if(isCurrentView("PageSmartRecipes")===true||isCurrentView("PageCookDetails")===true)
+                //                {
+                //                    if(smartRecipesIndex==0)
+                //                        push_page(pageSteaming)
+                //                }
                 push_page(pageSteaming)
                 workSleepWakeup()
             }
@@ -443,10 +443,7 @@ Item {
                     if(auxiliarySwitch>0)
                     {
                         SendFunc.tempControlRquest(0)
-                        if(lStoveStatus>0)
-                        {
-                            loaderAutoTextShow("右灶已关闭，本次控温结束")
-                        }
+                        loaderAutoTextShow("右灶已关闭，本次控温结束")
                         lastRStoveStatus=-1
                         return
                     }

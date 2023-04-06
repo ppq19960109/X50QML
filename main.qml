@@ -689,22 +689,22 @@ ApplicationWindow {
             {
                 SendFunc.getAllToServer()
                 SendFunc.setBuzControl(buzControlEnum.SHORT)
-                //                visible=false
+                visible=false
                 playing=false
-                animation.restart()
+//                animation.restart()
             }
         }
-        PropertyAnimation {
-            id: animation;
-            target: boot;
-            property: "opacity";
-            to: 0;
-            duration: 1200;
-            onStopped:{
-                console.log("onStopped...")
-                boot.visible=false
-            }
-        }
+//        PropertyAnimation {
+//            id: animation;
+//            target: boot;
+//            property: "opacity";
+//            to: 0;
+//            duration: 1200;
+//            onStopped:{
+//                console.log("onStopped...")
+//                boot.visible=false
+//            }
+//        }
     }
     //---------------------------------------------------------------
     function loaderMainHide(){

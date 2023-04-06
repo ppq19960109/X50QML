@@ -149,7 +149,7 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     setState("LoadPowerState",7);
 
     setState("LOilTemp",220);
-    setState("ROilTemp",220);
+    setState("ROilTemp",210);
     setState("LStoveStatus",1);
     setState("RStoveStatus",1);
     setState("RStoveTimingLeft",50);
