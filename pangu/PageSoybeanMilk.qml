@@ -12,12 +12,15 @@ Item{
         if(waterSlider.value==600)
         {
             cookSteps[1].repeat=2
+            cookSteps[1].cookTime-=5
             cookSteps[4].repeat=4
         }
         else if(waterSlider.value==1000)
         {
+            cookSteps[1].cookTime-=1
             cookSteps[7].repeat=5
-            cookSteps[9].repeat=5
+            cookSteps[9].repeat+=1
+            cookSteps[10].cookTime-=2
         }
 
         var para =CookFunc.getDefHistory()
