@@ -10,11 +10,11 @@ Item {
         smartRecipesIndex=0
     }
 
-    PageBackBar{
-        id:topBar
-        anchors.top:parent.top
-        name:qsTr("智慧菜谱")
-    }
+//    PageBackBar{
+//        id:topBar
+//        anchors.top:parent.top
+//        name:qsTr("智慧菜谱")
+//    }
     PageTabBar{
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.bottom: parent.bottom
@@ -25,8 +25,8 @@ Item {
         id:tabBar
         contentWidth:200*2
         contentHeight:40
-        anchors.top: topBar.bottom
-        anchors.topMargin: -35
+        anchors.top: parent.top
+        anchors.topMargin: 20
         anchors.horizontalCenter: parent.horizontalCenter
 
         background:Rectangle {
@@ -68,7 +68,8 @@ Item {
     }
     StackLayout {
         width:parent.width
-        anchors.top:topBar.bottom
+        anchors.top:parent.top
+        anchors.topMargin: 50
         anchors.bottom: parent.bottom
         currentIndex: tabBar.currentIndex
         PageLeftRecipes{

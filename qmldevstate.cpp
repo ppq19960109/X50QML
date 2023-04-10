@@ -42,7 +42,7 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     stateType.append(QPair<QString,int>("LStOvOrderTimer",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("LStOvSetTimerLeft",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("LStOvOrderTimerLeft",LINK_VALUE_TYPE_NUM));
-    stateType.append(QPair<QString,int>("LStOvPauseTimerLeft",LINK_VALUE_TYPE_NUM));
+//    stateType.append(QPair<QString,int>("LStOvPauseTimerLeft",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("LSteamGear",LINK_VALUE_TYPE_NUM));
 
     stateType.append(QPair<QString,int>("RStOvDoorState",LINK_VALUE_TYPE_NUM));
@@ -54,7 +54,7 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     stateType.append(QPair<QString,int>("RStOvSetTimer",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("RStOvSetTimerLeft",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("RStOvOrderTimerLeft",LINK_VALUE_TYPE_NUM));
-    stateType.append(QPair<QString,int>("RStOvPauseTimerLeft",LINK_VALUE_TYPE_NUM));
+//    stateType.append(QPair<QString,int>("RStOvPauseTimerLeft",LINK_VALUE_TYPE_NUM));
 
     stateType.append(QPair<QString,int>("LStoveStatus",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("RStoveStatus",LINK_VALUE_TYPE_NUM));
@@ -150,7 +150,7 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
 
     setState("LOilTemp",220);
     setState("ROilTemp",210);
-    setState("LStoveStatus",1);
+    setState("LStoveStatus",0);
     setState("RStoveStatus",1);
     setState("RStoveTimingLeft",50);
     setState("LStoveTimingLeft",50);

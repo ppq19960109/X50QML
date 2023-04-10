@@ -32,7 +32,10 @@ Item {
         oilTempPageSwitch.checked=oilTempSwitch
         lowHeatPageSwitch.checked=QmlDevState.state.RMovePotLowHeatSwitch
     }
-
+    function auxiliary_cancelFunc()
+    {
+        auxiliaryPageSwitch.checked=false
+    }
     //    PageBackBar{
     //        id:topBar
     //        anchors.top:parent.top
@@ -124,7 +127,7 @@ Item {
                     anchors.fill: parent
                     onClicked: {
                         console.log("Text onClicked")
-                        loaderTempControl(null)
+                        loaderTempControl(auxiliary_cancelFunc)
                     }
                 }
             }
@@ -137,7 +140,7 @@ Item {
                 source: themesPicturesPath+(checked ?"icon_switch_open.png":"icon_switch_close.png")
                 onClicked: {
                     if(checked==true)
-                        loaderTempControl(null)
+                        loaderTempControl(auxiliary_cancelFunc)
                     else
                     {
                         var Data={}

@@ -49,23 +49,28 @@ Item {
     Component.onDestruction: {
         loaderMainHide()
     }
-
-    PageBackBar{
-        id:topBar
-        anchors.top:parent.top
-        name:"蒸烤箱"
-        customClose:true
-        onClose:{
-            let page=isExistView("PageSteamOven")
-            if(page==null)
-                backTopPage()
-            else
-                backPage(page)
-        }
+    PageTabBar{
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.bottom: parent.bottom
+        currentIndex:1
     }
+    //    PageBackBar{
+    //        id:topBar
+    //        anchors.top:parent.top
+    //        name:"蒸烤箱"
+    //        customClose:true
+    //        onClose:{
+    //            let page=isExistView("PageSteamOven")
+    //            if(page==null)
+    //                backTopPage()
+    //            else
+    //                backPage(page)
+    //        }
+    //    }
     Row {
         width: parent.width-100
-        anchors.top: topBar.bottom
+        anchors.top: parent.top
+        anchors.topMargin: 10
         anchors.bottom: parent.bottom
         anchors.horizontalCenter: row.horizontalCenter
         spacing: 780
@@ -96,7 +101,7 @@ Item {
                         if(index==0)
                         {
                             if(lStOvState===workStateEnum.WORKSTATE_STOP)
-                                return ["左腔蒸烤","多段烹饪","智慧菜谱"]
+                                return ["左腔蒸烤","多段烹饪"]
                             else if(lStOvState===workStateEnum.WORKSTATE_PAUSE||lStOvState===workStateEnum.WORKSTATE_PAUSE_PREHEAT)
                                 return ["继续","取消"]
                             else if(lStOvState===workStateEnum.WORKSTATE_PAUSE_RESERVE)
@@ -230,8 +235,8 @@ Item {
         id:row
         width: 290*2+112
         height: 290
-        anchors.top: topBar.bottom
-        anchors.topMargin: 20
+        anchors.top: parent.top
+        anchors.topMargin: 30
         anchors.horizontalCenter: parent.horizontalCenter
         spacing: 112
 
@@ -626,7 +631,11 @@ Item {
                     {
                         if(QmlDevState.state.LMultiMode===multiModeEnum.NONE)
                         {
-                            if(lStOvState===workStateEnum.WORKSTATE_PAUSE)
+                            if(lStOvState===workStateEnum.WORKSTATE_STOP)
+                            {
+                                push_page(pageSteamOvenConfig,{cookWorkPos:cookWorkPosEnum.LEFT})
+                            }
+                            else if(lStOvState===workStateEnum.WORKSTATE_PAUSE)
                             {
                                 loaderPauseSteamShow(cookWorkPosEnum.LEFT)
                             }
@@ -646,7 +655,11 @@ Item {
                     {
                         if(QmlDevState.state.RMultiMode===multiModeEnum.NONE)
                         {
-                            if(rStOvState===workStateEnum.WORKSTATE_PAUSE)
+                            if(rStOvState===workStateEnum.WORKSTATE_STOP)
+                            {
+                                push_page(pageSteamOvenConfig,{cookWorkPos:cookWorkPosEnum.RIGHT})
+                            }
+                            else if(rStOvState===workStateEnum.WORKSTATE_PAUSE)
                             {
                                 loaderPauseSteamShow(cookWorkPosEnum.RIGHT)
                             }

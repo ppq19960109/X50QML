@@ -41,7 +41,7 @@ Item{
 
                 Item{
                     anchors.fill: parent
-                    visible: index==1
+                    visible: index==1 && tabBar.currentIndex!=1
                     PageRotationImg {
                         id:left_StOvState
                         asynchronous:true
@@ -50,7 +50,7 @@ Item{
                         anchors.horizontalCenterOffset: -95
                         anchors.verticalCenterOffset: 6
                         source: themesPicturesPath+"samll_rotation.png"
-                        duration:12000
+                        duration:8000
                         visible: lStOvState===workStateEnum.WORKSTATE_PREHEAT|| lStOvState===workStateEnum.WORKSTATE_RUN|| lStOvState===workStateEnum.WORKSTATE_PAUSE|| lStOvState===workStateEnum.WORKSTATE_PAUSE_PREHEAT
                         running: visible && (lStOvState===workStateEnum.WORKSTATE_PREHEAT || lStOvState===workStateEnum.WORKSTATE_RUN)
                     }
@@ -71,7 +71,7 @@ Item{
                         anchors.horizontalCenterOffset: 60
                         anchors.verticalCenterOffset: 6
                         source: themesPicturesPath+"samll_rotation.png"
-                        duration:12000
+                        duration:8000
                         visible: rStOvState===workStateEnum.WORKSTATE_PREHEAT|| rStOvState===workStateEnum.WORKSTATE_RUN|| rStOvState===workStateEnum.WORKSTATE_PAUSE|| rStOvState===workStateEnum.WORKSTATE_PAUSE_PREHEAT
                         running: visible && (rStOvState===workStateEnum.WORKSTATE_PREHEAT || rStOvState===workStateEnum.WORKSTATE_RUN)
                     }
@@ -115,7 +115,7 @@ Item{
                 break
             case 1:
                 if(lStOvState!==workStateEnum.WORKSTATE_STOP || rStOvState!==workStateEnum.WORKSTATE_STOP)
-                    push_page(pageSteaming)
+                    replace_page(pageSteaming)
                 else
                     replace_page(pageSteamOven)
                 break

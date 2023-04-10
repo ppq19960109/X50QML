@@ -225,7 +225,7 @@ Item {
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.top: parent.top
             anchors.topMargin: 100
-            source: themesPicturesPath+(lStoveStatus>0?"ai/stove_open.png":"ai/stove_close.png")
+            source: themesPicturesPath+"ai/stove_open.png"
         }
 
         Button{
@@ -339,7 +339,7 @@ Item {
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.top: parent.top
             anchors.topMargin: 100
-            source: themesPicturesPath+(rStoveStatus>0?"ai/stove_open.png":"ai/stove_close.png")
+            source: themesPicturesPath+"ai/stove_open.png"
         }
 
         Button{

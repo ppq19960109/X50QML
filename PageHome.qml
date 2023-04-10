@@ -172,14 +172,14 @@ Item {
     function steamInterfaceChange(state){
         if(state===false)
         {
-            if(isExistView("PageSteaming")!=null)
-            {
-                let page=isExistView("PageSteamOven")
-                if(page==null)
-                    backTopPage()
-                else
-                    backPage(page)
-            }
+            //            if(isExistView("PageSteaming")!=null)
+            //            {
+            //                let page=isExistView("PageSteamOven")
+            //                if(page==null)
+            //                    backTopPage()
+            //                else
+            //                    backPage(page)
+            //            }
         }
         else
         {
@@ -312,12 +312,9 @@ Item {
                     }
                     else
                     {
-                        if(lStOvDoorState===0)
+                        if(lStOvDoorState===0 || value===workStateEnum.WORKSTATE_STOP)
                         {
-                            if(value===workStateEnum.WORKSTATE_STOP)
-                            {
-                                loaderDoorAutoHide(cookWorkPosEnum.LEFT)
-                            }
+                            loaderDoorAutoHide(cookWorkPosEnum.LEFT)
                         }
                     }
 
@@ -346,14 +343,6 @@ Item {
                 }
                 lastLStOvState=value
             }
-            else if("LStOvDoorState"==key)
-            {
-                if(value==0)
-                {
-                    if(lStOvState===workStateEnum.WORKSTATE_PAUSE||lStOvState===workStateEnum.WORKSTATE_PAUSE_RESERVE||lStOvState===workStateEnum.WORKSTATE_PAUSE_PREHEAT)
-                        loaderDoorAutoRestoreShow("左腔门已关闭，是否继续烹饪？","继续烹饪",cookWorkPosEnum.LEFT)
-                }
-            }
             else if("RStOvState"==key)
             {
                 if(value===workStateEnum.WORKSTATE_STOP)
@@ -379,12 +368,9 @@ Item {
                     }
                     else
                     {
-                        if(rStOvDoorState===0)
+                        if(rStOvDoorState===0 || value===workStateEnum.WORKSTATE_STOP)
                         {
-                            if(value===workStateEnum.WORKSTATE_STOP)
-                            {
-                                loaderDoorAutoHide(cookWorkPosEnum.RIGHT)
-                            }
+                            loaderDoorAutoHide(cookWorkPosEnum.RIGHT)
                         }
                     }
                     if(lastRStOvState===workStateEnum.WORKSTATE_STOP)
@@ -403,24 +389,6 @@ Item {
                         SendFunc.setBuzControl(buzControlEnum.SHORTFIVE)
                 }
                 lastRStOvState=value
-            }
-            else if("RStOvDoorState"==key)
-            {
-                if(value==0)
-                {
-                    if(rStOvState===workStateEnum.WORKSTATE_PAUSE||rStOvState===workStateEnum.WORKSTATE_PAUSE_RESERVE||rStOvState===workStateEnum.WORKSTATE_PAUSE_PREHEAT)
-                        loaderDoorAutoRestoreShow("右腔门已关闭，是否继续烹饪？","继续烹饪",cookWorkPosEnum.RIGHT)
-                }
-            }
-            else if("LStOvPauseTimerLeft"==key)
-            {
-                if(value==0)
-                    loaderDoorAutoRestoreHide(cookWorkPosEnum.LEFT)
-            }
-            else if("RStOvPauseTimerLeft"==key)
-            {
-                if(value==0)
-                    loaderDoorAutoRestoreHide(cookWorkPosEnum.RIGHT)
             }
             else if("LStoveStatus"==key)
             {
@@ -910,7 +878,6 @@ Item {
         //        loaderUpdateConfirmShow()
         //       loaderUpdateResultShow("系统已更新至最新版本\n"+"1.2.0")
         //loaderScreenSaverShow()
-        //loaderDoorAutoRestoreShow("左腔门已关闭，是否继续烹饪？","继续烹饪",cookWorkPosEnum.LEFT)
         //loaderFirstStartupShow()
     }
 
@@ -1135,7 +1102,10 @@ Item {
                     lineHeight:0.6
                 }
                 onClicked: {
-                    push_page(pageSteamOven)
+                    if(lStOvState!==workStateEnum.WORKSTATE_STOP || rStOvState!==workStateEnum.WORKSTATE_STOP)
+                        push_page(pageSteaming)
+                    else
+                        push_page(pageSteamOven)
                 }
             }
             Button{

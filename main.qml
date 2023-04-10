@@ -610,18 +610,18 @@ ApplicationWindow {
         visible: stackView.visible && productionTestStatus == 0 && demoModeStatus==0
         enabled: stackView.enabled
     }
-//    SwipeView {
-//        anchors.fill: parent
-//        currentIndex:0
+    //    SwipeView {
+    //        anchors.fill: parent
+    //        currentIndex:0
 
-//        interactive:true //是否可以滑动
-//        Item {Image{source: themesPicturesPath+"display/1.png" }}
-//        Item {Image{source: themesPicturesPath+"display/5.png" }}
-//        Item {Image{source: themesPicturesPath+"display/3.png" }}
-//        Item {Image{source: themesPicturesPath+"display/4.png" }}
-//        Item {Image{source: themesPicturesPath+"display/6.png" }}
-//        Item {Image{source: themesPicturesPath+"display/2.png" }}
-//    }
+    //        interactive:true //是否可以滑动
+    //        Item {Image{source: themesPicturesPath+"display/1.png" }}
+    //        Item {Image{source: themesPicturesPath+"display/5.png" }}
+    //        Item {Image{source: themesPicturesPath+"display/3.png" }}
+    //        Item {Image{source: themesPicturesPath+"display/4.png" }}
+    //        Item {Image{source: themesPicturesPath+"display/6.png" }}
+    //        Item {Image{source: themesPicturesPath+"display/2.png" }}
+    //    }
 
     //    Item {
     //        anchors.fill: parent
@@ -691,20 +691,20 @@ ApplicationWindow {
                 SendFunc.setBuzControl(buzControlEnum.SHORT)
                 visible=false
                 playing=false
-//                animation.restart()
+                //                animation.restart()
             }
         }
-//        PropertyAnimation {
-//            id: animation;
-//            target: boot;
-//            property: "opacity";
-//            to: 0;
-//            duration: 1200;
-//            onStopped:{
-//                console.log("onStopped...")
-//                boot.visible=false
-//            }
-//        }
+        //        PropertyAnimation {
+        //            id: animation;
+        //            target: boot;
+        //            property: "opacity";
+        //            to: 0;
+        //            duration: 1200;
+        //            onStopped:{
+        //                console.log("onStopped...")
+        //                boot.visible=false
+        //            }
+        //        }
     }
     //---------------------------------------------------------------
     function loaderMainHide(){
@@ -988,50 +988,50 @@ ApplicationWindow {
                 loaderAuto.sourceComponent = null
         }
     }
-    Component{
-        id:component_doorAutoRestore
-        PageDialogConfirm{
-            cancelText:"结束烹饪("+(cookWorkPos===cookWorkPosEnum.LEFT?QmlDevState.state.LStOvPauseTimerLeft:QmlDevState.state.RStOvPauseTimerLeft)+"分钟)"
-            cancelBtnWidth:130
-            onCancel: {
-                if(index>0)
-                {
-                    SendFunc.setCookOperation(cookWorkPos,workOperationEnum.CANCEL)
-                }
-                loaderAutoHide()
-            }
-            onConfirm:{
-                SendFunc.setCookOperation(cookWorkPos,workOperationEnum.START)
-                loaderAutoHide()
-            }
-            Component.onCompleted: {
-                SendFunc.setBuzControl(buzControlEnum.OPEN)
-            }
-            Component.onDestruction: {
-                SendFunc.setBuzControl(buzControlEnum.STOP)
-            }
-        }
-    }
-    function loaderDoorAutoRestoreShow(text,confirmText,cookWorkPos){
-        if(loaderAuto.sourceComponent !== component_doorAutoRestore)
-        {
-            loaderAuto.sourceComponent = component_doorAutoRestore
-        }
-        loaderAuto.item.hintCenterText=text
-        //        if(cookWorkPos===cookWorkPosEnum.LEFT)
-        //            loaderAuto.item.cancelText=Qt.binding(function(){return "结束烹饪("+QmlDevState.state.LStOvPauseTimerLeft+"分钟)"})
-        //        else
-        //            loaderAuto.item.cancelText=Qt.binding(function(){return "结束烹饪("+QmlDevState.state.RStOvPauseTimerLeft+"分钟)"})
-        loaderAuto.item.confirmText=confirmText
-        loaderAuto.item.cookWorkPos=cookWorkPos
-    }
-    function loaderDoorAutoRestoreHide(cookWorkPos){
-        if(loaderAuto.sourceComponent === component_doorAutoRestore)
-        {
-            if(loaderAuto.item.cookWorkPos===cookWorkPos)
-                loaderAuto.sourceComponent = null
-        }
-    }
+    //    Component{
+    //        id:component_doorAutoRestore
+    //        PageDialogConfirm{
+    //            cancelText:"结束烹饪("+(cookWorkPos===cookWorkPosEnum.LEFT?QmlDevState.state.LStOvPauseTimerLeft:QmlDevState.state.RStOvPauseTimerLeft)+"分钟)"
+    //            cancelBtnWidth:130
+    //            onCancel: {
+    //                if(index>0)
+    //                {
+    //                    SendFunc.setCookOperation(cookWorkPos,workOperationEnum.CANCEL)
+    //                }
+    //                loaderAutoHide()
+    //            }
+    //            onConfirm:{
+    //                SendFunc.setCookOperation(cookWorkPos,workOperationEnum.START)
+    //                loaderAutoHide()
+    //            }
+    //            Component.onCompleted: {
+    //                SendFunc.setBuzControl(buzControlEnum.OPEN)
+    //            }
+    //            Component.onDestruction: {
+    //                SendFunc.setBuzControl(buzControlEnum.STOP)
+    //            }
+    //        }
+    //    }
+    //    function loaderDoorAutoRestoreShow(text,confirmText,cookWorkPos){
+    //        if(loaderAuto.sourceComponent !== component_doorAutoRestore)
+    //        {
+    //            loaderAuto.sourceComponent = component_doorAutoRestore
+    //        }
+    //        loaderAuto.item.hintCenterText=text
+    //        //        if(cookWorkPos===cookWorkPosEnum.LEFT)
+    //        //            loaderAuto.item.cancelText=Qt.binding(function(){return "结束烹饪("+QmlDevState.state.LStOvPauseTimerLeft+"分钟)"})
+    //        //        else
+    //        //            loaderAuto.item.cancelText=Qt.binding(function(){return "结束烹饪("+QmlDevState.state.RStOvPauseTimerLeft+"分钟)"})
+    //        loaderAuto.item.confirmText=confirmText
+    //        loaderAuto.item.cookWorkPos=cookWorkPos
+    //    }
+    //    function loaderDoorAutoRestoreHide(cookWorkPos){
+    //        if(loaderAuto.sourceComponent === component_doorAutoRestore)
+    //        {
+    //            if(loaderAuto.item.cookWorkPos===cookWorkPos)
+    //                loaderAuto.sourceComponent = null
+    //        }
+    //    }
     Component{
         id:component_hoodoff
         PageDialogConfirm{
@@ -1760,7 +1760,7 @@ ApplicationWindow {
         id:component_tempControl
         Item {
             property int cookWorkPos:0
-            property var clickFunc:null
+            property var cancelFunc:null
             Component.onCompleted: {
                 var i
                 var array = []
@@ -1770,7 +1770,7 @@ ApplicationWindow {
                 tempPathView.model=array
             }
             Component.onDestruction: {
-                clickFunc=null
+                cancelFunc=null
             }
 
             //内容
@@ -1786,7 +1786,8 @@ ApplicationWindow {
                     anchors.top:parent.top
                     anchors.right:parent.right
                     onClicked: {
-                        auxiliaryPageSwitch.checked=false
+                        if(cancelFunc!=null)
+                            cancelFunc()
                         loaderMainHide()
                     }
                 }
@@ -1861,7 +1862,8 @@ ApplicationWindow {
                         }
                         else
                         {
-                            auxiliaryPageSwitch.checked=false
+                            if(cancelFunc!=null)
+                                cancelFunc()
                         }
                         loaderMainHide()
                     }
@@ -1869,10 +1871,10 @@ ApplicationWindow {
             }
         }
     }
-    function loaderTempControl(clickFunc)
+    function loaderTempControl(cancelFunc)
     {
         loaderManual.sourceComponent = component_tempControl
-        loaderManual.item.clickFunc=clickFunc
+        loaderManual.item.cancelFunc=cancelFunc
     }
     //    readonly property var weather_code:{
     //        "113": "Sunny",
