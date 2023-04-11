@@ -158,13 +158,13 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     setState("RStoveTimingState",0);
 
     setState("LStOvMode",0);
-    setState("LStOvState",2);
+    setState("LStOvState",0);
     setState("LStOvSetTimer",10);
     setState("LStOvSetTimerLeft",10);
     setState("LStOvRealTemp",0);
     setState("LStOvOrderTimerLeft",0);
 
-    setState("RStOvState",2);
+    setState("RStOvState",0);
     setState("RStOvSetTimerLeft",20);
     setState("RStOvRealTemp",0);
     setState("RStOvOrderTimerLeft",0);

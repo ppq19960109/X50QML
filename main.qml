@@ -145,6 +145,7 @@ ApplicationWindow {
         property bool wifiEnable: false
         property bool reboot: false
         property var cookDialog:[true,true,true,true,true,true,true]
+        property bool hoodOffDialog:true
         property bool multistageRemind:true
         property bool rMovePotLowHeatRemind:true
         property var wifiPasswdArray:[]
@@ -247,6 +248,7 @@ ApplicationWindow {
         systemSettings.sleepSwitch=true
         systemSettings.screenSaverIndex=2
         systemSettings.cookDialog=[true,true,true,true,true,true,true]
+        systemSettings.hoodOffDialog=true
         systemSettings.multistageRemind=true
         systemSettings.wifiPasswdArray=[]
         systemSync()
@@ -1034,16 +1036,20 @@ ApplicationWindow {
     //    }
     Component{
         id:component_hoodoff
-        PageDialogConfirm{
+        PageDialog{
             property bool rAuxiliary: false
             hintCenterText:(rAuxiliary?"右灶已关闭，本次控温结束<br/>烟机自动延时":"烟机自动延时<br/>")+"<b><font color='#E68855'>"+QmlDevState.state.HoodOffLeftTime+"分钟</font></b>后关闭，清除余烟"
             cancelText:"好的"
             confirmText:"立即关闭("+QmlDevState.state.HoodOffLeftTime+"分钟)"
             confirmBtnWidth:130
             onCancel: {
+                if(checkboxChecked==true && index>0)
+                    systemSettings.hoodOffDialog=false
                 loaderAutoHide()
             }
             onConfirm:{
+                if(checkboxChecked==true)
+                    systemSettings.hoodOffDialog=false
                 SendFunc.setHoodSpeed(0)
                 loaderAutoHide()
             }
@@ -1051,6 +1057,9 @@ ApplicationWindow {
     }
 
     function showLoaderHoodOff(status){
+        console.log("showLoaderHoodOff:",systemSettings.hoodOffDialog)
+        if(systemSettings.hoodOffDialog==false)
+            return
         loaderAuto.sourceComponent = component_hoodoff
         if(status==null || status===0)
             loaderAuto.item.rAuxiliary=false
@@ -1532,6 +1541,14 @@ ApplicationWindow {
         case 14:
             if(dir==null||dir===cookWorkPosEnum.RIGHT)
                 loaderErrorShow("右腔干烧检测电路故障！","请拨打售后电话<font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员")
+            break
+        case 15:
+            if(dir==null)
+                loaderErrorShow("按键板通讯故障！","请拨打售后电话<font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员")
+            break
+        case 16:
+            if(dir==null)
+                loaderErrorShow("驱动板通讯故障！","请拨打售后电话<font color='"+themesTextColor+"'>400-888-8490</font><br/>咨询售后人员")
             break
         default:
             break

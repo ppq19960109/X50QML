@@ -3,11 +3,11 @@ import QtQuick.Controls 2.5
 import "../"
 Item {
     property string name: "PageSteamOven"
-    PageBackBar{
-        id:topBar
-        anchors.top:parent.top
-        name:qsTr("蒸烤箱")
-    }
+//    PageBackBar{
+//        id:topBar
+//        anchors.top:parent.top
+//        name:qsTr("蒸烤箱")
+//    }
 
     PageTabBar{
         anchors.horizontalCenter: parent.horizontalCenter
@@ -17,8 +17,8 @@ Item {
     Row {
         width: 344*3+26*2
         height: 266
-        anchors.top: topBar.bottom
-        anchors.topMargin: 17
+        anchors.top: parent.top
+        anchors.topMargin: 50
         anchors.horizontalCenter: parent.horizontalCenter
         spacing: 26
         Repeater {

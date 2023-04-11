@@ -14,6 +14,8 @@ Item {
     property alias checkboxChecked: checkBox.checked
     property alias hintWidth: hint.width
     property alias hintHeight: hint.height
+
+    property int confirmBtnWidth:0
     signal cancel(int index)
     signal confirm()
 
@@ -76,6 +78,7 @@ Item {
             font.pixelSize: 30
             horizontalAlignment: Text.AlignHCenter
             wrapMode:Text.WrapAnywhere
+            lineHeight:1.2
             text:""
         }
         PageCheckBox {
@@ -113,7 +116,7 @@ Item {
             }
         }
         Button {
-            width:140+10
+            width:140+10+confirmBtnWidth
             height:50+10
             anchors.bottom:parent.bottom
             anchors.bottomMargin: 25
@@ -127,7 +130,7 @@ Item {
                 text:""
             }
             background: Rectangle {
-                width:140
+                width:140+confirmBtnWidth
                 height:50
                 anchors.centerIn: parent
                 color:themesTextColor2
