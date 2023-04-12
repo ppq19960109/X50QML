@@ -5,6 +5,7 @@
 
 QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
 {
+    oilTempReportState=0;
     //    QProcess::execute("cd /oem && ./logoapp");
     readRecipeDetails();
 
@@ -42,7 +43,7 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     stateType.append(QPair<QString,int>("LStOvOrderTimer",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("LStOvSetTimerLeft",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("LStOvOrderTimerLeft",LINK_VALUE_TYPE_NUM));
-//    stateType.append(QPair<QString,int>("LStOvPauseTimerLeft",LINK_VALUE_TYPE_NUM));
+    //    stateType.append(QPair<QString,int>("LStOvPauseTimerLeft",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("LSteamGear",LINK_VALUE_TYPE_NUM));
 
     stateType.append(QPair<QString,int>("RStOvDoorState",LINK_VALUE_TYPE_NUM));
@@ -54,7 +55,7 @@ QmlDevState::QmlDevState(QObject *parent) : QObject(parent)
     stateType.append(QPair<QString,int>("RStOvSetTimer",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("RStOvSetTimerLeft",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("RStOvOrderTimerLeft",LINK_VALUE_TYPE_NUM));
-//    stateType.append(QPair<QString,int>("RStOvPauseTimerLeft",LINK_VALUE_TYPE_NUM));
+    //    stateType.append(QPair<QString,int>("RStOvPauseTimerLeft",LINK_VALUE_TYPE_NUM));
 
     stateType.append(QPair<QString,int>("LStoveStatus",LINK_VALUE_TYPE_NUM));
     stateType.append(QPair<QString,int>("RStoveStatus",LINK_VALUE_TYPE_NUM));
@@ -212,6 +213,16 @@ int QmlDevState::executeQProcess(const QString cmd,const QStringList list)
     //    process.start(cmd,list);
     //    return 0;
     return QProcess::startDetached(cmd,list);
+}
+
+void QmlDevState::stopOilTempReport(const int state)
+{
+    if(state==0 && oilTempReportState>0)
+    {
+        emit stateChanged("LOilTemp",stateMap["LOilTemp"]);
+        emit stateChanged("ROilTemp",stateMap["ROilTemp"]);
+    }
+    oilTempReportState=state;
 }
 
 int QmlDevState::executeShell(const QString cmd)
@@ -440,7 +451,7 @@ void QmlDevState::parsingData(const QJsonObject& object)
                     QrcodeEn::encodeImage(value.toString(),6,key+".png");
                     QString mac=stateMap["Wifimac"].toString().replace(":","");
                     QString str =QString("https://club.marssenger.com/web/pages/E70/cookingCurve.html?wifimac=%1&productKey=%2&CookingCurveSwitch=1&type=link").arg(mac).arg(stateMap["ProductKey"].toString());
-//                    qDebug()<<"Wifimac:"<<stateMap["Wifimac"].toString()<<"mac:"<<mac<<"CookingCurve:"<<str;
+                    //                    qDebug()<<"Wifimac:"<<stateMap["Wifimac"].toString()<<"mac:"<<mac<<"CookingCurve:"<<str;
                     QrcodeEn::encodeImage(str,6,"CookingCurve.png");
                 }
             }
@@ -527,6 +538,8 @@ int QmlDevState::getLocalConnected() const
 void QmlDevState::setState(const QString& name,const QVariant& value)
 {
     stateMap[name]=value;
+    if(("LOilTemp"==name||"ROilTemp"==name)&& oilTempReportState>0)
+        return;
     emit stateChanged(name,value);
 }
 

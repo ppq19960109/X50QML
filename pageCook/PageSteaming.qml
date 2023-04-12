@@ -46,7 +46,11 @@ Item {
             loaderManual.sourceComponent = null
         }
     }
+    Component.onCompleted: {
+        QmlDevState.stopOilTempReport(1)
+    }
     Component.onDestruction: {
+        QmlDevState.stopOilTempReport(0)
         loaderMainHide()
     }
     PageTabBar{
@@ -554,11 +558,11 @@ Item {
                     visible:{
                         if(index==0)
                         {
-                            return QmlDevState.state.LMultiMode > 0
+                            return lStOvState!==workStateEnum.WORKSTATE_STOP && lStOvState!==workStateEnum.WORKSTATE_FINISH && QmlDevState.state.LMultiMode > 0 && QmlDevState.state.LMultiTotalStep > 1
                         }
                         else
                         {
-                            return QmlDevState.state.RMultiMode > 0
+                            return rStOvState!==workStateEnum.WORKSTATE_STOP && rStOvState!==workStateEnum.WORKSTATE_FINISH && QmlDevState.state.RMultiMode > 0 && QmlDevState.state.RMultiTotalStep > 1
                         }
                     }
                     count: {
@@ -646,7 +650,7 @@ Item {
                                 loaderCookReserve(cookItem.cookPos,cookItem)
                             }
                         }
-                        else if(QmlDevState.state.LMultiMode===multiModeEnum.MULTISTAGE && lStOvState!==workStateEnum.WORKSTATE_STOP && lStOvState!==workStateEnum.WORKSTATE_FINISH && lMultiStageContent!=null)
+                        else if(QmlDevState.state.LMultiMode===multiModeEnum.MULTISTAGE && QmlDevState.state.LMultiTotalStep > 1 && lStOvState!==workStateEnum.WORKSTATE_STOP && lStOvState!==workStateEnum.WORKSTATE_FINISH && lMultiStageContent!=null)
                         {
                             push_page(pageMultistageShow)
                         }

@@ -15,7 +15,9 @@ Item {
     {
         SendFunc.setHoodSpeed(0)
     }
-
+    Component.onCompleted: {
+        QmlDevState.stopOilTempReport(0)
+    }
     PageTabBar{
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.bottom: parent.bottom
@@ -177,12 +179,16 @@ Item {
             color:{
                 if(lStoveStatus>0)
                 {
-                    if(lOilTemp>=220)
-                        return "#B44F23"
-                    else if(lOilTemp>=170)
-                        return "#B19A56"
-                    else
-                        return "#5AA5BE"
+                    if(oilTempSwitch)
+                    {
+                        if(lOilTemp>=220)
+                            return "#B44F23"
+                        else if(lOilTemp>=170)
+                            return "#B19A56"
+                        else
+                            return "#5AA5BE"
+                    }
+                    return "#5AA5BE"
                 }
                 return "#fff"
             }
@@ -206,15 +212,19 @@ Item {
         PageRotationImg {
             asynchronous:true
             smooth:true
-            visible: lStoveStatus>0 && oilTempSwitch
+            visible: lStoveStatus>0
             anchors.centerIn: left_stove
             source: {
-                if(lOilTemp>=220)
-                    return themesPicturesPath+"ai/high_temp.png"
-                else if(lOilTemp>=170)
-                    return themesPicturesPath+"ai/medium_temp.png"
-                else
-                    return themesPicturesPath+"ai/low_temp.png"
+                if(oilTempSwitch)
+                {
+                    if(lOilTemp>=220)
+                        return themesPicturesPath+"ai/high_temp.png"
+                    else if(lOilTemp>=170)
+                        return themesPicturesPath+"ai/medium_temp.png"
+                    else
+                        return themesPicturesPath+"ai/low_temp.png"
+                }
+                return themesPicturesPath+"ai/low_temp.png"
             }
             duration:9000
         }
@@ -291,12 +301,16 @@ Item {
             color:{
                 if(rStoveStatus>0)
                 {
-                    if(rOilTemp>=220)
-                        return "#B44F23"
-                    else if(rOilTemp>=170)
-                        return "#B19A56"
-                    else
-                        return "#5AA5BE"
+                    if(oilTempSwitch)
+                    {
+                        if(rOilTemp>=220)
+                            return "#B44F23"
+                        else if(rOilTemp>=170)
+                            return "#B19A56"
+                        else
+                            return "#5AA5BE"
+                    }
+                    return "#5AA5BE"
                 }
                 return "#fff"
             }
@@ -323,12 +337,16 @@ Item {
             visible: rStoveStatus>0 && oilTempSwitch
             anchors.centerIn: right_stove
             source: {
-                if(rOilTemp>=220)
-                    return themesPicturesPath+"ai/high_temp.png"
-                else if(rOilTemp>=170)
-                    return themesPicturesPath+"ai/medium_temp.png"
-                else
-                    return themesPicturesPath+"ai/low_temp.png"
+                if(oilTempSwitch)
+                {
+                    if(rOilTemp>=220)
+                        return themesPicturesPath+"ai/high_temp.png"
+                    else if(rOilTemp>=170)
+                        return themesPicturesPath+"ai/medium_temp.png"
+                    else
+                        return themesPicturesPath+"ai/low_temp.png"
+                }
+                return themesPicturesPath+"ai/low_temp.png"
             }
             duration:9000
         }
