@@ -334,7 +334,7 @@ Item {
         PageRotationImg {
             asynchronous:true
             smooth:true
-            visible: rStoveStatus>0 && oilTempSwitch
+            visible: rStoveStatus>0
             anchors.centerIn: right_stove
             source: {
                 if(oilTempSwitch)
