@@ -543,7 +543,7 @@ Item {
                             radius: 25
                         }
                         Text{
-                            text:"返回"
+                            text:"确认"
                             color:"#000"
                             font.pixelSize: 30
                             anchors.centerIn: parent

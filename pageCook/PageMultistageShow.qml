@@ -14,7 +14,16 @@ Item {
             return rStOvState!==workStateEnum.WORKSTATE_RESERVE
     }
 
-    Component.onCompleted: {
+    Connections { // 将目标对象信号与槽函数进行连接
+        target: QmlDevState
+        onStateChanged: { // 处理目标对象信号的槽函数
+            console.log("PageMultistageShow:",key)
+            if("LStOvState"==key)
+            {
+                if(value===workStateEnum.WORKSTATE_FINISH||value===workStateEnum.WORKSTATE_STOP)
+                    backPrePage()
+            }
+        }
     }
     PageBackBar{
         id:topBar
